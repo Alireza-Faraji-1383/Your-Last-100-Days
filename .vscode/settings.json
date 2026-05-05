@@ -1,0 +1,86 @@
+{
+    "typescript.tsserver.maxTsServerMemory": 4096,
+    "typescript.disableAutomaticTypeAcquisition": true,
+    "typescript.surveys.enabled": false,
+    "typescript.validate.enable": false,
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
+        }
+    ]
+}

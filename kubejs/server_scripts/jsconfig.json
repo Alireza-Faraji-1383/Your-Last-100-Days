@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "ES2020",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "kubejs/*": ["../../.probe/server/generated-server/*"]
+    },
+    "typeRoots": [
+      "../../.probe/server/generated-server"
+    ],
+    "lib": ["ES2020"]
+  },
+  "include": [
+    "**/*.js",
+    "../../.probe/server/generated-server/index.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

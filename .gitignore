@@ -1,0 +1,38 @@
+
+# Probe/temp
+.probe
+
+# Runtime generated
+logs/
+crash-reports/
+local/
+saves/
+screenshots/
+downloads/
+
+# Caches
+dynamic-data-pack-cache/
+dynamic-resource-pack-cache/
+.cache/
+
+# User-specific
+options.txt
+usercache.json
+usernamecache.json
+command_history.txt
+TrashSlotSaveState.json
+patchouli_data.json
+emi.json
+server-resource-packs/
+
+# Xaero maps/waypoints (personal data)
+xaero/
+XaeroWaypoints_BACKUP*/
+
+# Resource/shader packs (large binaries)
+resourcepacks/
+shaderpacks/
+texturepacks/
+
+# Mod jars (track separately or use manifest)
+mods/
