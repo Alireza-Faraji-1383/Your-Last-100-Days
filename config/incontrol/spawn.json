@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "mod": "born_in_chaos_v1",
+    "hostile": true,
+    "daycount": "range(0,15)",
+    "result": "deny"
+  }
+]
