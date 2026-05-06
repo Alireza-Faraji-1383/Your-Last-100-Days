@@ -458,7 +458,7 @@
 		#Chance for a fisher mob to steal an entity item in the hands instead of reeling the player.
 		# Default: 0.4
 		# Range: 0.0 ~ 1.0
-		"Hook hands chance" = 0.4
+		"Hook hands chance" = 0.15
 		#After how many ticks a mob will be forced to reel in the bobber.
 		# Default: 60
 		# Range: > 0
@@ -843,7 +843,7 @@
 		#Chance for a mob in the entity type tag enhancedai:can_be_miner to spawn with the miner ability
 		# Default: 0.07
 		# Range: 0.0 ~ 1.0
-		"Miner chance" = 0.07
+		"Miner chance" = 0.2
 		#NONE: No item is required. ANY_TOOL: Any item that can break blocks in the off-hand is required. CORRECT_TOOL_FOR_REQUIRED: The mob is able to mine any blocks that don't require a tool, and require a tool for blocks that require it (e.g. can always mine dirt but can't mine stone). CORRECT_TOOL_FOR_ANY_BLOCK: The mob can only mine blocks if the tool is the right one for the block (e.g. can mine dirt only with a shovel).
 		#Allowed Values: NONE, ANY_TOOL, CORRECT_TOOL_FOR_REQUIRED, CORRECT_TOOL_FOR_ANY_BLOCK
 		"Tool requirement" = "CORRECT_TOOL_FOR_REQUIRED"
