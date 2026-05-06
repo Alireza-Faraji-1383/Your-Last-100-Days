@@ -1,25 +1,49 @@
 {
-  "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "target": "ES2020",
-    "allowJs": true,
-    "checkJs": false,
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "kubejs/*": ["../../.probe/server/generated-server/*"]
+    "compilerOptions": {
+        "module": "none",
+        "moduleResolution": "node",
+        "target": "ES2015",
+        "allowJs": true,
+        "checkJs": false,
+        "noEmit": true,
+        "baseUrl": "../../.probe/packages",
+        "paths": {
+            "kubejs/*": [
+                "../../.probe/server/generated-server/*"
+            ]
+        },
+        "typeRoots": [
+            "../../.probe/server/generated-server",
+            "../../.probe/client/generated-client",
+            "../../.probe/startup/generated-startup",
+            "../../.probe/packages/generated-package",
+            "../../.probe/packages",
+            "../../.probe/server",
+            "../../.probe/client",
+            "../../.probe/startup"
+        ],
+        "lib": [
+            "ES2020",
+            "ES2015",
+            "ES2016.Array.Include",
+            "ES2017.Object"
+        ],
+        "disableSizeLimit": true,
+        "assumeChangesOnlyAffectDirectDependencies": true,
+        "rootDir": ".",
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true
     },
-    "typeRoots": [
-      "../../.probe/server/generated-server"
+    "include": [
+        "**/*.js",
+        "./**/*.js",
+        "./**/*.ts",
+        "../../.probe/server/generated-server/**/*.d.ts",
+        "../../.probe/client/generated-client/**/*.d.ts",
+        "../../.probe/startup/generated-startup/**/*.d.ts",
+        "../../.probe/packages/generated-package/**/*.d.ts"
     ],
-    "lib": ["ES2020"]
-  },
-  "include": [
-    "**/*.js",
-    "../../.probe/server/generated-server/index.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "exclude": [
+        "node_modules"
+    ]
 }

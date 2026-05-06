@@ -1,9 +1,7 @@
 LootJS.modifiers((event) => {
-  // Overworld chests only — exclude nether/end tables
-  const overworldChests = /minecraft:chests\/(?!bastion|nether_fortress|end_city)/
 
   // Netherite Upgrade Smithing Template: 0% chance in overworld
-  event.addTableModifier(overworldChests)
+  event.addTableModifier(/^(?!.*(bastion|fortress|end_city|end_ship|nether|end)).*:(chests|barrels)\/.*$/)
     .modifyLoot('minecraft:netherite_upgrade_smithing_template', (item) => {
       return Item.empty
     })
@@ -24,7 +22,7 @@ LootJS.modifiers((event) => {
   ]
 
   netheriteItems.forEach((id) => {
-    event.addTableModifier(overworldChests)
+    event.addTableModifier(/^(?!.*(bastion|fortress|end_city|end_ship|nether|end)).*:(chests|barrels)\/.*$/)
       .modifyLoot(id, (item) => {
         if (Math.random() > 0.2) return Item.empty
         return item

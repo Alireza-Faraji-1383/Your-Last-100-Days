@@ -13,7 +13,7 @@
         "noEmit": true,
         "assumeChangesOnlyAffectDirectDependencies": true,
         "rootDir": ".",
-        "baseUrl": "../../.probe/packages/generated-package",
+        "baseUrl": "../../.probe/packages",
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
         "lib": [
@@ -23,7 +23,9 @@
         ],
         "typeRoots": [
             "../../.probe/packages/generated-package",
-            "../../.probe/startup/generated-startup"
+            "../../.probe/startup/generated-startup",
+            "../../.probe/packages",
+            "../../.probe/startup"
         ]
     }
 }
