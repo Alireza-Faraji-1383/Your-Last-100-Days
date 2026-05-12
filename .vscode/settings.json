@@ -87,6 +87,12 @@
                 "/recipe_schema/*.json"
             ],
             "url": "./.vscode/recipe.json"
+        },
+        {
+            "fileMatch": [
+                "/recipe_schema/*.json"
+            ],
+            "url": "./.vscode/recipe.json"
         }
     ]
 }
