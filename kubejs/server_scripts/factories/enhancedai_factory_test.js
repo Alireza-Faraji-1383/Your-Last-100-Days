@@ -6,6 +6,8 @@
 // Usage (chat as op):
 //   /eai_test_presets            -> spawn all presets in row in front of player
 //   /eai_test_preset <name>      -> spawn one preset at player
+//   /eai_test_combo <a> <b> ...  -> spawn ONE mob with multiple presets merged
+//                                   (e.g. /eai_test_combo superMiner farSight)
 //   /eai_test_clear              -> kill all test mobs (tagged eai_test)
 //   /eai_test_dump               -> dump goals + NBT of nearest test mob
 //
@@ -117,6 +119,47 @@
         function fmt(n) { return (Math.round(Number(n) * 10) / 10).toString(); }
         console.info("[EAI-test] spawned " + presetName + " (" + plan.entity + ") at "
                      + fmt(x) + "," + fmt(y) + "," + fmt(z) + " — " + plan.note);
+        return entity;
+    }
+
+    // Spawn ONE mob with MULTIPLE presets merged (e.g. superMiner + farSight).
+    // Entity type taken from first known preset in the list, else zombie.
+    function spawnCombo(level, names, x, y, z, target) {
+        var EAI = getEAI();
+        if (!EAI || !names || names.length === 0) return null;
+
+        var entityType = "minecraft:zombie";
+        for (var i = 0; i < names.length; i++) {
+            if (TEST_PLAN[names[i]]) { entityType = TEST_PLAN[names[i]].entity; break; }
+        }
+        var hasMiner = false;
+        for (var m = 0; m < names.length; m++) { if (names[m] === "superMiner") hasMiner = true; }
+
+        var entity = EAI.fromPresets(level, entityType, names);
+        if (!entity) { console.error("[EAI-test] combo fromPresets returned null"); return null; }
+
+        var label = names.join("+");
+        try { entity.setPos(x, y, z); } catch (eP) {}
+        try { entity.addTag("eai_test"); } catch (eT1) {}
+        try { entity.addTag("eai_test_combo"); } catch (eT2) {}
+        try { entity.setCustomName(Text.of("[" + label + "]")); } catch (e1) {}
+        try { entity.setCustomNameVisible(true); } catch (e2) {}
+        try { entity.setPersistenceRequired(); } catch (e3) {}
+
+        // sword only if no miner — superMiner's clearHands wipes held items.
+        if (!hasMiner) giveItems(entity, { mainhand: "minecraft:iron_sword" });
+
+        try { entity.spawn(); }
+        catch (eSp) { console.error("[EAI-test] combo spawn failed: " + eSp); return null; }
+        EAI.applyDeferred(level, entity, EAI.resolveArgs(names, []));
+
+        if (target) {
+            try {
+                var raw = EAI.rawMob(entity);
+                if (raw && typeof raw.setTarget === "function") raw.setTarget(target);
+            } catch (eT) {}
+        }
+        console.info("[EAI-test] spawned combo " + label + " (" + entityType + ")");
         return entity;
     }
 
@@ -246,6 +289,43 @@
         );
 
         event.register(
+            Commands.literal("eai_test_combo")
+                .requires(src => src.hasPermission(2))
+                .then(Commands.argument("presets", StringArg.greedyString())
+                    .executes(ctx => safeExec(ctx.source, function () {
+                        var player = getPlayer(ctx.source);
+                        if (!player) { ctx.source.sendFailure(Text.of("must be a player")); return 0; }
+                        var asStr = String(StringArg.getString(ctx, "presets") || "");
+                        console.info("[EAI-test] combo raw arg: '" + asStr + "'");
+                        // Manual tokenize on space/comma/tab — avoids Rhino
+                        // Java-String regex-split + .filter pitfalls.
+                        var names = [];
+                        var tok = "";
+                        for (var ci = 0; ci < asStr.length; ci++) {
+                            var ch = asStr.charAt(ci);
+                            if (ch === " " || ch === "," || ch === "\t") {
+                                if (tok.length > 0) { names.push(tok); tok = ""; }
+                            } else {
+                                tok += ch;
+                            }
+                        }
+                        if (tok.length > 0) names.push(tok);
+                        if (names.length === 0) {
+                            ctx.source.sendFailure(Text.of("usage: /eai_test_combo <preset> [preset...]"));
+                            return 0;
+                        }
+                        var pos = player.position();
+                        var look = player.getLookAngle();
+                        var x = pos.x + look.x * 3;
+                        var y = pos.y;
+                        var z = pos.z + look.z * 3;
+                        var lvl = (typeof player.level === "function") ? player.level() : player.level;
+                        var ent = spawnCombo(lvl, names, x, y, z, player);
+                        return ent ? 1 : 0;
+                    })))
+        );
+
+        event.register(
             Commands.literal("eai_test_clear")
                 .requires(src => src.hasPermission(2))
                 .executes(ctx => safeExec(ctx.source, function () {
@@ -268,5 +348,5 @@
         );
     });
 
-    console.info("[EAI-test] commands registered: /eai_test_presets /eai_test_preset <name> /eai_test_clear /eai_test_dump");
+    console.info("[EAI-test] commands registered: /eai_test_presets /eai_test_preset <name> /eai_test_combo <names...> /eai_test_clear /eai_test_dump");
 })();

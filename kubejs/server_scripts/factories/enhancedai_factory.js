@@ -21,6 +21,12 @@
 //   - max_target_distance=0 means UNLIMITED
 //   - Mob must be stuck ~60 ticks with target aggroed
 //
+// Vanilla attributes: keys under feature "attributes" (e.g.
+// "attributes/follow_range=100") are NOT EnhancedAI NBT — they set
+// LivingEntity base attribute values via Attributes.<NAME>. follow_range is
+// the real "see player from N blocks" radius (targeting/alert_range only
+// alerts nearby allies). See applyAttributes + farSight preset.
+//
 // Rhino quirk: const/let inside try{} hoists to function-scope var on Rhino,
 // causing "redeclaration of var X" on 2nd invocation. All function-internal
 // declarations use `var` + indexed for-loops. Top-level module constants OK.
@@ -142,8 +148,12 @@
             if (!list) { warn(`bad arg @${i}: ${JSON.stringify(args[i])}`); continue; }
             for (var j = 0; j < list.length; j++) {
                 var e = list[j];
-                if (!inner[e.feature]) inner[e.feature] = {};
-                inner[e.feature][e.subkey] = e.value;
+                // "attributes/*" are vanilla LivingEntity attributes, not
+                // EnhancedAI NBT keys — applied directly, kept out of NBT.
+                if (e.feature !== "attributes") {
+                    if (!inner[e.feature]) inner[e.feature] = {};
+                    inner[e.feature][e.subkey] = e.value;
+                }
                 entries.push(e);
             }
         }
@@ -215,6 +225,54 @@
                 (e.value === true || e.value === "true" || e.value === 1)) return true;
         }
         return false;
+    }
+
+    // ---------- Vanilla attribute apply -------------------------------------
+    // "attributes/<name>=<number>" sets LivingEntity base attribute value.
+    // <name> maps to Attributes.<NAME.toUpperCase()> Holder. e.g.
+    //   attributes/follow_range=100   -> see player from 100 blocks
+    //   attributes/movement_speed=0.35
+    //   attributes/max_health=40
+    // Reapplied in deferred because zombie finalizeSpawn re-rolls follow_range
+    // and movement_speed modifiers on top of the base.
+
+    function applyAttributes(entity, entries) {
+        var attrEntries = [];
+        for (var i = 0; i < entries.length; i++) {
+            if (entries[i].feature === "attributes") attrEntries.push(entries[i]);
+        }
+        if (attrEntries.length === 0) return 0;
+
+        var Attributes = J("net.minecraft.world.entity.ai.attributes.Attributes");
+        if (!Attributes) { err("applyAttributes: Attributes class not loaded"); return 0; }
+        var raw = rawMob(entity);
+        if (!raw || typeof raw.getAttribute !== "function") {
+            err("applyAttributes: no getAttribute on mob"); return 0;
+        }
+
+        var written = 0;
+        for (var k = 0; k < attrEntries.length; k++) {
+            var en = attrEntries[k];
+            var fieldName = String(en.subkey).toUpperCase();
+            var holder = null;
+            try { holder = Attributes[fieldName]; } catch (eF) { holder = null; }
+            if (!holder) { err(`unknown attribute "${en.subkey}"`); continue; }
+            var inst = null;
+            try { inst = raw.getAttribute(holder); }
+            catch (eG) { warn(`getAttribute ${en.subkey}: ${eG}`); continue; }
+            if (!inst) { warn(`mob lacks attribute ${en.subkey}`); continue; }
+            var val = parseFloat(en.value);
+            if (isNaN(val)) { err(`attribute ${en.subkey} not a number: ${en.value}`); continue; }
+            try {
+                inst.setBaseValue(val);
+                written++;
+                info(`attribute ${en.subkey}=${val}`);
+                if (fieldName === "MAX_HEALTH" && typeof raw.setHealth === "function") {
+                    try { raw.setHealth(val); } catch (eH) { /* ignore */ }
+                }
+            } catch (eS) { err(`setBaseValue ${en.subkey}: ${eS}`); }
+        }
+        return written;
     }
 
     function directApplyMiner(entity, entries) {
@@ -430,6 +488,7 @@
         if (built.count > 0) {
             applyNbt(entity, built.root);
             directApplyMiner(entity, built.entries);
+            applyAttributes(entity, built.entries);
         }
         checkMobGriefing(level);
         return entity;
@@ -441,6 +500,7 @@
         if (built.count > 0) {
             applyNbt(entity, built.root);
             directApplyMiner(entity, built.entries);
+            applyAttributes(entity, built.entries);
         }
         return entity;
     }
@@ -472,6 +532,7 @@
                                 stripDistractionGoals(entity);
                             }
                             equipPickaxeIfNeeded(entity, built.entries);
+                            applyAttributes(entity, built.entries);
                             fireListeners(entity, args);
                             if (wantMiner) injectMinerGoal(entity, 1);
                         } catch (eD) { warn(`deferred t=${tick}: ${eD}`); }
@@ -595,6 +656,16 @@
             "skeleton_flee_target/attack_when_avoiding=true",
             "flee_target/avoid_target=true",
             "flee_target/attack_when_avoiding=true"
+        ],
+
+        // 100-block player sight. follow_range = vanilla detection radius
+        // (NOT targeting/alert_range, which only alerts nearby allies).
+        farSight: [
+            "attributes/follow_range=100",
+            "targeting/target_chance=1",
+            "targeting/unseen_forget_ticks=2400",
+            "targeting/alert_range=64",
+            "targeting/hurt_by_prefer_players=true"
         ]
     };
 
@@ -632,6 +703,7 @@
         resolveArgs:      resolveArgs,
         fireListeners:    fireListeners,
         directApplyMiner: directApplyMiner,
+        applyAttributes:  applyAttributes,
         injectMinerGoal:  injectMinerGoal,
         checkMobGriefing: checkMobGriefing,
         dumpGoals:        dumpGoals,
