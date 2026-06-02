@@ -87,7 +87,7 @@
             .executes(function (ctx) { return safeExec(ctx.source, function () {
                 var M = mgr(); if (!M) return 0;
                 var n = M.stopAll();
-                ctx.source.sendSuccess(Text.of("[Raid] stopped " + n + " raid(s)."), false);
+                ctx.source.sendSystemMessage(Text.of("[Raid] stopped " + n + " raid(s)."));
                 return 1;
             }); });
 
@@ -95,7 +95,7 @@
             .executes(function (ctx) { return safeExec(ctx.source, function () {
                 var R = reg();
                 var ids = R ? R.list() : [];
-                ctx.source.sendSuccess(Text.of("[Raid] registered (" + ids.length + "): " + (ids.join(", ") || "<none>")), false);
+                ctx.source.sendSystemMessage(Text.of("[Raid] registered (" + ids.length + "): " + (ids.join(", ") || "<none>")));
                 return 1;
             }); });
 
@@ -103,11 +103,11 @@
             .executes(function (ctx) { return safeExec(ctx.source, function () {
                 var M = mgr(); if (!M) return 0;
                 var act = M.getActive();
-                if (act.length === 0) { ctx.source.sendSuccess(Text.of("[Raid] no active raids."), false); return 1; }
-                ctx.source.sendSuccess(Text.of("[Raid] active (" + act.length + "):"), false);
+                if (act.length === 0) { ctx.source.sendSystemMessage(Text.of("[Raid] no active raids.")); return 1; }
+                ctx.source.sendSystemMessage(Text.of("[Raid] active (" + act.length + "):"));
                 for (var i = 0; i < act.length; i++) {
                     var a = act[i];
-                    ctx.source.sendSuccess(Text.of("  " + a.id + " — round " + a.round + " — " + a.phase + " — alive " + a.alive), false);
+                    ctx.source.sendSystemMessage(Text.of("  " + a.id + " — round " + a.round + " — " + a.phase + " — alive " + a.alive));
                 }
                 return 1;
             }); });
