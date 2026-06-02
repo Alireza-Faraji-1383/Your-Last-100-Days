@@ -192,17 +192,24 @@
         var EAI = getEAI();
         if (!EAI || !player) return [];
         var out = [];
-        var pp = player.position();
+        var pp = null;
+        try { pp = player.position(); } catch (ePp) { warn(`spawnRound: player.position() failed: ${ePp}`); return []; }
         var minR = def.spawn.minRadius, maxR = def.spawn.maxRadius;
         var span = Math.max(1, maxR - minR + 1);
+
+        // total mob count -> evenly spaced ring angle by global index (no Math.random).
+        var total = 0;
+        for (var ti = 0; ti < round.mobs.length; ti++) total += round.mobs[ti].count;
+        if (total < 1) total = 1;
+        var idx = 0;
 
         for (var gi = 0; gi < round.mobs.length; gi++) {
             var mob = round.mobs[gi];
             var names = mobPresetNames(def, mob);
             for (var c = 0; c < mob.count; c++) {
-                var seq = gi * 31 + c;                       // deterministic spread, no Math.random
-                var ang = (seq / Math.max(1, round.mobs.length * mob.count + 1)) * Math.PI * 2;
-                var rad = minR + (seq * 13 % span);
+                var ang = (idx / total) * Math.PI * 2;
+                var rad = minR + ((idx * 13) % span);
+                idx++;
                 var x = pp.x + Math.cos(ang) * rad;
                 var z = pp.z + Math.sin(ang) * rad;
                 var y = groundY(level, x, pp.y, z);
@@ -243,7 +250,7 @@
         this.carryover = [];          // live survivors carried from timed-out rounds
     }
     RaidInstance.prototype.ctx = function (player) {
-        return { player: player || resolvePlayer(this), level: this.level, raid: this.def, instance: this };
+        return { player: player || resolvePlayer(this) || this._ctxPlayer, level: this.level, raid: this.def, instance: this };
     };
     RaidInstance.prototype.aggro = function (player) {
         if (!player) return;
@@ -256,9 +263,8 @@
     RaidInstance.prototype.aliveCount = function () {
         return pruneDead(this.roundMobs).length + pruneDead(this.carryover).length;
     };
-    RaidInstance.prototype.startRound = function (idx) {
+    RaidInstance.prototype.startRound = function (idx, player) {
         var round = this.def.rounds[idx];
-        var player = resolvePlayer(this) || this._ctxPlayer;
         info(`raid ${this.id}: start round ${idx} "${round.name}"`);
         this.roundMobs = spawnRound(this.level, player, this.def, round, this.id);
         this.roundTimeLeft = (round.timeLimit != null) ? round.timeLimit : null;
@@ -266,12 +272,15 @@
         this.phase = "FIGHTING";
     };
     RaidInstance.prototype.tick = function () {
-        var player = resolvePlayer(this) || this._ctxPlayer;
+        var player = resolvePlayer(this);   // live player wrapper, or null if offline
         var round  = this.def.rounds[this.roundIdx];
 
         switch (this.phase) {
             case "SPAWNING":
-                this.startRound(this.roundIdx);
+                // Need a live player to ring-spawn around. Offline -> wait (raid
+                // keeps running, just doesn't spawn the next round until they return).
+                if (!player) return;
+                this.startRound(this.roundIdx, player);
                 break;
 
             case "FIGHTING":
@@ -304,6 +313,7 @@
                 break;
 
             case "BREATHER":
+                this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
                 this.breatherLeft -= TICK_THROTTLE;
                 if (this.breatherLeft <= 0) {
@@ -344,14 +354,14 @@
     function resolvePlayer(inst) {
         try {
             var server = Manager._server;
-            if (!server || !server.players) return inst._ctxPlayer || null;
+            if (!server || !server.players) return null;
             var it = server.players.iterator();
             while (it.hasNext()) {
                 var p = it.next();
                 if (String(p.uuid) === inst.playerUuid) return p;
             }
         } catch (e) {}
-        return null;
+        return null;   // offline / not found — callers handle null (SPAWNING waits, aggro no-ops)
     }
 
     // ---------- Manager -----------------------------------------------------
