@@ -1,0 +1,23 @@
+{
+	id: "NN00000000000000"
+	group: ""
+	order_index: 0
+	filename: "my_chapter"
+	title: "My Chapter"
+	icon: "minecraft:book"
+	default_quest_shape: "circle"
+	default_hide_dependency_lines: false
+	images: [ ]
+	quest_links: [ ]
+	quests: [
+		{
+			id: "NN00000000000001"
+			x: 0.0d
+			y: 0.0d
+			title: "First Quest"
+			description: ["What to do."]
+			tasks: [{ id: "NN00000000000002", type: "item", item: "minecraft:stick" }]
+			rewards: [{ id: "NN00000000000003", type: "xp", xp: 10 }]
+		}
+	]
+}
