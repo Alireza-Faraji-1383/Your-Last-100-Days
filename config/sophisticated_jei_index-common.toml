@@ -1,0 +1,5 @@
+[general]
+	#Maximum number of equipped backpacks with JEI Index Upgrade to scan (in Sophisticated Backpacks selection order). 0 means unlimited.
+	# Default: 0
+	# Range: 0 ~ 64
+	maxEnabledBackpacksScanned = 0

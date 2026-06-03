@@ -833,7 +833,7 @@
 		skull_drop_percentage = 25.0
 
 [oil]
-	#Only applies when enable_weapon_oil is true. Set to true to disable oil recipes while leaving the rest of the enabled Weapon Oil mechanic available.|仅在 enable_weapon_oil 为 true 时生效。设为 true 会禁用油配方，但保留已启用的其他武器油机制。
+	#Set to true to disable crafting recipes for oils|设为 true 禁用所有油配方
 	disable_oil_recipes = false
 	#Max uses for standard oils before the effect wears off|普通油的最大使用次数
 	# Default: 20
@@ -859,8 +859,6 @@
 	potion_oil_blacklist = []
 	#Whitelist for potions to allow them to be made into oils. By default, only potions with negative effects can be made into oils. Adding already enabled potions to this whitelist will do nothing|药水白名单，允许被制作成油。默认仅负面药水可制成油；已被允许的药水加入白名单不会产生效果
 	potion_oil_whitelist = []
-	#Master switch for Weapon Oil. Set to true to enable oil recipes, creative tab oil variants, oil application, combat effects, and client oil displays. Disabled by default for modpack compatibility.|武器油总开关。设为 true 后才会启用油配方、创造标签页油变体、涂油、攻击效果和客户端油显示。默认关闭以便整合包按需启用。
-	enable_weapon_oil = false
 
 [jei]
 	#Set to true to forcibly show disabled items in JEI, even if they cannot be crafted. Should be useful for modpack makers defining their own recipes.|设为 true 在 JEI 中强制显示已禁用物品，即使无法合成。对整合包作者自定义配方有用。
