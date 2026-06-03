@@ -126,6 +126,7 @@
             barColor: "RED",        // BossBarColor enum name
             barOverlay: "NOTCHED_10",// BossBarOverlay enum name
             barHold: DEFAULT_BAR_HOLD,// ticks victory/defeat bar lingers
+            aggroRadius: 20,         // blocks: mobs proactively attack players/villagers/golems within this
             sounds: {                // played to the target player (id null/"" = silent)
                 roundStart: { id: "minecraft:event.raid.horn",            vol: 1.0, pitch: 1.0 },
                 win:        { id: "minecraft:ui.toast.challenge_complete", vol: 1.0, pitch: 1.0 },
@@ -163,9 +164,25 @@
         if (this._round) this._round.timeLimit = Number(ticks); else warn("timeLimit() before round()");
         return this;
     };
-    RaidBuilder.prototype.mob = function (type) {
+    // Accepts a type id string OR a full spec object:
+    //   .mob({ type, count, presets, extraArgs, noDefaults, equip, nbt })
+    // Modded mobs work as long as type carries a namespace ("modid:mob").
+    RaidBuilder.prototype.mob = function (typeOrSpec) {
         if (!this._round) { warn("mob() before round(); opening a default round"); this.round(null); }
-        this._mob = { type: String(type), count: 1, presets: [], extraArgs: [], noDefaults: false };
+        if (typeOrSpec && typeof typeOrSpec === "object") {
+            var s = typeOrSpec;
+            this._mob = {
+                type:       String(s.type || s.id),
+                count:      Math.max(1, parseInt(s.count, 10) || 1),
+                presets:    Array.isArray(s.presets) ? s.presets.slice() : [],
+                extraArgs:  Array.isArray(s.extraArgs) ? s.extraArgs.slice() : [],
+                noDefaults: !!s.noDefaults,
+                equip:      (s.equip && typeof s.equip === "object") ? s.equip : null,
+                nbt:        (s.nbt && typeof s.nbt === "object") ? s.nbt : null
+            };
+        } else {
+            this._mob = { type: String(typeOrSpec), count: 1, presets: [], extraArgs: [], noDefaults: false, equip: null, nbt: null };
+        }
         this._round.mobs.push(this._mob);
         return this;
     };
@@ -187,11 +204,34 @@
         if (this._mob) this._mob.noDefaults = true; else warn("noDefaults() before mob()");
         return this;
     };
+    // Equipment — item id strings ("minecraft:bow"), "count id", or {id,count}.
+    // Slots: mainhand/offhand/head(helmet)/chest(chestplate)/legs(leggings)/feet(boots).
+    RaidBuilder.prototype.equip = function (obj) {
+        if (!this._mob) { warn("equip() before mob()"); return this; }
+        if (!this._mob.equip) this._mob.equip = {};
+        for (var k in obj) this._mob.equip[k] = obj[k];
+        return this;
+    };
+    RaidBuilder.prototype.mainHand   = function (it) { return this.equip({ mainhand: it }); };
+    RaidBuilder.prototype.offHand    = function (it) { return this.equip({ offhand: it }); };
+    RaidBuilder.prototype.helmet     = function (it) { return this.equip({ head: it }); };
+    RaidBuilder.prototype.chestplate = function (it) { return this.equip({ chest: it }); };
+    RaidBuilder.prototype.leggings   = function (it) { return this.equip({ legs: it }); };
+    RaidBuilder.prototype.boots      = function (it) { return this.equip({ feet: it }); };
+    RaidBuilder.prototype.armor      = function (h, c, l, f) { return this.equip({ head: h, chest: c, legs: l, feet: f }); };
+    // Raw entity NBT merged pre-spawn — variants/"skins", baby flag, mod data, etc.
+    RaidBuilder.prototype.nbt = function (obj) {
+        if (!this._mob) { warn("nbt() before mob()"); return this; }
+        if (!this._mob.nbt) this._mob.nbt = {};
+        for (var k in obj) this._mob.nbt[k] = obj[k];
+        return this;
+    };
     RaidBuilder.prototype.title      = function (s) { this.def.title = String(s); return this; };
     RaidBuilder.prototype.bossBar    = function (on) { this.def.bossBar = (on !== false); return this; };
     RaidBuilder.prototype.barColor   = function (c) { this.def.barColor = String(c); return this; };
     RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
     RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = Number(t); return this; };
+    RaidBuilder.prototype.aggroRadius = function (n) { this.def.aggroRadius = Number(n); return this; };
     function _snd(id, vol, pitch) { return { id: (id == null ? "" : String(id)), vol: (vol == null ? 1.0 : Number(vol)), pitch: (pitch == null ? 1.0 : Number(pitch)) }; }
     RaidBuilder.prototype.roundStartSound = function (id, vol, pitch) { this.def.sounds.roundStart = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.winSound        = function (id, vol, pitch) { this.def.sounds.win        = _snd(id, vol, pitch); return this; };
@@ -270,6 +310,170 @@
         } catch (e) { /* mob may be dead/unloaded */ }
     }
 
+    // ---------- Targeting engine (mod-agnostic) -----------------------------
+    // Drives every raid mob's target each throttle tick so behavior is identical
+    // for vanilla and modded mobs (no reliance on a mob having HurtByTargetGoal
+    // or a villager-targeting goal). Priority per mob:
+    //   1. retaliate vs whoever last hurt it (any player/mob, not a raid ally)
+    //   2. keep its current non-player victim until that victim dies
+    //   3. nearest player/villager/golem within aggroRadius
+    //   4. fall back to the main player (the long pull inward)
+    //   5. main player dead/offline -> only (3); idle until they respawn
+
+    var _rc = {};
+    function RC(fqn) {
+        if (_rc[fqn] !== undefined) return _rc[fqn];
+        try { _rc[fqn] = Java.loadClass(fqn); } catch (e) { _rc[fqn] = null; }
+        return _rc[fqn];
+    }
+    var _aggroCls = null;
+    function aggroClasses() {
+        if (_aggroCls) return _aggroCls;
+        _aggroCls = {
+            Living:   RC("net.minecraft.world.entity.LivingEntity"),
+            Player:   RC("net.minecraft.world.entity.player.Player"),
+            Villager: RC("net.minecraft.world.entity.npc.AbstractVillager"),
+            Golem:    RC("net.minecraft.world.entity.animal.IronGolem"),
+            AABB:     RC("net.minecraft.world.phys.AABB"),
+            Slot:     RC("net.minecraft.world.entity.EquipmentSlot")
+        };
+        return _aggroCls;
+    }
+
+    function rawMobOf(entity) {
+        var EAI = getEAI();
+        try { return EAI ? EAI.rawMob(entity) : entity; } catch (e) { return entity; }
+    }
+    function unwrapPlayer(p) {
+        if (!p) return null;
+        try { if (p.minecraftEntity) return p.minecraftEntity; } catch (e) {}
+        try { if (typeof p.unwrap === "function") return p.unwrap(); } catch (e2) {}
+        return p;
+    }
+    function isLiveEnt(e) { try { return e && (!e.isAlive || e.isAlive()); } catch (x) { return false; } }
+    function isAlly(e)    { try { var t = e.getTags(); return t && t.contains("raid_mob"); } catch (x) { return false; } }
+    function sameEnt(a, b) {
+        if (!a || !b) return false;
+        try { if (typeof a.is === "function") return a.is(b); } catch (x) {}
+        try { return String(a.getUUID()) === String(b.getUUID()); } catch (y) {}
+        return a === b;
+    }
+    function canHit(raw, t) {
+        try { if (typeof raw.canAttack === "function") return raw.canAttack(t); } catch (x) {}
+        return true;
+    }
+    function validVictim(raw, t) {
+        if (!isLiveEnt(t) || sameEnt(raw, t) || isAlly(t)) return false;
+        var C = aggroClasses();
+        try {
+            if (C.Player && C.Player.isInstance(t)) {
+                if (typeof t.isSpectator === "function" && t.isSpectator()) return false;
+                if (typeof t.isCreative === "function" && t.isCreative()) return false;
+            }
+        } catch (x) {}
+        return canHit(raw, t);
+    }
+    function isVictimClass(e) {
+        var C = aggroClasses();
+        try { if (C.Player   && C.Player.isInstance(e))   return true; } catch (x) {}
+        try { if (C.Villager && C.Villager.isInstance(e)) return true; } catch (y) {}
+        try { if (C.Golem    && C.Golem.isInstance(e))    return true; } catch (z) {}
+        return false;
+    }
+    function nearestVictim(raw, radius) {
+        var C = aggroClasses();
+        if (!C.Living) return null;
+        var level = (typeof raw.level === "function") ? raw.level() : raw.level;
+        if (!level || typeof level.getEntitiesOfClass !== "function") return null;
+        var box;
+        try { box = raw.getBoundingBox().inflate(radius); } catch (e) { return null; }
+        var list;
+        try { list = level.getEntitiesOfClass(C.Living, box); } catch (e2) { return null; }
+        var best = null, bestD = Number.MAX_VALUE;
+        try {
+            var it = list.iterator();
+            while (it.hasNext()) {
+                var e = it.next();
+                if (!isVictimClass(e) || !validVictim(raw, e)) continue;
+                var d = raw.distanceToSqr(e);
+                if (d < bestD) { bestD = d; best = e; }
+            }
+        } catch (e3) {}
+        return best;
+    }
+    function decideTarget(raw, mainRaw, radius) {
+        var atk = null;
+        try { atk = (typeof raw.getLastHurtByMob === "function") ? raw.getLastHurtByMob() : null; } catch (x) {}
+        if (validVictim(raw, atk)) return atk;                       // 1 retaliate
+
+        var cur = null;
+        try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (y) {}
+        if (cur && validVictim(raw, cur) && !(mainRaw && sameEnt(cur, mainRaw))) return cur; // 2 keep victim
+
+        var v = nearestVictim(raw, radius);                          // 3 nearest in radius
+        if (v) return v;
+
+        if (mainRaw && validVictim(raw, mainRaw)) return mainRaw;    // 4 main player
+        return null;                                                 // 5 idle
+    }
+
+    // ---------- Equipment / NBT --------------------------------------------
+
+    var _slotMap = {
+        mainhand: "MAINHAND", main: "MAINHAND", offhand: "OFFHAND", off: "OFFHAND",
+        head: "HEAD", helmet: "HEAD", chest: "CHEST", chestplate: "CHEST",
+        legs: "LEGS", leggings: "LEGS", feet: "FEET", boots: "FEET"
+    };
+    function makeStack(spec) {
+        if (spec == null) return null;
+        try {
+            if (typeof spec === "string") return Item.of(spec);
+            if (typeof spec === "object") {
+                var st = Item.of(spec.id || spec.item || spec.type);
+                if (st && spec.count != null && typeof st.setCount === "function") st.setCount(parseInt(spec.count, 10) || 1);
+                return st;
+            }
+        } catch (e) { warn("makeStack(" + spec + "): " + e); }
+        return null;
+    }
+    // Walk the class hierarchy for a no-arg method (e.g. Skeleton.reassessWeaponGoal,
+    // needed so a bow equipped post-spawn actually enables the ranged attack goal).
+    function invokeNoArg(obj, name) {
+        try {
+            var cls = obj.getClass();
+            while (cls) {
+                var m = null;
+                try { m = cls.getDeclaredMethod(name); } catch (e) { m = null; }
+                if (m) { try { m.setAccessible(true); m.invoke(obj); return true; } catch (e2) { return false; } }
+                cls = cls.getSuperclass();
+            }
+        } catch (e3) {}
+        return false;
+    }
+    function equipMob(entity, equip) {
+        if (!equip) return;
+        var raw = rawMobOf(entity);
+        var ES = aggroClasses().Slot;
+        if (!raw || !ES || typeof raw.setItemSlot !== "function") return;
+        var any = false;
+        for (var k in equip) {
+            var slotName = _slotMap[String(k).toLowerCase()];
+            if (!slotName) continue;
+            var stack = makeStack(equip[k]);
+            if (stack == null) continue;
+            var slot = null;
+            try { slot = ES.valueOf(slotName); } catch (e) { continue; }
+            try { raw.setItemSlot(slot, stack); any = true; } catch (e2) { warn("setItemSlot " + k + ": " + e2); continue; }
+            try { if (typeof raw.setDropChance === "function") raw.setDropChance(slot, 0.0); } catch (e3) {}
+        }
+        if (any) invokeNoArg(raw, "reassessWeaponGoal");   // no-op on mobs without it
+    }
+    function applyEntityNbt(entity, nbt) {
+        if (!nbt) return;
+        try { if (typeof entity.mergeNbt === "function") entity.mergeNbt(nbt); }
+        catch (e) { warn("mergeNbt(entity): " + e); }
+    }
+
     // Spawn every mob of a round in a ring around the player. Returns entity refs.
     function spawnRound(level, player, def, round, instanceId) {
         var EAI = getEAI();
@@ -304,10 +508,12 @@
                 try { entity.addTag("raid_" + instanceId); } catch (e2) {}
                 try { entity.setPersistenceRequired(); } catch (e3) {}
                 try { entity.setCustomName(Text.of("[" + round.name + "]")); } catch (e4) {}
+                applyEntityNbt(entity, mob.nbt);   // variants/skins/baby/mod data — pre-spawn
                 try { entity.spawn(); }
                 catch (eSp) { err(`spawn failed ${mob.type}: ${eSp}`); continue; }
                 try { EAI.applyDeferred(level, entity, EAI.resolveArgs(names, mob.extraArgs)); }
                 catch (eD) { warn(`applyDeferred: ${eD}`); }
+                equipMob(entity, mob.equip);        // weapons/armor — post-spawn
                 forceTarget(entity, player);
                 out.push(entity);
             }
@@ -374,11 +580,24 @@
         return { player: player || resolvePlayer(this) || this._ctxPlayer, level: this.level, raid: this.def, instance: this };
     };
     RaidInstance.prototype.aggro = function (player) {
-        if (!player) return;
+        // mainRaw = the live, *alive* main player (null while dead/offline so mobs
+        // fall through to attacking nearby villagers/players until they respawn).
+        var mainRaw = null;
+        if (player) {
+            var pAlive = true;
+            try { pAlive = (typeof player.isAlive === "function") ? player.isAlive() : player.isAlive; } catch (e) {}
+            if (pAlive) mainRaw = unwrapPlayer(player);
+        }
+        var radius = (this.def.aggroRadius != null) ? this.def.aggroRadius : 20;
         var lists = [this.roundMobs, this.carryover];
         for (var li = 0; li < lists.length; li++) {
             var arr = lists[li];
-            for (var i = 0; i < arr.length; i++) forceTarget(arr[i], player);
+            for (var i = 0; i < arr.length; i++) {
+                var raw = rawMobOf(arr[i]);
+                if (!raw || typeof raw.setTarget !== "function") continue;
+                var t = decideTarget(raw, mainRaw, radius);
+                if (t) { try { raw.setTarget(t); } catch (eS) {} }
+            }
         }
     };
     RaidInstance.prototype.aliveCount = function () {
@@ -400,12 +619,9 @@
         var player = resolvePlayer(this);   // live player wrapper, or null if offline
         var round  = this.def.rounds[this.roundIdx];
 
-        // Lose condition: the target player dies mid-raid (online but not alive).
-        if (player && this.phase !== "ENDING" && this.phase !== "DONE") {
-            var alive = true;
-            try { alive = (typeof player.isAlive === "function") ? player.isAlive() : player.isAlive; } catch (eAlive) {}
-            if (!alive) { this.lose(player); return; }
-        }
+        // No player-death loss: if the main player dies the mobs switch to nearby
+        // villagers/players (see aggro) and re-aggro the player on respawn. The
+        // only loss is the final round's timer expiring (see FIGHTING below).
 
         switch (this.phase) {
 
@@ -437,14 +653,17 @@
                 } else if (this.roundTimeLeft != null) {
                     this.roundTimeLeft -= TICK_THROTTLE;
                     if (this.roundTimeLeft <= 0) {
-                        for (var i = 0; i < this.roundMobs.length; i++) this.carryover.push(this.roundMobs[i]);
-                        this.roundMobs = [];
-                        fireCb(this.def, "onRoundEnd", [this.ctx(player), round, this.roundIdx]);
                         if (this.roundIdx + 1 < this.def.rounds.length) {
+                            // non-final round timed out: survivors carry into next round
+                            for (var i = 0; i < this.roundMobs.length; i++) this.carryover.push(this.roundMobs[i]);
+                            this.roundMobs = [];
+                            fireCb(this.def, "onRoundEnd", [this.ctx(player), round, this.roundIdx]);
                             this.roundIdx++;
                             this.phase = "SPAWNING";   // no breather on a timer force-advance
                         } else {
-                            this.phase = "WIN_WAIT";
+                            // FINAL round not cleared in time -> defeat, no prize.
+                            fireCb(this.def, "onRoundEnd", [this.ctx(player), round, this.roundIdx]);
+                            this.lose(player);
                         }
                     }
                 }
@@ -539,6 +758,49 @@
         inst.closeBar();
     }
 
+    // True if a raw entity carries a raid_<id> tag of a still-running instance.
+    function ownedByActive(entity) {
+        try {
+            var tags = entity.getTags();
+            if (!tags) return false;
+            for (var k in _active) {
+                if (_active[k].phase === "DONE") continue;
+                if (tags.contains("raid_" + _active[k].id)) return true;
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    // Bug #1: spawned mobs are persistenceRequired + tagged. A crash/restart
+    // mid-raid loses _active, orphaning those mobs forever. Sweep every loaded
+    // level on server load and discard raid_mob-tagged entities not owned by a
+    // live instance (on a fresh boot that's all of them).
+    function sweepOrphans(server) {
+        if (!server || typeof server.getAllLevels !== "function") return 0;
+        var killed = 0;
+        try {
+            var lit = server.getAllLevels().iterator();
+            while (lit.hasNext()) {
+                var lvl = lit.next();
+                var getter = null;
+                try { getter = lvl.getEntities(); } catch (eg) { continue; }
+                if (!getter || typeof getter.getAll !== "function") continue;
+                var toKill = [];
+                var eit = getter.getAll().iterator();
+                while (eit.hasNext()) {
+                    var en = eit.next();
+                    try {
+                        var tags = en.getTags();
+                        if (tags && tags.contains("raid_mob") && !ownedByActive(en)) toKill.push(en);
+                    } catch (x) {}
+                }
+                for (var i = 0; i < toKill.length; i++) { try { toKill[i].discard(); killed++; } catch (y) {} }
+            }
+        } catch (e) { warn("sweepOrphans: " + e); }
+        if (killed) info("sweepOrphans removed " + killed + " stray raid mob(s)");
+        return killed;
+    }
+
     const Manager = {
         _server: null,
 
@@ -577,6 +839,8 @@
             return n;
         },
 
+        sweepOrphans: function () { return sweepOrphans(Manager._server); },
+
         getActive: function () {
             var out = [];
             for (var k in _active) {
@@ -607,6 +871,12 @@
 
     ServerEvents.tick(function (event) {
         Manager._drive(event.server);
+    });
+
+    // Clean up mobs orphaned by a crash/restart (bug #1).
+    ServerEvents.loaded(function (event) {
+        Manager._server = event.server;
+        sweepOrphans(event.server);
     });
 
     // ---------- Export ------------------------------------------------------
