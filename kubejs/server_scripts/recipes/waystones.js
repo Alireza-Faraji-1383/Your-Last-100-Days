@@ -4,7 +4,7 @@ ServerEvents.recipes(event => {
     event.shaped('waystones:warp_stone', [
         ' N ',
         'EDE',
-        ' N '
+        ' E '
     ], {
         E: 'minecraft:ender_eye',
         D: 'minecraft:diamond_block',
