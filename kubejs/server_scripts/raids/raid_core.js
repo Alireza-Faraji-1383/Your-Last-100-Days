@@ -42,6 +42,55 @@
         return false;
     }
 
+    // ---------- Boss bar (vanilla ServerBossEvent) --------------------------
+
+    var _barCls = null;
+    function barClasses() {
+        if (_barCls) return _barCls;
+        try {
+            _barCls = {
+                SBE:     Java.loadClass("net.minecraft.server.level.ServerBossEvent"),
+                Color:   Java.loadClass("net.minecraft.world.BossEvent$BossBarColor"),
+                Overlay: Java.loadClass("net.minecraft.world.BossEvent$BossBarOverlay")
+            };
+        } catch (e) { err("boss bar classes unavailable: " + e); _barCls = { SBE: null }; }
+        return _barCls;
+    }
+    function enumVal(cls, name, fallback) {
+        try { return cls.valueOf(name); } catch (e) {}
+        try { return cls.valueOf(fallback); } catch (e2) {}
+        return null;
+    }
+    function makeBar(title, colorName, overlayName) {
+        var C = barClasses();
+        if (!C.SBE) return null;
+        try {
+            var bar = new C.SBE(Text.of(title || "Raid"),
+                                enumVal(C.Color, colorName || "RED", "RED"),
+                                enumVal(C.Overlay, overlayName || "NOTCHED_10", "PROGRESS"));
+            bar.setProgress(1.0);
+            return bar;
+        } catch (e) { warn("makeBar: " + e); return null; }
+    }
+    function entHealth(e) {
+        try { if (e && e.isAlive && !e.isAlive()) return 0; } catch (x) {}
+        try { if (typeof e.getHealth === "function") return e.getHealth(); } catch (x) {}
+        try { return e.health; } catch (x) {}
+        return 0;
+    }
+    function entMaxHealth(e) {
+        try { if (typeof e.getMaxHealth === "function") return e.getMaxHealth(); } catch (x) {}
+        try { return e.maxHealth; } catch (x) {}
+        return 0;
+    }
+    function sumHealth(arr) { var s = 0; for (var i = 0; i < arr.length; i++) s += entHealth(arr[i]); return s; }
+    function sumMax(arr)    { var s = 0; for (var i = 0; i < arr.length; i++) s += entMaxHealth(arr[i]); return s; }
+    function prettyId(id) {
+        var parts = String(id).split("_"), out = [];
+        for (var i = 0; i < parts.length; i++) { var w = parts[i]; if (w) out.push(w.charAt(0).toUpperCase() + w.slice(1)); }
+        return out.join(" ");
+    }
+
     // ---------- Registry ----------------------------------------------------
 
     const RAIDS = {};
@@ -66,7 +115,11 @@
             spawn: { minRadius: DEFAULT_MIN_R, maxRadius: DEFAULT_MAX_R },
             defaultPresets: [],
             rounds: [],
-            callbacks: {}
+            callbacks: {},
+            title: null,            // boss bar label (null -> prettified id)
+            bossBar: true,          // show a vanilla-style raid boss bar
+            barColor: "RED",        // BossBarColor enum name
+            barOverlay: "NOTCHED_10"// BossBarOverlay enum name
         };
         this._round = null;   // current round being configured
         this._mob   = null;   // current mob group being configured
@@ -123,6 +176,10 @@
         if (this._mob) this._mob.noDefaults = true; else warn("noDefaults() before mob()");
         return this;
     };
+    RaidBuilder.prototype.title      = function (s) { this.def.title = String(s); return this; };
+    RaidBuilder.prototype.bossBar    = function (on) { this.def.bossBar = (on !== false); return this; };
+    RaidBuilder.prototype.barColor   = function (c) { this.def.barColor = String(c); return this; };
+    RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
     RaidBuilder.prototype.onStart      = function (fn) { this.def.callbacks.onStart = fn; return this; };
     RaidBuilder.prototype.onRoundStart = function (fn) { this.def.callbacks.onRoundStart = fn; return this; };
     RaidBuilder.prototype.onRoundEnd   = function (fn) { this.def.callbacks.onRoundEnd = fn; return this; };
@@ -248,7 +305,29 @@
         this.roundTimeLeft = null;
         this.roundMobs = [];          // live mobs of the current round
         this.carryover = [];          // live survivors carried from timed-out rounds
+        this.bar       = null;        // ServerBossEvent (or null if disabled/unavailable)
+        this.barBase   = def.title || prettyId(def.id);
+        this.roundTotalHealth = 1;    // sum of max-health for the current wave (bar denominator)
     }
+    RaidInstance.prototype.barRoundName = function (round, idx) {
+        if (!this.bar) return;
+        var n = this.def.rounds.length;
+        try { this.bar.setName(Text.of("§c" + this.barBase + " §7— " + round.name + " (" + (idx + 1) + "/" + n + ")")); } catch (e) {}
+    };
+    RaidInstance.prototype.updateBar = function (player) {
+        if (!this.bar) return;
+        if (player) { try { if (!this.bar.getPlayers().contains(player)) this.bar.addPlayer(player); } catch (e) {} }
+        var alive = sumHealth(this.roundMobs) + sumHealth(this.carryover);
+        var total = this.roundTotalHealth > 0 ? this.roundTotalHealth : 1;
+        var p = alive / total; if (p < 0) p = 0; if (p > 1) p = 1;
+        try { this.bar.setProgress(p); } catch (e) {}
+    };
+    RaidInstance.prototype.closeBar = function () {
+        if (!this.bar) return;
+        try { this.bar.setVisible(false); } catch (e) {}
+        try { this.bar.removeAllPlayers(); } catch (e) {}
+        this.bar = null;
+    };
     RaidInstance.prototype.ctx = function (player) {
         return { player: player || resolvePlayer(this) || this._ctxPlayer, level: this.level, raid: this.def, instance: this };
     };
@@ -268,6 +347,9 @@
         info(`raid ${this.id}: start round ${idx} "${round.name}"`);
         this.roundMobs = spawnRound(this.level, player, this.def, round, this.id);
         this.roundTimeLeft = (round.timeLimit != null) ? round.timeLimit : null;
+        this.roundTotalHealth = Math.max(1, sumMax(this.roundMobs) + sumMax(this.carryover));
+        this.barRoundName(round, idx);
+        this.updateBar(player);
         fireCb(this.def, "onRoundStart", [this.ctx(player), round, idx]);
         this.phase = "FIGHTING";
     };
@@ -287,6 +369,7 @@
                 this.roundMobs = pruneDead(this.roundMobs);
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
+                this.updateBar(player);
 
                 if (this.roundMobs.length === 0) {
                     fireCb(this.def, "onRoundEnd", [this.ctx(player), round, this.roundIdx]);
@@ -315,6 +398,8 @@
             case "BREATHER":
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
+                if (this.bar) { try { this.bar.setName(Text.of("§c" + this.barBase + " §7— next wave incoming…")); } catch (e) {} }
+                this.updateBar(player);
                 this.breatherLeft -= TICK_THROTTLE;
                 if (this.breatherLeft <= 0) {
                     this.roundIdx++;
@@ -326,8 +411,10 @@
                 this.roundMobs = pruneDead(this.roundMobs);
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
+                this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
                     fireCb(this.def, "onWin", [this.ctx(player)]);
+                    this.closeBar();
                     this.phase = "DONE";
                 }
                 break;
@@ -388,6 +475,7 @@
             }
         }
         inst.roundMobs = []; inst.carryover = [];
+        inst.closeBar();
     }
 
     const Manager = {
@@ -401,6 +489,10 @@
             if (playerInRaid(puid)) { warn(`start: ${player.username} already in a raid`); return null; }
             var id = newInstanceId(defId);
             var inst = new RaidInstance(id, def, level || playerLevel(player), player);
+            if (def.bossBar !== false) {
+                inst.bar = makeBar(inst.barBase, def.barColor, def.barOverlay);
+                if (inst.bar) { try { inst.bar.addPlayer(player); } catch (eB) {} }
+            }
             _active[id] = inst;
             fireCb(def, "onStart", [inst.ctx(player)]);
             info(`started "${defId}" as ${id} for ${player.username}`);
