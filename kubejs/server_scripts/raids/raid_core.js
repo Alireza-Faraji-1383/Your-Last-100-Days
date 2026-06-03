@@ -127,6 +127,7 @@
             barOverlay: "NOTCHED_10",// BossBarOverlay enum name
             barHold: DEFAULT_BAR_HOLD,// ticks victory/defeat bar lingers
             aggroRadius: 20,         // blocks: mobs proactively attack players/villagers/golems within this
+            followRange: null,       // blocks: player detection + chase range (sets attributes/follow_range on every mob)
             sounds: {                // played to the target player (id null/"" = silent)
                 roundStart: { id: "minecraft:event.raid.horn",            vol: 1.0, pitch: 1.0 },
                 win:        { id: "minecraft:ui.toast.challenge_complete", vol: 1.0, pitch: 1.0 },
@@ -232,6 +233,7 @@
     RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
     RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = Number(t); return this; };
     RaidBuilder.prototype.aggroRadius = function (n) { this.def.aggroRadius = Number(n); return this; };
+    RaidBuilder.prototype.followRange = function (n) { this.def.followRange = Number(n); return this; };
     function _snd(id, vol, pitch) { return { id: (id == null ? "" : String(id)), vol: (vol == null ? 1.0 : Number(vol)), pitch: (pitch == null ? 1.0 : Number(pitch)) }; }
     RaidBuilder.prototype.roundStartSound = function (id, vol, pitch) { this.def.sounds.roundStart = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.winSound        = function (id, vol, pitch) { this.def.sounds.win        = _snd(id, vol, pitch); return this; };
@@ -493,6 +495,11 @@
         for (var gi = 0; gi < round.mobs.length; gi++) {
             var mob = round.mobs[gi];
             var names = mobPresetNames(def, mob);
+            // Per-raid followRange overrides any preset follow_range (last write wins
+            // in applyAttributes) -> controls how far mobs detect + chase the player.
+            var xtra = (def.followRange != null)
+                ? mob.extraArgs.concat(["attributes/follow_range=" + def.followRange])
+                : mob.extraArgs;
             for (var c = 0; c < mob.count; c++) {
                 var ang = (idx / total) * Math.PI * 2;
                 var rad = minR + ((idx * 13) % span);
@@ -501,7 +508,7 @@
                 var z = pp.z + Math.sin(ang) * rad;
                 var y = groundY(level, x, pp.y, z);
 
-                var entity = EAI.fromPresets(level, mob.type, names, mob.extraArgs);
+                var entity = EAI.fromPresets(level, mob.type, names, xtra);
                 if (!entity) { err(`spawnRound: fromPresets returned null for ${mob.type}`); continue; }
                 try { entity.setPos(x + 0.5, y, z + 0.5); } catch (eP) { warn(`setPos: ${eP}`); }
                 try { entity.addTag("raid_mob"); } catch (e1) {}
@@ -511,7 +518,7 @@
                 applyEntityNbt(entity, mob.nbt);   // variants/skins/baby/mod data — pre-spawn
                 try { entity.spawn(); }
                 catch (eSp) { err(`spawn failed ${mob.type}: ${eSp}`); continue; }
-                try { EAI.applyDeferred(level, entity, EAI.resolveArgs(names, mob.extraArgs)); }
+                try { EAI.applyDeferred(level, entity, EAI.resolveArgs(names, xtra)); }
                 catch (eD) { warn(`applyDeferred: ${eD}`); }
                 equipMob(entity, mob.equip);        // weapons/armor — post-spawn
                 forceTarget(entity, player);

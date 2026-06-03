@@ -18,6 +18,7 @@
     Raid("pillager_siege")
         .spawn(18, 36)                 // ring 18–36 blocks around the player
         .aggroRadius(20)               // proactively attack villagers/players/golems within 20 blocks
+        .followRange(200)              // detect + chase the player from up to 200 blocks
         .defaultPresets("farSight")    // every mob sees + hunts the player far away
         .round("Scouts")
             .breather(80)              // 4s pause after this round is cleared
