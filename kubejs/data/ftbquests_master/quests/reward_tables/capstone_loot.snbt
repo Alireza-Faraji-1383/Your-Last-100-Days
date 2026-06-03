@@ -1,0 +1,12 @@
+{
+	id: "FA00000000000001"
+	loot_size: 1
+	order_index: 0
+	title: "Capstone Loot"
+	use_title: true
+	rewards: [
+		{ item: "minecraft:diamond", count: 4 }
+		{ item: "minecraft:netherite_scrap", count: 1 }
+		{ item: "cataclysm:witherite_ingot", count: 1 }
+	]
+}

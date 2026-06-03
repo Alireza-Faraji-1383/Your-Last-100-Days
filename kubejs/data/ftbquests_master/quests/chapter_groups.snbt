@@ -1,0 +1,7 @@
+{
+	chapter_groups: [
+		{ id: "F100000000000001", title: "Survival" }
+		{ id: "F100000000000002", title: "Combat & Bosses" }
+		{ id: "F100000000000003", title: "World & Magic" }
+	]
+}
