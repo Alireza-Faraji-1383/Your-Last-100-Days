@@ -1,0 +1,51 @@
+{
+	id: "0600000000000000"
+	group: "F100000000000001"
+	order_index: 1
+	filename: "minecolonies"
+	title: "Found a Colony"
+	icon: "minecraft:bell"
+	default_quest_shape: "circle"
+	default_hide_dependency_lines: false
+	images: [ ]
+	quest_links: [ ]
+	quests: [
+		{
+			id: "0600000000000001"
+			x: 0.0d
+			y: 0.0d
+			shape: "gear"
+			title: "Day 25: Settle Down"
+			tasks: [{ id: "0600000000000002", type: "gamestage", stage: "day_25" }]
+			rewards: [{ id: "0600000000000003", type: "xp", xp: 50 }]
+		}
+		{
+			id: "0600000000000004"
+			x: 1.5d
+			y: 0.0d
+			dependencies: ["0600000000000001"]
+			title: "Place the Supply Camp"
+			description: ["Deploy a Supply Camp or Supply Ship to begin your colony."]
+			tasks: [{ id: "0600000000000005", type: "checkmark", title: "Place a MineColonies supply camp/ship" }]
+			rewards: [{ id: "0600000000000006", type: "xp", xp: 30 }]
+		}
+		{
+			id: "0600000000000007"
+			x: 3.0d
+			y: 0.0d
+			dependencies: ["0600000000000004"]
+			title: "Raise the Town Hall"
+			tasks: [{ id: "0600000000000008", type: "checkmark", title: "Build and place a Town Hall" }]
+			rewards: [{ id: "0600000000000009", type: "item", item: "minecraft:gold_block", count: 2 }]
+		}
+		{
+			id: "060000000000000A"
+			x: 4.5d
+			y: 0.0d
+			dependencies: ["0600000000000007"]
+			title: "A Growing Settlement"
+			tasks: [{ id: "060000000000000B", type: "checkmark", title: "Reach colony level 5" }]
+			rewards: [{ id: "060000000000000C", type: "random", table_id: "FA00000000000001" }]
+		}
+	]
+}
