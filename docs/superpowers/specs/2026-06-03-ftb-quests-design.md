@@ -1,8 +1,17 @@
 # FTB Quests for the Modpack — Design
 
 **Date:** 2026-06-03
-**Status:** Approved design (pending user spec review)
+**Status:** Implemented (seed mechanism revised — see Update below)
 **Branch:** `feat/ftb-quests`
+
+> **Update 2026-06-04 — seed mechanism changed.** The planned KubeJS seed script
+> (`ServerEvents.loaded` → copy master → world) does NOT work: KubeJS's class filter
+> denies `java.nio`/`java.io`, so scripts cannot do file IO (crashes loading
+> `java.nio.file.Files`). Seeding moved to a standalone `tools/seed_world.py`
+> (run via a PrismLauncher pre-launch command: `python "$INST_MC_DIR/tools/seed_world.py" --all`).
+> Everything else stands: the day-spine KubeJS script works (FTB Teams API is allowed),
+> the master/chapters/validator/gating are unchanged. The "Seed script" section below
+> is historical.
 
 ## Goal
 
