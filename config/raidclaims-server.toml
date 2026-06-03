@@ -1,0 +1,45 @@
+[claims]
+	#Maximum chunks a single player may claim. 0 = unlimited.
+	# Default: 25
+	# Range: 0 ~ 1000000
+	maxClaimsPerPlayer = 25
+	#If true, operators (permission level 2+) ignore claim protection.
+	allowOpBypass = true
+
+[vulnerability]
+	#When a player dies, all of their claims become raidable for this many minutes. 0 disables the death trigger.
+	# Default: 10
+	# Range: 0 ~ 1440
+	deathVulnerableMinutes = 10
+	#How many minutes a target's claims stay raidable after a siege is declared.
+	# Default: 15
+	# Range: 1 ~ 1440
+	siegeMinutes = 15
+	#Minimum minutes between sieges declared on the same target player. 0 = no cooldown.
+	# Default: 30
+	# Range: 0 ~ 1440
+	siegeCooldownMinutes = 30
+
+[siege_item]
+	#Registry id of the item that starts a siege when right-clicked on a block inside an enemy claim.
+	siegeItem = "minecraft:bell"
+	#Consume one siege item when a siege is started with it (survival only).
+	siegeItemConsumed = true
+
+[map]
+	#Radius (in chunks) shown around the player by /raidclaim map. A radius of 12 shows a 25x25 grid.
+	# Default: 12
+	# Range: 3 ~ 32
+	mapRadiusChunks = 12
+
+[daily_war]
+	#If true, ALL claims are raidable during the daily in-game time window below.
+	dailyWarEnabled = false
+	#Start of the daily war window in in-game day ticks (0-24000). 13000 is roughly dusk.
+	# Default: 13000
+	# Range: 0 ~ 24000
+	dailyWarStartTick = 13000
+	#End of the daily war window in in-game day ticks (0-24000). 23000 is roughly before dawn. The window may wrap past midnight.
+	# Default: 23000
+	# Range: 0 ~ 24000
+	dailyWarEndTick = 23000

@@ -43,18 +43,24 @@
         return false;
     }
 
-    // ---------- Boss bar (vanilla ServerBossEvent) --------------------------
+    // ---------- Boss bar (server CustomBossEvents) --------------------------
+    // Bars live in the server's CustomBossEvents registry under the "raidfactory"
+    // namespace so they're enumerable + survive a /reload or crash. That lets
+    // stopall + a load-time sweep nuke EVERY raid bar, including ones orphaned
+    // when a reload wiped the script state (a plain ServerBossEvent reference is
+    // lost on reload and can never be removed -> bar sticks on the client).
 
+    const BAR_NS = "raidfactory";
     var _barCls = null;
     function barClasses() {
         if (_barCls) return _barCls;
         try {
             _barCls = {
-                SBE:     Java.loadClass("net.minecraft.server.level.ServerBossEvent"),
                 Color:   Java.loadClass("net.minecraft.world.BossEvent$BossBarColor"),
-                Overlay: Java.loadClass("net.minecraft.world.BossEvent$BossBarOverlay")
+                Overlay: Java.loadClass("net.minecraft.world.BossEvent$BossBarOverlay"),
+                RL:      Java.loadClass("net.minecraft.resources.ResourceLocation")
             };
-        } catch (e) { err("boss bar classes unavailable: " + e); _barCls = { SBE: null }; }
+        } catch (e) { err("boss bar classes unavailable: " + e); _barCls = {}; }
         return _barCls;
     }
     function enumVal(cls, name, fallback) {
@@ -62,14 +68,30 @@
         try { return cls.valueOf(fallback); } catch (e2) {}
         return null;
     }
-    function makeBar(title, colorName, overlayName) {
+    function barRL(path) {
         var C = barClasses();
-        if (!C.SBE) return null;
+        if (!C.RL) return null;
+        var p = String(path).toLowerCase().replace(/[^a-z0-9._\-\/]/g, "_");
+        try { return C.RL.fromNamespaceAndPath(BAR_NS, p); }
+        catch (e) { try { return C.RL.tryParse(BAR_NS + ":" + p); } catch (e2) { return null; } }
+    }
+    function customBars(server) {
+        if (!server || typeof server.getCustomBossEvents !== "function") return null;
+        try { return server.getCustomBossEvents(); } catch (e) { return null; }
+    }
+    function makeBar(server, idPath, title, colorName, overlayName) {
+        var C = barClasses();
+        var ce = customBars(server);
+        if (!ce) { warn("makeBar: no CustomBossEvents (server unavailable)"); return null; }
+        var rl = barRL(idPath);
+        if (!rl) return null;
         try {
-            var bar = new C.SBE(Text.of(title || "Raid"),
-                                enumVal(C.Color, colorName || "RED", "RED"),
-                                enumVal(C.Overlay, overlayName || "NOTCHED_10", "PROGRESS"));
-            bar.setProgress(1.0);
+            var existing = ce.get(rl);
+            if (existing) { try { existing.removeAllPlayers(); ce.remove(existing); } catch (eR) {} }
+            var bar = ce.create(rl, Text.of(title || "Raid"));
+            try { bar.setColor(enumVal(C.Color, colorName || "RED", "RED")); } catch (e1) {}
+            try { if (typeof bar.setOverlay === "function") bar.setOverlay(enumVal(C.Overlay, overlayName || "NOTCHED_10", "PROGRESS")); } catch (e2) {}
+            try { bar.setProgress(1.0); } catch (e3) {}
             return bar;
         } catch (e) { warn("makeBar: " + e); return null; }
     }
@@ -580,7 +602,8 @@
     RaidInstance.prototype.closeBar = function () {
         if (!this.bar) return;
         try { this.bar.setVisible(false); } catch (e) {}
-        try { this.bar.removeAllPlayers(); } catch (e) {}
+        try { this.bar.removeAllPlayers(); } catch (e2) {}   // sends client remove packet
+        try { var ce = customBars(Manager._server); if (ce) ce.remove(this.bar); } catch (e3) {} // delete from registry (no reload ghost)
         this.bar = null;
     };
     RaidInstance.prototype.ctx = function (player) {
@@ -808,6 +831,40 @@
         return killed;
     }
 
+    // A raidfactory bar is "owned" if its path matches a still-running instance id.
+    function barOwnedByActive(rl) {
+        try {
+            var path = String(rl.getPath());
+            for (var k in _active) {
+                if (_active[k].phase !== "DONE" && String(_active[k].id) === path) return true;
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    // Remove every raidfactory boss bar not owned by a live instance — clears
+    // bars orphaned by a reload/crash. Called on server load and from stopall.
+    function sweepBars(server) {
+        var ce = customBars(server);
+        if (!ce || typeof ce.getEvents !== "function") return 0;
+        var removed = 0;
+        try {
+            var toRemove = [];
+            var it = ce.getEvents().iterator();
+            while (it.hasNext()) {
+                var ev = it.next();
+                var rl = null;
+                try { rl = ev.getTextId(); } catch (eId) { continue; }
+                if (rl && String(rl.getNamespace()) === BAR_NS && !barOwnedByActive(rl)) toRemove.push(ev);
+            }
+            for (var i = 0; i < toRemove.length; i++) {
+                try { toRemove[i].removeAllPlayers(); ce.remove(toRemove[i]); removed++; } catch (eRm) {}
+            }
+        } catch (e) { warn("sweepBars: " + e); }
+        if (removed) info("sweepBars removed " + removed + " stray raid bar(s)");
+        return removed;
+    }
+
     const Manager = {
         _server: null,
 
@@ -819,8 +876,9 @@
             if (playerInRaid(puid)) { warn(`start: ${player.username} already in a raid`); return null; }
             var id = newInstanceId(defId);
             var inst = new RaidInstance(id, def, level || playerLevel(player), player);
+            if (!Manager._server) { try { Manager._server = player.server; } catch (eSv) {} }
             if (def.bossBar !== false) {
-                inst.bar = makeBar(inst.barBase, def.barColor, def.barOverlay);
+                inst.bar = makeBar(Manager._server, inst.id, inst.barBase, def.barColor, def.barOverlay);
                 if (inst.bar) { try { inst.bar.addPlayer(player); } catch (eB) {} }
             }
             _active[id] = inst;
@@ -843,10 +901,11 @@
         stopAll: function () {
             var n = 0;
             for (var k in _active) { cleanupMobs(_active[k]); delete _active[k]; n++; }
+            sweepBars(Manager._server);   // also clears bars orphaned by a prior reload/crash
             return n;
         },
 
-        sweepOrphans: function () { return sweepOrphans(Manager._server); },
+        sweepOrphans: function () { var m = sweepOrphans(Manager._server); sweepBars(Manager._server); return m; },
 
         getActive: function () {
             var out = [];
@@ -880,10 +939,11 @@
         Manager._drive(event.server);
     });
 
-    // Clean up mobs orphaned by a crash/restart (bug #1).
+    // Clean up mobs + boss bars orphaned by a crash/restart/reload (bug #1).
     ServerEvents.loaded(function (event) {
         Manager._server = event.server;
         sweepOrphans(event.server);
+        sweepBars(event.server);
     });
 
     // ---------- Export ------------------------------------------------------
