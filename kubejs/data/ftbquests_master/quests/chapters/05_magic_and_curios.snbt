@@ -1,0 +1,53 @@
+{
+	id: "0500000000000000"
+	group: "F100000000000003"
+	order_index: 2
+	filename: "magic_and_curios"
+	title: "Magic & Curios"
+	icon: "minecraft:enchanted_book"
+	default_quest_shape: "circle"
+	default_hide_dependency_lines: false
+	images: [ ]
+	quest_links: [ ]
+	quests: [
+		{
+			id: "0500000000000001"
+			x: 0.0d
+			y: 0.0d
+			shape: "gear"
+			title: "Day 25: Arcane Awakening"
+			tasks: [{ id: "0500000000000002", type: "gamestage", stage: "day_25" }]
+			rewards: [{ id: "0500000000000003", type: "xp", xp: 50 }]
+		}
+		{
+			id: "0500000000000004"
+			x: 1.5d
+			y: -0.75d
+			dependencies: ["0500000000000001"]
+			title: "Bookshelf Sanctum"
+			description: ["Surround an Enchanting Table with bookshelves (collect 15)."]
+			tasks: [{ id: "0500000000000005", type: "item", item: "minecraft:bookshelf", count: 15L }]
+			rewards: [{ id: "0500000000000006", type: "xp", xp: 30 }]
+		}
+		{
+			id: "0500000000000007"
+			x: 1.5d
+			y: 0.75d
+			dependencies: ["0500000000000001"]
+			title: "Equip a Curio"
+			description: ["Open your Curios slots and equip any trinket."]
+			tasks: [{ id: "0500000000000008", type: "checkmark", title: "Equip a curio in a Curios slot" }]
+			rewards: [{ id: "0500000000000009", type: "item", item: "minecraft:gold_ingot", count: 4 }]
+		}
+		{
+			id: "050000000000000A"
+			x: 3.0d
+			y: 0.0d
+			dependencies: ["0500000000000004", "0500000000000007"]
+			title: "Ender's Hand"
+			subtitle: "Relics"
+			tasks: [{ id: "050000000000000B", type: "item", item: "relics:enders_hand" }]
+			rewards: [{ id: "050000000000000C", type: "item", item: "minecraft:ender_pearl", count: 4 }]
+		}
+	]
+}
