@@ -39,12 +39,21 @@
             }
         }
         // KubeJS player wrapper by name, via the executing player's server handle.
+        // NB: server.getPlayer(String) parses the arg as a UUID in KubeJS 2101
+        // ("UUID string must be 32 or 36 characters long"), so match on username
+        // over the live player list instead — same API resolvePlayer() uses.
         function findKjsPlayer(src, name) {
             try {
                 var self = getPlayer(src);
                 var server = self ? self.server : null;
-                if (server && typeof server.getPlayer === "function") return server.getPlayer(name);
-            } catch (e) {}
+                if (!server || !server.players) return null;
+                var want = String(name).toLowerCase();
+                var it = server.players.iterator();
+                while (it.hasNext()) {
+                    var p = it.next();
+                    if (p && String(p.username).toLowerCase() === want) return p;
+                }
+            } catch (e) { console.error("[Raid-cmd] findKjsPlayer: " + e); }
             return null;
         }
 
