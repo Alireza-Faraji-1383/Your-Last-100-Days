@@ -20,7 +20,7 @@
     const DEFAULT_MIN_R  = 20;     // ring spawn radius (blocks)
     const DEFAULT_MAX_R  = 40;
     const DEFAULT_BREATHER = 60;   // ticks after an all-dead round before the next
-    const DEFAULT_BAR_HOLD  = 80;  // ticks the victory/defeat bar lingers before closing
+    const DEFAULT_BAR_HOLD  = 300; // ticks the victory/defeat bar lingers before closing (15s)
 
     function warn(m) { console.warn(`[Raid] ${m}`); }
     function err(m)  { console.error(`[Raid] ${m}`); }
@@ -91,6 +91,10 @@
         for (var i = 0; i < parts.length; i++) { var w = parts[i]; if (w) out.push(w.charAt(0).toUpperCase() + w.slice(1)); }
         return out.join(" ");
     }
+    function playSnd(player, s) {
+        if (!player || !s || !s.id) return;
+        try { player.playSound(s.id, (s.vol != null ? s.vol : 1.0), (s.pitch != null ? s.pitch : 1.0)); } catch (e) {}
+    }
 
     // ---------- Registry ----------------------------------------------------
 
@@ -121,7 +125,12 @@
             bossBar: true,          // show a vanilla-style raid boss bar
             barColor: "RED",        // BossBarColor enum name
             barOverlay: "NOTCHED_10",// BossBarOverlay enum name
-            barHold: DEFAULT_BAR_HOLD// ticks victory/defeat bar lingers
+            barHold: DEFAULT_BAR_HOLD,// ticks victory/defeat bar lingers
+            sounds: {                // played to the target player (id null/"" = silent)
+                roundStart: { id: "minecraft:event.raid.horn",            vol: 1.0, pitch: 1.0 },
+                win:        { id: "minecraft:ui.toast.challenge_complete", vol: 1.0, pitch: 1.0 },
+                lose:       { id: "minecraft:entity.ravager.roar",        vol: 1.0, pitch: 0.8 }
+            }
         };
         this._round = null;   // current round being configured
         this._mob   = null;   // current mob group being configured
@@ -183,6 +192,10 @@
     RaidBuilder.prototype.barColor   = function (c) { this.def.barColor = String(c); return this; };
     RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
     RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = Number(t); return this; };
+    function _snd(id, vol, pitch) { return { id: (id == null ? "" : String(id)), vol: (vol == null ? 1.0 : Number(vol)), pitch: (pitch == null ? 1.0 : Number(pitch)) }; }
+    RaidBuilder.prototype.roundStartSound = function (id, vol, pitch) { this.def.sounds.roundStart = _snd(id, vol, pitch); return this; };
+    RaidBuilder.prototype.winSound        = function (id, vol, pitch) { this.def.sounds.win        = _snd(id, vol, pitch); return this; };
+    RaidBuilder.prototype.loseSound       = function (id, vol, pitch) { this.def.sounds.lose       = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.onStart      = function (fn) { this.def.callbacks.onStart = fn; return this; };
     RaidBuilder.prototype.onRoundStart = function (fn) { this.def.callbacks.onRoundStart = fn; return this; };
     RaidBuilder.prototype.onRoundEnd   = function (fn) { this.def.callbacks.onRoundEnd = fn; return this; };
@@ -323,6 +336,7 @@
     };
     RaidInstance.prototype.lose = function (player) {
         killMobs(this);
+        playSnd(player, this.def.sounds.lose);
         fireCb(this.def, "onLose", [this.ctx(player)]);
         this.barEnd("§4§l✖ DEFEATED", "RED", 0.0);
         this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
@@ -369,6 +383,7 @@
         this.roundTotalHealth = Math.max(1, sumMax(this.roundMobs) + sumMax(this.carryover));
         this.barRoundName(round, idx);
         this.updateBar(player);
+        playSnd(player, this.def.sounds.roundStart);
         fireCb(this.def, "onRoundStart", [this.ctx(player), round, idx]);
         this.phase = "FIGHTING";
     };
@@ -445,6 +460,7 @@
                 this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
                     fireCb(this.def, "onWin", [this.ctx(player)]);
+                    playSnd(player, this.def.sounds.win);
                     this.barEnd("§a§l✔ VICTORY", "GREEN", 1.0);
                     this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
                     this.phase = "ENDING";
