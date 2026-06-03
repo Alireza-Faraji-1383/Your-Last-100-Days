@@ -4,14 +4,16 @@
 **Status:** Implemented (seed mechanism revised — see Update below)
 **Branch:** `feat/ftb-quests`
 
-> **Update 2026-06-04 — seed mechanism changed.** The planned KubeJS seed script
-> (`ServerEvents.loaded` → copy master → world) does NOT work: KubeJS's class filter
-> denies `java.nio`/`java.io`, so scripts cannot do file IO (crashes loading
-> `java.nio.file.Files`). Seeding moved to a standalone `tools/seed_world.py`
-> (run via a PrismLauncher pre-launch command: `python "$INST_MC_DIR/tools/seed_world.py" --all`).
-> Everything else stands: the day-spine KubeJS script works (FTB Teams API is allowed),
-> the master/chapters/validator/gating are unchanged. The "Seed script" section below
-> is historical.
+> **Update 2026-06-04 (final) — no seeding needed; quests are config-global.**
+> FTB Quests `2101.x` stores quest DEFINITIONS in `config/ftbquests/quests/`
+> (git-tracked), which EVERY world reads — existing and newly created. The whole
+> "per-world only, must seed" premise was wrong (that path holds per-world *progress*).
+> So: the 9 chapters + reward table + groups now live in `config/ftbquests/quests/`;
+> the validator points there; `TEMPLATE.snbt`/`README.md` sit in `config/ftbquests/`.
+> Both the KubeJS seed script and the `tools/seed_world.py` workaround are DELETED.
+> Still valid: the day-spine KubeJS script (FTB Teams API), the chapters, gating,
+> and validator. The "Key Constraint" and "Seed script" sections below are historical
+> and superseded by this note.
 
 ## Goal
 
