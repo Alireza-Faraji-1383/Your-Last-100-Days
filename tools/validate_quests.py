@@ -11,7 +11,7 @@ Exit 0 = OK, 1 = problems (prints them).
 """
 import re, sys, pathlib
 
-ROOT = pathlib.Path("kubejs/data/ftbquests_master/quests")
+ROOT = pathlib.Path("config/ftbquests/quests")
 TASK_TYPES = {"item","kill","advancement","structure","dimension","biome",
               "checkmark","gamestage","observation","stat","custom"}
 
@@ -34,6 +34,8 @@ def main():
             errors.append(f"{f}: unbalanced [ ] ({bare.count('[')} vs {bare.count(']')})")
         for m in re.finditer(r'(?<!\w)id:\s*"([^"]*)"', text):
             v = m.group(1)
+            if ":" in v:
+                continue  # resource location inside an item:{...} compound, not an object id
             if not re.fullmatch(r"[0-9A-Fa-f]{16}", v):
                 errors.append(f"{f}: id '{v}' is not 16 hex chars")
             elif v in ids:

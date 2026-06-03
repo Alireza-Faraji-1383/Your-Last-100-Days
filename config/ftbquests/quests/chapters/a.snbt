@@ -1,0 +1,26 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "a"
+	group: ""
+	id: "6DE5EF1B23714EBB"
+	order_index: 0
+	quest_links: [ ]
+	quests: [{
+		id: "2D60D5A1A8FC35F1"
+		rewards: [{
+			id: "458957830E21D339"
+			item: {
+				count: 1
+				id: "minecraft:stripped_oak_wood"
+			}
+			type: "item"
+		}]
+		tasks: [{
+			id: "6DE4A94B6AB968A9"
+			type: "checkmark"
+		}]
+		x: 0.5d
+		y: 0.5d
+	}]
+}
