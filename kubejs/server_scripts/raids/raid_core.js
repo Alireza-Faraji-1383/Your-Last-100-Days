@@ -252,12 +252,21 @@
         return Math.floor(baseY);
     }
 
+    // Steer the mob toward the player ONLY when it has no valid target of its
+    // own. Lets natural AI win when it kicks in: HurtByTargetGoal (retaliate vs
+    // whoever attacks it), raider villager-hunting, other players. Player is the
+    // fallback that re-aggros an idle mob, so the wave always drifts inward.
     function forceTarget(entity, player) {
         if (!player) return;
         try {
             var EAI = getEAI();
             var raw = EAI ? EAI.rawMob(entity) : entity;
-            if (raw && typeof raw.setTarget === "function") raw.setTarget(player);
+            if (!raw || typeof raw.setTarget !== "function") return;
+            var cur = null;
+            try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (eGt) {}
+            var hasValid = false;
+            if (cur) { try { hasValid = (!cur.isAlive || cur.isAlive()); } catch (eAl) { hasValid = true; } }
+            if (!hasValid) raw.setTarget(player);
         } catch (e) { /* mob may be dead/unloaded */ }
     }
 
