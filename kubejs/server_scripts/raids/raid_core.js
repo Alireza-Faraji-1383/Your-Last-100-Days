@@ -20,6 +20,7 @@
     const DEFAULT_MIN_R  = 20;     // ring spawn radius (blocks)
     const DEFAULT_MAX_R  = 40;
     const DEFAULT_BREATHER = 60;   // ticks after an all-dead round before the next
+    const DEFAULT_BAR_HOLD  = 80;  // ticks the victory/defeat bar lingers before closing
 
     function warn(m) { console.warn(`[Raid] ${m}`); }
     function err(m)  { console.error(`[Raid] ${m}`); }
@@ -119,7 +120,8 @@
             title: null,            // boss bar label (null -> prettified id)
             bossBar: true,          // show a vanilla-style raid boss bar
             barColor: "RED",        // BossBarColor enum name
-            barOverlay: "NOTCHED_10"// BossBarOverlay enum name
+            barOverlay: "NOTCHED_10",// BossBarOverlay enum name
+            barHold: DEFAULT_BAR_HOLD// ticks victory/defeat bar lingers
         };
         this._round = null;   // current round being configured
         this._mob   = null;   // current mob group being configured
@@ -180,10 +182,12 @@
     RaidBuilder.prototype.bossBar    = function (on) { this.def.bossBar = (on !== false); return this; };
     RaidBuilder.prototype.barColor   = function (c) { this.def.barColor = String(c); return this; };
     RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
+    RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = Number(t); return this; };
     RaidBuilder.prototype.onStart      = function (fn) { this.def.callbacks.onStart = fn; return this; };
     RaidBuilder.prototype.onRoundStart = function (fn) { this.def.callbacks.onRoundStart = fn; return this; };
     RaidBuilder.prototype.onRoundEnd   = function (fn) { this.def.callbacks.onRoundEnd = fn; return this; };
     RaidBuilder.prototype.onWin        = function (fn) { this.def.callbacks.onWin = fn; return this; };
+    RaidBuilder.prototype.onLose       = function (fn) { this.def.callbacks.onLose = fn; return this; };
     RaidBuilder.prototype.build = function () {
         var d = this.def;
         if (!validateDef(d)) { err(`raid "${d.id}" failed validation — not registered`); return null; }
@@ -308,7 +312,22 @@
         this.bar       = null;        // ServerBossEvent (or null if disabled/unavailable)
         this.barBase   = def.title || prettyId(def.id);
         this.roundTotalHealth = 1;    // sum of max-health for the current wave (bar denominator)
+        this.endLeft   = 0;           // ENDING-phase linger countdown (victory/defeat bar)
     }
+    // Freeze the bar on an end state (victory green / defeat red) before it closes.
+    RaidInstance.prototype.barEnd = function (name, colorName, progress) {
+        if (!this.bar) return;
+        try { this.bar.setName(Text.of(name)); } catch (e) {}
+        if (colorName) { var C = barClasses(); try { this.bar.setColor(enumVal(C.Color, colorName, "RED")); } catch (e2) {} }
+        try { this.bar.setProgress(progress); } catch (e3) {}
+    };
+    RaidInstance.prototype.lose = function (player) {
+        killMobs(this);
+        fireCb(this.def, "onLose", [this.ctx(player)]);
+        this.barEnd("§4§l✖ DEFEATED", "RED", 0.0);
+        this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
+        this.phase = "ENDING";
+    };
     RaidInstance.prototype.barRoundName = function (round, idx) {
         if (!this.bar) return;
         var n = this.def.rounds.length;
@@ -357,7 +376,19 @@
         var player = resolvePlayer(this);   // live player wrapper, or null if offline
         var round  = this.def.rounds[this.roundIdx];
 
+        // Lose condition: the target player dies mid-raid (online but not alive).
+        if (player && this.phase !== "ENDING" && this.phase !== "DONE") {
+            var alive = true;
+            try { alive = (typeof player.isAlive === "function") ? player.isAlive() : player.isAlive; } catch (eAlive) {}
+            if (!alive) { this.lose(player); return; }
+        }
+
         switch (this.phase) {
+
+            case "ENDING":
+                this.endLeft -= TICK_THROTTLE;
+                if (this.endLeft <= 0) { this.closeBar(); this.phase = "DONE"; }
+                break;
             case "SPAWNING":
                 // Need a live player to ring-spawn around. Offline -> wait (raid
                 // keeps running, just doesn't spawn the next round until they return).
@@ -414,8 +445,9 @@
                 this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
                     fireCb(this.def, "onWin", [this.ctx(player)]);
-                    this.closeBar();
-                    this.phase = "DONE";
+                    this.barEnd("§a§l✔ VICTORY", "GREEN", 1.0);
+                    this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
+                    this.phase = "ENDING";
                 }
                 break;
         }
@@ -466,7 +498,7 @@
         return null;
     }
 
-    function cleanupMobs(inst) {
+    function killMobs(inst) {
         var lists = [inst.roundMobs, inst.carryover];
         for (var li = 0; li < lists.length; li++) {
             var arr = lists[li];
@@ -475,6 +507,10 @@
             }
         }
         inst.roundMobs = []; inst.carryover = [];
+    }
+
+    function cleanupMobs(inst) {
+        killMobs(inst);
         inst.closeBar();
     }
 

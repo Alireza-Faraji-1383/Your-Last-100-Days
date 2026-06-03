@@ -26,20 +26,15 @@
         .round("Warbeast")
             .mob("minecraft:ravager").count(1).extraArgs("attributes/max_health=150", "attributes/movement_speed=0.32")
             .mob("minecraft:evoker").count(1).presets("sharpTargeting")
-        .onStart(function (ctx) {
-            try { ctx.player.tell(Text.of("§c⚔ The pillager siege begins!")); } catch (e) {}
-        })
+        // Feedback lives on the boss bar now — keep callbacks for sound + loot only.
         .onRoundStart(function (ctx, round, idx) {
-            try {
-                ctx.player.tell(Text.of("§6Round " + (idx + 1) + ": " + round.name));
-                ctx.player.playSound("minecraft:event.raid.horn", 1.0, 1.0);
-            } catch (e) {}
+            try { ctx.player.playSound("minecraft:event.raid.horn", 1.0, 1.0); } catch (e) {}
         })
         .onWin(function (ctx) {
-            try {
-                ctx.player.tell(Text.of("§a✔ Siege repelled — you win!"));
-                ctx.player.give("minecraft:emerald_block 3");
-            } catch (e) {}
+            try { ctx.player.give("minecraft:emerald_block 3"); } catch (e) {}
+        })
+        .onLose(function (ctx) {
+            try { ctx.player.playSound("minecraft:entity.illusioner.mirror_move", 1.0, 0.6); } catch (e) {}
         })
         .build();
 
