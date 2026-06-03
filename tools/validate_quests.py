@@ -32,7 +32,7 @@ def main():
             errors.append(f"{f}: unbalanced {{ }} ({bare.count('{')} vs {bare.count('}')})")
         if bare.count("[") != bare.count("]"):
             errors.append(f"{f}: unbalanced [ ] ({bare.count('[')} vs {bare.count(']')})")
-        for m in re.finditer(r'id:\s*"([^"]*)"', text):
+        for m in re.finditer(r'(?<!\w)id:\s*"([^"]*)"', text):
             v = m.group(1)
             if not re.fullmatch(r"[0-9A-Fa-f]{16}", v):
                 errors.append(f"{f}: id '{v}' is not 16 hex chars")
@@ -49,7 +49,7 @@ def main():
         for m in re.finditer(r'table_id:\s*"([^"]*)"', text):
             ref_tables.append((f.name, m.group(1)))
         if "reward_tables" in str(f):
-            for m in re.finditer(r'id:\s*"([0-9A-Fa-f]{16})"', text):
+            for m in re.finditer(r'(?<!\w)id:\s*"([0-9A-Fa-f]{16})"', text):
                 table_ids.add(m.group(1))
         for m in re.finditer(r'dependencies:\s*\[([^\]]*)\]', text):
             for d in re.findall(r'"([^"]*)"', m.group(1)):
