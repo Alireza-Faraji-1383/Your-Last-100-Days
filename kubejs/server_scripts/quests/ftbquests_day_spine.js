@@ -18,7 +18,6 @@
     var CHECK_EVERY = 100;   // server ticks between checks (~5s)
     var _accum = 0;
 
-    function log(m)  { console.info("[DaySpine] " + m); }
     function warn(m) { console.warn("[DaySpine] " + m); }
 
     function currentDay(server) {

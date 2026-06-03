@@ -30,8 +30,11 @@
 
     function isEmptyOrMissing(dir) {
         var chapters = dir.resolve("chapters");
-        try { return !Files.isDirectory(chapters) || !Files.list(chapters).findAny().isPresent(); }
+        if (!Files.isDirectory(chapters)) return true;
+        var s = Files.list(chapters);   // stream must be closed (Windows holds a dir handle otherwise)
+        try { return !s.findAny().isPresent(); }
         catch (e) { return true; }
+        finally { try { s.close(); } catch (e2) {} }
     }
 
     // Recursive copy master -> dest (REPLACE_EXISTING on files, create dirs).
