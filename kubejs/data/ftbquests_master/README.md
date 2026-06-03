@@ -1,8 +1,26 @@
 # Quest Master (expandable)
 
-Source of truth for the pack's FTB Quests. The KubeJS seed script
-(`kubejs/server_scripts/quests/ftbquests_seed.js`) copies `quests/` into any world
-that has none, so changes here reach every world.
+Source of truth for the pack's FTB Quests. FTB Quests reads quests only from each
+world's `ftbquests/quests/`, and KubeJS scripts are sandboxed away from file IO
+(the class filter denies `java.nio`/`java.io`), so seeding is done by a standalone
+tool — `tools/seed_world.py` — that copies this `quests/` folder into worlds.
+
+## Get quests into worlds
+- `python tools/seed_world.py --all` — seed every world under `saves/` that has no
+  chapters yet (never clobbers an established world). Run from the instance root.
+- `python tools/seed_world.py "saves/<World Name>"` — seed one world.
+- Add `--force` to overwrite existing quest definitions in a world.
+
+**Automatic seeding:** set a PrismLauncher pre-launch command (Instance →
+Settings → Custom Commands → Pre-launch) to:
+```
+python "$INST_MC_DIR/tools/seed_world.py" --all
+```
+Every launch then seeds any world missing quests before the game starts.
+
+(The day-spine — `kubejs/server_scripts/quests/ftbquests_day_spine.js` — grants the
+`day_*` stages in-game and works inside the sandbox; only file-copying had to move
+out to the tool.)
 
 ## Add a chapter
 1. Copy `TEMPLATE.snbt` to `quests/chapters/NN_name.snbt` with a free 2-hex `NN`
@@ -13,9 +31,10 @@ that has none, so changes here reach every world.
 3. (Optional) gate it: make the first quest a `{ type:"gamestage", stage:"day_25" }`
    task and `dependencies` the rest on it.
 4. (Optional) put it in a group: set `group` to a `chapter_groups.snbt` id.
-5. Run `python ../../../tools/validate_quests.py` from the instance root.
-6. Commit. New worlds get it automatically; an existing world picks it up after you
-   delete its `<world>/ftbquests/quests/chapters/` and rejoin (or merge by hand).
+5. Run `python tools/validate_quests.py` from the instance root.
+6. Commit, then `python tools/seed_world.py --all --force` to push the update into
+   existing worlds (or `--all` for only worlds with no quests yet). New worlds get it
+   on next launch via the pre-launch command.
 
 ## Sync edits made in-game
 The in-game FTB Quests editor writes to `<world>/ftbquests/quests/`. To keep them,
