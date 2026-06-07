@@ -1,0 +1,79 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: "diamond"
+	filename: "endgame"
+	group: ""
+	id: "2070756DB93A1974"
+	order_index: 18
+	quest_links: [ ]
+	quests: [
+		{
+			id: "00F981F3F52E0F79"
+			rewards: [{
+				id: "33DC2012DD1FE5A0"
+				type: "random"
+			}]
+			shape: "gear"
+			tasks: [{
+				id: "132E18808D2D9154"
+				stage: "day_100"
+				type: "gamestage"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0900000000000001"]
+			id: "3EFD27FBA69F248C"
+			rewards: [{
+				id: "16FF4518D4F96ABE"
+				item: {
+					count: 1
+					id: "minecraft:netherite_block"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "48D98F253ADDD4B6"
+				item: { count: 1, id: "advancednetherite:netherite_diamond_chestplate" }
+				type: "item"
+			}]
+			x: 1.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0900000000000004"]
+			id: "6AC236FBBE420C98"
+			rewards: [{
+				id: "0356E23AB8B8C478"
+				item: {
+					count: 1
+					id: "minecraft:totem_of_undying"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "cataclysm:ignis"
+				id: "3CD267A89A0E18C0"
+				type: "kill"
+				value: 1L
+			}]
+			x: 3.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0900000000000007"]
+			id: "13CD766B829A584B"
+			rewards: [{
+				id: "02ECE26FFEBC83ED"
+				type: "random"
+			}]
+			tasks: [{
+				id: "0FC1293491A091CD"
+				type: "checkmark"
+			}]
+			x: 4.5d
+			y: 0.0d
+		}
+	]
+}

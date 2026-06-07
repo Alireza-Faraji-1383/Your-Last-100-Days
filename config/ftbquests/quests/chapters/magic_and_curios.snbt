@@ -1,0 +1,86 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: "circle"
+	filename: "magic_and_curios"
+	group: ""
+	id: "5C027E1D187F444E"
+	order_index: 16
+	quest_links: [ ]
+	quests: [
+		{
+			id: "290C50D88940F5A3"
+			rewards: [{
+				id: "1CAF092DFD82CD6A"
+				type: "xp"
+				xp: 50
+			}]
+			shape: "gear"
+			tasks: [{
+				id: "23D621FA618C3D5C"
+				stage: "day_25"
+				type: "gamestage"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0500000000000001"]
+			id: "121ECFD1D272B848"
+			rewards: [{
+				id: "09047184B4D87E3C"
+				type: "xp"
+				xp: 30
+			}]
+			tasks: [{
+				count: 15L
+				id: "4C9414E300D71267"
+				item: { count: 1, id: "minecraft:bookshelf" }
+				type: "item"
+			}]
+			x: 1.5d
+			y: -0.75d
+		}
+		{
+			dependencies: ["0500000000000001"]
+			id: "5C1E54D95567E77C"
+			rewards: [{
+				count: 4
+				id: "44716AD72A9E3C14"
+				item: {
+					count: 1
+					id: "minecraft:gold_ingot"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "7870BC9DCB597C5F"
+				type: "checkmark"
+			}]
+			x: 1.5d
+			y: 0.75d
+		}
+		{
+			dependencies: [
+				"0500000000000004"
+				"0500000000000007"
+			]
+			id: "2A2DEC48536341D5"
+			rewards: [{
+				count: 4
+				id: "61E5C7426EC763B2"
+				item: {
+					count: 1
+					id: "minecraft:ender_pearl"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "006DEE4FFD3165D4"
+				item: { components: { "relics:data": { abilities: { abilities: { neutrality: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { } }, swap: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { distance: { initialValue: 17.84525d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:enders_hand" }
+				type: "item"
+			}]
+			x: 3.0d
+			y: 0.0d
+		}
+	]
+}

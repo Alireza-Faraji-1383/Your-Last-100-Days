@@ -1,0 +1,80 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: "hexagon"
+	filename: "chaos_and_bosses"
+	group: ""
+	id: "6A6F4AA1EE1FA936"
+	order_index: 17
+	quest_links: [ ]
+	quests: [
+		{
+			id: "37595B01F0A05B3A"
+			rewards: [{
+				id: "1CB551F319782033"
+				type: "xp"
+				xp: 100
+			}]
+			shape: "gear"
+			tasks: [{
+				id: "10442E1224F98120"
+				stage: "day_50"
+				type: "gamestage"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0800000000000001"]
+			id: "29683CB3B9BB2495"
+			rewards: [{
+				id: "36411C307ED35267"
+				type: "xp"
+				xp: 40
+			}]
+			tasks: [{
+				id: "0C5D806E7056EF69"
+				item: { count: 1, id: "block_factorys_bosses:ancient_trial_key" }
+				type: "item"
+			}]
+			x: 1.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0800000000000004"]
+			id: "2977491F1BBECCDF"
+			rewards: [{
+				id: "774A6726B7748F08"
+				type: "random"
+			}]
+			tasks: [{
+				entity: "block_factorys_bosses:kraken"
+				id: "26250A1A11D68D77"
+				type: "kill"
+				value: 1L
+			}]
+			x: 3.0d
+			y: -0.75d
+		}
+		{
+			dependencies: ["0800000000000004"]
+			id: "5E5F2DB0F2B28B91"
+			rewards: [{
+				count: 4
+				id: "5F487296D1183F79"
+				item: {
+					count: 1
+					id: "block_factorys_bosses:dragon_bone"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "block_factorys_bosses:infernal_dragon"
+				id: "51F329BBD02DD5E0"
+				type: "kill"
+				value: 1L
+			}]
+			x: 3.0d
+			y: 0.75d
+		}
+	]
+}

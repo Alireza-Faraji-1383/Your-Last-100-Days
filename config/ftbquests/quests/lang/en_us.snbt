@@ -1,5 +1,84 @@
 {
-	chapter.6589117C83BD574F.title: "Alireza123"
+	chapter.0100000000000000.title: "Getting Started"
+	chapter.0200000000000000.title: "Combat & Gear"
+	chapter.0300000000000000.title: "Artifacts & Relics"
+	chapter.0400000000000000.title: "Exploration"
+	chapter.0500000000000000.title: "Magic & Curios"
+	chapter.0600000000000000.title: "Found a Colony"
+	chapter.0700000000000000.title: "Cataclysm"
+	chapter.0800000000000000.title: "Chaos & Bosses"
+	chapter.0900000000000000.title: "Endgame"
 	chapter.6DE5EF1B23714EBB.title: "a"
+	chapter_group.24B0AE8DD48A2385.title: "Survival"
+	quest.0100000000000001.quest_desc: ["Punch a tree. Everything starts here."]
+	quest.0100000000000001.title: "Wood First"
+	quest.0100000000000004.title: "A Proper Workbench"
+	quest.0100000000000007.title: "Stone Tools"
+	quest.010000000000000A.quest_desc: ["Craft a Backpack — your inventory will thank you."]
+	quest.010000000000000A.quest_subtitle: "Sophisticated Backpacks"
+	quest.010000000000000A.title: "Pack It Up"
+	quest.010000000000000D.quest_desc: ["Craft and place a Waystone to unlock fast travel."]
+	quest.010000000000000D.quest_subtitle: "Waystones"
+	quest.010000000000000D.title: "Fast Travel"
+	quest.0200000000000001.title: "Iron-Clad"
+	quest.0200000000000004.title: "Diamond Edge"
+	quest.0200000000000007.quest_desc: ["Enchant any item at an Enchanting Table."]
+	quest.0200000000000007.title: "Enchanted"
+	quest.020000000000000A.quest_desc: ["Prove your blade on a Ravager."]
+	quest.020000000000000A.title: "Cull the Herd"
+	quest.020000000000000D.quest_desc: ["Forge a Netherite-Diamond Ingot."]
+	quest.020000000000000D.quest_subtitle: "Advanced Netherite"
+	quest.020000000000000D.title: "Beyond Netherite"
+	quest.0300000000000001.quest_desc: ["Survive to day 10 and the world's trinkets reveal themselves."]
+	quest.0300000000000001.title: "Day 10: Curiosities Surface"
+	quest.0300000000000004.title: "Cloud in a Bottle"
+	quest.0300000000000007.title: "Cross Necklace"
+	quest.030000000000000A.quest_subtitle: "Relics"
+	quest.030000000000000A.title: "Mirror, Mirror"
+	quest.030000000000000D.quest_subtitle: "Relics"
+	quest.030000000000000D.title: "Holy Locket"
+	quest.0400000000000001.title: "Day 10: Wanderlust"
+	quest.0400000000000004.quest_desc: ["Place a second Waystone to build a travel network."]
+	quest.0400000000000004.title: "Network of Waystones"
+	quest.0400000000000007.title: "Into the Nether"
+	quest.040000000000000A.quest_desc: ["Loot a Nether Fortress for blaze rods."]
+	quest.040000000000000A.title: "Fortress Plunder"
+	quest.040000000000000D.quest_desc: ["Earn the vanilla 'Adventuring Time' spirit — visit a new biome."]
+	quest.040000000000000D.title: "Adventuring Time"
+	quest.0500000000000001.title: "Day 25: Arcane Awakening"
+	quest.0500000000000004.quest_desc: ["Surround an Enchanting Table with bookshelves (collect 15)."]
+	quest.0500000000000004.title: "Bookshelf Sanctum"
+	quest.0500000000000007.quest_desc: ["Open your Curios slots and equip any trinket."]
+	quest.0500000000000007.title: "Equip a Curio"
+	quest.050000000000000A.quest_subtitle: "Relics"
+	quest.050000000000000A.title: "Ender's Hand"
+	quest.0600000000000001.title: "Day 25: Settle Down"
+	quest.0600000000000004.quest_desc: ["Deploy a Supply Camp or Supply Ship to begin your colony."]
+	quest.0600000000000004.title: "Place the Supply Camp"
+	quest.0600000000000007.title: "Raise the Town Hall"
+	quest.060000000000000A.title: "A Growing Settlement"
+	quest.0700000000000001.title: "Day 50: The Earth Trembles"
+	quest.0700000000000004.quest_desc: ["Craft the Infernal Forge to make Cataclysm gear."]
+	quest.0700000000000004.title: "Forge of Legends"
+	quest.0700000000000007.quest_subtitle: "The Fire Giant"
+	quest.0700000000000007.title: "Slay Ignis"
+	quest.070000000000000A.title: "The Netherite Monstrosity"
+	quest.070000000000000D.title: "Guardian of the End"
+	quest.0800000000000001.title: "Day 50: Trials Await"
+	quest.0800000000000004.quest_desc: ["Obtain an Ancient Trial Key to open a boss trial."]
+	quest.0800000000000004.title: "Ancient Trial Key"
+	quest.0800000000000007.title: "Release the Kraken"
+	quest.080000000000000A.title: "Infernal Dragon"
+	quest.0900000000000001.quest_desc: ["One hundred days. You have outlasted the world's worst."]
+	quest.0900000000000001.title: "Day 100: Survivor"
+	quest.0900000000000004.title: "Master of Netherite"
+	quest.0900000000000007.quest_desc: ["Defeat Ignis once more to claim the trophy."]
+	quest.0900000000000007.title: "Slayer of Giants"
+	quest.090000000000000A.title: "Legend"
+	task.0500000000000008.title: "Equip a curio in a Curios slot"
+	task.0600000000000005.title: "Place a MineColonies supply camp/ship"
+	task.0600000000000008.title: "Build and place a Town Hall"
+	task.060000000000000B.title: "Reach colony level 5"
+	task.090000000000000B.title: "Claim your legend"
 	task.6DE4A94B6AB968A9.title: "a"
 }

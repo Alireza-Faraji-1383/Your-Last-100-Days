@@ -1,12 +1,18 @@
 {
-	id: "FA00000000000001"
+	id: "1A7D8F6C9F7C2604"
 	loot_size: 1
 	order_index: 0
-	title: "Capstone Loot"
-	use_title: true
 	rewards: [
-		{ item: "minecraft:diamond", count: 4 }
-		{ item: "minecraft:netherite_scrap", count: 1 }
-		{ item: "cataclysm:witherite_ingot", count: 1 }
+		{
+			count: 4
+			id: "7D4DD5898B8E9222"
+			item: {
+				count: 1
+				id: "minecraft:diamond"
+			}
+		}
+		{ id: "39674D24A409EA18", item: { count: 1, id: "minecraft:netherite_scrap" } }
+		{ id: "3925C64A0F0F0B94", item: { count: 1, id: "cataclysm:witherite_ingot" } }
 	]
+	use_title: true
 }

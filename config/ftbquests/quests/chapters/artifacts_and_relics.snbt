@@ -1,0 +1,95 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: "circle"
+	filename: "artifacts_and_relics"
+	group: ""
+	id: "5E35E5FECF251930"
+	order_index: 11
+	quest_links: [ ]
+	quests: [
+		{
+			id: "422A567CA8B3230A"
+			rewards: [{
+				id: "091F93993EC6711A"
+				type: "xp"
+				xp: 30
+			}]
+			shape: "gear"
+			tasks: [{
+				id: "4D85BFA330AE3121"
+				stage: "day_10"
+				type: "gamestage"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0300000000000001"]
+			id: "281CC3036EFAEDBA"
+			rewards: [{
+				id: "7DBFAE0FA294DB68"
+				type: "xp"
+				xp: 20
+			}]
+			tasks: [{
+				id: "22DC36BDBAD70F70"
+				item: { count: 1, id: "artifacts:cloud_in_a_bottle" }
+				type: "item"
+			}]
+			x: 1.5d
+			y: -0.75d
+		}
+		{
+			dependencies: ["0300000000000001"]
+			id: "7447DFBEA58FBB65"
+			rewards: [{
+				id: "02A35871471839E9"
+				type: "xp"
+				xp: 20
+			}]
+			tasks: [{
+				id: "0D259230E6543C48"
+				item: { count: 1, id: "artifacts:cross_necklace" }
+				type: "item"
+			}]
+			x: 1.5d
+			y: 0.75d
+		}
+		{
+			dependencies: ["0300000000000004"]
+			id: "29596CA0D4B8E7F8"
+			rewards: [{
+				id: "59D595399716D381"
+				type: "xp"
+				xp: 30
+			}]
+			tasks: [{
+				id: "6DB82DB615A0B7BB"
+				item: { components: { "relics:data": { abilities: { abilities: { teleport: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { cooldown: { initialValue: 114.43921d }, distance: { initialValue: 793.14449d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:magic_mirror" }
+				type: "item"
+			}]
+			x: 3.0d
+			y: -0.75d
+		}
+		{
+			dependencies: ["0300000000000007"]
+			id: "0FB6D3E7DF721105"
+			rewards: [{
+				count: 8
+				id: "6706C924112D741A"
+				item: {
+					count: 1
+					id: "minecraft:experience_bottle"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "31C760BAA81C0844"
+				item: { components: { "relics:data": { abilities: { abilities: { ascension: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 0 }, points: 0, research: { links: { }, researched: 0b }, stats: { duration: { initialValue: 0.91915d }, max_duration: { initialValue: 8.99794d } } }, faith: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { damage: { initialValue: 0.47361d }, health: { initialValue: 0.10534d }, radius: { initialValue: 6.02283d } } }, penitence: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 0 }, points: 0, research: { links: { }, researched: 0b }, stats: { amount: { initialValue: 0.3279d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:holy_locket" }
+				type: "item"
+			}]
+			x: 3.0d
+			y: 0.75d
+		}
+	]
+}

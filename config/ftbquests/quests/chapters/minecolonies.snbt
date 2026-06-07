@@ -1,0 +1,75 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: "circle"
+	filename: "minecolonies"
+	group: ""
+	id: "6D13DDB491C89652"
+	order_index: 14
+	quest_links: [ ]
+	quests: [
+		{
+			id: "7F9E40A27DB09E87"
+			rewards: [{
+				id: "1F723530F3200270"
+				type: "xp"
+				xp: 50
+			}]
+			shape: "gear"
+			tasks: [{
+				id: "37443C3B20873832"
+				stage: "day_25"
+				type: "gamestage"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0600000000000001"]
+			id: "65B1DA656512DAD7"
+			rewards: [{
+				id: "4A138DE5496B5956"
+				type: "xp"
+				xp: 30
+			}]
+			tasks: [{
+				id: "1BC27A75E22C52A7"
+				type: "checkmark"
+			}]
+			x: 1.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0600000000000004"]
+			id: "04BA4D040BAC7A8A"
+			rewards: [{
+				count: 2
+				id: "37FCE57C168DB51C"
+				item: {
+					count: 1
+					id: "minecraft:gold_block"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "662E7CCF390109AD"
+				type: "checkmark"
+			}]
+			x: 3.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["0600000000000007"]
+			id: "5B9F4A813CAE170A"
+			rewards: [{
+				id: "6D3B7463D2109BBA"
+				type: "random"
+			}]
+			tasks: [{
+				id: "30C5E356DA60FDA9"
+				type: "checkmark"
+			}]
+			x: 4.5d
+			y: 0.0d
+		}
+	]
+}
