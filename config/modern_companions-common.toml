@@ -1,7 +1,7 @@
 #Settings for world gen (data packs recommended in 1.21.1)
 [worldgen]
 	#Average chunk separation between companion houses
-	# Default: 20
+	# Default: 15
 	# Range: > 11
 	averageHouseSeparation = 20
 
@@ -9,7 +9,7 @@
 	#Whether companions can hurt each other
 	friendlyFireCompanions = false
 	#Whether companion can damage the owning player
-	friendlyFirePlayer = true
+	friendlyFirePlayer = false
 	#Whether companions take fall damage
 	fallDamage = true
 	#Whether companions spawn with random armor
@@ -19,7 +19,7 @@
 	#Base health for companions; a small random variance is applied on spawn
 	# Default: 20
 	# Range: > 5
-	baseHealth = 20
+	baseHealth = 25
 	#If true, companions ask for food when below half health
 	lowHealthFood = true
 	#If true, companions warn the player about nearby creepers
@@ -37,11 +37,11 @@
 	#Enable morale tracking and small performance nudges.
 	moraleEnabled = true
 	#Ticks between passive bond XP awards while near the owner (20 ticks = 1 second).
-	# Default: 1200
+	# Default: 1000
 	# Range: > 20
 	bondTickInterval = 1200
 	#Bond XP granted each interval when alive near the owner.
-	# Default: 5
+	# Default: 20
 	# Range: 0 ~ 10000
 	bondTimeXp = 5
 	#Bond XP granted when the owner feeds the companion.
@@ -71,4 +71,4 @@
 	#Chance for Lucky trait companions to duplicate one dropped item on a kill (0.0-1.0).
 	# Default: 0.05
 	# Range: 0.0 ~ 1.0
-	luckyExtraDropChance = 0.05
+	luckyExtraDropChance = 0.1

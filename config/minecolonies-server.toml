@@ -19,11 +19,11 @@
 	#Should citizen name tags be rendered? [Default: true]
 	alwaysrendernametag = true
 	#Should workers work during the rain? [Default: false]
-	workersalwaysworkinrain = false
+	workersalwaysworkinrain = true
 	#Chance for the Miner to get an ore when mining cobblestone or stone (by default, can be expanded with datapacks to other materials). This is a percentage. (To change which ores the Miner can find, see "List of Lucky Ores".) [Default: 1, min: 0, max: 100]
 	# Default: 1
 	# Range: 0 ~ 100
-	luckyblockchance = 1
+	luckyblockchance = 10
 	#The minimum level a Town Hall has to be to allow teleportation to allied colonies. [Default: 3, min: 0, max: 5]
 	# Default: 3
 	# Range: 0 ~ 5
@@ -41,7 +41,7 @@
 	#Set how long chunks stay loaded after player leaves, does not persist through restarts. Default: 10min [Default: 10, min: 1, max: 1440]
 	# Default: 10
 	# Range: 1 ~ 1440
-	loadtime = 10
+	loadtime = 20
 	#This controls how many chunks are loaded with the "Chunk Load Colony" option. The higher this value, the fewer chunks will be loaded. (The innermost chunks will be loaded first.) 1 = load all claimed chunks. [Default: 3, min: 1, max: 15]
 	# Default: 3
 	# Range: 1 ~ 15
@@ -49,7 +49,7 @@
 	#Max log count in one tree for the Forester to check during their tree search. [Default: 400, min: 1, max: 1000]
 	# Default: 400
 	# Range: 1 ~ 1000
-	maxtreesize = 400
+	maxtreesize = 200
 	#Disables supply camp placing restrictions, intended for skyworlds and similar [Default: false]
 	nosupplyplacementrestrictions = false
 	#Raiders will spawn in the sky if this is enabled [Default: false]
@@ -121,17 +121,17 @@
 	#minecolonies.config.maxBarbarianSize.comment [Default: 80, min: 6, max: 400]
 	# Default: 80
 	# Range: 6 ~ 400
-	maxBarbarianSize = 80
+	maxBarbarianSize = 90
 	#minecolonies.config.dobarbariansbreakthroughwalls.comment [Default: true]
 	dobarbariansbreakthroughwalls = true
 	#The average number of nights between raids. [Default: 14, min: 1, max: 50]
 	# Default: 14
 	# Range: 1 ~ 50
-	averagenumberofnightsbetweenraids = 14
+	averagenumberofnightsbetweenraids = 10
 	#The minimum number of nights between raids. [Default: 10, min: 1, max: 30]
 	# Default: 10
 	# Range: 1 ~ 30
-	minimumnumberofnightsbetweenraids = 10
+	minimumnumberofnightsbetweenraids = 7
 	#Should mobs attack citizens? [Default: true]
 	mobattackcitizens = true
 	#minecolonies.config.shouldraiderbreakdoors.comment [Default: true]
@@ -139,13 +139,13 @@
 	#Attack damage multiplier for Guards. [Default: 1.0, min: 0.1, max: 15.0]
 	# Default: 1.0
 	# Range: 0.1 ~ 15.0
-	guardDamageMultiplier = 1.0
+	guardDamageMultiplier = 2.0
 	#Health multiplier for all Guards. [Default: 1.0, min: 0.1, max: 5.0]
 	# Default: 1.0
 	# Range: 0.1 ~ 5.0
-	guardhealthmult = 1.0
+	guardhealthmult = 2.0
 	#Turn on MineColonies PVP mode (colonies can be destroyed and griefed under certain conditions). [Default: false]
-	pvp_mode = false
+	pvp_mode = true
 
 #All permission configuration options
 [permissions]
