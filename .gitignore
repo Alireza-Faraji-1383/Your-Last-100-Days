@@ -16,6 +16,7 @@ dynamic-resource-pack-cache/
 .cache/
 
 # User-specific
+config/oculus.properties
 options.txt
 usercache.json
 usernamecache.json
