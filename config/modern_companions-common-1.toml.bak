@@ -1,7 +1,7 @@
 #Settings for world gen (data packs recommended in 1.21.1)
 [worldgen]
 	#Average chunk separation between companion houses
-	# Default: 20
+	# Default: 15
 	# Range: > 11
 	averageHouseSeparation = 20
 
@@ -37,11 +37,11 @@
 	#Enable morale tracking and small performance nudges.
 	moraleEnabled = true
 	#Ticks between passive bond XP awards while near the owner (20 ticks = 1 second).
-	# Default: 1200
+	# Default: 1000
 	# Range: > 20
 	bondTickInterval = 1200
 	#Bond XP granted each interval when alive near the owner.
-	# Default: 5
+	# Default: 20
 	# Range: 0 ~ 10000
 	bondTimeXp = 5
 	#Bond XP granted when the owner feeds the companion.
