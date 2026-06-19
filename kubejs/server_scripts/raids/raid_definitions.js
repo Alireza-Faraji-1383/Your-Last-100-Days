@@ -10,6 +10,30 @@
 
     if (typeof Raid === "undefined") { console.error("[Raid-def] Raid builder missing — raid_core.js not loaded"); return; }
 
+    // ---- Mob archetypes ---------------------------------------------------
+    // Reusable mob loadouts as plain objects matching the .mob() spec:
+    //   { type, presets, extraArgs, equip, nbt, noDefaults }
+    // Reference one with .mob(Mobs.X) and set the wave size with .count(n).
+    // Each raid clones equip/nbt on use, so the same archetype is safe to reuse
+    // across rounds/raids — chaining .equip()/.nbt() after .mob() won't leak back
+    // into the shared object. defaultPresets() still merge in (unless noDefaults).
+    var Mobs = {
+        PILLAGER:         { type: "minecraft:pillager",   presets: ["mobile"] },
+        VINDICATOR:       { type: "minecraft:vindicator", presets: ["mobile"] },
+        VINDICATOR_LEAD:  { type: "minecraft:vindicator", presets: ["sharpTargeting"] },
+        EVOKER:           { type: "minecraft:evoker",     presets: ["sharpTargeting"] },
+        // Skeletons need a weapon to shoot — the bow re-enables the ranged goal.
+        BOW_SKELETON:     { type: "minecraft:skeleton",   presets: ["mobile", "skirmisher"],
+                            equip: { mainhand: "minecraft:bow", head: "minecraft:leather_helmet" } },
+        // Full iron-armored, sworded zombie (variant via nbt).
+        IRON_ZOMBIE:      { type: "minecraft:zombie",     presets: ["mobile"],
+                            equip: { mainhand: "minecraft:iron_sword", head: "minecraft:iron_helmet", chest: "minecraft:iron_chestplate" },
+                            nbt:   { IsBaby: false } },
+        // Beefed-up boss ravager.
+        WARBEAST_RAVAGER: { type: "minecraft:ravager",
+                            extraArgs: ["attributes/max_health=150", "attributes/movement_speed=0.32"] }
+    };
+
     // ---- Sample: pillager siege, 3 sequential rounds ----------------------
     // Aggro: mobs march on the target player by default, but retaliate against
     // anyone who hits them and attack players/villagers/iron golems within
@@ -23,28 +47,31 @@
         .round("Scouts")
             .breather(80)              // 4s pause after this round is cleared
             .timeLimit(2400)           // non-final round: force-advance after 2 min; survivors carry over
-            .mob("minecraft:pillager").count(5).presets("mobile")
-            .mob("minecraft:vindicator").count(2).presets("sharpTargeting")
-            // skeletons need a weapon to shoot — equip a bow (re-enables ranged goal)
-            .mob("minecraft:skeleton").count(3).presets("mobile", "skirmisher")
-                .mainHand("minecraft:bow")
-                .helmet("minecraft:leather_helmet")
+            .mob(Mobs.PILLAGER).count(5)
+            .mob(Mobs.VINDICATOR_LEAD).count(2)
+            .mob(Mobs.BOW_SKELETON).count(3)
         .round("Assault")
             .breather(100)
-            .mob("minecraft:vindicator").count(6).presets("mobile")
-            // full iron-armored, sworded zombie variants via .equip + .nbt
-            .mob("minecraft:zombie").count(4).presets("mobile")
-                .equip({ mainhand: "minecraft:iron_sword", head: "minecraft:iron_helmet", chest: "minecraft:iron_chestplate" })
-                .nbt({ IsBaby: false })
+            .mob(Mobs.VINDICATOR).count(6)
+            .mob(Mobs.IRON_ZOMBIE).count(4)
         .round("Warbeast")
             .timeLimit(3600)           // FINAL round timer (3 min) -> loss + no prize if not cleared
-            .mob("minecraft:ravager").count(1).extraArgs("attributes/max_health=150", "attributes/movement_speed=0.32")
-            .mob("minecraft:evoker").count(1).presets("sharpTargeting")
+            .mob(Mobs.WARBEAST_RAVAGER).count(1)
+            .mob(Mobs.EVOKER).count(1)
         // onWin fires ONLY on victory — loss skips it, so no prize on a timeout.
         .onWin(function (ctx) {
             try { ctx.player.give("minecraft:emerald_block 3"); } catch (e) {}
         })
         .build();
+
+    // ---- Night triggers ---------------------------------------------------
+    // Fire a registered raid on the first nightfall on/after the overworld
+    // reaches a day count. Each online player gets their own instance.
+    if (typeof RaidSchedule !== "undefined") {
+        RaidSchedule.onDay(20, "pillager_siege");   // pillager siege on night 20
+    } else {
+        console.warn("[Raid-def] RaidSchedule missing — raid_schedule.js not loaded; skipping night triggers");
+    }
 
     // ---- Modded mobs: any "modid:mob" type works (e.g. a Mowzie's/Alex's mob).
     // Equipment + nbt + EAI presets all apply the same way. Uncomment + adapt.

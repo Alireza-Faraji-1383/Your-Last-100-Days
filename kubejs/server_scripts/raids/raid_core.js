@@ -117,6 +117,13 @@
         if (!player || !s || !s.id) return;
         try { player.playSound(s.id, (s.vol != null ? s.vol : 1.0), (s.pitch != null ? s.pitch : 1.0)); } catch (e) {}
     }
+    // Shallow-copy a plain object (null otherwise). Lets a reusable archetype's
+    // equip/nbt be referenced by many raids without a later .equip()/.nbt() chain
+    // mutating the shared source object.
+    function shallowCopy(o) {
+        if (!o || typeof o !== "object") return null;
+        var r = {}; for (var k in o) r[k] = o[k]; return r;
+    }
 
     // ---------- Registry ----------------------------------------------------
 
@@ -200,8 +207,8 @@
                 presets:    Array.isArray(s.presets) ? s.presets.slice() : [],
                 extraArgs:  Array.isArray(s.extraArgs) ? s.extraArgs.slice() : [],
                 noDefaults: !!s.noDefaults,
-                equip:      (s.equip && typeof s.equip === "object") ? s.equip : null,
-                nbt:        (s.nbt && typeof s.nbt === "object") ? s.nbt : null
+                equip:      shallowCopy(s.equip),   // copied so a shared archetype isn't mutated
+                nbt:        shallowCopy(s.nbt)
             };
         } else {
             this._mob = { type: String(typeOrSpec), count: 1, presets: [], extraArgs: [], noDefaults: false, equip: null, nbt: null };
