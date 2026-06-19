@@ -1,0 +1,102 @@
+#Max level entities can level up
+# Default: 100
+# Range: > 1
+maxLevel = 100
+#Amount of health humans gain on level up
+# Default: 1
+# Range: > 0
+healthAmount = 1
+#Max times humans will get the health bonus upon leveling up (can't be higher than max level)
+# Default: 100
+# Range: > 0
+healthAmountTimes = 100
+#Amount of health bonus humans get upon killing bosses
+# Default: 2
+# Range: > 0
+healthAmountBossKills = 2
+#Max times humans will get the health bonus upon killing bosses
+# Default: 20
+# Range: > 0
+healthAmountBossKillsTimes = 20
+#Amount of damage bonus humans get upon killing bosses
+# Default: 1
+# Range: > 0
+damageAmountBossKills = 1
+#Max times humans will get the damage bonus upon killing bosses
+# Default: 20
+# Range: > 0
+damageAmountBossKillsTimes = 20
+#Amount of armor bonus humans get upon killing bosses
+# Default: 1
+# Range: > 0
+armorAmountBossKills = 1
+#Max times humans will get the armor bonus upon killing bosses
+# Default: 20
+# Range: > 0
+armorAmountBossKillsTimes = 20
+#Max percentage of bonus spell power mages can get upon leveling up (50.0 = 50%)
+# Default: 50.0
+# Range: 0.0 ~ 1.7976931348623157E308
+maxSpellPowerPercentage = 50.0
+#Max percentage of bonus spell resistance mages can get upon leveling up (50.0 = 50%)
+# Default: 50.0
+# Range: 0.0 ~ 1.7976931348623157E308
+maxSpellResistancePercentage = 50.0
+#Amount of armor bonus warriors get upon leveling up
+# Default: 1
+# Range: > 0
+armorAmountWarriors = 1
+#Max times warriors will get the armor bonus upon leveling up (can't be higher than max level)
+# Default: 30
+# Range: > 0
+armorAmountWarriorsTimes = 30
+#Max percentage of bonus speed rogues can get upon leveling up (50.0 = 50%)
+# Default: 50.0
+# Range: 0.0 ~ 1.7976931348623157E308
+maxSpeedPercentage = 50.0
+#Max percentage of bonus arrow velocity archers can get upon leveling up (50.0 = 50%)
+# Default: 50.0
+# Range: 0.0 ~ 1.7976931348623157E308
+maxArrowVelocityPercentage = 50.0
+#Max percentage of bonus draw speed archers can get upon leveling up (50.0 = 50%)
+# Default: 50.0
+# Range: 0.0 ~ 1.7976931348623157E308
+maxDrawSpeedPercentage = 50.0
+#XP gain multiplier (50.0 = 50% = xp_gained * 0.5)
+# Default: 100.0
+# Range: 0.0 ~ 1.7976931348623157E308
+xpGainedMultiplier = 100.0
+#XP needed to level up multiplier (50.0 = 50% = xp_needed * 0.5)
+# Default: 100.0
+# Range: 0.0 ~ 1.7976931348623157E308
+xpNeededMultiplier = 100.0
+#Duration in seconds that immortal entities are stunned after being knocked out
+# Default: 10
+# Range: 1 ~ 60
+immortalStunDuration = 10
+#Chance of a human spawning with one of the textures from the additional textures directory (0.5 = 50%)
+# Default: 0.1
+# Range: 0.0 ~ 1.0
+customTextureChance = 0.1
+#Duration in minutes needed to be able to establish a permanent contract with a human
+# Default: 200
+# Range: > 1
+minutesUntilPermanent = 200
+#Duration in minutes contracts will last for
+# Default: 10
+# Range: > 1
+minutesPerContract = 10
+#Max amount of mercenaries that can spawn in chairs inside a 20 blocks radius.
+# Default: 8
+# Range: > 1
+maxMercenariesInRadius = 8
+#If mercenaries should attempt to use unclassified spells (set at your own risk).
+attemptCastUnclassifiedSpells = false
+#List of male names for human entities
+maleNames = ["Aldric", "Bowen", "Cedric", "Dorian", "Edmund", "Felix", "Gareth", "Hugo", "Ivan", "Jasper", "Klaus", "Leon", "Magnus", "Nolan", "Oscar", "Preston", "Quentin", "Roland", "Sebastian", "Tristan", "Ulric", "Victor", "Winston", "Aaron", "Abdul", "Abraham", "Adam", "Adrian", "Ahmed", "Akira", "Alan", "Albert", "Alexander", "Ali", "Amir", "Andre", "Andrew", "Angelo", "Antonio", "Ari", "Arthur", "Arjun", "Asher", "Ashton", "Axel", "Benjamin", "Blake", "Boris", "Brandon", "Brian", "Bruno", "Caleb", "Carlos", "Cedric", "Chen", "Christian", "Christopher", "Connor", "Daniel", "David", "Diego", "Dmitri", "Dylan", "Edgar", "Eduardo", "Edward", "Elias", "Emmanuel", "Erik", "Ethan", "Felix", "Fernando", "Francisco", "Gabriel", "George", "Giovanni", "Gonzalo", "Gustav", "Hassan", "Henry", "Hugo", "Ian", "Ibrahim", "Isaac", "Ivan", "Jack", "Jacob", "James", "Jason", "Javier", "Jean", "Jesus", "John", "Jonathan", "Jorge", "Jose", "Joseph", "Joshua", "Juan", "Julian", "Justin", "Kai", "Kevin", "Klaus", "Leonardo", "Liam", "Louis", "Lucas", "Luis", "Marco", "Marcus", "Mario", "Mark", "Martin", "Matthew", "Max", "Michael", "Miguel", "Nathan", "Nicholas", "Noah", "Oliver", "Omar", "Oscar", "Pablo", "Patrick", "Paul", "Pedro", "Peter", "Rafael", "Ramon", "Ricardo", "Richard", "Robert", "Roberto", "Ryan", "Samuel", "Santiago", "Sebastian", "Sergio", "Simon", "Stefan", "Stephen", "Thomas", "Timothy", "Victor", "Vincent", "William", "Xavier", "Zachary"]
+#List of female names for human entities
+femaleNames = ["Aria", "Beatrice", "Celeste", "Diana", "Evelyn", "Fiona", "Grace", "Helena", "Isabella", "Jasmine", "Katherine", "Luna", "Morgana", "Natalie", "Ophelia", "Penelope", "Quinn", "Rose", "Seraphina", "Tessa", "Ursula", "Victoria", "Aaliyah", "Abigail", "Ada", "Adriana", "Aisha", "Alana", "Alexandra", "Alice", "Alicia", "Amanda", "Amelia", "Amy", "Ana", "Andrea", "Angela", "Anna", "Anne", "Aria", "Ariana", "Ashley", "Aurora", "Ava", "Beatrice", "Bella", "Beth", "Bianca", "Brooke", "Camila", "Carla", "Carmen", "Caroline", "Catherine", "Celia", "Charlotte", "Chloe", "Christina", "Clara", "Claudia", "Danielle", "Diana", "Elena", "Elizabeth", "Emily", "Emma", "Eva", "Faith", "Fatima", "Felicia", "Fiona", "Gabriela", "Grace", "Hannah", "Helen", "Isabella", "Jasmine", "Jennifer", "Jessica", "Julia", "Katherine", "Laura", "Leah", "Linda", "Lisa", "Luna", "Madison", "Maria", "Michelle", "Natalie", "Nicole", "Olivia", "Patricia", "Rachel", "Rebecca", "Rose", "Ruth", "Samantha", "Sarah", "Sofia", "Sophia", "Stephanie", "Susan", "Taylor", "Teresa", "Victoria", "Zoe"]
+#List of hometown names for mercenary backstory flavor
+hometowns = ["Westhollow", "Ironwatch", "Greyhaven", "Silverbrook", "Redgate", "Blackfen", "Stormkeep", "Oakmere", "Ashford", "Thornvale", "Highpine", "Brackenfield", "Coldwater", "Driftmarch", "Emberdale", "Foxford", "Glimmerwood", "Hartrest", "Kingsreach", "Lowmere", "Marshend", "Nightvale", "Oldbridge", "Pebblestone", "Ravenhold", "Swiftbrook", "Tallgrass", "Undermoor", "Willowdeep", "Yewcross", "Stonewick", "Grimsby", "Fairhaven", "Mistmoor", "Saltcove"]
+#List of translation keys for the Tavernkeeper's tips.
+tavernTips = ["message.magic_realms.tavernkeep_tip.1", "message.magic_realms.tavernkeep_tip.2", "message.magic_realms.tavernkeep_tip.3", "message.magic_realms.tavernkeep_tip.4", "message.magic_realms.tavernkeep_tip.5", "message.magic_realms.tavernkeep_tip.6"]

@@ -1,0 +1,33 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "the_start"
+	group: ""
+	id: "69925B81CA75CC32"
+	order_index: 1
+	quest_links: [ ]
+	quests: [{
+		id: "27A25EDA167C31B2"
+		rewards: [{
+			id: "7043784C07609BC9"
+			item: {
+				count: 1
+				id: "enigmaticlegacyplus:cursed_ring"
+			}
+			type: "item"
+		}]
+		tasks: [{
+			dimension: "minecraft:overworld"
+			icon: {
+				components: {
+					"ftbquests:icon": "supplementaries:item/globes/globe_caketaco"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "08D4BE286A5190F8"
+			type: "dimension"
+		}]
+		x: -0.5d
+		y: -1.0d
+	}]
+}
