@@ -1,0 +1,42 @@
+# Veil Origins Configuration File
+# This file controls which origins are available on your server.
+# Set to 'true' to enable an origin, 'false' to disable it.
+# Changes require a server restart to take effect.
+#
+# Format: origin_id=true/false
+# Example: veil_origins:veilborn=false
+#
+# This file will be automatically populated with all registered origins
+# from the base mod and any addon mods.
+
+# ========================================
+# Base Veil Origins
+# ========================================
+
+veil_origins:veilborn=true
+veil_origins:stoneheart=true
+veil_origins:feralkin=true
+veil_origins:riftwalker=true
+veil_origins:umbrakin=true
+veil_origins:voidtouched=true
+veil_origins:frostborn=true
+veil_origins:cindersoul=true
+veil_origins:tidecaller=true
+veil_origins:starborne=true
+veil_origins:skyborn=true
+veil_origins:mycomorph=true
+veil_origins:crystalline=true
+veil_origins:technomancer=true
+veil_origins:ethereal=true
+veil_origins:vampire=true
+veil_origins:vampling=true
+veil_origins:werewolf=true
+veil_origins:wolfling=true
+veil_origins:dryad=true
+veil_origins:necromancer=true
+
+# ========================================
+# Addon Origins
+# ========================================
+# Origins from addon mods will appear here automatically
+
