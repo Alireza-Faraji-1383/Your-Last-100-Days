@@ -28,7 +28,7 @@
 
     var M = RaidMobs;
 
-    Raid("day30_raid")
+    Raid("day30_onslaught")
         .spawn(20, 44)                 // wider ring than the day-20 siege
         .aggroRadius(24)
         .followRange(200)

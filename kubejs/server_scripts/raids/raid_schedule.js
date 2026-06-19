@@ -23,7 +23,7 @@
 (function (global) {
     "use strict";
 
-    var CHECK_EVERY = 100;     // server ticks between checks (~5s)
+    var CHECK_EVERY = 200;     // server ticks between checks (~5s)
     var NIGHT_START = 13000;   // overworld time-of-day (ticks past dawn) when night raids may fire
     var _accum = 0;
     var _schedule = [];        // [{ day, raidId, fired }]
