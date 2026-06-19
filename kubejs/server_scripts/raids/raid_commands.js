@@ -18,9 +18,6 @@
         return RaidManager;
     }
     function reg() { return (typeof RaidRegistry !== "undefined") ? RaidRegistry : null; }
-    function playerLevel(player) {
-        return (typeof player.level === "function") ? player.level() : player.level;
-    }
 
     ServerEvents.commandRegistry(function (event) {
         var Commands  = event.commands;
@@ -43,18 +40,13 @@
         // ("UUID string must be 32 or 36 characters long"), so match on username
         // over the live player list instead — same API resolvePlayer() uses.
         function findKjsPlayer(src, name) {
-            try {
-                var self = getPlayer(src);
-                var server = self ? self.server : null;
-                if (!server || !server.players) return null;
-                var want = String(name).toLowerCase();
-                var it = server.players.iterator();
-                while (it.hasNext()) {
-                    var p = it.next();
-                    if (p && String(p.username).toLowerCase() === want) return p;
-                }
-            } catch (e) { console.error("[Raid-cmd] findKjsPlayer: " + e); }
-            return null;
+            if (typeof RaidManager === "undefined" || !RaidManager.findOnlinePlayer) return null;
+            var self = getPlayer(src);
+            var server = self ? self.server : null;
+            var want = String(name).toLowerCase();
+            return RaidManager.findOnlinePlayer(server, function (p) {
+                return String(p.username).toLowerCase() === want;
+            });
         }
 
         var startNode = Commands.literal("start")
@@ -64,7 +56,7 @@
                     var player = getPlayer(ctx.source);
                     if (!player) { ctx.source.sendFailure(Text.of("must be run by/at a player")); return 0; }
                     var id = StringArg.getString(ctx, "id");
-                    var iid = M.start(playerLevel(player), player, id);
+                    var iid = M.start(M.playerLevel(player), player, id);
                     if (iid) player.tell(Text.of("[Raid] started '" + id + "' (" + iid + ")"));
                     else ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id, or player already in a raid)"));
                     return iid ? 1 : 0;
@@ -76,7 +68,7 @@
                         var pname = StringArg.getString(ctx, "player");
                         var target = findKjsPlayer(ctx.source, pname);
                         if (!target) { ctx.source.sendFailure(Text.of("[Raid] player not found: " + pname)); return 0; }
-                        var iid = M.start(playerLevel(target), target, id);
+                        var iid = M.start(M.playerLevel(target), target, id);
                         if (iid) { try { target.tell(Text.of("[Raid] '" + id + "' started on you!")); } catch (e) {} }
                         else ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id, or target already in a raid)"));
                         return iid ? 1 : 0;
