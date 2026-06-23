@@ -32,21 +32,21 @@ LootJS.modifiers((event) => {
     })
 
   // Enigmatic Legacy Plus earth_heart_fragment: 50% chance to void from any loot table
-  const elSpellstones = [
+  const elHeartFragment = [
     'enigmaticlegacyplus:earth_heart_fragment'
   ]
   event.addTableModifier(/.*/)
-    .modifyLoot(elSpellstones, (item) => {
+    .modifyLoot(elHeartFragment, (item) => {
       if (Math.random() > 0.5) return Item.empty
       return item
     })
 
      // Enigmatic Legacy Plus earth_heart: 100% chance to void from any loot table
-  const elSpellstones = [
+  const elHeart = [
     'enigmaticlegacyplus:earth_heart'
   ]
   event.addTableModifier(/.*/)
-    .modifyLoot(elSpellstones, (item) => {
+    .modifyLoot(elHeart, (item) => {
       return Item.empty
     })
 

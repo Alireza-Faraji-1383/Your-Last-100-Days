@@ -117,6 +117,13 @@
         if (!player || !s || !s.id) return;
         try { player.playSound(s.id, (s.vol != null ? s.vol : 1.0), (s.pitch != null ? s.pitch : 1.0)); } catch (e) {}
     }
+    // Shallow-copy a plain object (null otherwise). Lets a reusable archetype's
+    // equip/nbt be referenced by many raids without a later .equip()/.nbt() chain
+    // mutating the shared source object.
+    function shallowCopy(o) {
+        if (!o || typeof o !== "object") return null;
+        var r = {}; for (var k in o) r[k] = o[k]; return r;
+    }
 
     // ---------- Registry ----------------------------------------------------
 
@@ -200,8 +207,8 @@
                 presets:    Array.isArray(s.presets) ? s.presets.slice() : [],
                 extraArgs:  Array.isArray(s.extraArgs) ? s.extraArgs.slice() : [],
                 noDefaults: !!s.noDefaults,
-                equip:      (s.equip && typeof s.equip === "object") ? s.equip : null,
-                nbt:        (s.nbt && typeof s.nbt === "object") ? s.nbt : null
+                equip:      shallowCopy(s.equip),   // copied so a shared archetype isn't mutated
+                nbt:        shallowCopy(s.nbt)
             };
         } else {
             this._mob = { type: String(typeOrSpec), count: 1, presets: [], extraArgs: [], noDefaults: false, equip: null, nbt: null };
@@ -619,16 +626,12 @@
             if (pAlive) mainRaw = unwrapPlayer(player);
         }
         var radius = (this.def.aggroRadius != null) ? this.def.aggroRadius : 20;
-        var lists = [this.roundMobs, this.carryover];
-        for (var li = 0; li < lists.length; li++) {
-            var arr = lists[li];
-            for (var i = 0; i < arr.length; i++) {
-                var raw = rawMobOf(arr[i]);
-                if (!raw || typeof raw.setTarget !== "function") continue;
-                var t = decideTarget(raw, mainRaw, radius);
-                if (t) { try { raw.setTarget(t); } catch (eS) {} }
-            }
-        }
+        eachMob(this, function (m) {
+            var raw = rawMobOf(m);
+            if (!raw || typeof raw.setTarget !== "function") return;
+            var t = decideTarget(raw, mainRaw, radius);
+            if (t) { try { raw.setTarget(t); } catch (eS) {} }
+        });
     };
     RaidInstance.prototype.aliveCount = function () {
         return pruneDead(this.roundMobs).length + pruneDead(this.carryover).length;
@@ -736,6 +739,15 @@
         return alive;
     }
 
+    // Apply fn(entity) to every mob across both the round + carryover lists.
+    function eachMob(inst, fn) {
+        var lists = [inst.roundMobs, inst.carryover];
+        for (var li = 0; li < lists.length; li++) {
+            var arr = lists[li];
+            for (var i = 0; i < arr.length; i++) fn(arr[i]);
+        }
+    }
+
     function fireCb(def, name, cbArgs) {
         var fn = def.callbacks[name];
         if (typeof fn !== "function") return;
@@ -743,18 +755,22 @@
         catch (e) { err(`callback ${name} threw: ${e}`); }
     }
 
+    // Iterate the live server player list; return the first match for pred, or null.
+    function findOnlinePlayer(server, pred) {
+        if (!server || !server.players) return null;
+        try {
+            var it = server.players.iterator();
+            while (it.hasNext()) { var p = it.next(); if (p && pred(p)) return p; }
+        } catch (e) {}
+        return null;
+    }
+
     // Live player by UUID from the current server player list; null if offline.
     function resolvePlayer(inst) {
-        try {
-            var server = Manager._server;
-            if (!server || !server.players) return null;
-            var it = server.players.iterator();
-            while (it.hasNext()) {
-                var p = it.next();
-                if (String(p.uuid) === inst.playerUuid) return p;
-            }
-        } catch (e) {}
-        return null;   // offline / not found — callers handle null (SPAWNING waits, aggro no-ops)
+        // offline / not found returns null — callers handle it (SPAWNING waits, aggro no-ops).
+        return findOnlinePlayer(Manager._server, function (p) {
+            return String(p.uuid) === inst.playerUuid;
+        });
     }
 
     // ---------- Manager -----------------------------------------------------
@@ -773,13 +789,9 @@
     }
 
     function killMobs(inst) {
-        var lists = [inst.roundMobs, inst.carryover];
-        for (var li = 0; li < lists.length; li++) {
-            var arr = lists[li];
-            for (var i = 0; i < arr.length; i++) {
-                try { if (arr[i] && arr[i].isAlive && arr[i].isAlive()) arr[i].kill(); } catch (e) {}
-            }
-        }
+        eachMob(inst, function (e) {
+            try { if (e && e.isAlive && e.isAlive()) e.kill(); } catch (x) {}
+        });
         inst.roundMobs = []; inst.carryover = [];
     }
 
@@ -867,6 +879,10 @@
 
     const Manager = {
         _server: null,
+
+        // Shared utilities reused by raid_commands.js (avoids duplicating them there).
+        playerLevel: playerLevel,
+        findOnlinePlayer: findOnlinePlayer,
 
         start: function (level, player, defId) {
             var def = Registry.get(defId);
