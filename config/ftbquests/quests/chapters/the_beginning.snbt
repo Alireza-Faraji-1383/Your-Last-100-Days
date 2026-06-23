@@ -1,0 +1,133 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "the_beginning"
+	group: ""
+	icon: {
+		id: "minecraft:sunflower"
+	}
+	id: "1473010E94DC31F5"
+	order_index: 0
+	quest_links: [ ]
+	quests: [
+		{
+			id: "5AFFF6D2AB06C8E5"
+			shape: "rsquare"
+			size: 2.9d
+			tasks: [{
+				advancement: "minecraft:story/root"
+				criterion: ""
+				id: "0DD60D43B4FF16B1"
+				type: "advancement"
+			}]
+			x: -4.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["5AFFF6D2AB06C8E5"]
+			hide_dependency_lines: false
+			id: "150B22BC04F1A682"
+			rewards: [
+				{
+					id: "4E127336B9C62664"
+					type: "xp"
+					xp: 30
+				}
+				{
+					id: "096E58C1F58ED4D7"
+					item: {
+						count: 1
+						id: "enigmaticlegacyplus:iron_ring"
+					}
+					type: "item"
+				}
+				{
+					id: "0326CBFB4A071283"
+					item: {
+						count: 1
+						id: "minecraft:furnace"
+					}
+					type: "item"
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:story/smelt_iron"
+				criterion: ""
+				id: "0CEA5772257B71EF"
+				type: "advancement"
+			}]
+			x: -0.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["5AFFF6D2AB06C8E5"]
+			id: "2C9F7712321854BE"
+			shape: "gear"
+			size: 1.7d
+			tasks: [{
+				advancement: "minecraft:adventure/root"
+				criterion: ""
+				id: "3F5D85043C2D0453"
+				type: "advancement"
+			}]
+			x: -4.0d
+			y: -5.5d
+		}
+		{
+			dependencies: ["2C9F7712321854BE"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:item/trial_key"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "5707E1C306DE7F69"
+			shape: "hexagon"
+			tasks: [{
+				advancement: "minecraft:adventure/minecraft_trials_edition"
+				criterion: ""
+				id: "3F271D09198AE025"
+				type: "advancement"
+			}]
+			x: -4.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["2C9F7712321854BE"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:item/warden_spawn_egg"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "60CB4B59DF9639E5"
+			shape: "hexagon"
+			tasks: [{
+				id: "7740D1507B380B1C"
+				structure: "minecraft:ancient_city"
+				type: "structure"
+			}]
+			x: -2.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["2C9F7712321854BE"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:item/trial_key"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "2C0EC05D1BEA77B1"
+			shape: "hexagon"
+			tasks: [{
+				advancement: "minecraft:adventure/minecraft_trials_edition"
+				criterion: ""
+				id: "022D3F838EB03A33"
+				type: "advancement"
+			}]
+			x: -6.0d
+			y: -8.0d
+		}
+	]
+}
