@@ -13,15 +13,15 @@
 		{
 			id: "5AFFF6D2AB06C8E5"
 			shape: "rsquare"
-			size: 2.9d
+			size: 3.0d
 			tasks: [{
 				advancement: "minecraft:story/root"
 				criterion: ""
 				id: "0DD60D43B4FF16B1"
 				type: "advancement"
 			}]
-			x: -4.0d
-			y: -2.0d
+			x: -3.5d
+			y: 3.0d
 		}
 		{
 			dependencies: ["5AFFF6D2AB06C8E5"]
@@ -56,22 +56,27 @@
 				id: "0CEA5772257B71EF"
 				type: "advancement"
 			}]
-			x: -0.5d
-			y: -2.0d
+			x: 0.0d
+			y: 3.0d
 		}
 		{
 			dependencies: ["5AFFF6D2AB06C8E5"]
 			id: "2C9F7712321854BE"
+			rewards: [{
+				id: "558B14564E27A212"
+				type: "xp"
+				xp: 50
+			}]
 			shape: "gear"
-			size: 1.7d
+			size: 1.8d
 			tasks: [{
 				advancement: "minecraft:adventure/root"
 				criterion: ""
 				id: "3F5D85043C2D0453"
 				type: "advancement"
 			}]
-			x: -4.0d
-			y: -5.5d
+			x: -3.5d
+			y: -4.5d
 		}
 		{
 			dependencies: ["2C9F7712321854BE"]
@@ -82,6 +87,31 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "5707E1C306DE7F69"
+			rewards: [
+				{
+					count: 3
+					id: "302AD2FA5AC5A35E"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					count: 64
+					id: "7D5BCC072A9FD97D"
+					item: {
+						count: 1
+						id: "minecraft:oak_log"
+					}
+					type: "item"
+				}
+				{
+					id: "24D184E5047DFF86"
+					type: "xp"
+					xp: 50
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
 				advancement: "minecraft:adventure/minecraft_trials_edition"
@@ -89,8 +119,8 @@
 				id: "3F271D09198AE025"
 				type: "advancement"
 			}]
-			x: -4.0d
-			y: -8.0d
+			x: -3.5d
+			y: -7.0d
 		}
 		{
 			dependencies: ["2C9F7712321854BE"]
@@ -101,33 +131,243 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "60CB4B59DF9639E5"
+			rewards: [
+				{
+					count: 32
+					id: "369F1B3589BAD51A"
+					item: {
+						count: 1
+						id: "minecraft:white_wool"
+					}
+					type: "item"
+				}
+				{
+					count: 2
+					id: "6C5F90506729CB0E"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					id: "19554321EA506D72"
+					type: "xp"
+					xp: 50
+				}
+				{
+					id: "37D37A25D39E6DCD"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:long_swiftness"
+							}
+						}
+						count: 1
+						id: "minecraft:splash_potion"
+					}
+					type: "item"
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
 				id: "7740D1507B380B1C"
 				structure: "minecraft:ancient_city"
 				type: "structure"
 			}]
-			x: -2.0d
-			y: -8.0d
+			x: -1.5d
+			y: -6.5d
 		}
 		{
 			dependencies: ["2C9F7712321854BE"]
 			icon: {
 				components: {
-					"ftbquests:icon": "minecraft:item/trial_key"
+					"ftbquests:icon": "minecraft:textures/map/decorations/woodland_mansion.png"
 				}
 				id: "ftbquests:custom_icon"
 			}
 			id: "2C0EC05D1BEA77B1"
+			rewards: [
+				{
+					id: "6DA56898F484D9CE"
+					item: {
+						count: 1
+						id: "minecraft:totem_of_undying"
+					}
+					type: "item"
+				}
+				{
+					id: "29FE5C747BB2CBE3"
+					type: "xp"
+					xp: 50
+				}
+				{
+					id: "4DE12DD5240B923B"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:long_invisibility"
+							}
+						}
+						count: 1
+						id: "minecraft:splash_potion"
+					}
+					type: "item"
+				}
+				{
+					count: 64
+					id: "40BA1FC87E140DB9"
+					item: {
+						count: 1
+						id: "minecraft:stone"
+					}
+					type: "item"
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
-				advancement: "minecraft:adventure/minecraft_trials_edition"
-				criterion: ""
-				id: "022D3F838EB03A33"
-				type: "advancement"
+				id: "2F5385C01DF8CBD9"
+				structure: "minecraft:mansion"
+				type: "structure"
+			}]
+			x: -5.5d
+			y: -6.5d
+		}
+		{
+			dependencies: ["2C9F7712321854BE"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:block/stone_bricks"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "5626294477EA4DCB"
+			rewards: [
+				{
+					count: 2
+					id: "03F3ABEDA4F80396"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					id: "22C3780F5871C9E9"
+					type: "xp"
+					xp: 50
+				}
+				{
+					count: 128
+					id: "04A1ADFFDF17422F"
+					item: {
+						count: 1
+						id: "minecraft:torch"
+					}
+					type: "item"
+				}
+				{
+					id: "4747625E416D2DC7"
+					item: {
+						count: 1
+						id: "minecraft:end_crystal"
+					}
+					type: "item"
+				}
+			]
+			shape: "hexagon"
+			tasks: [{
+				id: "330B06F6885B5449"
+				structure: "#betterstrongholds:better_strongholds"
+				type: "structure"
+			}]
+			x: -1.0d
+			y: -4.5d
+		}
+		{
+			dependencies: ["2C9F7712321854BE"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:textures/map/decorations/ocean_monument.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "7D7BFA807275B79B"
+			rewards: [
+				{
+					count: 2
+					id: "48FD38BB0769E223"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					id: "4BB349265A0C0ABE"
+					type: "xp"
+					xp: 50
+				}
+				{
+					count: 3
+					id: "337CDF60D21AB820"
+					item: {
+						count: 1
+						id: "minecraft:wet_sponge"
+					}
+					type: "item"
+				}
+				{
+					id: "2F6C64D50CA2470A"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:long_water_breathing"
+							}
+						}
+						count: 1
+						id: "minecraft:potion"
+					}
+					type: "item"
+				}
+			]
+			shape: "hexagon"
+			tasks: [{
+				id: "3EAD1D466FD9060E"
+				structure: "minecraft:monument"
+				type: "structure"
 			}]
 			x: -6.0d
-			y: -8.0d
+			y: -4.5d
+		}
+		{
+			dependencies: ["2C9F7712321854BE"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:textures/map/decorations/ocean_monument.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "0DBD83FB696E5326"
+			rewards: [
+				{
+					count: 2
+					id: "49BE2A6726C79AFA"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					id: "3652A797720156EE"
+					type: "xp"
+					xp: 50
+				}
+			]
+			shape: "hexagon"
+			x: -5.5d
+			y: -2.5d
 		}
 	]
 }

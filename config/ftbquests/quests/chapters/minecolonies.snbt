@@ -282,6 +282,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 64
+					id: "0D1842C33B72978C"
+					item: {
+						count: 1
+						id: "minecraft:cobblestone"
+					}
+					type: "item"
+				}
 			]
 			shape: "octagon"
 			size: 2.0d
@@ -766,9 +775,9 @@
 			hide_dependency_lines: true
 			id: "71FCF06A98CC66D7"
 			rewards: [{
-				id: "177501B32770F7EB"
-				type: "xp_levels"
-				xp_levels: 5
+				id: "4169DA6621B5385A"
+				type: "xp"
+				xp: 20
 			}]
 			tasks: [{
 				id: "6FF8ACDFE7CCF238"
@@ -2314,6 +2323,8 @@
 					type: "item"
 				}
 			]
+			shape: "pentagon"
+			size: 1.7d
 			tasks: [{
 				advancement: "minecolonies:military/army_30"
 				criterion: ""
@@ -2535,16 +2546,16 @@
 					type: "item"
 				}
 			]
-			shape: "pentagon"
-			size: 2.0d
+			shape: "hexagon"
+			size: 2.5d
 			tasks: [{
 				advancement: "minecolonies:military/army_80"
 				criterion: ""
 				id: "0576D447E526E8C2"
 				type: "advancement"
 			}]
-			x: 9.5d
-			y: -16.0d
+			x: 10.0d
+			y: -16.25d
 		}
 		{
 			id: "3AE1C3290500638F"
@@ -2607,6 +2618,8 @@
 					type: "item"
 				}
 			]
+			shape: "pentagon"
+			size: 1.7d
 			tasks: [{
 				advancement: "minecolonies:minecolonies/colony_population_25"
 				criterion: ""
@@ -2668,16 +2681,16 @@
 					type: "item"
 				}
 			]
-			shape: "pentagon"
-			size: 2.0d
+			shape: "hexagon"
+			size: 2.5d
 			tasks: [{
 				advancement: "minecolonies:minecolonies/colony_population_50"
 				criterion: ""
 				id: "3A10636BFEEE2400"
 				type: "advancement"
 			}]
-			x: -3.5d
-			y: -16.0d
+			x: -3.75d
+			y: -16.25d
 		}
 		{
 			dependencies: ["5A11A2FC20E5CE2A"]
@@ -2906,7 +2919,7 @@
 				}
 			]
 			shape: "hexagon"
-			size: 2.5d
+			size: 3.0d
 			tasks: [{
 				advancement: "minecolonies:production/deep_mine"
 				criterion: ""
