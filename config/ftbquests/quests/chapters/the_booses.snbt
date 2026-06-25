@@ -3,8 +3,391 @@
 	default_quest_shape: ""
 	filename: "the_booses"
 	group: ""
+	icon: {
+		components: {
+			"ftbquests:icon": "cataclysm:item/strange_key"
+		}
+		id: "ftbquests:custom_icon"
+	}
 	id: "07DDCEA56A248369"
+	images: [
+		{
+			click: "1"
+			height: 5.5d
+			image: "cataclysm:textures/entity/flame_strike_sigil.png"
+			rotation: 0.0d
+			width: 5.5d
+			x: -3.0d
+			y: -0.5d
+		}
+		{
+			click: "1"
+			height: 12.0d
+			image: "cataclysm:textures/entity/soul_flame_strike_sigil.png"
+			order: -1
+			rotation: 0.0d
+			width: 12.0d
+			x: -3.0d
+			y: -0.5d
+		}
+	]
 	order_index: 2
 	quest_links: [ ]
-	quests: [ ]
+	quests: [
+		{
+			dependencies: ["2768BCABBE854AE2"]
+			icon: {
+				id: "cataclysm:mechanical_fusion_anvil"
+			}
+			id: "154F2CD44BB7EC38"
+			tasks: [{
+				id: "42D0D04FE1780EEC"
+				structure: "cataclysm:ancient_factory"
+				type: "structure"
+			}]
+			x: -3.0d
+			y: -4.5d
+		}
+		{
+			dependencies: ["154F2CD44BB7EC38"]
+			id: "1DCA014C0D986B5E"
+			shape: "hexagon"
+			tasks: [{
+				advancement: "cataclysm:kill_harbinger"
+				criterion: ""
+				icon: {
+					components: {
+						"ftbquests:icon": "cataclysm:item/witherite_ingot"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "0B981A722305B897"
+				type: "advancement"
+			}]
+			x: -3.0d
+			y: -6.5d
+		}
+		{
+			dependencies: ["1D21918DEB56B1A6"]
+			icon: {
+				components: {
+					"ftbquests:icon": "cataclysm:block/frosted_stone_bricks"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "41B1C88067F9ADB8"
+			tasks: [{
+				id: "2F033A3007EA8946"
+				structure: "cataclysm:frosted_prison"
+				type: "structure"
+			}]
+			x: 0.5d
+			y: -4.0d
+		}
+		{
+			dependencies: ["41B1C88067F9ADB8"]
+			id: "552A5BBC9AC53420"
+			shape: "hexagon"
+			tasks: [{
+				advancement: "cataclysm:kill_maledictus"
+				criterion: ""
+				id: "5132D6C39C326043"
+				type: "advancement"
+			}]
+			x: 2.5d
+			y: -6.0d
+		}
+		{
+			id: "23C3ADD73281CAB2"
+			shape: "octagon"
+			size: 2.0d
+			tasks: [{
+				advancement: "cataclysm:root"
+				criterion: ""
+				id: "097CCA3ED81C0C15"
+				type: "advancement"
+			}]
+			x: -3.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			icon: {
+				id: "cataclysm:storm_eye"
+			}
+			id: "179F0314EF6F15F9"
+			tasks: [{
+				id: "413437A2AC29C11F"
+				item: { count: 1, id: "cataclysm:storm_eye" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			icon: {
+				id: "cataclysm:desert_eye"
+			}
+			id: "219A93D1B55C768D"
+			tasks: [{
+				id: "2B8583D355EAA2E8"
+				item: { count: 1, id: "cataclysm:desert_eye" }
+				type: "item"
+			}]
+			x: -4.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			id: "2768BCABBE854AE2"
+			tasks: [{
+				id: "36FB0052E1B5FCA4"
+				item: { count: 1, id: "cataclysm:mech_eye" }
+				type: "item"
+			}]
+			x: -3.0d
+			y: -2.5d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			id: "41089C0F0B9E9621"
+			tasks: [{
+				id: "5C83ABAB599B9BD3"
+				item: { count: 1, id: "cataclysm:abyss_eye" }
+				type: "item"
+			}]
+			x: -5.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["179F0314EF6F15F9"]
+			icon: {
+				components: {
+					"ftbquests:icon": "artifacts:item/cloud_in_a_bottle"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "159A20BC9424EADC"
+			tasks: [{
+				id: "6D6BD147978B045D"
+				structure: "cataclysm:acropolis"
+				type: "structure"
+			}]
+			x: 1.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["159A20BC9424EADC"]
+			id: "1E133F29216F6E4A"
+			shape: "hexagon"
+			tasks: [{
+				advancement: "cataclysm:kill_scylla"
+				criterion: ""
+				id: "4E9F238778247775"
+				type: "advancement"
+			}]
+			x: 3.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["41089C0F0B9E9621"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:textures/mob_effect/water_breathing.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "155725BD5EEF4DB4"
+			tasks: [{
+				id: "082740EBEE151E22"
+				structure: "cataclysm:sunken_city"
+				type: "structure"
+			}]
+			x: -7.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["41089C0F0B9E9621"]
+			id: "4CA7ACB8384A6CB8"
+			shape: "hexagon"
+			tasks: [{
+				advancement: "cataclysm:kill_leviathan"
+				criterion: ""
+				id: "4DF80EEFA12BE1DB"
+				type: "advancement"
+			}]
+			x: -9.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["219A93D1B55C768D"]
+			icon: {
+				id: "cataclysm:necklace_of_the_desert"
+			}
+			id: "66BBED961CBFADF3"
+			rewards: [{
+				id: "65AE714A3CFEDF13"
+				item: {
+					count: 1
+					id: "minecraft:brush"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "4C9085519E405318"
+				structure: "cataclysm:cursed_pyramid"
+				type: "structure"
+			}]
+			x: -6.5d
+			y: -4.0d
+		}
+		{
+			dependencies: ["66BBED961CBFADF3"]
+			id: "74AF1CE2FEEF22BC"
+			shape: "hexagon"
+			tasks: [{
+				advancement: "cataclysm:kill_remnant"
+				criterion: ""
+				id: "75F8C406CAD6FD2D"
+				type: "advancement"
+			}]
+			x: -8.5d
+			y: -6.0d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			icon: {
+				id: "cataclysm:cursed_eye"
+			}
+			id: "1D21918DEB56B1A6"
+			tasks: [{
+				id: "56588DF5FD4CCD1E"
+				item: { count: 1, id: "cataclysm:cursed_eye" }
+				type: "item"
+			}]
+			x: -1.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			id: "6576C98A4DB6221C"
+			tasks: [{
+				id: "67459229F379BF26"
+				item: { count: 1, id: "cataclysm:flame_eye" }
+				type: "item"
+			}]
+			x: -3.0d
+			y: 1.5d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			id: "472C6FAECDD0CBA0"
+			tasks: [{
+				id: "00B7A9AF5047AC6C"
+				item: { count: 1, id: "cataclysm:monstrous_eye" }
+				type: "item"
+			}]
+			x: -1.5d
+			y: 1.0d
+		}
+		{
+			dependencies: ["23C3ADD73281CAB2"]
+			id: "78C886330EF984E8"
+			tasks: [{
+				id: "25689E78CF7C1FD0"
+				item: { count: 1, id: "cataclysm:void_eye" }
+				type: "item"
+			}]
+			x: -4.5d
+			y: 1.0d
+		}
+		{
+			dependencies: ["472C6FAECDD0CBA0"]
+			icon: {
+				components: {
+					"ftbquests:icon": "cataclysm:textures/mob_effect/monstrous.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "0DB241AA8AB171C9"
+			tasks: [{
+				id: "1309DABBE73C3552"
+				structure: "cataclysm:soul_black_smith"
+				type: "structure"
+			}]
+			x: 0.5d
+			y: 3.0d
+		}
+		{
+			dependencies: ["0DB241AA8AB171C9"]
+			id: "74D320BC2CE035A6"
+			tasks: [{
+				advancement: "cataclysm:kill_monstrosity"
+				criterion: ""
+				id: "03245AD04E244D83"
+				type: "advancement"
+			}]
+			x: 2.5d
+			y: 5.0d
+		}
+		{
+			dependencies: ["6576C98A4DB6221C"]
+			icon: {
+				components: {
+					"ftbquests:icon": "cataclysm:block/ignitium_block"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "5B26284490667F2E"
+			tasks: [{
+				id: "48FB885B4604D1F1"
+				structure: "cataclysm:burning_arena"
+				type: "structure"
+			}]
+			x: -3.0d
+			y: 3.5d
+		}
+		{
+			dependencies: ["5B26284490667F2E"]
+			id: "1326AD9EC7A362E8"
+			tasks: [{
+				advancement: "cataclysm:kill_ignis"
+				criterion: ""
+				id: "2A6C4818DEFF1886"
+				type: "advancement"
+			}]
+			x: -3.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["78C886330EF984E8"]
+			icon: {
+				components: {
+					"ftbquests:icon": "cataclysm:block/void_stone"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "66205FF8691A9FD7"
+			tasks: [{
+				id: "0FD81C48335216D5"
+				structure: "cataclysm:ruined_citadel"
+				type: "structure"
+			}]
+			x: -6.5d
+			y: 3.0d
+		}
+		{
+			dependencies: ["66205FF8691A9FD7"]
+			id: "128AB24F072E82BD"
+			tasks: [{
+				advancement: "cataclysm:kill_ender_guardian"
+				criterion: ""
+				id: "7D9A008EFECF8397"
+				type: "advancement"
+			}]
+			x: -8.5d
+			y: 5.0d
+		}
+	]
 }

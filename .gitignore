@@ -38,3 +38,4 @@ texturepacks/
 # Mod jars (track separately or use manifest)
 mods/
 icon.png
+config/ftbquests/quests/lang/en_us.snbt
