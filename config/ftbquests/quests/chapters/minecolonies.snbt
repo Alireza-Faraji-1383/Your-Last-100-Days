@@ -2271,8 +2271,8 @@
 				id: "316B12D0955BD3A5"
 				type: "advancement"
 			}]
-			x: 4.5d
-			y: -16.0d
+			x: 5.0d
+			y: -15.0d
 		}
 		{
 			dependencies: ["537A8F99CC3F525D"]
@@ -2331,8 +2331,8 @@
 				id: "7B6CBFCC0D73938B"
 				type: "advancement"
 			}]
-			x: 7.0d
-			y: -16.0d
+			x: 8.0d
+			y: -15.5d
 		}
 		{
 			dependencies: ["5F5DB67F6A470C73"]
@@ -2554,8 +2554,8 @@
 				id: "0576D447E526E8C2"
 				type: "advancement"
 			}]
-			x: 10.0d
-			y: -16.25d
+			x: 10.5d
+			y: -17.0d
 		}
 		{
 			id: "3AE1C3290500638F"
@@ -2578,8 +2578,8 @@
 				id: "47E29293D84B8C1F"
 				type: "advancement"
 			}]
-			x: 1.5d
-			y: -16.0d
+			x: 1.0d
+			y: -15.0d
 		}
 		{
 			dependencies: ["3AE1C3290500638F"]
@@ -2626,8 +2626,8 @@
 				id: "5EE4B0C4C88E2C21"
 				type: "advancement"
 			}]
-			x: -1.0d
-			y: -16.0d
+			x: -2.0d
+			y: -15.5d
 		}
 		{
 			dependencies: ["4D61009737D94BDA"]
@@ -2648,15 +2648,6 @@
 					type: "item"
 				}
 				{
-					count: 4
-					id: "07D3EDCF214903AB"
-					item: {
-						count: 1
-						id: "minecraft:netherite_ingot"
-					}
-					type: "item"
-				}
-				{
 					id: "5D125CDAF76C1CD3"
 					item: {
 						count: 1
@@ -2665,18 +2656,19 @@
 					type: "item"
 				}
 				{
-					id: "4354583FD1EA93CA"
+					count: 2
+					id: "146D9CF16F632582"
 					item: {
 						count: 1
-						id: "minecraft:beacon"
+						id: "enigmaticlegacyplus:mending_mixture"
 					}
 					type: "item"
 				}
 				{
-					id: "106E492C8A43FBF8"
+					id: "02E9F8DF01EBFC52"
 					item: {
 						count: 1
-						id: "enigmaticlegacyplus:ascension_amulet"
+						id: "enigmaticlegacyplus:execution_axe"
 					}
 					type: "item"
 				}
@@ -2689,8 +2681,8 @@
 				id: "3A10636BFEEE2400"
 				type: "advancement"
 			}]
-			x: -3.75d
-			y: -16.25d
+			x: -4.5d
+			y: -17.0d
 		}
 		{
 			dependencies: ["5A11A2FC20E5CE2A"]
@@ -2928,6 +2920,58 @@
 			}]
 			x: -2.5d
 			y: -1.25d
+		}
+		{
+			id: "75CC6A3ABF5E66E2"
+			rewards: [
+				{
+					count: 3
+					id: "6AD8CB86BA040970"
+					item: {
+						count: 1
+						id: "minecraft:nether_star"
+					}
+					type: "item"
+				}
+				{
+					id: "55002C7716673203"
+					item: {
+						count: 1
+						id: "minecraft:netherite_block"
+					}
+					type: "item"
+				}
+				{
+					id: "46DCE37BD40E7891"
+					item: {
+						count: 1
+						id: "enigmaticlegacyplus:ascension_amulet"
+					}
+					type: "item"
+				}
+				{
+					id: "71CCC5246180AB3C"
+					item: {
+						count: 1
+						id: "enigmaticlegacyplus:blazing_core"
+					}
+					type: "item"
+				}
+				{
+					id: "7371434CBA47DCC0"
+					type: "xp_levels"
+					xp_levels: 100
+				}
+			]
+			size: 4.0d
+			tasks: [{
+				advancement: "minecolonies:minecolonies/colony_population_75"
+				criterion: ""
+				id: "44BF0282202624E0"
+				type: "advancement"
+			}]
+			x: 3.0d
+			y: -18.0d
 		}
 	]
 }

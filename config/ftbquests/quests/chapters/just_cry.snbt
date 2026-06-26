@@ -1,0 +1,22 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "just_cry"
+	group: ""
+	id: "5A68256C8616EE36"
+	order_index: 2
+	quest_links: [ ]
+	quests: [{
+		id: "2D3422284A9EFF23"
+		shape: "diamond"
+		size: 3.0d
+		tasks: [{
+			advancement: "enigmaticlegacyplus:main/cursed_ring"
+			criterion: ""
+			id: "33488AC08208BAD1"
+			type: "advancement"
+		}]
+		x: 0.5d
+		y: -3.5d
+	}]
+}
