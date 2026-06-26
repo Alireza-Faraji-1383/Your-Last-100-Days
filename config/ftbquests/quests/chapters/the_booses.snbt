@@ -4,10 +4,7 @@
 	filename: "the_booses"
 	group: ""
 	icon: {
-		components: {
-			"ftbquests:icon": "cataclysm:item/strange_key"
-		}
-		id: "ftbquests:custom_icon"
+		id: "cataclysm:flame_eye"
 	}
 	id: "07DDCEA56A248369"
 	images: [
@@ -40,6 +37,21 @@
 				id: "cataclysm:mechanical_fusion_anvil"
 			}
 			id: "154F2CD44BB7EC38"
+			rewards: [
+				{
+					id: "64F583D0D72DD207"
+					item: {
+						count: 1
+						id: "cataclysm:witherite_ingot"
+					}
+					type: "item"
+				}
+				{
+					id: "374356D056A0445A"
+					type: "xp"
+					xp: 200
+				}
+			]
 			tasks: [{
 				id: "42D0D04FE1780EEC"
 				structure: "cataclysm:ancient_factory"
@@ -51,6 +63,38 @@
 		{
 			dependencies: ["154F2CD44BB7EC38"]
 			id: "1DCA014C0D986B5E"
+			rewards: [
+				{
+					id: "07645484884FC263"
+					item: {
+						count: 1
+						id: "minecraft:anvil"
+					}
+					type: "item"
+				}
+				{
+					id: "690494891D7AF372"
+					item: {
+						count: 1
+						id: "cataclysm:witherite_ingot"
+					}
+					type: "item"
+				}
+				{
+					id: "7CADAD5E49F0D2F5"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					count: 10
+					id: "41287C115D7B2699"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
 				advancement: "cataclysm:kill_harbinger"
@@ -76,6 +120,11 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "41B1C88067F9ADB8"
+			rewards: [{
+				id: "47BD0228B8DF088B"
+				type: "xp"
+				xp: 200
+			}]
 			tasks: [{
 				id: "2F033A3007EA8946"
 				structure: "cataclysm:frosted_prison"
@@ -87,6 +136,22 @@
 		{
 			dependencies: ["41B1C88067F9ADB8"]
 			id: "552A5BBC9AC53420"
+			rewards: [
+				{
+					id: "79A667422120B108"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					count: 10
+					id: "3BF404D59257DD8A"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
 				advancement: "cataclysm:kill_maledictus"
@@ -116,6 +181,11 @@
 				id: "cataclysm:storm_eye"
 			}
 			id: "179F0314EF6F15F9"
+			rewards: [{
+				id: "5C9ED58620121D35"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "413437A2AC29C11F"
 				item: { count: 1, id: "cataclysm:storm_eye" }
@@ -130,6 +200,11 @@
 				id: "cataclysm:desert_eye"
 			}
 			id: "219A93D1B55C768D"
+			rewards: [{
+				id: "5442300B7BC550E5"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "2B8583D355EAA2E8"
 				item: { count: 1, id: "cataclysm:desert_eye" }
@@ -141,6 +216,11 @@
 		{
 			dependencies: ["23C3ADD73281CAB2"]
 			id: "2768BCABBE854AE2"
+			rewards: [{
+				id: "1C8A90D0A8123715"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "36FB0052E1B5FCA4"
 				item: { count: 1, id: "cataclysm:mech_eye" }
@@ -152,6 +232,11 @@
 		{
 			dependencies: ["23C3ADD73281CAB2"]
 			id: "41089C0F0B9E9621"
+			rewards: [{
+				id: "4FF3BE7A112DC387"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "5C83ABAB599B9BD3"
 				item: { count: 1, id: "cataclysm:abyss_eye" }
@@ -169,6 +254,11 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "159A20BC9424EADC"
+			rewards: [{
+				id: "310C36F38346D9DF"
+				type: "xp"
+				xp: 200
+			}]
 			tasks: [{
 				id: "6D6BD147978B045D"
 				structure: "cataclysm:acropolis"
@@ -180,6 +270,22 @@
 		{
 			dependencies: ["159A20BC9424EADC"]
 			id: "1E133F29216F6E4A"
+			rewards: [
+				{
+					id: "435EF5C776F89FE0"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					count: 10
+					id: "443B47EE0D2E938C"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
 				advancement: "cataclysm:kill_scylla"
@@ -199,6 +305,11 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "155725BD5EEF4DB4"
+			rewards: [{
+				id: "371A5528E79B2BFC"
+				type: "xp"
+				xp: 200
+			}]
 			tasks: [{
 				id: "082740EBEE151E22"
 				structure: "cataclysm:sunken_city"
@@ -210,6 +321,43 @@
 		{
 			dependencies: ["41089C0F0B9E9621"]
 			id: "4CA7ACB8384A6CB8"
+			rewards: [
+				{
+					id: "3E748CE38B6D1144"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					id: "057CB6CCD52E670F"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:long_water_breathing"
+							}
+						}
+						count: 1
+						id: "minecraft:splash_potion"
+					}
+					type: "item"
+				}
+				{
+					id: "0F8D9C56A3823781"
+					item: {
+						count: 1
+						id: "minecraft:trident"
+					}
+					type: "item"
+				}
+				{
+					count: 10
+					id: "6BBAAC88F9835BF5"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
 				advancement: "cataclysm:kill_leviathan"
@@ -226,14 +374,21 @@
 				id: "cataclysm:necklace_of_the_desert"
 			}
 			id: "66BBED961CBFADF3"
-			rewards: [{
-				id: "65AE714A3CFEDF13"
-				item: {
-					count: 1
-					id: "minecraft:brush"
+			rewards: [
+				{
+					id: "65AE714A3CFEDF13"
+					item: {
+						count: 1
+						id: "minecraft:brush"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "005693643EAC4398"
+					type: "xp"
+					xp: 200
+				}
+			]
 			tasks: [{
 				id: "4C9085519E405318"
 				structure: "cataclysm:cursed_pyramid"
@@ -245,6 +400,30 @@
 		{
 			dependencies: ["66BBED961CBFADF3"]
 			id: "74AF1CE2FEEF22BC"
+			rewards: [
+				{
+					id: "6CDB6A6D9608240B"
+					item: {
+						count: 1
+						id: "cataclysm:koboleton_bone"
+					}
+					type: "item"
+				}
+				{
+					id: "046CE5ACABB60CB8"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					count: 10
+					id: "6320C12EAFBAEFDF"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			shape: "hexagon"
 			tasks: [{
 				advancement: "cataclysm:kill_remnant"
@@ -261,6 +440,11 @@
 				id: "cataclysm:cursed_eye"
 			}
 			id: "1D21918DEB56B1A6"
+			rewards: [{
+				id: "363CE714E217A38A"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "56588DF5FD4CCD1E"
 				item: { count: 1, id: "cataclysm:cursed_eye" }
@@ -272,6 +456,11 @@
 		{
 			dependencies: ["23C3ADD73281CAB2"]
 			id: "6576C98A4DB6221C"
+			rewards: [{
+				id: "460F92CC603423A1"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "67459229F379BF26"
 				item: { count: 1, id: "cataclysm:flame_eye" }
@@ -283,6 +472,11 @@
 		{
 			dependencies: ["23C3ADD73281CAB2"]
 			id: "472C6FAECDD0CBA0"
+			rewards: [{
+				id: "3E0583DB9140B35F"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "00B7A9AF5047AC6C"
 				item: { count: 1, id: "cataclysm:monstrous_eye" }
@@ -294,6 +488,11 @@
 		{
 			dependencies: ["23C3ADD73281CAB2"]
 			id: "78C886330EF984E8"
+			rewards: [{
+				id: "608B853278FA6FD5"
+				type: "xp_levels"
+				xp_levels: 5
+			}]
 			tasks: [{
 				id: "25689E78CF7C1FD0"
 				item: { count: 1, id: "cataclysm:void_eye" }
@@ -311,6 +510,11 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "0DB241AA8AB171C9"
+			rewards: [{
+				id: "435E0B7EAAF1F8E6"
+				type: "xp"
+				xp: 200
+			}]
 			tasks: [{
 				id: "1309DABBE73C3552"
 				structure: "cataclysm:soul_black_smith"
@@ -322,6 +526,22 @@
 		{
 			dependencies: ["0DB241AA8AB171C9"]
 			id: "74D320BC2CE035A6"
+			rewards: [
+				{
+					id: "279399F389249552"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					count: 10
+					id: "38EA3AEA5C71AEE6"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "cataclysm:kill_monstrosity"
 				criterion: ""
@@ -340,6 +560,11 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "5B26284490667F2E"
+			rewards: [{
+				id: "216F4D0F3B0A0373"
+				type: "xp"
+				xp: 200
+			}]
 			tasks: [{
 				id: "48FB885B4604D1F1"
 				structure: "cataclysm:burning_arena"
@@ -351,6 +576,22 @@
 		{
 			dependencies: ["5B26284490667F2E"]
 			id: "1326AD9EC7A362E8"
+			rewards: [
+				{
+					id: "14FFDC9487E5FE9B"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					count: 10
+					id: "3FACAF6BD9778389"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "cataclysm:kill_ignis"
 				criterion: ""
@@ -369,6 +610,11 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "66205FF8691A9FD7"
+			rewards: [{
+				id: "04EB4DDB955022F5"
+				type: "xp"
+				xp: 200
+			}]
 			tasks: [{
 				id: "0FD81C48335216D5"
 				structure: "cataclysm:ruined_citadel"
@@ -380,6 +626,22 @@
 		{
 			dependencies: ["66205FF8691A9FD7"]
 			id: "128AB24F072E82BD"
+			rewards: [
+				{
+					id: "019717E215928EA4"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					count: 10
+					id: "4C204FDB874AF1F7"
+					item: {
+						count: 1
+						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "cataclysm:kill_ender_guardian"
 				criterion: ""

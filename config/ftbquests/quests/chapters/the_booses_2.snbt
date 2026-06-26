@@ -1,0 +1,262 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "the_booses_2"
+	group: ""
+	id: "53CE9BF04888A6F5"
+	images: [
+		{
+			height: 2.0d
+			image: "cataclysm:textures/gui/boss_bar/life_remain_sans.png"
+			order: 2
+			rotation: 0.0d
+			width: 2.0d
+			x: 0.0d
+			y: -5.5d
+		}
+		{
+			height: 2.0d
+			image: "minecraft:block/soul_campfire_fire"
+			rotation: 0.0d
+			width: 2.0d
+			x: 0.0d
+			y: -6.5d
+		}
+	]
+	order_index: 3
+	quest_links: [ ]
+	quests: [
+		{
+			id: "409CAA9FC686CC59"
+			shape: "hexagon"
+			size: 2.0d
+			tasks: [{
+				id: "58B0E5120F65BB1C"
+				stat: "minecraft:mob_kills"
+				type: "stat"
+				value: 1
+			}]
+			x: 0.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "40A420EAEEBDB544"
+			tasks: [{
+				advancement: "block_factorys_bosses:kill_sandworm"
+				criterion: ""
+				id: "26BA603E53BC18D8"
+				type: "advancement"
+			}]
+			x: -3.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "160CD8B65B2BD16B"
+			tasks: [{
+				advancement: "block_factorys_bosses:kill_kraken"
+				criterion: ""
+				id: "5FCC991155396D7A"
+				type: "advancement"
+			}]
+			x: -1.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "3831CD0CAEEE8E4F"
+			tasks: [{
+				advancement: "block_factorys_bosses:kill_underworld_knight"
+				criterion: ""
+				id: "3F64753322F01151"
+				type: "advancement"
+			}]
+			x: 1.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "789AA17C4D02BE94"
+			tasks: [{
+				advancement: "block_factorys_bosses:kill_yeti"
+				criterion: ""
+				id: "3DB0BE86E7DA3D49"
+				type: "advancement"
+			}]
+			x: 3.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["40A420EAEEBDB544"]
+			id: "2C039F5007E909A4"
+			rewards: [{
+				id: "5A974C8040CE3CA8"
+				type: "xp_levels"
+				xp_levels: 50
+			}]
+			tasks: [{
+				advancement: "block_factorys_bosses:no_hit_sandworm"
+				criterion: ""
+				id: "514B4F465BC10430"
+				type: "advancement"
+			}]
+			x: -3.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["160CD8B65B2BD16B"]
+			id: "67688DF5FCCD3447"
+			rewards: [{
+				id: "41F7AE14D142B011"
+				type: "xp_levels"
+				xp_levels: 50
+			}]
+			tasks: [{
+				advancement: "block_factorys_bosses:no_hit_kraken"
+				criterion: ""
+				id: "148570E944C61403"
+				type: "advancement"
+			}]
+			x: -1.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["3831CD0CAEEE8E4F"]
+			id: "68C704D802430B1D"
+			rewards: [{
+				id: "2E3C8C52A6A3532D"
+				type: "xp_levels"
+				xp_levels: 50
+			}]
+			tasks: [{
+				advancement: "block_factorys_bosses:no_hit_underworld_knight"
+				criterion: ""
+				id: "37F5F3C9F3D0B15F"
+				type: "advancement"
+			}]
+			x: 1.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["789AA17C4D02BE94"]
+			id: "4D54DD7ACE7E734F"
+			rewards: [{
+				id: "065E337EAEDDA088"
+				type: "xp_levels"
+				xp_levels: 40
+			}]
+			tasks: [{
+				advancement: "block_factorys_bosses:no_hit_yeti"
+				criterion: ""
+				id: "6692AE4F8D60142B"
+				type: "advancement"
+			}]
+			x: 3.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "4CDC2E55A9584A0C"
+			tasks: [{
+				advancement: "mowziesmobs:kill_umvuthi"
+				criterion: ""
+				id: "761F548C4819AFF2"
+				type: "advancement"
+			}]
+			x: -3.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "17AB0649B90CFE9B"
+			tasks: [{
+				advancement: "mowziesmobs:kill_ferrous_wroughtnaut"
+				criterion: ""
+				id: "3CCD4D6D22F3B761"
+				type: "advancement"
+			}]
+			x: 1.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "0BF93E0CDEDCB004"
+			tasks: [{
+				advancement: "mowziesmobs:kill_frostmaw"
+				criterion: ""
+				id: "39E09E64129AF0D5"
+				type: "advancement"
+			}]
+			x: 3.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "46C19773B8CF7A2C"
+			rewards: [
+				{
+					id: "627304A5C34DA740"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:long_fire_resistance"
+							}
+						}
+						count: 1
+						id: "minecraft:splash_potion"
+					}
+					type: "item"
+				}
+				{
+					id: "4C01130ADA09A79A"
+					type: "xp_levels"
+					xp_levels: 15
+				}
+				{
+					id: "149BC53229E3488E"
+					item: {
+						count: 1
+						id: "cataclysm:flame_eye"
+					}
+					type: "item"
+				}
+			]
+			shape: "rsquare"
+			size: 2.2d
+			tasks: [{
+				advancement: "mowziesmobs:sculptor_challenge"
+				criterion: ""
+				id: "41BFCCB27A9AA7FD"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: 2.2d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "47A5CE8F2E46F18F"
+			rewards: [{
+				id: "386840F7D5F2E480"
+				item: {
+					components: {
+						"minecraft:potion_contents": {
+							potion: "enigmaticlegacyplus:ultimate_slow_falling"
+						}
+					}
+					count: 1
+					id: "minecraft:splash_potion"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "mowziesmobs:sculptor"
+				id: "297F824B1036CCE8"
+				type: "kill"
+				value: 1L
+			}]
+			x: -1.5d
+			y: 0.0d
+		}
+	]
+}

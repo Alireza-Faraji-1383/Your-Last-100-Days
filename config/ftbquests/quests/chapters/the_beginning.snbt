@@ -20,8 +20,8 @@
 				id: "0DD60D43B4FF16B1"
 				type: "advancement"
 			}]
-			x: -3.5d
-			y: 3.0d
+			x: -10.5d
+			y: -4.5d
 		}
 		{
 			dependencies: ["5AFFF6D2AB06C8E5"]
@@ -56,8 +56,8 @@
 				id: "0CEA5772257B71EF"
 				type: "advancement"
 			}]
-			x: 0.0d
-			y: 3.0d
+			x: -10.5d
+			y: -1.5d
 		}
 		{
 			dependencies: ["5AFFF6D2AB06C8E5"]
@@ -110,6 +110,14 @@
 					id: "24D184E5047DFF86"
 					type: "xp"
 					xp: 50
+				}
+				{
+					id: "43E55F96FC34E6F3"
+					item: {
+						count: 1
+						id: "minecraft:trial_key"
+					}
+					type: "item"
 				}
 			]
 			shape: "hexagon"
@@ -230,8 +238,8 @@
 				structure: "minecraft:mansion"
 				type: "structure"
 			}]
-			x: -5.5d
-			y: -6.5d
+			x: -3.5d
+			y: -2.0d
 		}
 		{
 			dependencies: ["2C9F7712321854BE"]
@@ -337,37 +345,38 @@
 				structure: "minecraft:monument"
 				type: "structure"
 			}]
-			x: -6.0d
-			y: -4.5d
+			x: -1.5d
+			y: -2.5d
 		}
 		{
-			dependencies: ["2C9F7712321854BE"]
-			icon: {
-				components: {
-					"ftbquests:icon": "minecraft:textures/map/decorations/ocean_monument.png"
-				}
-				id: "ftbquests:custom_icon"
-			}
-			id: "0DBD83FB696E5326"
-			rewards: [
-				{
-					count: 2
-					id: "49BE2A6726C79AFA"
-					item: {
-						count: 1
-						id: "minecraft:golden_apple"
-					}
-					type: "item"
-				}
-				{
-					id: "3652A797720156EE"
-					type: "xp"
-					xp: 50
-				}
-			]
-			shape: "hexagon"
-			x: -5.5d
-			y: -2.5d
+			dependencies: ["150B22BC04F1A682"]
+			id: "5A6266BFD238B9B9"
+			rewards: [{
+				exclude_from_claim_all: true
+				id: "6C8B25125919A879"
+				table_id: 2567105459748842191L
+				type: "random"
+			}]
+			tasks: [{
+				advancement: "minecraft:story/mine_diamond"
+				criterion: ""
+				id: "2E5F0DCE601699E6"
+				type: "advancement"
+			}]
+			x: -10.5d
+			y: 0.5d
+		}
+		{
+			dependencies: ["5A6266BFD238B9B9"]
+			id: "2B42A1CB36B3751A"
+			tasks: [{
+				advancement: "minecraft:story/form_obsidian"
+				criterion: ""
+				id: "750F888131BD7ED0"
+				type: "advancement"
+			}]
+			x: -10.5d
+			y: 2.5d
 		}
 	]
 }
