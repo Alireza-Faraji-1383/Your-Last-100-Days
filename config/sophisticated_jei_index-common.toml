@@ -3,3 +3,7 @@
 	# Default: 0
 	# Range: 0 ~ 64
 	maxEnabledBackpacksScanned = 0
+	#Virtual slot id stride reserved for each indexed backpack source. Increase this if an Inception Upgrade makes one indexed backpack expose more slots than the default. Client and server must use the same value.
+	# Default: 100000
+	# Range: 10000 ~ 10000000
+	backpackSlotIdStride = 100000

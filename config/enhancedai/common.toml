@@ -402,7 +402,7 @@
 	"Enable Melee attacking" = true
 	#Makes mobs teleport other mobs close to the target. Mobs in the `enhancedai:mobs/teleport_to_target/can_be_teleported` tag will be able to be picked up, while mobs in the `enhancedai:mobs/teleport_to_target/can_teleport` tag will be able to pick up other mobs.
 	"Enable Teleport to target" = true
-	#Use `config/enhancedai/Custom targeting` to set custom targeting
+	#Use `config/enhancedai/Custom targeting` to set custom targeting. This might not work properly as the targeting system is not meant to be expanded like this. This is not applied through Data Keys, so can't be changed at runtime.
 	"Enable Custom targeting" = true
 	"Enable Fire immune ticks" = true
 	"Enable Spawning" = true
@@ -445,7 +445,7 @@
 	"Enable Air steal" = true
 	#Change how mobs target players. Check the config options below for entity type tags.
 	"Enable Targeting" = true
-	#Make mobs angry when a block is broken. Check the mod's config folder Mobs/Break Anger/break_anger_config.json to change blocks and entities triggered.
+	#Make mobs angry when a block is broken. Check the mod's config folder Mobs/Break anger/break_anger_config.json to change blocks and entities triggered.
 	"Enable Break anger" = true
 
 	#Let mobs use Fishing Rods, reeling players in. Either put a Fishing Rod in main or off hand and when near enough from the target they will use it. Only mobs in enhancedai:mobs/can_equip_fishing_rod entity type tag are affected by this feature.
@@ -902,16 +902,16 @@
 			# Default: 32.0
 			# Range: 0.0 ~ 128.0
 			Minimum = 32.0
-			# Default: 64.0
+			# Default: 48.0
 			# Range: 0.0 ~ 128.0
 			Maximum = 64.0
 
 		#How far away can the mobs see targets even through walls. This only works with 'Better Nearby Targeting' enabled. Setting 'Max' to 0 will make mobs not able to see through walls. Use mods like Mobs Properties Randomness to have more control over the attribute; the attribute name is 'enhancedai:xray_follow_range'. Only mobs in the entity type tag `enhancedai:mobs/targeting/apply_xray` will be affected by this override.
 		[Mobs.Targeting."Xray range override"]
-			# Default: 12.0
+			# Default: 8.0
 			# Range: 0.0 ~ 128.0
 			Minimum = 12.0
-			# Default: 24.0
+			# Default: 16.0
 			# Range: 0.0 ~ 128.0
 			Maximum = 24.0
 
@@ -937,13 +937,13 @@
 
 			#Chances for a mob to spawn neutral (so will not attack players until provoked)
 			[Mobs.Targeting."Better nearby targeting"."Neutral chances"]
-				# Default: 0.25
+				# Default: 0.15
 				# Range: 0.0 ~ 1.0
 				"Easy/Peaceful" = 0.25
 				# Default: 0.1
 				# Range: 0.0 ~ 1.0
 				Normal = 0.1
-				# Default: 0.04
+				# Default: 0.05
 				# Range: 0.0 ~ 1.0
 				Hard = 0.04
 
@@ -1298,3 +1298,14 @@
 		# Default: 0.5
 		# Range: 0.0 ~ 1.7976931348623157E308
 		Damage = 0.5
+
+[Endermen]
+	#Changes the angular size of the enderman's 'face' that angers them when looked at. Higher values make endermen anger from a wider viewing angle.
+	"Enable Look anger cone" = true
+
+	#Changes the angular size of the enderman's 'face' that angers them when looked at. Higher values make endermen anger from a wider viewing angle.
+	[Endermen."Look anger cone"]
+		#Controls how directly a player must look at an enderman to anger it. Vanilla is 0.025. Higher values make endermen easier to anger (wider cone).
+		# Default: 0.07
+		# Range: 0.0 ~ 1.0
+		"Look anger cone" = 0.07
