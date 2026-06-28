@@ -1,19 +1,19 @@
 LootJS.modifiers((event) => {
-  // Artifacts: 60% chance to void from any loot table
+  // Artifacts: 98% chance to void from any loot table
   event.addTableModifier(/.*/)
     .modifyLoot('#artifacts:artifacts', (item) => {
-      if (Math.random() > 0.4) return Item.empty
+      if (Math.random() > 0.02) return Item.empty
       return item
     })
 
-  // Relics: 90% chance to void from any loot table
+  // Relics: 99.5% chance to void from any loot table
   event.addTableModifier(/.*/)
     .modifyLoot('@relics', (item) => {
-      if (Math.random() > 0.1) return Item.empty
+      if (Math.random() > 0.005) return Item.empty
       return item
     })
 
-  // Enigmatic Legacy Plus spellstones: 75% chance to void from any loot table
+  // Enigmatic Legacy Plus spellstones: 99% chance to void from any loot table
   const elSpellstones = [
     'enigmaticlegacyplus:angel_blessing',
     'enigmaticlegacyplus:blazing_core',
@@ -27,7 +27,7 @@ LootJS.modifiers((event) => {
   ]
   event.addTableModifier(/.*/)
     .modifyLoot(elSpellstones, (item) => {
-      if (Math.random() > 0.25) return Item.empty
+      if (Math.random() > 0.01) return Item.empty
       return item
     })
 
