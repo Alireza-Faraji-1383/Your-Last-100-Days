@@ -95,42 +95,10 @@
     };
     global.RaidMobs = Mobs;   // expose archetypes to day files (days/<dayN>/)
 
-    // ---- Sample: pillager siege, 3 sequential rounds ----------------------
-    // Aggro: mobs march on the target player by default, but retaliate against
-    // anyone who hits them and attack players/villagers/iron golems within
-    // aggroRadius — then return to the player. Loss = the FINAL round's timer
-    // running out (set a .timeLimit on the last round); no prize on loss.
-    Raid("pillager_siege")
-        .spawn(18, 36)                 // ring 18–36 blocks around the player
-        .aggroRadius(20)               // proactively attack villagers/players/golems within 20 blocks
-        .followRange(200)              // detect + chase the player from up to 200 blocks
-        .defaultPresets("farSight")    // every mob sees + hunts the player far away
-        .round("Scouts")
-            .breather(80)              // 4s pause after this round is cleared
-            .timeLimit(2400)           // non-final round: force-advance after 2 min; survivors carry over
-            .mob(Mobs.PILLAGER).count(5)
-            .mob(Mobs.VINDICATOR_LEAD).count(2)
-            .mob(Mobs.BOW_SKELETON).count(3)
-        .round("Assault")
-            .breather(100)
-            .mob(Mobs.VINDICATOR).count(6)
-            .mob(Mobs.IRON_ZOMBIE).count(4)
-        .round("Warbeast")
-            .timeLimit(3600)           // FINAL round timer (3 min) -> loss + no prize if not cleared
-            .mob(Mobs.WARBEAST_RAVAGER).count(1)
-            .mob(Mobs.EVOKER).count(1)
-        // onWin fires ONLY on victory — loss skips it, so no prize on a timeout.
-        .onWin(function (ctx) {
-            try { ctx.player.give("minecraft:emerald_block 3"); } catch (e) {}
-        })
-        .build();
-
     // ---- Night triggers ---------------------------------------------------
-    // Moved out of this file. Each scheduled night lives in its own file:
-    //   days/day20/night_raid.js  -> RaidSchedule.onDay(20, "pillager_siege")
-    //   days/day30/night_raid.js  -> defines a harder raid inline, onDay(30, ...)
-    // Those files (priority 60) load after this one, so RaidMobs + the raids
-    // registered above are already available to them.
+    // Each scheduled night lives in its own file under days/<dayN>/night_raid.js
+    // (priority 60), which defines the raid inline + calls RaidSchedule.onDay().
+    // RaidMobs archetypes above are shared across all day files.
 
     // ---- Modded mobs: any "modid:mob" type works (e.g. a Mowzie's/Alex's mob).
     // Equipment + nbt + EAI presets all apply the same way. Uncomment + adapt.
@@ -161,6 +129,6 @@
     //     }
     // });
 
-    console.info("[Raid-def] sample raids registered: " +
-        (typeof RAIDS !== "undefined" ? Object.keys(RAIDS).join(", ") : "?"));
+    console.info("[Raid-def] mob archetypes registered (" +
+        Object.keys(Mobs).length + " types)");
 })(this);
