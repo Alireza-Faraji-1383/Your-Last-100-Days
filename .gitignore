@@ -136,5 +136,14 @@ config/jei/blacklist.json
 # Sound Physics: user audio preferences
 config/sound_physics_remastered/
 
+# Voice Chat: user audio settings (auto-generated)
+config/voicechat/
+
+# Sounds: auto-generated sound settings
+config/sounds/
+
+# Relics: auto-generated main config
+config/relics.yaml
+
 # FTB Quests lang (auto-generated translations)
 config/ftbquests/quests/lang/
