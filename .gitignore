@@ -39,3 +39,5 @@ texturepacks/
 mods/
 icon.png
 config/ftbquests/quests/lang/en_us.snbt
+*.bak
+*.yaml
