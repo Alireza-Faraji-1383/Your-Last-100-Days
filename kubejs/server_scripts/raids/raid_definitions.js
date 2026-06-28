@@ -82,6 +82,25 @@
         PEARL_ZOMBIE:     { type: "minecraft:zombie",     presets: ["mobile", "pearlThrower"],
                             equip: { mainhand: "minecraft:ender_pearl" } },
 
+        // --- Day 1 archetypes ---
+        // Leather-helmet zombie (round 2).
+        LEATHER_ZOMBIE:   { type: "minecraft:zombie",     presets: ["mobile"],
+                            equip: { head: "minecraft:leather_helmet" },
+                            nbt:   { IsBaby: false } },
+        // Full movement zombie: climbing + sprint via entity tags, mobile preset.
+        MOVEMENT_ZOMBIE:  { type: "minecraft:zombie",     presets: ["mobile"],
+                            nbt:   { IsBaby: false } },
+        // Miner with double health (40 HP).
+        MINER_STRONG:     { type: "minecraft:zombie",     presets: ["mobile", "superMiner"],
+                            equip: { mainhand: "minecraft:iron_pickaxe", head: "minecraft:iron_helmet" },
+                            extraArgs: ["attributes/max_health=40"] },
+        // Iron tank: full iron + sword + shield + blocking (shielding via entity tag).
+        IRON_BLOCKER:     { type: "minecraft:zombie",     presets: ["mobile"],
+                            equip: { mainhand: "minecraft:iron_sword", offhand: "minecraft:shield",
+                                     head: "minecraft:iron_helmet", chest: "minecraft:iron_chestplate",
+                                     legs: "minecraft:iron_leggings", feet: "minecraft:iron_boots" },
+                            nbt:   { IsBaby: false } },
+
         // --- Spiders ---
         WEB_SPIDER:       { type: "minecraft:cave_spider", presets: ["mobile", "webShooter"] },
 
