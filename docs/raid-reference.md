@@ -6,9 +6,9 @@
 
 | اتربیوت | مثال | توضیح |
 |---------|------|-------|
-| `.spawn(minR, maxR)` | `.spawn(150, 250)` | شعاع حلقه اسپوان مابها دور بازیکن (بلاک). مابها توی این فاصله ظاهر میشن |
+| `.spawn(minR, maxR)` | `.spawn(150, 250)` | شعاع حلقه اسپوان مابها دور بازیکن (بلاک) |
 | `.aggroRadius(n)` | `.aggroRadius(25)` | مابها خودکار به بازیکن/ویلجر/گلم توی این شعاع حمله میکنن |
-| `.followRange(n)` | `.followRange(300)` | مسافت تعقیب + تشخیص بازیکن — ماب تا چند بلاک دنبال میکنه (attribute follow_range) |
+| `.followRange(n)` | `.followRange(300)` | مسافت تعقیب + تشخیص بازیکن (بلاک) |
 | `.defaultPresets("...")` | `.defaultPresets("farSight")` | preset پیشفرض EnhancedAI برای همه مابها |
 | `.barColor("...")` | `.barColor("GREEN")` | رنگ Boss Bar (RED, GREEN, BLUE, PURPLE, YELLOW, WHITE, PINK) |
 | `.barHold(ticks)` | `.barHold(200)` | مدت نمایش Boss Bar بعد از برد/باخت (20 تیک = 1 ثانیه) |
@@ -18,19 +18,19 @@
 | اتربیوت | مثال | توضیح |
 |---------|------|-------|
 | `.breather(ticks)` | `.breather(200)` | مکث بعد از پاکسازی دور قبلی (200 = 10 ثانیه) |
-| `.timeLimit(ticks)` | `.timeLimit(4800)` | مهلت دور — اگه تموم نشه force advance میشه (4800 = 4 دقیقه) |
+| `.timeLimit(ticks)` | `.timeLimit(4800)` | مهلت دور — اگه تموم نشه force advance (4800 = 4 دقیقه) |
 
 ### سطح ماب (Mob level)
 
 | اتربیوت | مثال | توضیح |
 |---------|------|-------|
-| `.mob({...})` | `.mob({type:"minecraft:zombie", presets:["mobile"]})` | تعریف ماب با نوع، preset، تجهیزات، NBT |
+| `.mob({...})` | `.mob({type:"minecraft:zombie", presets:["mobile"]})` | تعریف ماب |
 | `.count(n)` | `.count(5)` | تعداد این ماب توی این دور |
 | `type` | `"minecraft:zombie"` | نوع ماب (namespace:name) |
 | `presets` | `["mobile", "superMiner"]` | presetهای EnhancedAI (قابل ترکیب) |
 | `equip` | `{mainhand:"...", head:"..."}` | تجهیزات (mainhand, offhand, head, chest, legs, feet) |
 | `nbt` | `{IsBaby: false}` | NBT اختصاصی |
-| `extraArgs` | `["attributes/max_health=40"]` | تغییر attribute (max_health, movement_speed, follow_range) |
+| `extraArgs` | `["attributes/max_health=40"]` | تغییر attribute |
 | `noDefaults` | `true` | preset پیشفرض رید رو نادیده بگیر |
 
 ### Callback ها
@@ -53,7 +53,50 @@
 
 ---
 
-## EnhancedAI Preset ها (رفتار جنگی)
+## قدرت‌های موجود EnhancedAI
+
+### حرکت/جابجایی
+
+| قدرت | توضیح | Tag |
+|------|-------|-----|
+| Climbing | بالا رفتن از نردبان و بلاکهای مشابه | `enhancedai:mobs/can_climb` |
+| Parkour | پریدن از روی بلاکها | `enhancedai:mobs/can_parkour` |
+| Sprint | دویدن + حرکت پیشرفته | `enhancedai:mobs/can_sprint` |
+| Swimmers | سرعت شنا بر اساس attribute | `enhancedai:mobs/swimmers` |
+| Jump | پریدن وقتی هدف بالاتره | `enhancedai:mobs/can_jump_in_place` |
+| Riding | سوار شدن روی مابهای دیگه | `enhancedai:mobs/riding/` |
+
+### مبارزه
+
+| قدرت | توضیح |
+|------|-------|
+| superMiner | حفر مستقیم به سمت بازیکن |
+| fisherAggro | قلاب ماهیگیری + کشیدن بازیکن |
+| pearlThrower | پرتاب مروارید اند + تلپورت |
+| webShooter | پرتاب تار عنکبوت + زهر |
+| skirmisher | حمله از دور + strafe |
+| Shielding | بلاک کردن با سپر |
+| Melee attacking | حمله با سرعت attribute |
+| Drowning targets | بلند کردن بازیکن + غرق کردن |
+| Leaders | صدا زدن نیروهای کمکی |
+| Item disruption | انداختن آیتم از دست بازیکن |
+| Air steal | دزدیدن هوا از بازیکن |
+| Flee target | فرار کردن |
+| Break anger | عصبانیت وقتی بلاک شکسته میشه |
+
+### ویژه
+
+| قدرت | توضیح |
+|------|-------|
+| Open doors | باز کردن درها |
+| Anti-Cheese | شکستن وسایل نقلیه |
+| Panic | وحشت وقتی آتیش گرفته |
+| Teleport anti-cheese | ضد تقلب تلپورت |
+| Avoid explosions | فرار از انفجار |
+
+---
+
+## EnhancedAI Preset ها (KubeJS)
 
 اینا از طریق KubeJS روی ماب اعمال میشن:
 
@@ -75,7 +118,7 @@ presets: ["mobile", "superMiner", "farSight"]  // ماینر سریع با دی�
 
 ---
 
-## EnhancedAI Entity Tag ها (قابلیت فیزیکی)
+## EnhancedAI Entity Tag ها (Datapack)
 
 اینا از طریق datapack کنترل میشن. فایلها توی `kubejs/data/enhancedai/tags/entity_type/mobs/`:
 
