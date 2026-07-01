@@ -33,6 +33,7 @@
 				}
 				type: "item"
 			}]
+			size: 1.5d
 			tasks: [{
 				id: "5409036BE4EB4FC6"
 				item: { count: 1, id: "kubejs:coin" }
@@ -336,75 +337,15 @@
 		{
 			can_repeat: true
 			dependencies: ["3CB8AFABD435DAFD"]
-			icon: {
-				components: {
-					"relics:data": {
-						abilities: {
-							abilities: {
-								impact: {
-									extender: {
-										cooldown: 0
-										cooldownCap: 0
-										ticking: 0b
-									}
-									lock: {
-										breaks: 5
-									}
-									points: 0
-									research: {
-										links: { }
-										researched: 0b
-									}
-									stats: {
-										damage: {
-											initialValue: 3.54574d
-										}
-										size: {
-											initialValue: 2.71181d
-										}
-									}
-								}
-								sustainability: {
-									extender: {
-										cooldown: 0
-										cooldownCap: 0
-										ticking: 0b
-									}
-									lock: {
-										breaks: 5
-									}
-									points: 0
-									research: {
-										links: { }
-										researched: 0b
-									}
-									stats: {
-										modifier: {
-											initialValue: 0.62187d
-										}
-									}
-								}
-							}
-						}
-						leveling: {
-							experience: 0
-							level: 0
-							luck: 0
-							points: 0
-						}
-					}
-				}
-				id: "relics:ice_breaker"
-			}
 			id: "0E9ABFF41F038D8B"
 			min_required_dependencies: 1
 			rewards: [{
-				auto: "enabled"
-				exclude_from_claim_all: true
-				id: "69204C09569FAED7"
-				table_id: 6803633540614101829L
-				team_reward: false
-				type: "loot"
+				id: "40C19401CB1DC36C"
+				item: {
+					count: 1
+					id: "enigmaticlegacyplus:mending_mixture"
+				}
+				type: "item"
 			}]
 			size: 2.0d
 			tasks: [
@@ -424,6 +365,37 @@
 				}
 			]
 			x: -5.0d
+			y: 10.5d
+		}
+		{
+			can_repeat: true
+			dependencies: ["3CB8AFABD435DAFD"]
+			id: "560B91BB9F4B84B1"
+			min_required_dependencies: 1
+			rewards: [{
+				exclude_from_claim_all: true
+				id: "2D9214D08F8AD061"
+				table_id: 2389461438744541566L
+				type: "random"
+			}]
+			size: 2.0d
+			tasks: [
+				{
+					consume_items: true
+					count: 150L
+					id: "13FBAF834409D7C5"
+					item: { count: 1, id: "kubejs:coin" }
+					only_from_crafting: false
+					type: "item"
+				}
+				{
+					advancement: "enigmaticlegacyplus:main/cursed_ring"
+					criterion: ""
+					id: "138798E6D07DF77F"
+					type: "advancement"
+				}
+			]
+			x: -2.0d
 			y: 10.5d
 		}
 	]

@@ -1,0 +1,22 @@
+{
+	id: "21291284C4DCB97E"
+	loot_size: 1
+	order_index: 4
+	rewards: [
+		{ id: "5AF8C3E436C96445", item: { count: 1, id: "enigmaticlegacyplus:earth_heart_fragment" } }
+		{ id: "02969A5BDDEA1CC0", item: { count: 1, id: "enigmaticlegacyplus:sacred_crystal" } }
+		{ id: "0E618EF2C0A2B5CF", item: { count: 1, id: "enigmaticlegacyplus:astral_dust" } }
+		{ id: "007A0D4E74EB7B3E", item: { count: 1, id: "enigmaticlegacyplus:ichor_droplet" } }
+		{
+			id: "6E834998A14E88B3"
+			item: {
+				count: 1
+				id: "enigmaticlegacyplus:abyssal_heart"
+			}
+			weight: 0.05f
+		}
+		{ id: "5A5179D48DDB2760", item: { count: 1, id: "enigmaticlegacyplus:spellstone_debris" } }
+		{ id: "6483FFA1DCFCBAD9", item: { count: 1, id: "enigmaticlegacyplus:etherium_nugget" } }
+		{ id: "3DE5583A75C48DD1", item: { count: 1, id: "enigmaticlegacyplus:evil_essence" } }
+	]
+}
