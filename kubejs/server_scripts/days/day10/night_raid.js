@@ -23,7 +23,7 @@
     var M = RaidMobs;
 
     Raid("day10_awakening")
-        .spawn(150, 250)         // ring 150–250 blocks around the player
+        .spawn(80, 100)         // ring 150–250 blocks around the player
         .aggroRadius(25)         // proactively attack villagers/players/golems within 25 blocks
         .followRange(300)        // detect + chase the player from up to 300 blocks
         .defaultPresets("farSight")
@@ -33,7 +33,8 @@
         .round("Shamblers")
             .breather(200)       // 10s pause
             .timeLimit(4800)     // 4 min
-            .mob({ type: "minecraft:zombie", presets: ["mobile"], nbt: { IsBaby: false } }).count(6)
+            // 6 basic zombies with iron helmet + fire immune
+            .mob({ type: "minecraft:zombie", presets: ["mobile"], equip: { head: "minecraft:iron_helmet" }, nbt: { IsBaby: false, Fire: -1 } }).count(6)
             .mob(M.MINER_ZOMBIE).count(3)
         // --- Round 2: Horde ---
         .round("Horde")
