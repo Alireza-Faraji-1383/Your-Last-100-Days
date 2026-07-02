@@ -11,14 +11,52 @@
 		id: "ftbquests:custom_icon"
 	}
 	id: "5A24B0F4C08450E8"
-	images: [{
-		height: 8.0d
-		image: "ftbquests:textures/gui/shop.png"
-		rotation: 0.0d
-		width: 8.0d
-		x: -1.0d
-		y: -8.0d
-	}]
+	images: [
+		{
+			height: 8.0d
+			image: "ftbquests:textures/gui/shop.png"
+			rotation: 0.0d
+			width: 8.0d
+			x: -1.0d
+			y: -8.0d
+		}
+		{
+			corner: true
+			height: 2.0d
+			image: "supplementaries:block/cannon_arrow"
+			rotation: 90.0d
+			width: 1.0d
+			x: 0.0d
+			y: -3.5d
+		}
+		{
+			corner: true
+			height: 2.0d
+			image: "supplementaries:block/cannon_arrow"
+			rotation: -90.0d
+			width: 1.0d
+			x: -1.0d
+			y: -3.0d
+		}
+		{
+			corner: true
+			height: 2.0d
+			image: "supplementaries:block/cannon_arrow"
+			rotation: -90.0d
+			width: 1.0d
+			x: -1.0d
+			y: -1.0d
+		}
+		{
+			corner: true
+			height: 2.0d
+			image: "supplementaries:block/cannon_arrow"
+			rotation: 90.0d
+			width: 1.0d
+			x: 0.0d
+			y: -1.5d
+		}
+	]
 	order_index: 0
 	quest_links: [ ]
 	quests: [
@@ -40,8 +78,8 @@
 				item: { count: 1, id: "kubejs:coin" }
 				type: "item"
 			}]
-			x: -1.0d
-			y: -1.5d
+			x: -10.5d
+			y: -3.25d
 		}
 		{
 			can_repeat: true
@@ -122,8 +160,8 @@
 				item: { count: 1, id: "kubejs:coin" }
 				type: "item"
 			}]
-			x: -7.0d
-			y: 0.5d
+			x: -16.5d
+			y: -1.25d
 		}
 		{
 			can_repeat: true
@@ -170,7 +208,7 @@
 			}
 			id: "04D1B2FE07C5A96A"
 			rewards: [{
-				exclude_from_claim_all: true
+				auto: "enabled"
 				id: "5FEDEEE670164249"
 				table_id: 5458772691254224182L
 				type: "random"
@@ -178,13 +216,13 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 200L
+				count: 2L
 				id: "6167E671DE449137"
-				item: { count: 1, id: "kubejs:coin" }
+				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
-			x: -7.0d
-			y: -1.5d
+			x: -16.5d
+			y: -3.25d
 		}
 		{
 			can_repeat: true
@@ -278,7 +316,7 @@
 			}
 			id: "52C9E92A9CC991F8"
 			rewards: [{
-				exclude_from_claim_all: true
+				auto: "enabled"
 				id: "58538BCDC7C1B5F9"
 				table_id: 525872331977689700L
 				type: "random"
@@ -286,13 +324,13 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 500L
+				count: 5L
 				id: "27CB59A1B81E97C3"
-				item: { count: 1, id: "kubejs:coin" }
+				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
-			x: -7.0d
-			y: -3.5d
+			x: -16.5d
+			y: -5.25d
 		}
 		{
 			can_repeat: false
@@ -329,8 +367,8 @@
 					type: "advancement"
 				}
 			]
-			x: -1.0d
-			y: 6.0d
+			x: -10.5d
+			y: 4.25d
 		}
 		{
 			can_repeat: true
@@ -349,9 +387,9 @@
 			tasks: [
 				{
 					consume_items: true
-					count: 150L
+					count: 2L
 					id: "1392A016441A4006"
-					item: { count: 1, id: "kubejs:coin" }
+					item: { count: 1, id: "kubejs:silver_coin" }
 					only_from_crafting: false
 					type: "item"
 				}
@@ -362,17 +400,62 @@
 					type: "advancement"
 				}
 			]
-			x: -5.0d
-			y: 11.0d
+			x: -10.5d
+			y: 10.0d
+		}
+		{
+			can_repeat: true
+			id: "1B8F8360FA7CAB0D"
+			rewards: [{
+				auto: "enabled"
+				count: 64
+				id: "77D370BE62ABB02F"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				id: "7604AA9F5040B42E"
+				item: { count: 1, id: "kubejs:coin" }
+				type: "item"
+			}]
+			x: -3.0d
+			y: -4.0d
+		}
+		{
+			can_repeat: true
+			id: "59EA669ABE8ABD8D"
+			rewards: [{
+				id: "311550123DFD06A4"
+				item: {
+					count: 1
+					id: "kubejs:coin"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 64L
+				id: "4E243E6B6C6CDC37"
+				item: { count: 1, id: "kubejs:silver_coin" }
+				type: "item"
+			}]
+			x: 1.0d
+			y: -4.0d
 		}
 		{
 			can_repeat: true
 			dependencies: ["3CB8AFABD435DAFD"]
-			id: "560B91BB9F4B84B1"
+			id: "1E771F8D69CD355D"
 			min_required_dependencies: 1
 			rewards: [{
 				exclude_from_claim_all: true
-				id: "2D9214D08F8AD061"
+				id: "187FB78866DDD590"
 				table_id: 2389461438744541566L
 				type: "random"
 			}]
@@ -380,21 +463,66 @@
 			tasks: [
 				{
 					consume_items: true
-					count: 150L
-					id: "13FBAF834409D7C5"
-					item: { count: 1, id: "kubejs:coin" }
+					count: 2L
+					id: "2A5D346422B569A2"
+					item: { count: 1, id: "kubejs:silver_coin" }
 					only_from_crafting: false
 					type: "item"
 				}
 				{
 					advancement: "enigmaticlegacyplus:main/cursed_ring"
 					criterion: ""
-					id: "138798E6D07DF77F"
+					id: "022240E02BE280B2"
 					type: "advancement"
 				}
 			]
-			x: -2.0d
-			y: 11.0d
+			x: -15.5d
+			y: 9.5d
+		}
+		{
+			can_repeat: true
+			id: "36CFAF2E18974908"
+			rewards: [{
+				id: "0B41898968732585"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 64L
+				id: "20B35BF655BD34EE"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: 1.0d
+			y: -2.0d
+		}
+		{
+			can_repeat: true
+			id: "0038426316854F1C"
+			rewards: [{
+				auto: "enabled"
+				count: 64
+				id: "26F24BDD5B63DD95"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				id: "23DDD75A3E2AEE93"
+				item: { count: 1, id: "kubejs:silver_coin" }
+				type: "item"
+			}]
+			x: -3.0d
+			y: -2.0d
 		}
 	]
 }
