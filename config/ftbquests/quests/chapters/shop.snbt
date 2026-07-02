@@ -61,29 +61,7 @@
 	quest_links: [ ]
 	quests: [
 		{
-			can_repeat: false
-			id: "32283E28F7147848"
-			rewards: [{
-				id: "0BA998838275C076"
-				item: {
-					count: 1
-					id: "minecraft:apple"
-				}
-				type: "item"
-			}]
-			size: 1.5d
-			tasks: [{
-				consume_items: true
-				id: "5409036BE4EB4FC6"
-				item: { count: 1, id: "kubejs:coin" }
-				type: "item"
-			}]
-			x: -10.5d
-			y: -3.25d
-		}
-		{
 			can_repeat: true
-			dependencies: ["32283E28F7147848"]
 			icon: {
 				components: {
 					"relics:data": {
@@ -160,12 +138,11 @@
 				item: { count: 1, id: "kubejs:coin" }
 				type: "item"
 			}]
-			x: -16.5d
-			y: -1.25d
+			x: -8.0d
+			y: -1.0d
 		}
 		{
 			can_repeat: true
-			dependencies: ["32283E28F7147848"]
 			icon: {
 				components: {
 					"relics:data": {
@@ -221,12 +198,11 @@
 				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
-			x: -16.5d
-			y: -3.25d
+			x: -8.0d
+			y: -3.0d
 		}
 		{
 			can_repeat: true
-			dependencies: ["32283E28F7147848"]
 			dependency_requirement: "one_completed"
 			icon: {
 				components: {
@@ -329,12 +305,11 @@
 				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
-			x: -16.5d
-			y: -5.25d
+			x: -8.0d
+			y: -5.0d
 		}
 		{
 			can_repeat: false
-			dependencies: ["32283E28F7147848"]
 			icon: {
 				components: {
 					"ftbquests:icon": "born_in_chaos_v1:textures/mob_effect/unity_with_darkness.png"
@@ -367,8 +342,8 @@
 					type: "advancement"
 				}
 			]
-			x: -10.5d
-			y: 4.25d
+			x: 7.5d
+			y: -3.0d
 		}
 		{
 			can_repeat: true
@@ -400,8 +375,8 @@
 					type: "advancement"
 				}
 			]
-			x: -10.5d
-			y: 10.0d
+			x: 12.0d
+			y: -1.0d
 		}
 		{
 			can_repeat: true
@@ -430,6 +405,7 @@
 			can_repeat: true
 			id: "59EA669ABE8ABD8D"
 			rewards: [{
+				auto: "enabled"
 				id: "311550123DFD06A4"
 				item: {
 					count: 1
@@ -476,13 +452,14 @@
 					type: "advancement"
 				}
 			]
-			x: -15.5d
-			y: 9.5d
+			x: 12.0d
+			y: -5.0d
 		}
 		{
 			can_repeat: true
 			id: "36CFAF2E18974908"
 			rewards: [{
+				auto: "enabled"
 				id: "0B41898968732585"
 				item: {
 					count: 1
