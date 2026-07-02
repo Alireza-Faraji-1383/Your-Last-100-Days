@@ -147,3 +147,5 @@ config/relics.yaml
 
 # FTB Quests lang (auto-generated translations)
 config/ftbquests/quests/lang/
+config/reliquified_lenders_cataclysm
+config/relics

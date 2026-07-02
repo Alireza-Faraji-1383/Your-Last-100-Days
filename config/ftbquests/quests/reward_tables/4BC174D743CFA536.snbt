@@ -1,0 +1,35 @@
+{
+	id: "4BC174D743CFA536"
+	loot_size: 1
+	order_index: 2
+	rewards: [
+		{ id: "654B3992462D1841", item: { count: 1, id: "artifacts:superstitious_hat" } }
+		{ id: "4FFC12B594F49B2B", item: { count: 1, id: "artifacts:power_glove" } }
+		{ id: "2C9ADB1484A7712B", item: { count: 1, id: "artifacts:fire_gauntlet" } }
+		{ id: "1ACA958B595D289A", item: { count: 1, id: "artifacts:digging_claws" } }
+		{ id: "4BBA16C21D6B79FD", item: { count: 1, id: "artifacts:flippers" } }
+		{ id: "67CB70DECACE2F79", item: { count: 1, id: "artifacts:universal_attractor" } }
+		{ id: "5A3C5BECC1961BE9", item: { count: 1, id: "artifacts:villager_hat" } }
+		{ id: "56790FC0F6E62149", item: { count: 1, id: "artifacts:snorkel" } }
+		{ id: "0D4D7951A16CB35C", item: { count: 1, id: "artifacts:golden_hook" } }
+		{ id: "3500B25E9CBCDE29", item: { count: 1, id: "artifacts:umbrella" } }
+		{ id: "4CEA4401F5718E5E", item: { count: 1, id: "artifacts:flame_pendant" } }
+		{ id: "29BE4523DD809270", item: { count: 1, id: "artifacts:shock_pendant" } }
+		{ id: "3CB3D01A297DAD09", item: { count: 1, id: "artifacts:panic_necklace" } }
+		{ id: "5725F2F201E3F61D", item: { count: 1, id: "artifacts:lucky_scarf" } }
+		{ id: "2B40CEB3F7E371B3", item: { count: 1, id: "artifacts:antidote_vessel" } }
+		{ id: "3CBF8CB56A7BCC14", item: { count: 1, id: "artifacts:thorn_pendant" } }
+		{ id: "68CBE624391D5EBA", item: { count: 1, id: "artifacts:onion_ring" } }
+		{ id: "30BAC6E8657886B0", item: { count: 1, id: "artifacts:aqua_dashers" } }
+		{ id: "047DFA95094F9664", item: { count: 1, id: "artifacts:kitty_slippers" } }
+		{ id: "717BC66484EB5400", item: { count: 1, id: "artifacts:steadfast_spikes" } }
+		{ id: "23C7B53B8557026B", item: { components: { "relics:data": { abilities: { abilities: { explode: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { capacity: { initialValue: 30.67592d }, damage: { initialValue: 0.45741d }, stun: { initialValue: 0.17936d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:reflection_necklace" } }
+		{ id: "6632DA196B0FAA61", item: { components: { "relics:data": { abilities: { abilities: { compass: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { } }, trade: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 0 }, points: 0, research: { links: { }, researched: 0b }, stats: { rolls: { initialValue: 0.85751d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:bastion_ring" } }
+		{ id: "2CF21D072E677E84", item: { components: { "relics:data": { abilities: { abilities: { slots: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { charm: { initialValue: 1.30957d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:leather_belt" } }
+		{ id: "4D58D65BA60CC5AC", item: { components: { "relics:data": { abilities: { abilities: { slots: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { charm: { initialValue: 1.69683d } } }, training: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { damage: { initialValue: 1.71436d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:hunter_belt" } }
+		{ id: "7B2A476ECA2EBD4E", item: { components: { "relics:data": { abilities: { abilities: { bonfire: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { height: { initialValue: 4.63003d }, speed: { initialValue: 0.01113d }, step: { initialValue: 1.14552d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:blazing_flask" } }
+		{ id: "285EA0B487D8818E", item: { components: { "relics:data": { abilities: { abilities: { teleport: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { cooldown: { initialValue: 84.42401d }, distance: { initialValue: 622.609d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:magic_mirror" } }
+		{ id: "0B5D2EF3E1331816", item: { components: { "relics:data": { abilities: { abilities: { skating: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { duration: { initialValue: 33.25148d }, speed: { initialValue: 0.00411d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:roller_skates" } }
+		{ id: "195C16AFA063C79D", item: { components: { "relics:data": { abilities: { abilities: { spore_mist: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { amount: { initialValue: 3.86017d }, damage: { initialValue: 0.1487d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "relics:spore_sack" } }
+	]
+}
