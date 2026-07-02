@@ -1,8 +1,10 @@
 // priority: 85
 // kubejs/server_scripts/raids/raid_schedule.js
 //
-// Day/night auto-trigger layer for raids. Declare night raids in raid_definitions.js:
+// Day/night auto-trigger layer for raids. Declare night raids in day files, e.g.
+// `kubejs/server_scripts/days/day20/night_raid.js`, after the raid is built:
 //
+//   Raid("pillager_siege")...build();
 //   RaidSchedule.onDay(20, "pillager_siege")
 //
 // On the first nightfall on or after the overworld day count reaches `day`, the
@@ -38,6 +40,21 @@
         } catch (e) { return 0; }
     }
 
+    function raidExists(raidId) {
+        try {
+            return (typeof RaidRegistry !== "undefined" && RaidRegistry && RaidRegistry.has(String(raidId)));
+        } catch (e) { return false; }
+    }
+
+    function findEntry(day, raidId) {
+        var d = Math.floor(Number(day));
+        var id = String(raidId);
+        for (var i = 0; i < _schedule.length; i++) {
+            if (_schedule[i].day === d && _schedule[i].raidId === id) return _schedule[i];
+        }
+        return null;
+    }
+
     // Start raidId for every online player. Returns how many instances launched.
     function fireForAll(server, raidId) {
         var M = (typeof RaidManager !== "undefined") ? RaidManager : null;
@@ -59,7 +76,11 @@
         // Fire raidId on the first nightfall on/after the overworld reaches `day`.
         onDay: function (day, raidId) {
             if (!(Number(day) >= 0) || !raidId) { warn("onDay: bad args (day, raidId)"); return false; }
-            _schedule.push({ day: Math.floor(Number(day)), raidId: String(raidId), fired: false });
+            var d = Math.floor(Number(day));
+            var id = String(raidId);
+            if (findEntry(d, id)) { warn("onDay: duplicate schedule ignored for day " + d + " raid " + id); return false; }
+            if (!raidExists(id)) warn("onDay: raid '" + id + "' is not registered yet");
+            _schedule.push({ day: d, raidId: id, fired: false });
             return true;
         },
         list: function () {

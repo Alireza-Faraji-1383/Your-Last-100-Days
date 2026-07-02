@@ -143,10 +143,50 @@
 
     // ---------- Builder -----------------------------------------------------
 
+    function numberOr(value, fallback) {
+        if (value == null) return fallback;
+        var n = Number(value);
+        return isFinite(n) ? n : fallback;
+    }
+    function nonNegativeOr(value, fallback) {
+        var n = numberOr(value, fallback);
+        return n < 0 ? 0 : n;
+    }
+    function positiveIntOr(value, fallback) {
+        var n = parseInt(value, 10);
+        if (!isFinite(n) || n < 1) return fallback;
+        return n;
+    }
+    function optionalNonNegative(value) {
+        if (value == null) return null;
+        return nonNegativeOr(value, 0);
+    }
+    function normalizedSpawn(minR, maxR) {
+        var min = nonNegativeOr(minR, DEFAULT_MIN_R);
+        var max = nonNegativeOr(maxR, DEFAULT_MAX_R);
+        if (max < min) { var tmp = min; min = max; max = tmp; }
+        return { minRadius: min, maxRadius: max };
+    }
+    function normalizeMobSpec(typeOrSpec) {
+        if (typeOrSpec && typeof typeOrSpec === "object") {
+            var s = typeOrSpec;
+            return {
+                type:       String(s.type || s.id || ""),
+                count:      positiveIntOr(s.count, 1),
+                presets:    Array.isArray(s.presets) ? s.presets.slice() : [],
+                extraArgs:  Array.isArray(s.extraArgs) ? s.extraArgs.slice() : [],
+                noDefaults: !!s.noDefaults,
+                equip:      shallowCopy(s.equip),   // copied so a shared archetype isn't mutated
+                nbt:        shallowCopy(s.nbt)
+            };
+        }
+        return { type: String(typeOrSpec || ""), count: 1, presets: [], extraArgs: [], noDefaults: false, equip: null, nbt: null };
+    }
+
     function RaidBuilder(id) {
         this.def = {
-            id: id,
-            spawn: { minRadius: DEFAULT_MIN_R, maxRadius: DEFAULT_MAX_R },
+            id: String(id || ""),
+            spawn: normalizedSpawn(DEFAULT_MIN_R, DEFAULT_MAX_R),
             defaultPresets: [],
             rounds: [],
             callbacks: {},
@@ -167,8 +207,7 @@
         this._mob   = null;   // current mob group being configured
     }
     RaidBuilder.prototype.spawn = function (minR, maxR) {
-        this.def.spawn.minRadius = Number(minR);
-        this.def.spawn.maxRadius = Number(maxR);
+        this.def.spawn = normalizedSpawn(minR, maxR);
         return this;
     };
     RaidBuilder.prototype.defaultPresets = function () {
@@ -187,11 +226,11 @@
         return this;
     };
     RaidBuilder.prototype.breather = function (ticks) {
-        if (this._round) this._round.breather = Number(ticks); else warn("breather() before round()");
+        if (this._round) this._round.breather = nonNegativeOr(ticks, DEFAULT_BREATHER); else warn("breather() before round()");
         return this;
     };
     RaidBuilder.prototype.timeLimit = function (ticks) {
-        if (this._round) this._round.timeLimit = Number(ticks); else warn("timeLimit() before round()");
+        if (this._round) this._round.timeLimit = optionalNonNegative(ticks); else warn("timeLimit() before round()");
         return this;
     };
     // Accepts a type id string OR a full spec object:
@@ -199,25 +238,12 @@
     // Modded mobs work as long as type carries a namespace ("modid:mob").
     RaidBuilder.prototype.mob = function (typeOrSpec) {
         if (!this._round) { warn("mob() before round(); opening a default round"); this.round(null); }
-        if (typeOrSpec && typeof typeOrSpec === "object") {
-            var s = typeOrSpec;
-            this._mob = {
-                type:       String(s.type || s.id),
-                count:      Math.max(1, parseInt(s.count, 10) || 1),
-                presets:    Array.isArray(s.presets) ? s.presets.slice() : [],
-                extraArgs:  Array.isArray(s.extraArgs) ? s.extraArgs.slice() : [],
-                noDefaults: !!s.noDefaults,
-                equip:      shallowCopy(s.equip),   // copied so a shared archetype isn't mutated
-                nbt:        shallowCopy(s.nbt)
-            };
-        } else {
-            this._mob = { type: String(typeOrSpec), count: 1, presets: [], extraArgs: [], noDefaults: false, equip: null, nbt: null };
-        }
+        this._mob = normalizeMobSpec(typeOrSpec);
         this._round.mobs.push(this._mob);
         return this;
     };
     RaidBuilder.prototype.count = function (n) {
-        if (this._mob) this._mob.count = Math.max(1, parseInt(n, 10) || 1); else warn("count() before mob()");
+        if (this._mob) this._mob.count = positiveIntOr(n, 1); else warn("count() before mob()");
         return this;
     };
     RaidBuilder.prototype.presets = function () {
@@ -260,10 +286,16 @@
     RaidBuilder.prototype.bossBar    = function (on) { this.def.bossBar = (on !== false); return this; };
     RaidBuilder.prototype.barColor   = function (c) { this.def.barColor = String(c); return this; };
     RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
-    RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = Number(t); return this; };
-    RaidBuilder.prototype.aggroRadius = function (n) { this.def.aggroRadius = Number(n); return this; };
-    RaidBuilder.prototype.followRange = function (n) { this.def.followRange = Number(n); return this; };
-    function _snd(id, vol, pitch) { return { id: (id == null ? "" : String(id)), vol: (vol == null ? 1.0 : Number(vol)), pitch: (pitch == null ? 1.0 : Number(pitch)) }; }
+    RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = nonNegativeOr(t, DEFAULT_BAR_HOLD); return this; };
+    RaidBuilder.prototype.aggroRadius = function (n) { this.def.aggroRadius = nonNegativeOr(n, 20); return this; };
+    RaidBuilder.prototype.followRange = function (n) { this.def.followRange = optionalNonNegative(n); return this; };
+    function _snd(id, vol, pitch) {
+        return {
+            id: (id == null ? "" : String(id)),
+            vol: numberOr(vol, 1.0),
+            pitch: numberOr(pitch, 1.0)
+        };
+    }
     RaidBuilder.prototype.roundStartSound = function (id, vol, pitch) { this.def.sounds.roundStart = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.winSound        = function (id, vol, pitch) { this.def.sounds.win        = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.loseSound       = function (id, vol, pitch) { this.def.sounds.lose       = _snd(id, vol, pitch); return this; };
@@ -281,11 +313,20 @@
 
     function validateDef(d) {
         if (!d.id || typeof d.id !== "string") { err("def id missing/not a string"); return false; }
+        if (!d.spawn || !(d.spawn.minRadius >= 0) || !(d.spawn.maxRadius >= d.spawn.minRadius)) {
+            err(`raid "${d.id}": bad spawn radius (${d.spawn && d.spawn.minRadius}, ${d.spawn && d.spawn.maxRadius})`);
+            return false;
+        }
+        if (!(d.aggroRadius >= 0)) { err(`raid "${d.id}": bad aggroRadius "${d.aggroRadius}"`); return false; }
+        if (d.followRange != null && !(d.followRange >= 0)) { err(`raid "${d.id}": bad followRange "${d.followRange}"`); return false; }
+        if (!(d.barHold >= 0)) { err(`raid "${d.id}": bad barHold "${d.barHold}"`); return false; }
         if (!d.rounds || d.rounds.length === 0) { err(`raid "${d.id}": no rounds`); return false; }
         var EAI = getEAI();
         var presetMap = (EAI && EAI.presets) ? EAI.presets : {};
         for (var i = 0; i < d.rounds.length; i++) {
             var r = d.rounds[i];
+            if (!(r.breather >= 0)) { err(`raid "${d.id}" round ${i}: bad breather "${r.breather}"`); return false; }
+            if (r.timeLimit != null && !(r.timeLimit >= 0)) { err(`raid "${d.id}" round ${i}: bad timeLimit "${r.timeLimit}"`); return false; }
             if (!r.mobs || r.mobs.length === 0) { err(`raid "${d.id}" round ${i} "${r.name}": no mobs`); return false; }
             for (var j = 0; j < r.mobs.length; j++) {
                 var m = r.mobs[j];

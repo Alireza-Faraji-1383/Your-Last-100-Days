@@ -1,10 +1,10 @@
 // priority: 70
 // kubejs/server_scripts/raids/raid_definitions.js
 //
-// Reusable mob archetypes (exported as the RaidMobs global) + shared raid
-// definitions. The user-facing library layer. Per-night triggers live in their
-// own files under days/<dayN>/night_raid.js (priority 60), which reference these
-// raids/archetypes. Depends on the Raid builder + RaidManager globals
+// Reusable mob archetypes (exported as the RaidMobs global). Per-night raid
+// definitions live in their own files under days/<dayN>/night_raid.js
+// (priority 60), which reference these raids/archetypes. Depends on the Raid
+// builder + RaidManager globals
 // (raid_core.js, priority 90). Preset names come from EnhancedAI.presets.
 
 (function (global) {
