@@ -59,6 +59,14 @@
 			x: -1.0d
 			y: -17.0d
 		}
+		{
+			height: 2.0d
+			image: "mctradepost:item/mctp_coin"
+			rotation: 0.0d
+			width: 2.0d
+			x: 17.0d
+			y: -15.5d
+		}
 	]
 	order_index: 2
 	quest_links: [ ]
@@ -339,7 +347,7 @@
 				type: "advancement"
 			}]
 			x: 10.5d
-			y: -12.0d
+			y: -15.0d
 		}
 		{
 			dependencies: ["0D6E099A1A242153"]
@@ -1073,7 +1081,7 @@
 				type: "item"
 			}]
 			x: 9.5d
-			y: -12.0d
+			y: -14.0d
 		}
 		{
 			dependencies: [
@@ -2206,7 +2214,7 @@
 				type: "item"
 			}]
 			x: 11.5d
-			y: -12.0d
+			y: -14.0d
 		}
 		{
 			dependencies: ["15B51FB56A64C303"]
@@ -2972,6 +2980,239 @@
 			}]
 			x: 3.0d
 			y: -18.0d
+		}
+		{
+			dependencies: [
+				"0D6E099A1A242153"
+				"2A7FFD785EAB2DE0"
+			]
+			icon: {
+				id: "mctradepost:mctp_coin"
+			}
+			id: "56F019E26B073560"
+			rewards: [
+				{
+					id: "10C6238BEBDFB188"
+					type: "xp"
+					xp: 20
+				}
+				{
+					id: "7DA0C390B0424F8B"
+					item: {
+						count: 1
+						id: "mctradepost:mctp_coin"
+					}
+					type: "item"
+				}
+			]
+			shape: "hexagon"
+			size: 3.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/root"
+				criterion: ""
+				id: "5C7B69D70DA83B0F"
+				type: "advancement"
+			}]
+			x: 16.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["56F019E26B073560"]
+			icon: {
+				id: "mctradepost:blockhutmarketplace"
+			}
+			id: "27EF4C1254D06288"
+			rewards: [
+				{
+					id: "590BAAB86B229B11"
+					type: "xp"
+					xp: 20
+				}
+				{
+					id: "157A1D3A41FF87AD"
+					item: {
+						count: 1
+						id: "mctradepost:mctp_coin"
+					}
+					type: "item"
+				}
+			]
+			shape: "diamond"
+			size: 2.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/marketplace"
+				criterion: ""
+				id: "2F7161CE7E1165A6"
+				type: "advancement"
+			}]
+			x: 19.5d
+			y: -12.0d
+		}
+		{
+			dependencies: ["2A7FFD785EAB2DE0"]
+			icon: {
+				id: "mctradepost:mctp_coin"
+			}
+			id: "7923F12E91B8E241"
+			rewards: [{
+				id: "1D50BFD75A7F6D7C"
+				type: "xp"
+				xp: 20
+			}]
+			shape: "circle"
+			size: 2.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/big_spender"
+				criterion: ""
+				id: "0E93780C48FA4D7D"
+				type: "advancement"
+			}]
+			x: 19.0d
+			y: -8.0d
+		}
+		{
+			dependencies: [
+				"0D7D0A11D7517585"
+				"7923F12E91B8E241"
+			]
+			icon: {
+				id: "mctradepost:mctp_coin_gold"
+			}
+			id: "1447D48FBE3286B6"
+			rewards: [{
+				id: "0832C295B90D1E23"
+				type: "xp"
+				xp: 20
+			}]
+			shape: "circle"
+			size: 2.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/high_roller"
+				criterion: ""
+				id: "434AD2302CC21191"
+				type: "advancement"
+			}]
+			x: 21.0d
+			y: -8.0d
+		}
+		{
+			icon: {
+				id: "mctradepost:mctp_coin_diamond"
+			}
+			id: "0D7D0A11D7517585"
+			rewards: [{
+				id: "20E5AF5D5C9BDFD2"
+				type: "xp"
+				xp: 20
+			}]
+			shape: "circle"
+			size: 2.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/bling"
+				criterion: ""
+				id: "568B601C5FF4CDAE"
+				type: "advancement"
+			}]
+			x: 23.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["27EF4C1254D06288"]
+			icon: {
+				id: "minecraft:totem_of_undying"
+			}
+			id: "5B22BA665F0E928F"
+			rewards: [
+				{
+					id: "12FFC06E8C3AFF0A"
+					type: "xp"
+					xp: 20
+				}
+				{
+					count: 10
+					id: "599E37F3BEF4DCDA"
+					item: {
+						count: 1
+						id: "mctradepost:mctp_coin"
+					}
+					type: "item"
+				}
+			]
+			shape: "circle"
+			size: 2.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/rare_find"
+				criterion: ""
+				id: "463FD773EAF705D4"
+				type: "advancement"
+			}]
+			x: 23.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["3B6C0A0C144F0CEE"]
+			icon: {
+				id: "mctradepost:mixed_stone"
+			}
+			id: "2A7FFD785EAB2DE0"
+			rewards: [{
+				id: "26C0EC3E10C5EC02"
+				type: "xp"
+				xp: 20
+			}]
+			shape: "circle"
+			size: 2.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/mix_and_match"
+				criterion: ""
+				id: "669232A1C6C8B24D"
+				type: "advancement"
+			}]
+			x: 16.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["7966BC6250F38D48"]
+			icon: {
+				id: "mctradepost:mixed_stone"
+			}
+			id: "3B6C0A0C144F0CEE"
+			rewards: [{
+				id: "55E99C17EDE25F9A"
+				type: "xp"
+				xp: 20
+			}]
+			shape: "diamond"
+			size: 2.25d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/make_a_wishingwell"
+				criterion: ""
+				id: "45EDD6B5277CB8F2"
+				type: "advancement"
+			}]
+			x: 16.0d
+			y: -5.625d
+		}
+		{
+			icon: {
+				id: "mctradepost:quartz_mortar"
+			}
+			id: "7966BC6250F38D48"
+			rewards: [{
+				id: "177D9C50759A5EA5"
+				type: "xp"
+				xp: 20
+			}]
+			shape: "circle"
+			size: 2.0d
+			tasks: [{
+				advancement: "mctradepost:mctradepost/make_a_wish"
+				criterion: ""
+				id: "25307817757419C5"
+				type: "advancement"
+			}]
+			x: 16.0d
+			y: -3.0d
 		}
 	]
 }

@@ -118,6 +118,14 @@
 					}
 					type: "item"
 				}
+				{
+					id: "602F2455E38BAA4A"
+					item: {
+						count: 1
+						id: "minecraft:stone_pickaxe"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "minecraft:story/smelt_iron"
@@ -774,6 +782,19 @@
 		{
 			dependencies: ["6D1C9E652CE9007A"]
 			id: "2F1B0D8E1D18AB3C"
+			rewards: [{
+				id: "4E11EDBA6819FD6F"
+				item: {
+					components: {
+						"minecraft:custom_data": {
+							AmmoUsed: 0
+						}
+					}
+					count: 1
+					id: "spartan_weaponry_unofficial:boomerang_iron"
+				}
+				type: "item"
+			}]
 			tasks: [
 				{
 					id: "42490E4771CBEBEF"

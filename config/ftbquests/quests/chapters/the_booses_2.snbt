@@ -90,11 +90,21 @@
 		{
 			dependencies: ["40A420EAEEBDB544"]
 			id: "2C039F5007E909A4"
-			rewards: [{
-				id: "5A974C8040CE3CA8"
-				type: "xp_levels"
-				xp_levels: 50
-			}]
+			rewards: [
+				{
+					id: "5A974C8040CE3CA8"
+					type: "xp_levels"
+					xp_levels: 50
+				}
+				{
+					id: "021AD3E5D9C0AC81"
+					item: {
+						count: 1
+						id: "minecraft:nether_star"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "block_factorys_bosses:no_hit_sandworm"
 				criterion: ""
@@ -107,11 +117,21 @@
 		{
 			dependencies: ["160CD8B65B2BD16B"]
 			id: "67688DF5FCCD3447"
-			rewards: [{
-				id: "41F7AE14D142B011"
-				type: "xp_levels"
-				xp_levels: 50
-			}]
+			rewards: [
+				{
+					id: "41F7AE14D142B011"
+					type: "xp_levels"
+					xp_levels: 50
+				}
+				{
+					id: "411AAF2D2CF36C3B"
+					item: {
+						count: 1
+						id: "minecraft:nether_star"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "block_factorys_bosses:no_hit_kraken"
 				criterion: ""
@@ -124,11 +144,21 @@
 		{
 			dependencies: ["3831CD0CAEEE8E4F"]
 			id: "68C704D802430B1D"
-			rewards: [{
-				id: "2E3C8C52A6A3532D"
-				type: "xp_levels"
-				xp_levels: 50
-			}]
+			rewards: [
+				{
+					id: "2E3C8C52A6A3532D"
+					type: "xp_levels"
+					xp_levels: 50
+				}
+				{
+					id: "1A13F6E6D44430C7"
+					item: {
+						count: 1
+						id: "minecraft:nether_star"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "block_factorys_bosses:no_hit_underworld_knight"
 				criterion: ""
@@ -141,11 +171,21 @@
 		{
 			dependencies: ["789AA17C4D02BE94"]
 			id: "4D54DD7ACE7E734F"
-			rewards: [{
-				id: "065E337EAEDDA088"
-				type: "xp_levels"
-				xp_levels: 40
-			}]
+			rewards: [
+				{
+					id: "065E337EAEDDA088"
+					type: "xp_levels"
+					xp_levels: 40
+				}
+				{
+					id: "4BFC7EF07C73C0DF"
+					item: {
+						count: 1
+						id: "minecraft:nether_star"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "block_factorys_bosses:no_hit_yeti"
 				criterion: ""
@@ -257,6 +297,53 @@
 			}]
 			x: -1.5d
 			y: 0.0d
+		}
+		{
+			icon: {
+				components: {
+					"!ftbquests:icon": { }
+					"ftbquests:entity_face": "minecraft:zombie"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "01465705388B72B7"
+			rewards: [{
+				id: "753BF223E7E9EF33"
+				type: "xp"
+				xp: 20
+			}]
+			tasks: [{
+				entity: "minecraft:zombie"
+				id: "648C111E2C0EDF31"
+				type: "kill"
+				value: 10L
+			}]
+			x: -5.5d
+			y: 5.0d
+		}
+		{
+			dependencies: ["01465705388B72B7"]
+			icon: {
+				components: {
+					"!ftbquests:icon": { }
+					"ftbquests:entity_face": "minecraft:zombie"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "31ED6D42594C1F83"
+			rewards: [{
+				id: "032F9E7B3C62F155"
+				type: "xp"
+				xp: 20
+			}]
+			tasks: [{
+				entity: "minecraft:zombie"
+				id: "3B2C11402D07C35A"
+				type: "kill"
+				value: 50L
+			}]
+			x: -5.5d
+			y: 7.0d
 		}
 	]
 }

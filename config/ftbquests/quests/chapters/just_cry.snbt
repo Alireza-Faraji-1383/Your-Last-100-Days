@@ -3,20 +3,610 @@
 	default_quest_shape: ""
 	filename: "just_cry"
 	group: ""
+	icon: {
+		id: "enigmaticlegacyplus:cursed_ring"
+	}
 	id: "5A68256C8616EE36"
+	images: [
+		{
+			height: 2.0d
+			image: "enigmaticlegacyplus:item/cursed_ring"
+			rotation: 0.0d
+			width: 2.0d
+			x: 7.0d
+			y: -2.5d
+		}
+		{
+			height: 2.0d
+			image: "enigmaticlegacyplus:item/etherium_ingot"
+			rotation: 0.0d
+			width: 2.0d
+			x: -7.0d
+			y: -2.5d
+		}
+	]
 	order_index: 3
 	quest_links: [ ]
-	quests: [{
-		id: "2D3422284A9EFF23"
-		shape: "diamond"
-		size: 3.0d
-		tasks: [{
-			advancement: "enigmaticlegacyplus:main/cursed_ring"
-			criterion: ""
-			id: "33488AC08208BAD1"
-			type: "advancement"
-		}]
-		x: 0.5d
-		y: -3.5d
-	}]
+	quests: [
+		{
+			icon: {
+				id: "enigmaticlegacyplus:the_acknowledgment"
+			}
+			id: "29EA35D78BD0C39A"
+			rewards: [{
+				id: "0C4F46D93BBED64D"
+				type: "xp"
+				xp: 100
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/root"
+				criterion: ""
+				id: "6746252D5DA2F20E"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["29EA35D78BD0C39A"]
+			id: "2D3422284A9EFF23"
+			shape: "diamond"
+			size: 3.0d
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/cursed_ring"
+				criterion: ""
+				id: "33488AC08208BAD1"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: -7.5d
+		}
+		{
+			dependencies: ["29EA35D78BD0C39A"]
+			icon: {
+				id: "enigmaticlegacyplus:blank_scroll"
+			}
+			id: "53AB7EFD8D1A6F5E"
+			rewards: [{
+				id: "4AC06D176DC1AB15"
+				type: "xp"
+				xp: 120
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/discover_scroll"
+				criterion: ""
+				id: "63F9399CB9AF824E"
+				type: "advancement"
+			}]
+			x: -2.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["53AB7EFD8D1A6F5E"]
+			icon: {
+				id: "enigmaticlegacyplus:darkest_scroll"
+			}
+			id: "7BCF084B6C070D66"
+			rewards: [{
+				id: "254F49574D2B0D80"
+				type: "xp"
+				xp: 180
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/darkest_scroll"
+				criterion: ""
+				id: "37324D35CB6B7E1F"
+				type: "advancement"
+			}]
+			x: -2.0d
+			y: 0.0d
+		}
+		{
+			icon: {
+				id: "enigmaticlegacyplus:cursed_scroll"
+			}
+			id: "13C5FAB90F6EAACA"
+			rewards: [{
+				id: "49ABB5C05783A7F0"
+				type: "xp"
+				xp: 150
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/cursed_scroll"
+				criterion: ""
+				id: "66A5CC092C3217C9"
+				type: "advancement"
+			}]
+			x: -3.5d
+			y: 8.5d
+		}
+		{
+			dependencies: ["29EA35D78BD0C39A"]
+			icon: {
+				id: "enigmaticlegacyplus:recall_potion"
+			}
+			id: "5F895C96E1163335"
+			rewards: [{
+				id: "62DC98D190A39E63"
+				type: "xp"
+				xp: 160
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/recall_potion"
+				criterion: ""
+				id: "1D8F3445E4A6D9DB"
+				type: "advancement"
+			}]
+			x: -2.0d
+			y: -4.0d
+		}
+		{
+			icon: {
+				id: "enigmaticlegacyplus:escape_scroll"
+			}
+			id: "26E4868B7C280A98"
+			rewards: [{
+				id: "39717F24A12CD429"
+				type: "xp"
+				xp: 150
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/escape_scroll"
+				criterion: ""
+				id: "08777DD3C652794F"
+				type: "advancement"
+			}]
+			x: -3.5d
+			y: 10.5d
+		}
+		{
+			dependencies: ["29EA35D78BD0C39A"]
+			icon: {
+				id: "enigmaticlegacyplus:golem_heart"
+			}
+			id: "6D80D38812B5B2D0"
+			rewards: [{
+				id: "3688FC51A4FF164E"
+				type: "xp"
+				xp: 150
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/discover_spellstone"
+				criterion: ""
+				id: "62A4AC16ED4025CD"
+				type: "advancement"
+			}]
+			x: 4.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["6D80D38812B5B2D0"]
+			icon: {
+				id: "enigmaticlegacyplus:spellstone_table"
+			}
+			id: "0DD8CE32CA2D3810"
+			rewards: [{
+				id: "0C79DB8DC8AF0830"
+				type: "xp"
+				xp: 200
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/spellstone_table"
+				criterion: ""
+				id: "78FB08B2CFC322E5"
+				type: "advancement"
+			}]
+			x: 4.0d
+			y: -2.5d
+		}
+		{
+			dependencies: ["0DD8CE32CA2D3810"]
+			icon: {
+				id: "enigmaticlegacyplus:spellcore"
+			}
+			id: "21302453E6311BC9"
+			rewards: [{
+				id: "2ED0841E29F13168"
+				type: "xp"
+				xp: 500
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/all_spellstone"
+				criterion: ""
+				id: "3421E8D1FEE7ED03"
+				type: "advancement"
+			}]
+			x: 5.5d
+			y: -1.0d
+		}
+		{
+			dependencies: ["21302453E6311BC9"]
+			icon: {
+				id: "enigmaticlegacyplus:the_cube"
+			}
+			id: "17371E278B5E8441"
+			rewards: [{
+				id: "7A491FA3D508FA5C"
+				type: "xp"
+				xp: 450
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/the_cube"
+				criterion: ""
+				id: "250DA67AB64A93A4"
+				type: "advancement"
+			}]
+			x: 5.5d
+			y: 0.5d
+		}
+		{
+			dependencies: ["29EA35D78BD0C39A"]
+			icon: {
+				id: "enigmaticlegacyplus:infernal_cinder"
+			}
+			id: "4D5854E87F8B8F3F"
+			rewards: [{
+				id: "653C8A1888135B9C"
+				type: "xp"
+				xp: 220
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/infernal_cinder"
+				criterion: ""
+				id: "2554B3D21C2F9E2C"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["4D5854E87F8B8F3F"]
+			icon: {
+				id: "enigmaticlegacyplus:ichor_droplet"
+			}
+			id: "18F224F39CFD0B35"
+			rewards: [{
+				id: "4A59951A687B9DD0"
+				type: "xp"
+				xp: 200
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/ichor_droplet"
+				criterion: ""
+				id: "1423082495AADD3A"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: -0.5d
+		}
+		{
+			dependencies: ["18F224F39CFD0B35"]
+			icon: {
+				id: "enigmaticlegacyplus:astral_dust"
+			}
+			id: "4454DC053175B397"
+			rewards: [{
+				id: "0457664DB632EC0B"
+				type: "xp"
+				xp: 180
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/astral_dust"
+				criterion: ""
+				id: "42DFEC822414C9B9"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: 1.0d
+		}
+		{
+			dependencies: ["4454DC053175B397"]
+			icon: {
+				id: "enigmaticlegacyplus:etherium_ingot"
+			}
+			id: "11274B9716914F83"
+			rewards: [{
+				id: "03A198AEC34625ED"
+				type: "xp"
+				xp: 220
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/etherium_ingot"
+				criterion: ""
+				id: "12393C75899641AA"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: 3.0d
+		}
+		{
+			dependencies: ["11274B9716914F83"]
+			icon: {
+				id: "enigmaticlegacyplus:etherium_chestplate"
+			}
+			id: "41D4412079EEC5EC"
+			rewards: [{
+				id: "0AA1B52EDF58909E"
+				type: "xp"
+				xp: 350
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/etherium_gear"
+				criterion: ""
+				id: "3A9D9F539DF3B4D7"
+				type: "advancement"
+			}]
+			x: -1.5d
+			y: 4.5d
+		}
+		{
+			dependencies: ["11274B9716914F83"]
+			icon: {
+				id: "enigmaticlegacyplus:etherium_sword"
+			}
+			id: "5F73123B6664C1A9"
+			rewards: [{
+				id: "76CAB5E31A49A00C"
+				type: "xp"
+				xp: 300
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/etherium_tool"
+				criterion: ""
+				id: "2D181F359BA0C3E9"
+				type: "advancement"
+			}]
+			x: 1.5d
+			y: 4.5d
+		}
+		{
+			dependencies: ["2D3422284A9EFF23"]
+			icon: {
+				id: "enigmaticlegacyplus:pure_heart"
+			}
+			id: "47B4C6C23BA97AD0"
+			rewards: [{
+				id: "2181F1D44F8EA1CC"
+				type: "xp"
+				xp: 180
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/pure_heart"
+				criterion: ""
+				id: "4FB9CE4460B4CD42"
+				type: "advancement"
+			}]
+			x: 3.5d
+			y: -7.0d
+		}
+		{
+			icon: {
+				id: "enigmaticlegacyplus:sacred_crystal"
+			}
+			id: "010F20E85B157B42"
+			rewards: [{
+				id: "2649B8508BD07E27"
+				type: "xp"
+				xp: 150
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/sacred_crystal"
+				criterion: ""
+				id: "7722A3431AAA18CE"
+				type: "advancement"
+			}]
+			x: 2.5d
+			y: -1.0d
+		}
+		{
+			dependencies: ["010F20E85B157B42"]
+			icon: {
+				id: "enigmaticlegacyplus:the_bless"
+			}
+			id: "33BA6855BBED8FEA"
+			rewards: [{
+				id: "43B8BB9C57E8377E"
+				type: "xp"
+				xp: 300
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/the_bless"
+				criterion: ""
+				id: "1D6678A8CFA284A7"
+				type: "advancement"
+			}]
+			x: 2.5d
+			y: 0.5d
+		}
+		{
+			dependencies: ["18F224F39CFD0B35"]
+			icon: {
+				id: "enigmaticlegacyplus:evil_essence"
+			}
+			id: "03E3259694F8C307"
+			rewards: [{
+				id: "2D585341CF946661"
+				type: "xp"
+				xp: 220
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:book/materials/evil_essence"
+				criterion: ""
+				id: "2800A3920B3E8C33"
+				type: "advancement"
+			}]
+			x: 3.5d
+			y: -0.5d
+		}
+		{
+			dependencies: ["03E3259694F8C307"]
+			icon: {
+				id: "enigmaticlegacyplus:unholy_grail"
+			}
+			id: "4AFD222259C9360A"
+			rewards: [{
+				id: "4B6512A472658624"
+				type: "xp"
+				xp: 300
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/unholy_grail"
+				criterion: ""
+				id: "442C38486B1F3D0E"
+				type: "advancement"
+			}]
+			x: 3.5d
+			y: 5.0d
+		}
+		{
+			dependencies: ["2D3422284A9EFF23"]
+			icon: {
+				id: "enigmaticlegacyplus:twisted_heart"
+			}
+			id: "63B158B616DF7AFC"
+			rewards: [{
+				id: "0AC29AED71397044"
+				type: "xp"
+				xp: 250
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/twisted_heart"
+				criterion: ""
+				id: "6D46591E1B958A3C"
+				type: "advancement"
+			}]
+			x: -7.0d
+			y: 1.0d
+		}
+		{
+			dependencies: ["63B158B616DF7AFC"]
+			icon: {
+				id: "enigmaticlegacyplus:twisted_mirror"
+			}
+			id: "2DDFBA95A9138CA4"
+			rewards: [{
+				id: "1A5E01C6B0209096"
+				type: "xp"
+				xp: 300
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/twisted_mirror"
+				criterion: ""
+				id: "056B811C2E456AF3"
+				type: "advancement"
+			}]
+			x: -3.5d
+			y: 5.0d
+		}
+		{
+			dependencies: ["63B158B616DF7AFC"]
+			icon: {
+				id: "enigmaticlegacyplus:the_twist"
+			}
+			id: "39CBE1417FEE719A"
+			rewards: [{
+				id: "09C5D72F3AF9C483"
+				type: "xp"
+				xp: 320
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/the_twist"
+				criterion: ""
+				id: "6842A1217221776D"
+				type: "advancement"
+			}]
+			x: -10.0d
+			y: 1.0d
+		}
+		{
+			icon: {
+				id: "enigmaticlegacyplus:abyssal_heart"
+			}
+			id: "1C47017E1661966A"
+			rewards: [{
+				id: "18F71B9F72921578"
+				type: "xp"
+				xp: 300
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/abyssal_heart"
+				criterion: ""
+				id: "25A83343733AFA69"
+				type: "advancement"
+			}]
+			x: 6.0d
+			y: 6.5d
+		}
+		{
+			dependencies: ["1C47017E1661966A"]
+			icon: {
+				id: "enigmaticlegacyplus:chaos_elytra"
+			}
+			id: "51DCE7CCB7BE3A57"
+			rewards: [{
+				id: "490AA4ABF8734A33"
+				type: "xp"
+				xp: 600
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/chaos_elytra"
+				criterion: ""
+				id: "1D11A2C08131E3FB"
+				type: "advancement"
+			}]
+			x: 4.0d
+			y: 7.0d
+		}
+		{
+			dependencies: ["1C47017E1661966A"]
+			icon: {
+				id: "enigmaticlegacyplus:the_infinitum"
+			}
+			id: "0347B872A2C8896C"
+			rewards: [{
+				id: "24569B29D181C589"
+				type: "xp"
+				xp: 700
+			}]
+			tasks: [{
+				advancement: "enigmaticlegacyplus:main/the_infinitum"
+				criterion: ""
+				id: "17AFD744DA9FF440"
+				type: "advancement"
+			}]
+			x: 4.0d
+			y: 10.0d
+		}
+		{
+			dependencies: [
+				"13C5FAB90F6EAACA"
+				"26E4868B7C280A98"
+				"41D4412079EEC5EC"
+				"5F73123B6664C1A9"
+				"4AFD222259C9360A"
+				"2DDFBA95A9138CA4"
+				"51DCE7CCB7BE3A57"
+			]
+			icon: {
+				id: "enigmaticlegacyplus:the_infinitum"
+			}
+			id: "6FC427158E014F38"
+			rewards: [{
+				id: "3382F19D9CCF7DF6"
+				type: "xp"
+				xp: 1000
+			}]
+			shape: "rsquare"
+			size: 2.5d
+			tasks: [{
+				icon: {
+					id: "enigmaticlegacyplus:the_infinitum"
+				}
+				id: "7BD0EEAD4D643C4F"
+				type: "checkmark"
+			}]
+			x: 0.0d
+			y: 8.75d
+		}
+	]
 }

@@ -35,6 +35,7 @@
 			}]
 			size: 1.5d
 			tasks: [{
+				consume_items: true
 				id: "5409036BE4EB4FC6"
 				item: { count: 1, id: "kubejs:coin" }
 				type: "item"
@@ -119,7 +120,6 @@
 				count: 150L
 				id: "5539C51064745E13"
 				item: { count: 1, id: "kubejs:coin" }
-				optional_task: true
 				type: "item"
 			}]
 			x: -7.0d
@@ -181,7 +181,6 @@
 				count: 200L
 				id: "6167E671DE449137"
 				item: { count: 1, id: "kubejs:coin" }
-				optional_task: true
 				type: "item"
 			}]
 			x: -7.0d
@@ -190,7 +189,7 @@
 		{
 			can_repeat: true
 			dependencies: ["32283E28F7147848"]
-			dependency_requirement: "one_started"
+			dependency_requirement: "one_completed"
 			icon: {
 				components: {
 					"relics:data": {
@@ -290,7 +289,6 @@
 				count: 500L
 				id: "27CB59A1B81E97C3"
 				item: { count: 1, id: "kubejs:coin" }
-				optional_task: true
 				type: "item"
 			}]
 			x: -7.0d
@@ -365,7 +363,7 @@
 				}
 			]
 			x: -5.0d
-			y: 10.5d
+			y: 11.0d
 		}
 		{
 			can_repeat: true
@@ -396,7 +394,7 @@
 				}
 			]
 			x: -2.0d
-			y: 10.5d
+			y: 11.0d
 		}
 	]
 }
