@@ -299,6 +299,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 32
+					id: "26FA06DEB1A0A153"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "octagon"
 			size: 2.0d
@@ -2272,6 +2281,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 32
+					id: "7F3B97C408904055"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "minecolonies:military/army_8"
@@ -2327,6 +2345,15 @@
 					item: {
 						count: 1
 						id: "modern_companions:beastmaster_spawn_egg"
+					}
+					type: "item"
+				}
+				{
+					count: 8
+					id: "5B0D127D1D48596F"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -2553,6 +2580,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 32
+					id: "7F533BA395795A5C"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "hexagon"
 			size: 2.5d
@@ -2578,6 +2614,15 @@
 					id: "3699D9ECAC724F45"
 					table_id: 2567105459748842191L
 					type: "loot"
+				}
+				{
+					count: 32
+					id: "26D0AF778A0DED28"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
 				}
 			]
 			tasks: [{
@@ -2622,6 +2667,15 @@
 					item: {
 						count: 1
 						id: "minecraft:diamond"
+					}
+					type: "item"
+				}
+				{
+					count: 16
+					id: "66FA9A78CA447DD7"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -2677,6 +2731,14 @@
 					item: {
 						count: 1
 						id: "enigmaticlegacyplus:execution_axe"
+					}
+					type: "item"
+				}
+				{
+					id: "668BDF4A69907D35"
+					item: {
+						count: 1
+						id: "kubejs:coin"
 					}
 					type: "item"
 				}
@@ -2834,15 +2896,25 @@
 					table_id: 2567105459748842191L
 					type: "loot"
 				}
+				{
+					count: 3
+					id: "2A8C1166468FD093"
+					item: {
+						count: 1
+						id: "kubejs:coin"
+					}
+					type: "item"
+				}
 			]
+			size: 2.0d
 			tasks: [{
 				advancement: "minecolonies:minecolonies/build_town_hall_5"
 				criterion: ""
 				id: "5ADD18EEB58A873B"
 				type: "advancement"
 			}]
-			x: -1.0d
-			y: -8.5d
+			x: -1.5d
+			y: -9.0d
 		}
 		{
 			id: "41E0C4A2DFB4A709"
@@ -2917,6 +2989,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 2
+					id: "4F24AAFE1EBEFEA4"
+					item: {
+						count: 1
+						id: "kubejs:coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "hexagon"
 			size: 3.0d
@@ -2969,6 +3050,15 @@
 					id: "7371434CBA47DCC0"
 					type: "xp_levels"
 					xp_levels: 100
+				}
+				{
+					count: 5
+					id: "08BFF927DE47F790"
+					item: {
+						count: 1
+						id: "kubejs:coin"
+					}
+					type: "item"
 				}
 			]
 			size: 4.0d
@@ -3036,6 +3126,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 16
+					id: "2D3080A681813C43"
+					item: {
+						count: 1
+						id: "mctradepost:mctp_coin_gold"
+					}
+					type: "item"
+				}
 			]
 			shape: "diamond"
 			size: 2.0d
@@ -3054,11 +3153,21 @@
 				id: "mctradepost:mctp_coin"
 			}
 			id: "7923F12E91B8E241"
-			rewards: [{
-				id: "1D50BFD75A7F6D7C"
-				type: "xp"
-				xp: 20
-			}]
+			rewards: [
+				{
+					id: "1D50BFD75A7F6D7C"
+					type: "xp"
+					xp: 20
+				}
+				{
+					id: "5A3E8B21976FA19A"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "circle"
 			size: 2.0d
 			tasks: [{
@@ -3079,11 +3188,21 @@
 				id: "mctradepost:mctp_coin_gold"
 			}
 			id: "1447D48FBE3286B6"
-			rewards: [{
-				id: "0832C295B90D1E23"
-				type: "xp"
-				xp: 20
-			}]
+			rewards: [
+				{
+					id: "0832C295B90D1E23"
+					type: "xp"
+					xp: 100
+				}
+				{
+					id: "060DD1413F3EE81B"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "circle"
 			size: 2.0d
 			tasks: [{
@@ -3100,11 +3219,21 @@
 				id: "mctradepost:mctp_coin_diamond"
 			}
 			id: "0D7D0A11D7517585"
-			rewards: [{
-				id: "20E5AF5D5C9BDFD2"
-				type: "xp"
-				xp: 20
-			}]
+			rewards: [
+				{
+					id: "20E5AF5D5C9BDFD2"
+					type: "xp"
+					xp: 200
+				}
+				{
+					id: "42B4711302DB05A7"
+					item: {
+						count: 1
+						id: "kubejs:coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "circle"
 			size: 2.0d
 			tasks: [{
@@ -3134,6 +3263,14 @@
 					item: {
 						count: 1
 						id: "mctradepost:mctp_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "556A24F9150C71EF"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -3198,11 +3335,22 @@
 				id: "mctradepost:quartz_mortar"
 			}
 			id: "7966BC6250F38D48"
-			rewards: [{
-				id: "177D9C50759A5EA5"
-				type: "xp"
-				xp: 20
-			}]
+			rewards: [
+				{
+					id: "177D9C50759A5EA5"
+					type: "xp"
+					xp: 20
+				}
+				{
+					count: 10
+					id: "3144E670DCEBF7D9"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "circle"
 			size: 2.0d
 			tasks: [{

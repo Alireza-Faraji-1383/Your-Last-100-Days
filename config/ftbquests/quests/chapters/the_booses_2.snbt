@@ -298,5 +298,17 @@
 			x: -1.5d
 			y: 0.0d
 		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "004EEA3ED315B781"
+			tasks: [{
+				advancement: "born_in_chaos_v1:pumpkin_lord"
+				criterion: ""
+				id: "45C090A0C2AF4A2D"
+				type: "advancement"
+			}]
+			x: -3.5d
+			y: -2.0d
+		}
 	]
 }

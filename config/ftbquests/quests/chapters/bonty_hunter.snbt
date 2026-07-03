@@ -22,13 +22,38 @@
 			y: -8.5d
 		}
 		{
-			height: 4.0d
-			image: "minecraft:item/paper"
+			height: 7.0d
+			image: "supplementaries:item/antique_map"
 			order: -1
 			rotation: 0.0d
-			width: 4.0d
+			width: 7.0d
 			x: 0.5d
-			y: -12.5d
+			y: -8.0d
+		}
+		{
+			height: 2.0d
+			image: "born_in_chaos_v1:textures/born_in_chaos_title.png"
+			rotation: 0.0d
+			width: 5.0d
+			x: 0.5d
+			y: 4.5d
+		}
+		{
+			height: 3.0d
+			image: "born_in_chaos_v1:textures/chaosicon2.png"
+			order: -1
+			rotation: 0.0d
+			width: 3.0d
+			x: 0.5d
+			y: 6.0d
+		}
+		{
+			height: 3.0d
+			image: "minecraft:textures/gui/title/minecraft.png"
+			rotation: 0.0d
+			width: 8.0d
+			x: 0.5d
+			y: -4.5d
 		}
 	]
 	order_index: 2
@@ -1089,6 +1114,741 @@
 			}]
 			x: -7.0d
 			y: 2.5d
+		}
+		{
+			icon: {
+				components: {
+					"ftbquests:icon": "born_in_chaos_v1:item/missionaryhat"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "228A571FEFE2EDAA"
+			rewards: [{
+				count: 32
+				id: "33318801895CF088"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:missionary_raider"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:missionary_raider"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "0EEF6EFEB5F12685"
+				type: "kill"
+				value: 3L
+			}]
+			x: -4.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["228A571FEFE2EDAA"]
+			icon: {
+				id: "born_in_chaos_v1:missionary_hat_helmet"
+			}
+			id: "1F47D5A964354601"
+			rewards: [
+				{
+					count: 2
+					id: "3F4AC5CF68CFF847"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "69ECDC9A25BED209"
+					type: "xp"
+					xp: 100
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:missionary_raider"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:missionary_raider"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "274519A882512D06"
+				type: "kill"
+				value: 8L
+			}]
+			x: -4.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["1F47D5A964354601"]
+			icon: {
+				id: "born_in_chaos_v1:missionary_hat_helmet"
+			}
+			id: "5368F734DF31A768"
+			rewards: [
+				{
+					count: 8
+					id: "0E953D08D001927C"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4515D9498B2F170A"
+					type: "xp"
+					xp: 250
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:missionary_raider"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:missionary_raider"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "14665A6FC2583D65"
+				type: "kill"
+				value: 16L
+			}]
+			x: -4.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["5368F734DF31A768"]
+			icon: {
+				id: "born_in_chaos_v1:missionary_hat_helmet"
+			}
+			id: "3D16905887ECCFCC"
+			rewards: [
+				{
+					count: 50
+					id: "542C8D1E055E5F7F"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "56620C7A9735B149"
+					type: "xp_levels"
+					xp_levels: 3
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:missionary_raider"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:missionary_raider"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "24DBC3971F95C9ED"
+				type: "kill"
+				value: 64L
+			}]
+			x: -4.0d
+			y: 11.5d
+		}
+		{
+			icon: {
+				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
+			}
+			id: "44A2E11BCD2A97A8"
+			rewards: [{
+				count: 64
+				id: "581C670969CFA055"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:fallen_chaos_knight"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:fallen_chaos_knight"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "520A68A844609682"
+				type: "kill"
+				value: 15L
+			}]
+			x: -1.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["44A2E11BCD2A97A8"]
+			icon: {
+				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
+			}
+			id: "4456DF4F17EE974B"
+			rewards: [
+				{
+					id: "1BDAAC763E1A197C"
+					type: "xp"
+					xp: 200
+				}
+				{
+					count: 2
+					id: "7FC235A51DA25155"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:fallen_chaos_knight"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:fallen_chaos_knight"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "033DD1ED31781E04"
+				type: "kill"
+				value: 48L
+			}]
+			x: -1.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["4456DF4F17EE974B"]
+			icon: {
+				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
+			}
+			id: "6094F3D5234A99BE"
+			rewards: [
+				{
+					count: 8
+					id: "071FD37998080160"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4D074F9ED4E55838"
+					type: "xp"
+					xp: 450
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:fallen_chaos_knight"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:fallen_chaos_knight"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "1603DC66499ED017"
+				type: "kill"
+				value: 96L
+			}]
+			x: -1.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["6094F3D5234A99BE"]
+			icon: {
+				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
+			}
+			id: "3A80D5F8B58DCF72"
+			rewards: [
+				{
+					count: 32
+					id: "29E59ED31D46854C"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "505C5DE51FA55CF8"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:fallen_chaos_knight"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:fallen_chaos_knight"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "39176CEB2ADB9728"
+				type: "kill"
+				value: 168L
+			}]
+			x: -1.0d
+			y: 11.5d
+		}
+		{
+			icon: {
+				id: "born_in_chaos_v1:nightmare_stalker_skull"
+			}
+			id: "16AB5EBC9FC3D0A6"
+			rewards: [{
+				count: 64
+				id: "3775B7683CB01A59"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:nightmare_stalker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:nightmare_stalker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "367603DFB6C5C564"
+				type: "kill"
+				value: 5L
+			}]
+			x: 0.5d
+			y: 7.5d
+		}
+		{
+			dependencies: ["16AB5EBC9FC3D0A6"]
+			icon: {
+				id: "born_in_chaos_v1:nightmare_stalker_skull"
+			}
+			id: "24936A36AA105819"
+			rewards: [
+				{
+					count: 12
+					id: "35C4F38237034848"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4C2AC5A03224B281"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:nightmare_stalker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:nightmare_stalker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "15B3BC856F5ABB6F"
+				type: "kill"
+				value: 32L
+			}]
+			x: 0.5d
+			y: 9.5d
+		}
+		{
+			dependencies: ["24936A36AA105819"]
+			icon: {
+				id: "born_in_chaos_v1:nightmare_stalker_skull"
+			}
+			id: "7C0D8D03B1585871"
+			rewards: [
+				{
+					count: 24
+					id: "3C73C0BDF832F9B6"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "03DFBD728127021C"
+					type: "xp"
+					xp: 350
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:nightmare_stalker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:nightmare_stalker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "14E2DD04E2E56AF5"
+				type: "kill"
+				value: 64L
+			}]
+			x: 0.5d
+			y: 11.5d
+		}
+		{
+			dependencies: ["7C0D8D03B1585871"]
+			icon: {
+				id: "born_in_chaos_v1:nightmare_stalker_skull"
+			}
+			id: "5841235154F20F41"
+			rewards: [
+				{
+					count: 64
+					id: "31D887ACCE091BF7"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "59C9573209AACF79"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:nightmare_stalker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:nightmare_stalker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "6FC78108FEAEFB0D"
+				type: "kill"
+				value: 128L
+			}]
+			x: 0.5d
+			y: 13.5d
+		}
+		{
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:textures/mob_effect/darkness.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "432BCBA63DDF143F"
+			rewards: [{
+				count: 64
+				id: "0342E21181321FA8"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:dark_vortex"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dark_vortex"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "4A056FE4A5032E67"
+				type: "kill"
+				value: 16L
+			}]
+			x: 5.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["432BCBA63DDF143F"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:textures/mob_effect/darkness.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "68C45EE6E1929275"
+			rewards: [
+				{
+					count: 2
+					id: "197F6098756FEF1C"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "16CD5684CB976CCC"
+					type: "xp"
+					xp: 250
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:dark_vortex"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dark_vortex"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "5ADC9FE7B9658F63"
+				type: "kill"
+				value: 64L
+			}]
+			x: 5.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["68C45EE6E1929275"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:textures/mob_effect/darkness.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "5CD0B8FBE3D0248D"
+			rewards: [
+				{
+					count: 10
+					id: "76ED8B8CCE0960D7"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "059A888754AEA102"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:dark_vortex"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dark_vortex"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "1E189DD4BDD5FF07"
+				type: "kill"
+				value: 128L
+			}]
+			x: 5.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["5CD0B8FBE3D0248D"]
+			icon: {
+				components: {
+					"ftbquests:icon": "minecraft:textures/mob_effect/darkness.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "752201E2F85A9A1C"
+			rewards: [
+				{
+					count: 16
+					id: "432C3E7948D19131"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "05F2E7AA9D4B61DE"
+					type: "xp_levels"
+					xp_levels: 6
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:dark_vortex"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dark_vortex"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "6DD3BDB060CD7BEB"
+				type: "kill"
+				value: 200L
+			}]
+			x: 5.0d
+			y: 11.5d
+		}
+		{
+			icon: {
+				id: "born_in_chaos_v1:fangofthe_hound_leader"
+			}
+			id: "6D89803F760D5658"
+			rewards: [{
+				count: 20
+				id: "179EF1BE73D6E8A0"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:dire_hound_leader"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dire_hound_leader"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "135F9FA83FDB7D1B"
+				type: "kill"
+				value: 12L
+			}]
+			x: 2.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["6D89803F760D5658"]
+			icon: {
+				id: "born_in_chaos_v1:fangofthe_hound_leader"
+			}
+			id: "7508A124081E679C"
+			rewards: [
+				{
+					count: 50
+					id: "2E78FA7D74C37F3A"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "34E4388971EB311E"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:dire_hound_leader"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dire_hound_leader"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "7833CF1421794EC1"
+				type: "kill"
+				value: 32L
+			}]
+			x: 2.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["7508A124081E679C"]
+			icon: {
+				id: "born_in_chaos_v1:fangofthe_hound_leader"
+			}
+			id: "3BD9809A4BDA5445"
+			rewards: [
+				{
+					count: 2
+					id: "74A9B486F4B93DD5"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "5DC03FB4BEDA2C14"
+					type: "xp"
+					xp: 350
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:dire_hound_leader"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dire_hound_leader"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "43ECB1125CCD6BC2"
+				type: "kill"
+				value: 64L
+			}]
+			x: 2.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["3BD9809A4BDA5445"]
+			icon: {
+				id: "born_in_chaos_v1:fangofthe_hound_leader"
+			}
+			id: "04B585AE7EEA7583"
+			rewards: [
+				{
+					count: 5
+					id: "61C3783491E36C18"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "1958F07586D593E6"
+					type: "xp_levels"
+					xp_levels: 4
+				}
+			]
+			tasks: [{
+				entity: "born_in_chaos_v1:dire_hound_leader"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "born_in_chaos_v1:dire_hound_leader"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "192D0C81D162D63B"
+				type: "kill"
+				value: 128L
+			}]
+			x: 2.0d
+			y: 11.5d
 		}
 	]
 }
