@@ -187,6 +187,8 @@
         this.def = {
             id: String(id || ""),
             spawn: normalizedSpawn(DEFAULT_MIN_R, DEFAULT_MAX_R),
+            spawnPattern: "ring",   // "ring" (spread around player) | "horde" (one cluster, one direction)
+            hordeAngle: null,       // degrees: fixed horde direction; null -> per-round deterministic pick
             defaultPresets: [],
             rounds: [],
             callbacks: {},
@@ -195,6 +197,7 @@
             barColor: "RED",        // BossBarColor enum name
             barOverlay: "NOTCHED_10",// BossBarOverlay enum name
             barHold: DEFAULT_BAR_HOLD,// ticks victory/defeat bar lingers
+            waterproof: true,        // raid mobs swim fast + never drown (attributes/water_movement_efficiency + oxygen_bonus)
             aggroRadius: 20,         // blocks: mobs proactively attack players/villagers/golems within this
             followRange: null,       // blocks: player detection + chase range (sets attributes/follow_range on every mob)
             sounds: {                // played to the target player (id null/"" = silent)
@@ -208,6 +211,22 @@
     }
     RaidBuilder.prototype.spawn = function (minR, maxR) {
         this.def.spawn = normalizedSpawn(minR, maxR);
+        return this;
+    };
+    // "ring" (default): mobs evenly spaced around the player.
+    // "horde": the whole round clusters at one anchor point in one direction.
+    RaidBuilder.prototype.spawnPattern = function (p) {
+        var s = String(p || "").toLowerCase();
+        if (s !== "ring" && s !== "horde") { warn(`spawnPattern("${p}") unknown — using "ring"`); s = "ring"; }
+        this.def.spawnPattern = s;
+        return this;
+    };
+    // Fixed horde direction in degrees (0 = +X / east, 90 = +Z / south).
+    // Overrides the per-round deterministic angle pick. Only used by "horde".
+    RaidBuilder.prototype.hordeAngle = function (deg) {
+        var n = Number(deg);
+        this.def.hordeAngle = isFinite(n) ? n : null;
+        if (!isFinite(n)) warn(`hordeAngle("${deg}") not a number — auto angle`);
         return this;
     };
     RaidBuilder.prototype.defaultPresets = function () {
@@ -287,6 +306,9 @@
     RaidBuilder.prototype.barColor   = function (c) { this.def.barColor = String(c); return this; };
     RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
     RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = nonNegativeOr(t, DEFAULT_BAR_HOLD); return this; };
+    // Water handling (default ON): full-speed water movement + no drowning for
+    // every mob of the raid. .waterproof(false) restores vanilla water behavior.
+    RaidBuilder.prototype.waterproof = function (on) { this.def.waterproof = (on !== false); return this; };
     RaidBuilder.prototype.aggroRadius = function (n) { this.def.aggroRadius = nonNegativeOr(n, 20); return this; };
     RaidBuilder.prototype.followRange = function (n) { this.def.followRange = optionalNonNegative(n); return this; };
     function _snd(id, vol, pitch) {
@@ -317,6 +339,8 @@
             err(`raid "${d.id}": bad spawn radius (${d.spawn && d.spawn.minRadius}, ${d.spawn && d.spawn.maxRadius})`);
             return false;
         }
+        if (d.spawnPattern !== "ring" && d.spawnPattern !== "horde") { err(`raid "${d.id}": bad spawnPattern "${d.spawnPattern}"`); return false; }
+        if (d.hordeAngle != null && !isFinite(Number(d.hordeAngle))) { err(`raid "${d.id}": bad hordeAngle "${d.hordeAngle}"`); return false; }
         if (!(d.aggroRadius >= 0)) { err(`raid "${d.id}": bad aggroRadius "${d.aggroRadius}"`); return false; }
         if (d.followRange != null && !(d.followRange >= 0)) { err(`raid "${d.id}": bad followRange "${d.followRange}"`); return false; }
         if (!(d.barHold >= 0)) { err(`raid "${d.id}": bad barHold "${d.barHold}"`); return false; }
@@ -348,20 +372,176 @@
 
     // ---------- Spawner -----------------------------------------------------
 
-    // Ground Y: scan down from baseY+3 for a non-air block with 2 air above.
-    // Best-effort; falls back to baseY.
+    const SPAWN_TRIES  = 10;   // candidate positions tried per mob before fallback
+    const SPAWN_Y_SCAN = 16;   // vertical search range (blocks) around the player's Y
+
+    // Blocks a mob must not stand ON (instant damage / sink / suffocate-adjacent).
+    var _dangerBelow = {
+        "minecraft:lava": 1, "minecraft:water": 1, "minecraft:magma_block": 1,
+        "minecraft:cactus": 1, "minecraft:fire": 1, "minecraft:soul_fire": 1,
+        "minecraft:campfire": 1, "minecraft:soul_campfire": 1,
+        "minecraft:powder_snow": 1, "minecraft:sweet_berry_bush": 1
+    };
+    // Non-air blocks a mob may still stand IN (replaceable plants, thin snow).
+    var _passable = {
+        "minecraft:short_grass": 1, "minecraft:grass": 1, "minecraft:tall_grass": 1,
+        "minecraft:fern": 1, "minecraft:large_fern": 1, "minecraft:snow": 1,
+        "minecraft:dead_bush": 1, "minecraft:dandelion": 1, "minecraft:poppy": 1
+    };
+    function blockId(b) { try { return String(b.id); } catch (e) { return ""; } }
+    function isPassable(b)  { return isAirBlock(b) || !!_passable[blockId(b)]; }
+    function isSafeFloor(b) { return b && !isAirBlock(b) && !_passable[blockId(b)] && !_dangerBelow[blockId(b)]; }
+
+    // Ground Y near the player's elevation: from playerY outward (0,+1,-1,+2,-2…)
+    // find solid safe floor with 2 passable blocks above. Nearest-to-player-Y wins,
+    // so mobs spawn on the player's terrace, not a cliff top or cave roof above.
+    // Returns null when the column has no safe spot (caller tries another column).
     function groundY(level, x, baseY, z) {
         try {
-            var bx = Math.floor(x), bz = Math.floor(z);
-            var topY = Math.floor(baseY) + 3;
-            for (var y = topY; y > topY - 14; y--) {
-                var below = level.getBlock(bx, y - 1, bz);
-                var at    = level.getBlock(bx, y, bz);
-                var above = level.getBlock(bx, y + 1, bz);
-                if (!isAirBlock(below) && isAirBlock(at) && isAirBlock(above)) return y;
+            var bx = Math.floor(x), bz = Math.floor(z), py = Math.floor(baseY);
+            for (var off = 0; off <= SPAWN_Y_SCAN; off++) {
+                for (var s = 0; s < (off === 0 ? 1 : 2); s++) {
+                    var y = py + (s === 0 ? off : -off);
+                    var below = level.getBlock(bx, y - 1, bz);
+                    if (!isSafeFloor(below)) continue;
+                    if (isPassable(level.getBlock(bx, y, bz)) && isPassable(level.getBlock(bx, y + 1, bz))) return y;
+                }
             }
         } catch (e) { warn(`groundY: ${e}`); }
-        return Math.floor(baseY);
+        return null;
+    }
+
+    // Pick a safe ring position for global mob index idx (of total). Base angle is
+    // evenly spaced; each retry nudges angle + radius deterministically (no
+    // Math.random — Rhino-safe and reproducible). Falls back to minR at the base
+    // angle on the player's Y if every candidate column is unsafe (mid-ocean, void).
+    function findSpawnPos(level, pp, def, idx, total) {
+        var minR = def.spawn.minRadius, maxR = def.spawn.maxRadius;
+        var span = Math.max(1, maxR - minR + 1);
+        var baseAng = (idx / total) * Math.PI * 2;
+        for (var t = 0; t < SPAWN_TRIES; t++) {
+            var ang = baseAng + t * 0.618 * (t % 2 === 0 ? 1 : -1) * 0.35;
+            var rad = minR + ((idx * 13 + t * 7) % span);
+            var x = pp.x + Math.cos(ang) * rad;
+            var z = pp.z + Math.sin(ang) * rad;
+            var y = groundY(level, x, pp.y, z);
+            if (y != null) return { x: x, y: y, z: z };
+        }
+        warn("findSpawnPos: no safe column after " + SPAWN_TRIES + " tries — fallback at player Y");
+        return {
+            x: pp.x + Math.cos(baseAng) * minR,
+            y: Math.floor(pp.y),
+            z: pp.z + Math.sin(baseAng) * minR
+        };
+    }
+
+    // ---- Horde pattern ------------------------------------------------------
+    // All mobs of a round cluster around one anchor point in one direction from
+    // the player. Anchor angle: fixed via def.hordeAngle, else a deterministic
+    // per-round pick hashed from instanceId + round index (no Math.random).
+
+    const HORDE_ZONE_R    = 2;  // landing-zone sample radius around the anchor
+    const HORDE_SPREAD_MAX = 4; // max blocks a mob offsets from the anchor
+    const GOLDEN_ANG      = 2.399963; // radians — spreads cluster offsets evenly
+
+    function hashStr(s) {
+        var h = 5381;
+        for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) & 0x7fffffff;
+        return h;
+    }
+
+    // Validate a whole landing zone, not just one column: anchor + 4 side samples
+    // at HORDE_ZONE_R must all have safe floor (same rules as groundY) at a
+    // similar elevation. Returns the anchor Y, or null if the zone is unusable.
+    function hordeZoneY(level, pp, ax, az) {
+        var ay = groundY(level, ax, pp.y, az);
+        if (ay == null) return null;
+        var samples = [[HORDE_ZONE_R, 0], [-HORDE_ZONE_R, 0], [0, HORDE_ZONE_R], [0, -HORDE_ZONE_R]];
+        for (var i = 0; i < samples.length; i++) {
+            var sy = groundY(level, ax + samples[i][0], ay, az + samples[i][1]);
+            if (sy == null || Math.abs(sy - ay) > 3) return null;
+        }
+        return ay;
+    }
+
+    // Find the horde anchor: try the base angle, then rotate 45° per retry
+    // through the other 7 directions. Falls back to the base angle at the
+    // player's Y if no direction validates (mid-ocean, void).
+    function findHordeAnchor(level, pp, def, instanceId, roundIdx) {
+        var rad = (def.spawn.minRadius + def.spawn.maxRadius) / 2;
+        var baseAng = (def.hordeAngle != null)
+            ? def.hordeAngle * Math.PI / 180
+            : ((hashStr(String(instanceId) + "#" + roundIdx) % 360) * Math.PI / 180);
+        for (var d = 0; d < 8; d++) {
+            var ang = baseAng + d * (Math.PI / 4);
+            var ax = pp.x + Math.cos(ang) * rad;
+            var az = pp.z + Math.sin(ang) * rad;
+            var ay = hordeZoneY(level, pp, ax, az);
+            if (ay != null) return { x: ax, y: ay, z: az };
+        }
+        warn("findHordeAnchor: no valid zone in 8 directions — fallback at player Y");
+        return {
+            x: pp.x + Math.cos(baseAng) * rad,
+            y: Math.floor(pp.y),
+            z: pp.z + Math.sin(baseAng) * rad
+        };
+    }
+
+    // Deterministic small offset around the anchor for cluster mob idx:
+    // golden-angle direction, 1..HORDE_SPREAD_MAX block radius. Per-column
+    // ground lookup; anchor Y is the fallback when a column is unsafe.
+    function hordeMobPos(level, anchor, idx) {
+        var ang = idx * GOLDEN_ANG;
+        var rad = 1 + ((idx * 5) % HORDE_SPREAD_MAX);
+        var x = anchor.x + Math.cos(ang) * rad;
+        var z = anchor.z + Math.sin(ang) * rad;
+        var y = groundY(level, x, anchor.y, z);
+        return { x: x, y: (y != null ? y : anchor.y), z: z };
+    }
+
+    // ---- Water assist -------------------------------------------------------
+    // Runs on the throttle tick for waterproof raids. Attributes handle the
+    // speed + oxygen; this covers what attributes can't:
+    //   - air topped up (belt-and-suspenders vs oxygen_bonus edge cases)
+    //   - zombie -> drowned conversion blocked (InWaterTime reset; the 600-tick
+    //     timer never accumulates across our 5-tick cadence)
+    //   - a short dolphins_grace pulse so pathing through water keeps pace
+    function waterAssist(inst) {
+        if (inst.def.waterproof === false) return;
+        eachMob(inst, function (m) {
+            var raw = rawMobOf(m);
+            if (!raw) return;
+            var inWater = false;
+            try { inWater = (typeof raw.isInWater === "function") && raw.isInWater(); } catch (e) {}
+            if (!inWater) return;
+            try {
+                if (typeof raw.setAirSupply === "function" && typeof raw.getMaxAirSupply === "function")
+                    raw.setAirSupply(raw.getMaxAirSupply());
+            } catch (e1) {}
+            try { m.mergeNbt({ InWaterTime: -1, DrownedConversionTime: -1 }); } catch (e2) {}
+            try { m.potionEffects.add("minecraft:dolphins_grace", 40, 0, false, false); } catch (e3) {}
+        });
+    }
+
+    // Rotate a freshly spawned mob to face the player (cosmetic, best-effort).
+    function facePlayer(entity, pos, pp) {
+        try {
+            var yaw = (Math.atan2(pp.z - pos.z, pp.x - pos.x) * 180 / Math.PI) - 90;
+            if (typeof entity.setRotation === "function") entity.setRotation(yaw, 0);
+        } catch (e) {}
+    }
+
+    // Spawn telegraph: cloud puff at the spot so waves read as "arriving".
+    function spawnPoof(player, pos) {
+        if (!player) return;
+        try {
+            var server = player.server;
+            if (!server || typeof server.runCommandSilent !== "function") return;
+            server.runCommandSilent(
+                "particle minecraft:cloud " +
+                pos.x.toFixed(1) + " " + (pos.y + 0.5).toFixed(1) + " " + pos.z.toFixed(1) +
+                " 0.3 0.5 0.3 0.02 12 force");
+        } catch (e) {}
     }
 
     // Steer the mob toward the player ONLY when it has no valid target of its
@@ -553,34 +733,45 @@
         var out = [];
         var pp = null;
         try { pp = player.position(); } catch (ePp) { warn(`spawnRound: player.position() failed: ${ePp}`); return []; }
-        var minR = def.spawn.minRadius, maxR = def.spawn.maxRadius;
-        var span = Math.max(1, maxR - minR + 1);
-
         // total mob count -> evenly spaced ring angle by global index (no Math.random).
         var total = 0;
         for (var ti = 0; ti < round.mobs.length; ti++) total += round.mobs[ti].count;
         if (total < 1) total = 1;
         var idx = 0;
 
+        // Horde pattern: resolve the shared anchor once for the whole round.
+        var anchor = null;
+        if (def.spawnPattern === "horde") {
+            var roundIdx = def.rounds.indexOf(round);
+            anchor = findHordeAnchor(level, pp, def, instanceId, roundIdx);
+        }
+
         for (var gi = 0; gi < round.mobs.length; gi++) {
             var mob = round.mobs[gi];
             var names = mobPresetNames(def, mob);
             // Per-raid followRange overrides any preset follow_range (last write wins
             // in applyAttributes) -> controls how far mobs detect + chase the player.
-            var xtra = (def.followRange != null)
-                ? mob.extraArgs.concat(["attributes/follow_range=" + def.followRange])
-                : mob.extraArgs;
+            var xtra = mob.extraArgs;
+            if (def.followRange != null) xtra = xtra.concat(["attributes/follow_range=" + def.followRange]);
+            // Waterproof: full walk speed in water (1.0 = no slowdown) + oxygen
+            // bonus so air ~never depletes. Vanilla 1.21 attributes, same
+            // applyAttributes path as follow_range. Drowned conversion still
+            // guarded by the per-tick air refill in aggro().
+            if (def.waterproof !== false) {
+                xtra = xtra.concat([
+                    "attributes/water_movement_efficiency=1.0",
+                    "attributes/oxygen_bonus=1000"
+                ]);
+            }
             for (var c = 0; c < mob.count; c++) {
-                var ang = (idx / total) * Math.PI * 2;
-                var rad = minR + ((idx * 13) % span);
+                var pos = anchor ? hordeMobPos(level, anchor, idx)
+                                 : findSpawnPos(level, pp, def, idx, total);
                 idx++;
-                var x = pp.x + Math.cos(ang) * rad;
-                var z = pp.z + Math.sin(ang) * rad;
-                var y = groundY(level, x, pp.y, z);
 
                 var entity = EAI.fromPresets(level, mob.type, names, xtra);
                 if (!entity) { err(`spawnRound: fromPresets returned null for ${mob.type}`); continue; }
-                try { entity.setPos(x + 0.5, y, z + 0.5); } catch (eP) { warn(`setPos: ${eP}`); }
+                try { entity.setPos(Math.floor(pos.x) + 0.5, pos.y, Math.floor(pos.z) + 0.5); } catch (eP) { warn(`setPos: ${eP}`); }
+                facePlayer(entity, pos, pp);
                 try { entity.addTag("raid_mob"); } catch (e1) {}
                 try { entity.addTag("raid_" + instanceId); } catch (e2) {}
                 try { entity.setPersistenceRequired(); } catch (e3) {}
@@ -592,6 +783,7 @@
                 catch (eD) { warn(`applyDeferred: ${eD}`); }
                 equipMob(entity, mob.equip);        // weapons/armor — post-spawn
                 forceTarget(entity, player);
+                spawnPoof(player, pos);
                 out.push(entity);
             }
         }
@@ -666,7 +858,9 @@
             try { pAlive = (typeof player.isAlive === "function") ? player.isAlive() : player.isAlive; } catch (e) {}
             if (pAlive) mainRaw = unwrapPlayer(player);
         }
+        waterAssist(this);   // air/conversion/swim upkeep — same cadence as targeting
         var radius = (this.def.aggroRadius != null) ? this.def.aggroRadius : 20;
+        if (this.def.spawnPattern === "horde") radius += 8;   // cluster sits in one spot — widen detection
         eachMob(this, function (m) {
             var raw = rawMobOf(m);
             if (!raw || typeof raw.setTarget !== "function") return;
