@@ -298,52 +298,5 @@
 			x: -1.5d
 			y: 0.0d
 		}
-		{
-			icon: {
-				components: {
-					"!ftbquests:icon": { }
-					"ftbquests:entity_face": "minecraft:zombie"
-				}
-				id: "ftbquests:custom_icon"
-			}
-			id: "01465705388B72B7"
-			rewards: [{
-				id: "753BF223E7E9EF33"
-				type: "xp"
-				xp: 20
-			}]
-			tasks: [{
-				entity: "minecraft:zombie"
-				id: "648C111E2C0EDF31"
-				type: "kill"
-				value: 10L
-			}]
-			x: -5.5d
-			y: 5.0d
-		}
-		{
-			dependencies: ["01465705388B72B7"]
-			icon: {
-				components: {
-					"!ftbquests:icon": { }
-					"ftbquests:entity_face": "minecraft:zombie"
-				}
-				id: "ftbquests:custom_icon"
-			}
-			id: "31ED6D42594C1F83"
-			rewards: [{
-				id: "032F9E7B3C62F155"
-				type: "xp"
-				xp: 20
-			}]
-			tasks: [{
-				entity: "minecraft:zombie"
-				id: "3B2C11402D07C35A"
-				type: "kill"
-				value: 50L
-			}]
-			x: -5.5d
-			y: 7.0d
-		}
 	]
 }

@@ -62,6 +62,7 @@
 	quests: [
 		{
 			can_repeat: true
+			disable_toast: true
 			icon: {
 				components: {
 					"relics:data": {
@@ -133,9 +134,10 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 150L
+				count: 5L
+				disable_toast: true
 				id: "5539C51064745E13"
-				item: { count: 1, id: "kubejs:coin" }
+				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
 			x: -8.0d
@@ -143,6 +145,7 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			icon: {
 				components: {
 					"relics:data": {
@@ -193,7 +196,8 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 2L
+				count: 25L
+				disable_toast: true
 				id: "6167E671DE449137"
 				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
@@ -204,6 +208,7 @@
 		{
 			can_repeat: true
 			dependency_requirement: "one_completed"
+			disable_toast: true
 			icon: {
 				components: {
 					"relics:data": {
@@ -300,9 +305,9 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 5L
+				disable_toast: true
 				id: "27CB59A1B81E97C3"
-				item: { count: 1, id: "kubejs:silver_coin" }
+				item: { count: 1, id: "kubejs:coin" }
 				type: "item"
 			}]
 			x: -8.0d
@@ -310,6 +315,7 @@
 		}
 		{
 			can_repeat: false
+			disable_toast: true
 			icon: {
 				components: {
 					"ftbquests:icon": "born_in_chaos_v1:textures/mob_effect/unity_with_darkness.png"
@@ -318,6 +324,7 @@
 			}
 			id: "3CB8AFABD435DAFD"
 			rewards: [{
+				auto: "enabled"
 				count: 10
 				id: "1F0DDADE4BAD9597"
 				item: {
@@ -331,6 +338,7 @@
 			tasks: [
 				{
 					consume_items: true
+					disable_toast: true
 					id: "18C47108C00BBE05"
 					item: { count: 1, id: "kubejs:coin" }
 					type: "item"
@@ -348,9 +356,11 @@
 		{
 			can_repeat: true
 			dependencies: ["3CB8AFABD435DAFD"]
+			disable_toast: true
 			id: "0E9ABFF41F038D8B"
 			min_required_dependencies: 1
 			rewards: [{
+				auto: "enabled"
 				id: "40C19401CB1DC36C"
 				item: {
 					count: 1
@@ -363,6 +373,7 @@
 				{
 					consume_items: true
 					count: 2L
+					disable_toast: true
 					id: "1392A016441A4006"
 					item: { count: 1, id: "kubejs:silver_coin" }
 					only_from_crafting: false
@@ -380,6 +391,7 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			id: "1B8F8360FA7CAB0D"
 			rewards: [{
 				auto: "enabled"
@@ -394,6 +406,7 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
+				disable_toast: true
 				id: "7604AA9F5040B42E"
 				item: { count: 1, id: "kubejs:coin" }
 				type: "item"
@@ -403,6 +416,7 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			id: "59EA669ABE8ABD8D"
 			rewards: [{
 				auto: "enabled"
@@ -417,6 +431,7 @@
 			tasks: [{
 				consume_items: true
 				count: 64L
+				disable_toast: true
 				id: "4E243E6B6C6CDC37"
 				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
@@ -427,9 +442,11 @@
 		{
 			can_repeat: true
 			dependencies: ["3CB8AFABD435DAFD"]
+			disable_toast: true
 			id: "1E771F8D69CD355D"
 			min_required_dependencies: 1
 			rewards: [{
+				auto: "enabled"
 				exclude_from_claim_all: true
 				id: "187FB78866DDD590"
 				table_id: 2389461438744541566L
@@ -439,7 +456,8 @@
 			tasks: [
 				{
 					consume_items: true
-					count: 2L
+					count: 5L
+					disable_toast: true
 					id: "2A5D346422B569A2"
 					item: { count: 1, id: "kubejs:silver_coin" }
 					only_from_crafting: false
@@ -457,6 +475,7 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			id: "36CFAF2E18974908"
 			rewards: [{
 				auto: "enabled"
@@ -471,6 +490,7 @@
 			tasks: [{
 				consume_items: true
 				count: 64L
+				disable_toast: true
 				id: "20B35BF655BD34EE"
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
@@ -480,6 +500,7 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			id: "0038426316854F1C"
 			rewards: [{
 				auto: "enabled"
@@ -494,6 +515,7 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
+				disable_toast: true
 				id: "23DDD75A3E2AEE93"
 				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
@@ -503,11 +525,13 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			icon: {
 				id: "minecraft:diamond_ore"
 			}
 			id: "28F188346E50DD6A"
 			rewards: [{
+				auto: "enabled"
 				exclude_from_claim_all: true
 				id: "28E9FF0428944653"
 				table_id: 6989566830469712386L
@@ -516,9 +540,10 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 32L
+				count: 8L
+				disable_toast: true
 				id: "7B1F1F3ABA0058C9"
-				item: { count: 1, id: "kubejs:copper_coin" }
+				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
 			x: -3.5d
@@ -526,11 +551,13 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			icon: {
 				id: "minecraft:cooked_chicken"
 			}
 			id: "08EC21D0F20FBEF8"
 			rewards: [{
+				auto: "enabled"
 				exclude_from_claim_all: true
 				id: "70AD269D2FA629D1"
 				table_id: 6989566830469712388L
@@ -539,7 +566,8 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 32L
+				count: 12L
+				disable_toast: true
 				id: "3221DE51DEB90C9B"
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
@@ -549,11 +577,13 @@
 		}
 		{
 			can_repeat: true
+			disable_toast: true
 			icon: {
 				id: "minecraft:oak_wood"
 			}
 			id: "0316E30A250105ED"
 			rewards: [{
+				auto: "enabled"
 				exclude_from_claim_all: true
 				id: "38D0ED3698DC4041"
 				table_id: 6989566830469712385L
@@ -563,11 +593,37 @@
 			tasks: [{
 				consume_items: true
 				count: 32L
+				disable_toast: true
 				id: "0136491460B47C1E"
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
 			x: 1.5d
+			y: 1.5d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:arrow"
+			}
+			id: "6E75402CC8F32092"
+			rewards: [{
+				auto: "enabled"
+				id: "1B82BBF95BEF9693"
+				table_id: 6989566830469712387L
+				type: "random"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 4L
+				disable_toast: true
+				id: "0887CC9E206C3370"
+				item: { count: 1, id: "kubejs:silver_coin" }
+				type: "item"
+			}]
+			x: -1.0d
 			y: 1.5d
 		}
 	]

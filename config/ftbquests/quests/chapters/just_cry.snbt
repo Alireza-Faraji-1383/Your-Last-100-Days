@@ -117,8 +117,8 @@
 				id: "66A5CC092C3217C9"
 				type: "advancement"
 			}]
-			x: -3.5d
-			y: 8.5d
+			x: -4.5d
+			y: 7.0d
 		}
 		{
 			dependencies: ["29EA35D78BD0C39A"]
@@ -156,8 +156,8 @@
 				id: "08777DD3C652794F"
 				type: "advancement"
 			}]
-			x: -3.5d
-			y: 10.5d
+			x: -5.0d
+			y: 8.5d
 		}
 		{
 			dependencies: ["29EA35D78BD0C39A"]
@@ -396,7 +396,7 @@
 				type: "advancement"
 			}]
 			x: 2.5d
-			y: -1.0d
+			y: 2.0d
 		}
 		{
 			dependencies: ["010F20E85B157B42"]
@@ -416,7 +416,7 @@
 				type: "advancement"
 			}]
 			x: 2.5d
-			y: 0.5d
+			y: 3.5d
 		}
 		{
 			dependencies: ["18F224F39CFD0B35"]
@@ -430,7 +430,7 @@
 				xp: 220
 			}]
 			tasks: [{
-				advancement: "enigmaticlegacyplus:book/materials/evil_essence"
+				advancement: "apothic_enchanting:100ench"
 				criterion: ""
 				id: "2800A3920B3E8C33"
 				type: "advancement"
@@ -464,11 +464,21 @@
 				id: "enigmaticlegacyplus:twisted_heart"
 			}
 			id: "63B158B616DF7AFC"
-			rewards: [{
-				id: "0AC29AED71397044"
-				type: "xp"
-				xp: 250
-			}]
+			rewards: [
+				{
+					id: "0AC29AED71397044"
+					type: "xp"
+					xp: 250
+				}
+				{
+					id: "3435AD7E24EE6964"
+					item: {
+						count: 1
+						id: "born_in_chaos_v1:chocolate_heart"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "enigmaticlegacyplus:main/twisted_heart"
 				criterion: ""
@@ -534,7 +544,7 @@
 				id: "25A83343733AFA69"
 				type: "advancement"
 			}]
-			x: 6.0d
+			x: 6.5d
 			y: 6.5d
 		}
 		{
@@ -574,8 +584,8 @@
 				id: "17AFD744DA9FF440"
 				type: "advancement"
 			}]
-			x: 4.0d
-			y: 10.0d
+			x: 6.5d
+			y: 2.0d
 		}
 		{
 			dependencies: [

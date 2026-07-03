@@ -1,0 +1,1094 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "bonty_hunter"
+	group: "1EA4480B120F415D"
+	id: "7BEE420E690C035A"
+	images: [
+		{
+			height: 4.0d
+			image: "minecraft:item/iron_sword"
+			rotation: 0.0d
+			width: 4.0d
+			x: 0.0d
+			y: -8.5d
+		}
+		{
+			height: 4.0d
+			image: "minecraft:item/iron_sword"
+			rotation: -90.0d
+			width: 4.0d
+			x: 1.0d
+			y: -8.5d
+		}
+		{
+			height: 4.0d
+			image: "minecraft:item/paper"
+			order: -1
+			rotation: 0.0d
+			width: 4.0d
+			x: 0.5d
+			y: -12.5d
+		}
+	]
+	order_index: 2
+	quest_links: [ ]
+	quests: [
+		{
+			id: "46A64FE462A309A2"
+			rewards: [{
+				count: 20
+				id: "77C974230DCAD855"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:zombie"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:zombie"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "03F0FA8C9A1B7D62"
+				type: "kill"
+				value: 20L
+			}]
+			x: -4.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["46A64FE462A309A2"]
+			id: "7F9A15CD13D2D7CE"
+			rewards: [
+				{
+					count: 30
+					id: "1B3A633EF73D8362"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "288235AB277316DE"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:zombie"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:zombie"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "2FB27A09A0F7F0DD"
+				type: "kill"
+				value: 64L
+			}]
+			x: -4.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["7F9A15CD13D2D7CE"]
+			id: "0C6336145194DF5F"
+			rewards: [
+				{
+					count: 64
+					id: "4B60A4F6DA5276A0"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "6FC0AB6EF7DFC918"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:zombie"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:zombie"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "7E3008E4C23B84DB"
+				type: "kill"
+				value: 128L
+			}]
+			x: -4.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["0C6336145194DF5F"]
+			id: "7553083A4719E09B"
+			rewards: [
+				{
+					count: 2
+					id: "557718083F353201"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "215861B629D726D3"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:zombie"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:zombie"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "263CEB825E1BD06C"
+				type: "kill"
+				value: 500L
+			}]
+			x: -4.0d
+			y: 2.5d
+		}
+		{
+			id: "431FE96D8045138D"
+			rewards: [{
+				count: 32
+				id: "7E221F0F47C4547A"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:skeleton"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:skeleton"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "7C00784D2665F29E"
+				type: "kill"
+				value: 20L
+			}]
+			x: -1.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["431FE96D8045138D"]
+			id: "2B490712D752F2AA"
+			rewards: [
+				{
+					count: 64
+					id: "4D93C153DE8B4F23"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "3993E7382568C04E"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:skeleton"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:skeleton"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "671F8C027877FF39"
+				type: "kill"
+				value: 64L
+			}]
+			x: -1.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["2B490712D752F2AA"]
+			id: "4DC0476240C74913"
+			rewards: [
+				{
+					count: 128
+					id: "692978F0F99A168D"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "71F1671DC1112929"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:skeleton"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:skeleton"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "2BC3F176A51417E9"
+				type: "kill"
+				value: 128L
+			}]
+			x: -1.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["4DC0476240C74913"]
+			id: "10DE9863EFA5F528"
+			rewards: [
+				{
+					count: 3
+					id: "751DCEC7A98D0BB4"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "45AB7BBC85125D65"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:skeleton"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:skeleton"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "7D79C208F96F3232"
+				type: "kill"
+				value: 500L
+			}]
+			x: -1.0d
+			y: 2.5d
+		}
+		{
+			id: "1B416F55DB53C59C"
+			rewards: [{
+				count: 32
+				id: "4186154938021498"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:creeper"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:creeper"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "3A7F0E5F274C1C56"
+				type: "kill"
+				value: 20L
+			}]
+			x: 2.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["1B416F55DB53C59C"]
+			id: "761C7DF67620DC29"
+			rewards: [
+				{
+					count: 64
+					id: "6FA4517B6359A770"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "3036C60CD9AE6BFA"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:creeper"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:creeper"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "3A86ABADD7E33712"
+				type: "kill"
+				value: 64L
+			}]
+			x: 2.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["761C7DF67620DC29"]
+			id: "326677DEA12C0398"
+			rewards: [
+				{
+					count: 2
+					id: "41D5C84E5B0B88DF"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "3D59750047E15808"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:creeper"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:creeper"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "19F05509C1032FE3"
+				type: "kill"
+				value: 128L
+			}]
+			x: 2.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["326677DEA12C0398"]
+			id: "7AA9A3A54292DADF"
+			rewards: [
+				{
+					count: 10
+					id: "1D1C4252A9F21B3C"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "13351465FC74637B"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:creeper"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:creeper"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "3A2A386C8828F897"
+				type: "kill"
+				value: 360L
+			}]
+			x: 2.0d
+			y: 2.5d
+		}
+		{
+			id: "767FA524371C9480"
+			rewards: [{
+				count: 32
+				id: "07CF139DB9F806FF"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:enderman"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:enderman"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "2FB0C35045C5CBE0"
+				type: "kill"
+				value: 10L
+			}]
+			x: 5.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["767FA524371C9480"]
+			id: "635C194330BA9376"
+			rewards: [
+				{
+					count: 100
+					id: "5467FA5D00A81E67"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "715FABB3FB08DFEF"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:enderman"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:enderman"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "2F7D4CD8E1C9DC9E"
+				type: "kill"
+				value: 40L
+			}]
+			x: 5.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["635C194330BA9376"]
+			id: "21152CBE4D146E81"
+			rewards: [
+				{
+					count: 5
+					id: "6174460C3312D7F0"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "21435EE0ED8829A0"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:enderman"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:enderman"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "32731AF3C460D7D1"
+				type: "kill"
+				value: 80L
+			}]
+			x: 5.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["21152CBE4D146E81"]
+			id: "66A8C41F7F4F726B"
+			rewards: [
+				{
+					count: 20
+					id: "051B35C48745ACD0"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "0B4B6723ADE03274"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:enderman"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:enderman"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "674A002836F441D2"
+				type: "kill"
+				value: 168L
+			}]
+			x: 5.0d
+			y: 2.5d
+		}
+		{
+			id: "44B1D7CD5CCE18FD"
+			rewards: [{
+				count: 32
+				id: "6D1D1A3D93509E9C"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:piglin_brute"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:piglin_brute"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "56BDBAFCD8C027F1"
+				type: "kill"
+				value: 15L
+			}]
+			x: 8.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["44B1D7CD5CCE18FD"]
+			id: "73947C4B8254774E"
+			rewards: [
+				{
+					count: 64
+					id: "70CD0175D3E78C2F"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "7AFBB047D33136D0"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:piglin_brute"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:piglin_brute"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "4BCBD20E9026D1D0"
+				type: "kill"
+				value: 64L
+			}]
+			x: 8.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["73947C4B8254774E"]
+			id: "7FABA4362B1747BD"
+			rewards: [
+				{
+					count: 3
+					id: "51FE43A2BC1FECDD"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "590D457FBF325665"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:piglin_brute"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:piglin_brute"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "019C004B2897CB0D"
+				type: "kill"
+				value: 128L
+			}]
+			x: 8.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["7FABA4362B1747BD"]
+			id: "1552D2ED4A036712"
+			rewards: [
+				{
+					count: 5
+					id: "02128CE3674684ED"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "794385E9BC506642"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:piglin_brute"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:piglin_brute"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "549F5D458CCA4830"
+				type: "kill"
+				value: 256L
+			}]
+			x: 8.0d
+			y: 2.5d
+		}
+		{
+			id: "4D8B8AE038552C78"
+			rewards: [{
+				count: 15
+				id: "63FF9CB8A381A88F"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:pillager"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:pillager"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "77BA0C79A9D5EA31"
+				type: "kill"
+				value: 20L
+			}]
+			x: 11.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["4D8B8AE038552C78"]
+			id: "4E916034663E1DA7"
+			rewards: [
+				{
+					count: 40
+					id: "6254FF37861F498B"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "16A4A4C976268535"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:pillager"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:pillager"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "585937CE8596AE2B"
+				type: "kill"
+				value: 64L
+			}]
+			x: 11.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["4E916034663E1DA7"]
+			id: "62DA05A109DCFA92"
+			rewards: [
+				{
+					count: 80
+					id: "1417BEA6A1EF2041"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "5E765A3A607B2DA6"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:pillager"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:pillager"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "41D788AEC514F852"
+				type: "kill"
+				value: 128L
+			}]
+			x: 11.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["62DA05A109DCFA92"]
+			id: "367899B66A4BC30F"
+			rewards: [
+				{
+					count: 3
+					id: "35D5E736BEB0F3E1"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "719C1B87C30CC0DF"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:pillager"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:pillager"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "312B2BA86C6AC50C"
+				type: "kill"
+				value: 300L
+			}]
+			x: 11.0d
+			y: 2.5d
+		}
+		{
+			id: "75CB70D6340B9E4B"
+			rewards: [{
+				count: 20
+				id: "2A971C2FE48078D5"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:vindicator"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:vindicator"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "01C8661C66F61755"
+				type: "kill"
+				value: 16L
+			}]
+			x: -10.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["75CB70D6340B9E4B"]
+			id: "155C9B6E1BE2255D"
+			rewards: [
+				{
+					count: 50
+					id: "4948FB166D246153"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "5ACF9694593E34DC"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:vindicator"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:vindicator"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "4642E3CCE1DF1897"
+				type: "kill"
+				value: 32L
+			}]
+			x: -10.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["155C9B6E1BE2255D"]
+			id: "49DB89311DB8C3E5"
+			rewards: [
+				{
+					count: 2
+					id: "2303F386E854034B"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4DEFE0C0E691B24B"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:vindicator"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:vindicator"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "77E2F113BE04BB68"
+				type: "kill"
+				value: 64L
+			}]
+			x: -10.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["49DB89311DB8C3E5"]
+			id: "3E8EA6809CFE7F83"
+			rewards: [
+				{
+					count: 5
+					id: "4545FD094295285E"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4FA5886F1A1E4D35"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:vindicator"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:vindicator"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "0EAE01E8F8DFFF6E"
+				type: "kill"
+				value: 128L
+			}]
+			x: -10.0d
+			y: 2.5d
+		}
+		{
+			id: "5C815269EA7B055E"
+			rewards: [{
+				count: 32
+				id: "3D682159B7C108B9"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:evoker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:evoker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "1B6778F0AC407DB8"
+				type: "kill"
+				value: 8L
+			}]
+			x: -7.0d
+			y: -3.5d
+		}
+		{
+			dependencies: ["5C815269EA7B055E"]
+			id: "79EC9E317DCDD70C"
+			rewards: [
+				{
+					count: 64
+					id: "04D0B698B91755C5"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "0BEE464B46A57256"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:evoker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:evoker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "3965E98F7FBEF66E"
+				type: "kill"
+				value: 16L
+			}]
+			x: -7.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["79EC9E317DCDD70C"]
+			id: "0081C9FE085A14BD"
+			rewards: [
+				{
+					count: 2
+					id: "664F68F189FDED75"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "3F349C35ED30DDAA"
+					type: "xp"
+					xp: 500
+				}
+			]
+			tasks: [{
+				entity: "minecraft:evoker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:evoker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "5FF923F4BDA4EFDF"
+				type: "kill"
+				value: 32L
+			}]
+			x: -7.0d
+			y: 0.5d
+		}
+		{
+			dependencies: ["0081C9FE085A14BD"]
+			id: "562C9082EA53DE02"
+			rewards: [
+				{
+					count: 10
+					id: "0E02EF31ADCC79FA"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "77AA50A8A6109C3E"
+					type: "xp_levels"
+					xp_levels: 5
+				}
+			]
+			tasks: [{
+				entity: "minecraft:evoker"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:evoker"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "4DDAFD65994D83D0"
+				type: "kill"
+				value: 128L
+			}]
+			x: -7.0d
+			y: 2.5d
+		}
+	]
+}
