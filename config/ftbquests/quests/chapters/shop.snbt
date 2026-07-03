@@ -501,5 +501,74 @@
 			x: -3.0d
 			y: -2.0d
 		}
+		{
+			can_repeat: true
+			icon: {
+				id: "minecraft:diamond_ore"
+			}
+			id: "28F188346E50DD6A"
+			rewards: [{
+				exclude_from_claim_all: true
+				id: "28E9FF0428944653"
+				table_id: 6989566830469712386L
+				type: "loot"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 32L
+				id: "7B1F1F3ABA0058C9"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -3.5d
+			y: 1.5d
+		}
+		{
+			can_repeat: true
+			icon: {
+				id: "minecraft:cooked_chicken"
+			}
+			id: "08EC21D0F20FBEF8"
+			rewards: [{
+				exclude_from_claim_all: true
+				id: "70AD269D2FA629D1"
+				table_id: 6989566830469712388L
+				type: "loot"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 32L
+				id: "3221DE51DEB90C9B"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: 1.5d
+		}
+		{
+			can_repeat: true
+			icon: {
+				id: "minecraft:oak_wood"
+			}
+			id: "0316E30A250105ED"
+			rewards: [{
+				exclude_from_claim_all: true
+				id: "38D0ED3698DC4041"
+				table_id: 6989566830469712385L
+				type: "loot"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 32L
+				id: "0136491460B47C1E"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: 1.5d
+			y: 1.5d
+		}
 	]
 }

@@ -1,0 +1,161 @@
+{
+	id: "60FFEE0000000A02"
+	loot_size: 1
+	order_index: 6
+	rewards: [
+		{
+			count: 16
+			id: "7F68FB73F86AFE48"
+			item: {
+				count: 1
+				id: "minecraft:coal_ore"
+			}
+			weight: 14.0f
+		}
+		{
+			count: 16
+			id: "580883709AE33BC8"
+			item: {
+				count: 1
+				id: "minecraft:copper_ore"
+			}
+			weight: 14.0f
+		}
+		{
+			count: 12
+			id: "55DAEF70294A0FE9"
+			item: {
+				count: 1
+				id: "minecraft:iron_ore"
+			}
+			weight: 11.0f
+		}
+		{
+			count: 8
+			id: "6F92E08BFB9B8A0A"
+			item: {
+				count: 1
+				id: "minecraft:gold_ore"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 8
+			id: "0EC33F904C858EDD"
+			item: {
+				count: 1
+				id: "minecraft:redstone_ore"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 8
+			id: "5B6C9204FC66D97C"
+			item: {
+				count: 1
+				id: "minecraft:lapis_ore"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 12
+			id: "59D0CF7B80FE97EE"
+			item: {
+				count: 1
+				id: "minecraft:nether_quartz_ore"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 12
+			id: "705B01E42B1283C0"
+			item: {
+				count: 1
+				id: "minecraft:nether_gold_ore"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 2
+			id: "6EF25EBDF46EFECF"
+			item: {
+				count: 1
+				id: "minecraft:diamond_ore"
+			}
+			weight: 0.5f
+		}
+		{
+			count: 2
+			id: "0969061408E4009D"
+			item: {
+				count: 1
+				id: "minecraft:emerald_ore"
+			}
+			weight: 2.0f
+		}
+		{
+			count: 12
+			id: "006D42F719FD15E4"
+			item: {
+				count: 1
+				id: "minecraft:deepslate_coal_ore"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 12
+			id: "56D2B5060ACB4F60"
+			item: {
+				count: 1
+				id: "minecraft:deepslate_copper_ore"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 8
+			id: "3DC278B8AD731C33"
+			item: {
+				count: 1
+				id: "minecraft:deepslate_iron_ore"
+			}
+			weight: 6.0f
+		}
+		{
+			count: 6
+			id: "5A9CB6C0E7D2D612"
+			item: {
+				count: 1
+				id: "minecraft:deepslate_gold_ore"
+			}
+			weight: 5.0f
+		}
+		{
+			count: 6
+			id: "0BB1E20DC18961BD"
+			item: {
+				count: 1
+				id: "minecraft:deepslate_redstone_ore"
+			}
+			weight: 4.0f
+		}
+		{
+			count: 6
+			id: "7BA5938583B3DE06"
+			item: {
+				count: 1
+				id: "minecraft:deepslate_lapis_ore"
+			}
+			weight: 4.0f
+		}
+		{ id: "2ED0083E8AA97E27", item: { count: 1, id: "minecraft:deepslate_diamond_ore" } }
+		{ id: "28216B87819FC823", item: { count: 1, id: "minecraft:deepslate_emerald_ore" } }
+		{
+			id: "230198A33C1F40D8"
+			item: {
+				count: 1
+				id: "minecraft:ancient_debris"
+			}
+			weight: 0.03499999f
+		}
+	]
+}

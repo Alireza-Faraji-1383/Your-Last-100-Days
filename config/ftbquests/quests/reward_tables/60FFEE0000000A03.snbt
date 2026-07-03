@@ -1,0 +1,121 @@
+{
+	id: "60FFEE0000000A03"
+	loot_size: 1
+	order_index: 7
+	rewards: [
+		{
+			count: 32
+			id: "2B0517C1B399D6E9"
+			item: {
+				count: 1
+				id: "minecraft:arrow"
+			}
+			weight: 16.0f
+		}
+		{
+			count: 64
+			id: "6D0FCC0EF1817637"
+			item: {
+				count: 1
+				id: "minecraft:torch"
+			}
+			weight: 15.0f
+		}
+		{
+			count: 24
+			id: "122997AADB829816"
+			item: {
+				count: 1
+				id: "minecraft:string"
+			}
+			weight: 10.0f
+		}
+		{
+			count: 12
+			id: "0185793769EB667F"
+			item: {
+				count: 1
+				id: "minecraft:experience_bottle"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 16
+			id: "41658EF6343F7FD6"
+			item: {
+				count: 1
+				id: "minecraft:firework_rocket"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 4
+			id: "6C11D3169922E191"
+			item: {
+				count: 1
+				id: "minecraft:lead"
+			}
+			weight: 6.0f
+		}
+		{
+			id: "07DDD43FAE151DE9"
+			item: {
+				count: 1
+				id: "minecraft:name_tag"
+			}
+			weight: 3.0f
+		}
+		{
+			id: "7464A0C3013CD9F3"
+			item: {
+				count: 1
+				id: "minecraft:saddle"
+			}
+			weight: 3.0f
+		}
+		{
+			count: 2
+			id: "5FD53707FF374A9E"
+			item: {
+				count: 1
+				id: "minecraft:ender_pearl"
+			}
+			weight: 0.5f
+		}
+		{
+			count: 2
+			id: "19E6FF7DAE035271"
+			item: {
+				count: 1
+				id: "minecraft:blaze_rod"
+			}
+			weight: 2.0f
+		}
+		{
+			count: 8
+			id: "64E7B8929D121D18"
+			item: {
+				count: 1
+				id: "minecraft:slime_ball"
+			}
+			weight: 4.0f
+		}
+		{
+			count: 3
+			id: "671217902D099CDB"
+			item: {
+				count: 1
+				id: "minecraft:phantom_membrane"
+			}
+			weight: 2.0f
+		}
+		{
+			id: "23F78AEF5AB85D91"
+			item: {
+				count: 1
+				id: "minecraft:ender_eye"
+			}
+			weight: 0.8f
+		}
+	]
+}

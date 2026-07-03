@@ -1,0 +1,196 @@
+{
+	id: "60FFEE0000000A01"
+	loot_size: 1
+	order_index: 5
+	rewards: [
+		{
+			count: 32
+			id: "223591D9C0AD4691"
+			item: {
+				count: 1
+				id: "minecraft:oak_log"
+			}
+			weight: 10.0f
+		}
+		{
+			count: 32
+			id: "7425331ED5F5EAC4"
+			item: {
+				count: 1
+				id: "minecraft:spruce_log"
+			}
+			weight: 10.0f
+		}
+		{
+			count: 32
+			id: "13A808E62B69045F"
+			item: {
+				count: 1
+				id: "minecraft:birch_log"
+			}
+			weight: 10.0f
+		}
+		{
+			count: 32
+			id: "3E792FE5ADCA9F41"
+			item: {
+				count: 1
+				id: "minecraft:jungle_log"
+			}
+			weight: 9.0f
+		}
+		{
+			count: 32
+			id: "1DF775CF5FD1A520"
+			item: {
+				count: 1
+				id: "minecraft:acacia_log"
+			}
+			weight: 9.0f
+		}
+		{
+			count: 32
+			id: "3AF8C441E049A19D"
+			item: {
+				count: 1
+				id: "minecraft:dark_oak_log"
+			}
+			weight: 9.0f
+		}
+		{
+			count: 32
+			id: "29C8B3D07D029525"
+			item: {
+				count: 1
+				id: "minecraft:mangrove_log"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 32
+			id: "4737EA48856B2C8D"
+			item: {
+				count: 1
+				id: "minecraft:cherry_log"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 24
+			id: "6F3F86D6451F66D1"
+			item: {
+				count: 1
+				id: "minecraft:bamboo_block"
+			}
+			weight: 6.0f
+		}
+		{
+			count: 24
+			id: "4EABDB6805634440"
+			item: {
+				count: 1
+				id: "minecraft:crimson_stem"
+			}
+			weight: 4.0f
+		}
+		{
+			count: 24
+			id: "35E3E53B3950AF1D"
+			item: {
+				count: 1
+				id: "minecraft:warped_stem"
+			}
+			weight: 4.0f
+		}
+		{
+			count: 64
+			id: "420F31B8F1D1A635"
+			item: {
+				count: 1
+				id: "minecraft:oak_planks"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 64
+			id: "77E51BABE727B1C7"
+			item: {
+				count: 1
+				id: "minecraft:spruce_planks"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 64
+			id: "24208434CF04BC4E"
+			item: {
+				count: 1
+				id: "minecraft:birch_planks"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 64
+			id: "513D926BF471D142"
+			item: {
+				count: 1
+				id: "minecraft:jungle_planks"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 64
+			id: "2AB8B1B2583C15A2"
+			item: {
+				count: 1
+				id: "minecraft:acacia_planks"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 64
+			id: "2DF54829849A2C6A"
+			item: {
+				count: 1
+				id: "minecraft:dark_oak_planks"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 64
+			id: "2FB2314D69FB5603"
+			item: {
+				count: 1
+				id: "minecraft:mangrove_planks"
+			}
+			weight: 5.0f
+		}
+		{
+			count: 64
+			id: "651D97B7A72ABA38"
+			item: {
+				count: 1
+				id: "minecraft:cherry_planks"
+			}
+			weight: 5.0f
+		}
+		{
+			count: 48
+			id: "6E652A0B90202BAB"
+			item: {
+				count: 1
+				id: "minecraft:crimson_planks"
+			}
+			weight: 3.0f
+		}
+		{
+			count: 48
+			id: "3EA5601A01C93BC5"
+			item: {
+				count: 1
+				id: "minecraft:warped_planks"
+			}
+			weight: 3.0f
+		}
+	]
+}
