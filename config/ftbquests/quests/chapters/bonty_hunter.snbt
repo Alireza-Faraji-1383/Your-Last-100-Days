@@ -186,7 +186,7 @@
 				}
 				id: "263CEB825E1BD06C"
 				type: "kill"
-				value: 500L
+				value: 300L
 			}]
 			x: -4.0d
 			y: 2.5d
@@ -1712,7 +1712,7 @@
 			}
 			id: "6D89803F760D5658"
 			rewards: [{
-				count: 20
+				count: 32
 				id: "179EF1BE73D6E8A0"
 				item: {
 					count: 1
@@ -1744,7 +1744,7 @@
 			id: "7508A124081E679C"
 			rewards: [
 				{
-					count: 50
+					count: 64
 					id: "2E78FA7D74C37F3A"
 					item: {
 						count: 1
