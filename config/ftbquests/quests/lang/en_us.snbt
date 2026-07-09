@@ -23,6 +23,8 @@
 	chapter.6500C4D7C61AF53E.chapter_subtitle: ["Learn Apothic Enchanting through shelves, stats, infusion, and endgame table tuning."]
 	chapter.6500C4D7C61AF53E.title: "Apothic Enchanting"
 	chapter.6DE5EF1B23714EBB.title: "a"
+	chapter.71B0A0C51E1159E1.chapter_subtitle: ["Build your spellcasting path through spellbooks, scrollcraft, inks, runes, upgrades, and the Catacombs."]
+	chapter.71B0A0C51E1159E1.title: "Iron's Spells"
 	chapter.7BEE420E690C035A.title: "Bounty Hunter"
 	chapter_group.1EA4480B120F415D.title: "Hunt Or Get Hunted"
 	quest.0038426316854F1C.quest_desc: ["Receive Copper Coins for basic shop use."]
@@ -581,6 +583,50 @@
 	quest.6F60F67F81C1CC7C.title: "Dragon-Slaying Enchanter"
 	quest.6FC427158E014F38.quest_desc: ["Complete the major Enigmatic branches to finish this chapter."]
 	quest.6FC427158E014F38.title: "Beyond the Curse"
+	quest.71B0A0C51E115901.quest_desc: ["Discover Iron's Spells by collecting early arcane materials or loot. This opens the spellcasting path and prepares you for your first spellbook."]
+	quest.71B0A0C51E115901.title: "Arcane Awakening"
+	quest.71B0A0C51E115902.quest_desc: ["Craft or obtain a Copper Spell Book. Use it as the first container for basic scrolls before moving into stronger books."]
+	quest.71B0A0C51E115902.title: "First Spellbook"
+	quest.71B0A0C51E115903.quest_desc: ["Upgrade to an Iron Spell Book. Higher-tier spellbooks provide better room for spells and make the rest of the system worth building around."]
+	quest.71B0A0C51E115903.title: "Iron Spellbook"
+	quest.71B0A0C51E115904.quest_desc: ["Equip a spellbook and confirm your casting setup works. After this, focus on adding useful scrolls instead of carrying loose spells."]
+	quest.71B0A0C51E115904.title: "Ready to Cast"
+	quest.71B0A0C51E115905.quest_desc: ["Craft an Inscription Table. This station lets you place scrolls into spellbooks, turning found spells into a reusable casting loadout."]
+	quest.71B0A0C51E115905.title: "Inscription Table"
+	quest.71B0A0C51E115906.quest_desc: ["Find or craft a scroll for your spellbook. Scrolls hold individual spells and are the main source of new casting options."]
+	quest.71B0A0C51E115906.title: "First Scroll"
+	quest.71B0A0C51E115907.quest_desc: ["Craft a Scroll Forge. Use it to create specific scrolls from paper, ink, and the correct school focus instead of relying only on loot."]
+	quest.71B0A0C51E115907.title: "Scroll Forge"
+	quest.71B0A0C51E115908.quest_desc: ["Obtain magical ink for scrollcraft. Ink quality controls what spell tiers you can forge, so better inks become important as your book improves."]
+	quest.71B0A0C51E115908.title: "Ink Craft"
+	quest.71B0A0C51E115909.quest_desc: ["Craft a Blank Rune. Runes are the base for school runes and upgrade crafting, so keep a supply before specializing your gear."]
+	quest.71B0A0C51E115909.title: "Blank Rune"
+	quest.71B0A0C51E11590A.quest_desc: ["Craft an Arcane Rune. This confirms you can move from basic materials into the upgrade components used by advanced spell gear."]
+	quest.71B0A0C51E11590A.title: "Arcane Rune"
+	quest.71B0A0C51E11590B.quest_desc: ["Craft an Arcane Anvil. This station is used for spellbook upgrades, imbues, and higher-tier magical equipment progression."]
+	quest.71B0A0C51E11590B.title: "Arcane Anvil"
+	quest.71B0A0C51E11590C.quest_desc: ["Craft an Upgrade Orb. Upgrade orbs improve casting stats such as mana, cooldown, protection, or school power through Arcane Anvil work."]
+	quest.71B0A0C51E11590C.title: "Upgrade Orb"
+	quest.71B0A0C51E11590D.quest_desc: ["Create a Spell Slot Upgrade. Add more room to supported spellbooks so your loadout can carry utility, damage, and defensive spells together."]
+	quest.71B0A0C51E11590D.title: "More Spell Slots"
+	quest.71B0A0C51E11590E.quest_desc: ["Upgrade to a Gold Spell Book. This is the next general book tier before diamond and gives your magic build more space to grow."]
+	quest.71B0A0C51E11590E.title: "Gold Spellbook"
+	quest.71B0A0C51E11590F.quest_desc: ["Upgrade to a Diamond Spell Book. Pair it with stronger scrolls, better ink, and an upgraded casting setup before late-game fights."]
+	quest.71B0A0C51E11590F.title: "Diamond Spellbook"
+	quest.71B0A0C51E115910.quest_desc: ["Upgrade to a Netherite Spell Book. This is the durable endgame book tier for carrying your best spells into dangerous structures and bosses."]
+	quest.71B0A0C51E115910.title: "Netherite Spellbook"
+	quest.71B0A0C51E115911.quest_desc: ["Craft an Alchemist Cauldron. Use it for brewing inks, elixirs, and magical fluids that support scrollcraft and combat preparation."]
+	quest.71B0A0C51E115911.title: "Alchemist Cauldron"
+	quest.71B0A0C51E115912.quest_desc: ["Create Legendary Ink. This unlocks the highest scrollcraft tier and marks the point where your spellbook can support endgame spells."]
+	quest.71B0A0C51E115912.title: "Legendary Ink"
+	quest.71B0A0C51E115913.quest_desc: ["Acquire Mithril Ingots. Mithril supports advanced Iron's Spells crafting and prepares you for structure tools and stronger magical gear."]
+	quest.71B0A0C51E115913.title: "Mithril Work"
+	quest.71B0A0C51E115914.quest_desc: ["Craft a Wayward Compass. Use it to track Iron's Spells structures instead of wandering blindly for major progression locations."]
+	quest.71B0A0C51E115914.title: "Wayward Compass"
+	quest.71B0A0C51E115915.quest_desc: ["Enter the Catacombs. Bring a prepared spellbook, upgraded gear, and keys, because this structure pushes the mod into boss progression."]
+	quest.71B0A0C51E115915.title: "Enter the Catacombs"
+	quest.71B0A0C51E115916.quest_desc: ["Claim the Dead King's spellbook path. This completes the Catacombs branch and gives the chapter its major boss-tier milestone."]
+	quest.71B0A0C51E115916.title: "Dead King's Grimoire"
 	quest.71FCF06A98CC66D7.quest_desc: ["Obtain a Clipboard to inspect citizens, work orders, and colony problems. It is one of the best tools for quickly understanding what your settlement needs next."]
 	quest.71FCF06A98CC66D7.title: "Clipboard"
 	quest.72C749AD9F1C634E.quest_desc: ["Build citizen housing so the colony can grow beyond temporary beds. More homes mean more workers, more jobs, and smoother expansion."]
