@@ -29,26 +29,6 @@
 	quest_links: [ ]
 	quests: [
 		{
-			icon: {
-				id: "enigmaticlegacyplus:the_acknowledgment"
-			}
-			id: "29EA35D78BD0C39A"
-			rewards: [{
-				id: "0C4F46D93BBED64D"
-				type: "xp"
-				xp: 100
-			}]
-			tasks: [{
-				advancement: "enigmaticlegacyplus:main/root"
-				criterion: ""
-				id: "6746252D5DA2F20E"
-				type: "advancement"
-			}]
-			x: 0.0d
-			y: -4.0d
-		}
-		{
-			dependencies: ["29EA35D78BD0C39A"]
 			id: "2D3422284A9EFF23"
 			shape: "diamond"
 			size: 3.0d
@@ -62,7 +42,7 @@
 			y: -7.5d
 		}
 		{
-			dependencies: ["29EA35D78BD0C39A"]
+			dependencies: ["2D3422284A9EFF23"]
 			icon: {
 				id: "enigmaticlegacyplus:blank_scroll"
 			}
@@ -79,7 +59,7 @@
 				type: "advancement"
 			}]
 			x: -2.0d
-			y: -2.0d
+			y: -2.5d
 		}
 		{
 			dependencies: ["53AB7EFD8D1A6F5E"]
@@ -121,7 +101,7 @@
 			y: 7.0d
 		}
 		{
-			dependencies: ["29EA35D78BD0C39A"]
+			dependencies: ["2D3422284A9EFF23"]
 			icon: {
 				id: "enigmaticlegacyplus:recall_potion"
 			}
@@ -137,8 +117,8 @@
 				id: "1D8F3445E4A6D9DB"
 				type: "advancement"
 			}]
-			x: -2.0d
-			y: -4.0d
+			x: -3.0d
+			y: -7.5d
 		}
 		{
 			icon: {
@@ -160,7 +140,7 @@
 			y: 8.5d
 		}
 		{
-			dependencies: ["29EA35D78BD0C39A"]
+			dependencies: ["2D3422284A9EFF23"]
 			icon: {
 				id: "enigmaticlegacyplus:golem_heart"
 			}
@@ -177,7 +157,7 @@
 				type: "advancement"
 			}]
 			x: 4.0d
-			y: -4.0d
+			y: -4.5d
 		}
 		{
 			dependencies: ["6D80D38812B5B2D0"]
@@ -240,7 +220,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["29EA35D78BD0C39A"]
+			dependencies: ["2D3422284A9EFF23"]
 			icon: {
 				id: "enigmaticlegacyplus:infernal_cinder"
 			}
@@ -257,7 +237,7 @@
 				type: "advancement"
 			}]
 			x: 0.0d
-			y: -2.0d
+			y: -2.5d
 		}
 		{
 			dependencies: ["4D5854E87F8B8F3F"]
@@ -377,7 +357,7 @@
 				type: "advancement"
 			}]
 			x: 3.5d
-			y: -7.0d
+			y: -7.5d
 		}
 		{
 			icon: {
