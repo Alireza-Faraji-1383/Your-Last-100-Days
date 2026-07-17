@@ -48,24 +48,6 @@
 			x: 0.0d
 			y: 6.0d
 		}
-		{
-			click: "a"
-			height: 5.0d
-			image: "gabrielequests-mannequin:head=irons_spellbooks:priest_helmet,chest=irons_spellbooks:priest_chestplate,legs=irons_spellbooks:priest_leggings,feet=irons_spellbooks:priest_boots,main=irons_spellbooks:gold_spell_book,off=minecraft:crimson_button,rot=0x0"
-			rotation: 0.0d
-			width: 1.0d
-			x: 7.0d
-			y: -2.0d
-		}
-		{
-			click: "a"
-			height: 5.0d
-			image: "gabrielequests-mannequin:head=irons_spellbooks:priest_helmet,chest=irons_spellbooks:priest_chestplate,legs=irons_spellbooks:priest_leggings,feet=irons_spellbooks:priest_boots,main=irons_spellbooks:gold_spell_book,off=irons_spellbooks:hither_thither_wand,rot=0x0"
-			rotation: 0.0d
-			width: 1.0d
-			x: -6.5d
-			y: -2.0d
-		}
 	]
 	order_index: 5
 	quest_links: [ ]

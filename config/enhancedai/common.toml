@@ -554,7 +554,7 @@
 	#Allows mobs to call reinforcements (like vanilla zombies can, but better) and have leaders that have a high chance to call reinforcements. Only entity types in the `enhancedai:mobs/leaders` tag can jump. PLEASE NOTE that this feature uses a custom attribute (enhancedai:spawn_reinforcements_chance) instead of the vanilla one. This feature has also an MPR condition `enhancedai:is_leader` to check if the mob is a leader.
 	[Mobs.Leaders]
 		#Chance for a mob to become a leader. Leader mobs have a high chance to spawn reinforcements.
-		# Default: 0.03
+		# Default: 0.02
 		# Range: 0.0 ~ 1.0
 		"Leader chance" = 0.03
 		#At this damage, the chance to spawn reinforcements is 100% of the attribute, otherwise is scaled. E.g. with this set to 6 and enhancedai:spawn_reinforcements_chance attribute set to 0.5 the chance to spawn reinforcements is 50% at 6 damage, 25% at 3 damage or 100% at 12 damage. Set to 0 to disable scaling with damage. This is damage before resistances (armor, etc).
@@ -574,6 +574,8 @@
 		"Remove vanilla spawn reinforcements chance" = true
 		#If true, reinforcements will spawn only if the damage comes from an entity
 		"Entity damage only" = false
+		#If true, leader mobs will wear a banner with the Mojang logo on their head, like raid captains do with the ominous banner.
+		"Leader banner" = true
 
 	#Let mobs use ender pearls as long as they have them in the off hand and when far enough from the target. Only mobs in the enhancedai:mobs/can_equip_pearl entity type tag will try to be equipped ender pearls.
 	[Mobs."Pearler mobs"]
@@ -894,10 +896,6 @@
 		# Range: 0.0 ~ 1.0
 		"Xray range override chance" = 0.5
 		"See glowing entities" = true
-		#Mobs in the entity type tag `enhancedai:mobs/targeting/alert_nearby` will alert nearby mobs in this range and target the player.
-		# Default: 32
-		# Range: > 0
-		"Alert range" = 32
 		#Mobs will be able to find better and longer paths to the target the higher this value is. The higher the more performance heavy. Only entity types in the tag `enhancedai:mobs/targeting/visited_nodes_multiplier` tag will be affected by this. Vanilla is 1.0
 		# Default: 4.0
 		# Range: -1.7976931348623157E308 ~ 1.7976931348623157E308
@@ -961,6 +959,16 @@
 				# Range: 0.0 ~ 1.0
 				Hard = 0.04
 
+		[Mobs.Targeting.Alert]
+			#Mobs in the entity type tag `enhancedai:mobs/targeting/alert_nearby` will alert nearby mobs in this range and target the player.
+			# Default: 32
+			# Range: > 0
+			Range = 32
+			#If a mob can be alerted.
+			# Default: 0.5
+			# Range: 0.0 ~ 1.0
+			"Chance for mob to be able to" = 0.5
+
 	#Mobs can bite if are attacked with non-weapons. Only mobs in the enhancedai:mobs/biting_mobs/can_bite entity type tag can bite. Entity types in `mobs/biting_mobs/unaffected_by_bite` tag are unaffected by bites. Damage types in `biting_mobs/doesnt_trigger_bite` tag don't trigger biting mobs.
 	[Mobs."Biting mobs"]
 		#The damage dealt to the attacker when bit
@@ -1015,14 +1023,14 @@
 		"Vertical range per block" = 0.1
 
 [Animals]
-	#Makes animals not tempted by food. Use the entity type tag enhancedai:animal/can_ignore_food_temptation to change animals.
+	#Makes animals not tempted by food. Use the entity type tag enhancedai:animal/can_ignore_food_temptation to change animals. Please note that re-adding the tempt goal to the mob can't be done at runtime by updating the data with the /enhancedai command.
 	"Enable Not tempted animals" = true
 	#Make animals fight back or be scared by players. Use the entity type tag enhancedai:animal/scared_attack/can_be_neutral, enhancedai:animal/scared_attack/can_be_hostile, and enhancedai:animal/scared_attack/can_be_scared_by_players to add/remove animals.
 	"Enable Animal scared attack" = true
 	#Make animals panic when one is attacked. Only entity types in `enhancedai:animal/can_panic` tag will be affected by this feature.
 	"Enable Animals panic" = true
 
-	#Makes animals not tempted by food. Use the entity type tag enhancedai:animal/can_ignore_food_temptation to change animals.
+	#Makes animals not tempted by food. Use the entity type tag enhancedai:animal/can_ignore_food_temptation to change animals. Please note that re-adding the tempt goal to the mob can't be done at runtime by updating the data with the /enhancedai command.
 	[Animals."Not tempted animals"]
 		#Animals have this percentage chance to not be temped by food.
 		# Default: 0.5
