@@ -375,6 +375,14 @@
     const SPAWN_TRIES  = 10;   // candidate positions tried per mob before fallback
     const SPAWN_Y_SCAN = 16;   // vertical search range (blocks) around the player's Y
 
+    // Hard cap on the follow_range actually applied to raid mobs. Vanilla path
+    // search cost scales with follow_range (it bounds the A* search region per
+    // repath), so followRange(300) made EVERY repath of EVERY mob scan a huge
+    // region — the dominant lag with 40+ mobs. Detection/chase does NOT need it:
+    // aggro() setTarget has no range limit and re-pulls mobs every 5 ticks, and
+    // a partial path still walks the mob toward a target beyond this cap.
+    const FOLLOW_RANGE_CAP = 48;
+
     // Blocks a mob must not stand ON (instant damage / sink / suffocate-adjacent).
     var _dangerBelow = {
         "minecraft:lava": 1, "minecraft:water": 1, "minecraft:magma_block": 1,
@@ -488,11 +496,14 @@
     }
 
     // Deterministic small offset around the anchor for cluster mob idx:
-    // golden-angle direction, 1..HORDE_SPREAD_MAX block radius. Per-column
+    // golden-angle direction, radius scaled to the wave size so big hordes
+    // don't cram into a 4-block ring and jam each other (collision shoving
+    // freezes pathing). ~sqrt(total) keeps density roughly constant. Per-column
     // ground lookup; anchor Y is the fallback when a column is unsafe.
-    function hordeMobPos(level, anchor, idx) {
+    function hordeMobPos(level, anchor, idx, total) {
+        var spread = Math.max(HORDE_SPREAD_MAX, Math.ceil(Math.sqrt(total || 1) * 1.5));
         var ang = idx * GOLDEN_ANG;
-        var rad = 1 + ((idx * 5) % HORDE_SPREAD_MAX);
+        var rad = 1 + ((idx * 5) % spread);
         var x = anchor.x + Math.cos(ang) * rad;
         var z = anchor.z + Math.sin(ang) * rad;
         var y = groundY(level, x, anchor.y, z);
@@ -632,28 +643,56 @@
         try { if (C.Golem    && C.Golem.isInstance(e))    return true; } catch (z) {}
         return false;
     }
-    function nearestVictim(raw, radius) {
+    // Mob-independent half of validVictim (live, not a raid ally, victim class,
+    // not spectator/creative). Checked ONCE per candidate per aggro pass; the
+    // per-mob half (sameEnt/canHit) stays in nearestFrom.
+    function victimEligible(e) {
+        if (!isLiveEnt(e) || isAlly(e) || !isVictimClass(e)) return false;
         var C = aggroClasses();
-        if (!C.Living) return null;
-        var level = (typeof raw.level === "function") ? raw.level() : raw.level;
-        if (!level || typeof level.getEntitiesOfClass !== "function") return null;
+        try {
+            if (C.Player && C.Player.isInstance(e)) {
+                if (typeof e.isSpectator === "function" && e.isSpectator()) return false;
+                if (typeof e.isCreative === "function" && e.isCreative()) return false;
+            }
+        } catch (x) {}
+        return true;
+    }
+    // ONE entity query per instance per aggro pass, shared by every mob (was one
+    // AABB scan per mob — quadratic with big waves). Box is centered on the main
+    // player (or a live mob when they're dead/offline) and covers the spawn ring
+    // plus the aggro radius, so victims near stragglers are still found.
+    function collectVictims(inst, centerRaw, radius) {
+        var C = aggroClasses();
+        if (!C.Living || !centerRaw) return [];
+        var level = null;
+        try { level = (typeof centerRaw.level === "function") ? centerRaw.level() : centerRaw.level; } catch (eL) {}
+        if (!level || typeof level.getEntitiesOfClass !== "function") return [];
         var box;
-        try { box = raw.getBoundingBox().inflate(radius); } catch (e) { return null; }
+        try { box = centerRaw.getBoundingBox().inflate(radius + inst.def.spawn.maxRadius + 16); } catch (e) { return []; }
         var list;
-        try { list = level.getEntitiesOfClass(C.Living, box); } catch (e2) { return null; }
-        var best = null, bestD = Number.MAX_VALUE;
+        try { list = level.getEntitiesOfClass(C.Living, box); } catch (e2) { return []; }
+        var out = [];
         try {
             var it = list.iterator();
             while (it.hasNext()) {
                 var e = it.next();
-                if (!isVictimClass(e) || !validVictim(raw, e)) continue;
-                var d = raw.distanceToSqr(e);
-                if (d < bestD) { bestD = d; best = e; }
+                if (victimEligible(e)) out.push(e);
             }
         } catch (e3) {}
+        return out;
+    }
+    function nearestFrom(raw, victims, radiusSqr) {
+        var best = null, bestD = radiusSqr;
+        for (var i = 0; i < victims.length; i++) {
+            var e = victims[i];
+            if (sameEnt(raw, e)) continue;
+            var d;
+            try { d = raw.distanceToSqr(e); } catch (x) { continue; }
+            if (d <= bestD && canHit(raw, e)) { bestD = d; best = e; }
+        }
         return best;
     }
-    function decideTarget(raw, mainRaw, radius) {
+    function decideTarget(raw, mainRaw, victims, radiusSqr) {
         var atk = null;
         try { atk = (typeof raw.getLastHurtByMob === "function") ? raw.getLastHurtByMob() : null; } catch (x) {}
         if (validVictim(raw, atk)) return atk;                       // 1 retaliate
@@ -662,11 +701,63 @@
         try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (y) {}
         if (cur && validVictim(raw, cur) && !(mainRaw && sameEnt(cur, mainRaw))) return cur; // 2 keep victim
 
-        var v = nearestVictim(raw, radius);                          // 3 nearest in radius
+        var v = nearestFrom(raw, victims, radiusSqr);                // 3 nearest in radius
         if (v) return v;
 
         if (mainRaw && validVictim(raw, mainRaw)) return mainRaw;    // 4 main player
         return null;                                                 // 5 idle
+    }
+
+    // ---- Anti-stuck ---------------------------------------------------------
+    // A mob that has a target but hasn't moved between aggro passes first gets a
+    // navigation recompute; if it stays frozen ~8s while far from its target it
+    // teleports onto safe ground near the target. Standstills inside STUCK_NEAR
+    // are legit (melee crowd, bow/skirmisher hold range) and never count as
+    // stuck, so ranged kiting and EAI digging/fishing goals aren't disturbed.
+    const STUCK_MOVE_SQ = 0.25; // blocks² moved per pass below this = "not moving"
+    const STUCK_NEAR_SQ = 576;  // 24² blocks — inside this idling is allowed
+    const STUCK_KICK    = 4;    // idle passes before a nav recompute (repeats every 4)
+    const STUCK_TP      = 32;   // idle passes (~8s at 5-tick cadence) before hard teleport
+    const STUCK_TP_R    = 12;   // teleport ring radius around the target
+
+    function unstick(inst, raw, target) {
+        var key;
+        try { key = String(raw.getStringUUID()); }
+        catch (e) { try { key = String(raw.getUUID()); } catch (e2) { return; } }
+        var x, y, z;
+        try { x = raw.getX(); y = raw.getY(); z = raw.getZ(); } catch (e3) { return; }
+        var st = inst._mobState[key];
+        if (!st) { inst._mobState[key] = { x: x, y: y, z: z, idle: 0, tp: 0 }; return; }
+        var dx = x - st.x, dy = y - st.y, dz = z - st.z;
+        var movedSq = dx * dx + dy * dy + dz * dz;
+        st.x = x; st.y = y; st.z = z;
+        var distSq;
+        try { distSq = raw.distanceToSqr(target); } catch (e4) { return; }
+        if (movedSq > STUCK_MOVE_SQ || distSq < STUCK_NEAR_SQ) { st.idle = 0; return; }
+        st.idle++;
+        if (st.idle >= STUCK_TP) {
+            st.idle = 0; st.tp++;
+            var ang = ((hashStr(key) % 360) * Math.PI / 180) + st.tp * GOLDEN_ANG;
+            try {
+                var lvl = (typeof raw.level === "function") ? raw.level() : raw.level;
+                var tx = target.getX() + Math.cos(ang) * STUCK_TP_R;
+                var tz = target.getZ() + Math.sin(ang) * STUCK_TP_R;
+                var ty = groundY(lvl, tx, target.getY(), tz);
+                if (ty != null) {
+                    if (typeof raw.teleportTo === "function") raw.teleportTo(Math.floor(tx) + 0.5, ty, Math.floor(tz) + 0.5);
+                    else raw.setPos(Math.floor(tx) + 0.5, ty, Math.floor(tz) + 0.5);
+                }
+            } catch (e5) {}
+            return;
+        }
+        // Gentle kick: recompute a path only when navigation is idle, so active
+        // paths and custom EAI goals (miner digging, fisher casting) keep control.
+        if (st.idle % STUCK_KICK === 0) {
+            try {
+                var nav = (typeof raw.getNavigation === "function") ? raw.getNavigation() : null;
+                if (nav && (typeof nav.isDone !== "function" || nav.isDone())) nav.moveTo(target, 1.0);
+            } catch (e6) {}
+        }
     }
 
     // ---------- Equipment / NBT --------------------------------------------
@@ -750,9 +841,18 @@
             var mob = round.mobs[gi];
             var names = mobPresetNames(def, mob);
             // Per-raid followRange overrides any preset follow_range (last write wins
-            // in applyAttributes) -> controls how far mobs detect + chase the player.
+            // in applyAttributes), clamped to FOLLOW_RANGE_CAP (see const above).
             var xtra = mob.extraArgs;
-            if (def.followRange != null) xtra = xtra.concat(["attributes/follow_range=" + def.followRange]);
+            var fr = def.followRange;
+            if (fr == null) fr = FOLLOW_RANGE_CAP;            // also caps preset values (farSight=100)
+            if (fr > FOLLOW_RANGE_CAP) fr = FOLLOW_RANGE_CAP;
+            xtra = xtra.concat(["attributes/follow_range=" + fr]);
+            // Zombie-family reinforcements: every hit rolls a chance to spawn an
+            // extra zombie — with 40+ raid zombies that snowballs mob count (and
+            // spawns untagged, unmanaged mobs). Off for raid mobs.
+            if (/zombie|husk|drowned|zombified/.test(mob.type)) {
+                xtra = xtra.concat(["attributes/spawn_reinforcements_chance=0"]);
+            }
             // Waterproof: full walk speed in water (1.0 = no slowdown) + oxygen
             // bonus so air ~never depletes. Vanilla 1.21 attributes, same
             // applyAttributes path as follow_range. Drowned conversion still
@@ -764,7 +864,7 @@
                 ]);
             }
             for (var c = 0; c < mob.count; c++) {
-                var pos = anchor ? hordeMobPos(level, anchor, idx)
+                var pos = anchor ? hordeMobPos(level, anchor, idx, total)
                                  : findSpawnPos(level, pp, def, idx, total);
                 idx++;
 
@@ -810,6 +910,8 @@
         this.barBase   = def.title || prettyId(def.id);
         this.roundTotalHealth = 1;    // sum of max-health for the current wave (bar denominator)
         this.endLeft   = 0;           // ENDING-phase linger countdown (victory/defeat bar)
+        this._mobState = {};          // uuid -> {x,y,z,idle,tp} anti-stuck tracking
+        this._assistTick = 0;         // aggro pass counter (waterAssist throttling)
     }
     // Freeze the bar on an end state (victory green / defeat red) before it closes.
     RaidInstance.prototype.barEnd = function (name, colorName, progress) {
@@ -858,14 +960,29 @@
             try { pAlive = (typeof player.isAlive === "function") ? player.isAlive() : player.isAlive; } catch (e) {}
             if (pAlive) mainRaw = unwrapPlayer(player);
         }
-        waterAssist(this);   // air/conversion/swim upkeep — same cadence as targeting
+        // Water upkeep every 4th pass (~1s): mergeNbt is a full entity NBT
+        // save/load — too heavy per water mob at the 5-tick cadence. Drowned
+        // conversion needs 600 in-water ticks, so a 20-tick reset is plenty.
+        this._assistTick++;
+        if ((this._assistTick & 3) === 0) waterAssist(this);
         var radius = (this.def.aggroRadius != null) ? this.def.aggroRadius : 20;
         if (this.def.spawnPattern === "horde") radius += 8;   // cluster sits in one spot — widen detection
+        var center = mainRaw || firstRaw(this);
+        var victims = collectVictims(this, center, radius);
+        var radiusSqr = radius * radius;
+        var inst = this;
         eachMob(this, function (m) {
             var raw = rawMobOf(m);
             if (!raw || typeof raw.setTarget !== "function") return;
-            var t = decideTarget(raw, mainRaw, radius);
-            if (t) { try { raw.setTarget(t); } catch (eS) {} }
+            var t = decideTarget(raw, mainRaw, victims, radiusSqr);
+            if (!t) return;
+            // setTarget only on an actual change — re-setting the same target
+            // every pass fires target-change events + goal re-evaluation on
+            // every mob, and constantly restarts pathing (the "stuck" jitter).
+            var cur = null;
+            try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (eG) {}
+            if (!cur || !sameEnt(cur, t)) { try { raw.setTarget(t); } catch (eS) {} }
+            unstick(inst, raw, t);
         });
     };
     RaidInstance.prototype.aliveCount = function () {
@@ -874,6 +991,7 @@
     RaidInstance.prototype.startRound = function (idx, player) {
         var round = this.def.rounds[idx];
         info(`raid ${this.id}: start round ${idx} "${round.name}"`);
+        this._mobState = {};   // drop stale anti-stuck entries from the previous wave
         this.roundMobs = spawnRound(this.level, player, this.def, round, this.id);
         this.roundTimeLeft = (round.timeLimit != null) ? round.timeLimit : null;
         this.roundTotalHealth = Math.max(1, sumMax(this.roundMobs) + sumMax(this.carryover));
@@ -972,6 +1090,19 @@
             try { if (e && (!e.isAlive || e.isAlive())) alive.push(e); } catch (eA) {}
         }
         return alive;
+    }
+
+    // First live raw mob across both lists — aggro scan center when the main
+    // player is dead/offline.
+    function firstRaw(inst) {
+        var lists = [inst.roundMobs, inst.carryover];
+        for (var li = 0; li < lists.length; li++) {
+            for (var i = 0; i < lists[li].length; i++) {
+                var r = rawMobOf(lists[li][i]);
+                if (r) return r;
+            }
+        }
+        return null;
     }
 
     // Apply fn(entity) to every mob across both the round + carryover lists.
