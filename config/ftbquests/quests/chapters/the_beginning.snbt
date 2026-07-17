@@ -17,22 +17,6 @@
 			y: -5.0d
 		}
 		{
-			height: 2.0d
-			image: "supplementaries:block/cannon_target_charging"
-			rotation: 0.0d
-			width: 2.0d
-			x: -3.5d
-			y: 12.0d
-		}
-		{
-			height: 1.0d
-			image: "apothic_enchanting:blocks/blazing_hellshelf"
-			rotation: 0.0d
-			width: 1.0d
-			x: -5.5d
-			y: 7.5d
-		}
-		{
 			height: 1.0d
 			image: "minecraft:textures/gui/sprites/hud/armor_full.png"
 			rotation: 0.0d
@@ -97,11 +81,6 @@
 			hide_dependency_lines: false
 			id: "150B22BC04F1A682"
 			rewards: [
-				{
-					id: "4E127336B9C62664"
-					type: "xp"
-					xp: 30
-				}
 				{
 					id: "096E58C1F58ED4D7"
 					item: {
@@ -488,7 +467,7 @@
 				type: "advancement"
 			}]
 			x: -3.5d
-			y: 6.0d
+			y: 8.0d
 		}
 		{
 			dependencies: ["2B42A1CB36B3751A"]
@@ -515,134 +494,7 @@
 				id: "60E506B8143C011A"
 				type: "advancement"
 			}]
-			x: -3.5d
-			y: 7.5d
-		}
-		{
-			dependencies: ["016FC2B5041148D6"]
-			id: "4E77122161B6592B"
-			rewards: [
-				{
-					id: "33495E443C91889B"
-					item: {
-						count: 1
-						id: "apothic_enchanting:hellshelf"
-					}
-					type: "item"
-				}
-				{
-					id: "6A832BEDD2A2E2FD"
-					type: "xp"
-					xp: 400
-				}
-			]
-			tasks: [{
-				advancement: "apothic_enchanting:30ench"
-				criterion: ""
-				id: "3DC35FE660EAD808"
-				type: "advancement"
-			}]
-			x: -3.5d
-			y: 9.0d
-		}
-		{
-			dependencies: [
-				"4E77122161B6592B"
-				"0353CA115945D8CC"
-				"5E15117793DFCC3D"
-			]
-			id: "75EB4D8A1ADA0CE1"
-			rewards: [
-				{
-					id: "587A4450B0BC03AF"
-					item: {
-						count: 1
-						id: "apothic_enchanting:infused_hellshelf"
-					}
-					type: "item"
-				}
-				{
-					id: "2DD24ED8F5276E40"
-					type: "xp"
-					xp: 600
-				}
-			]
-			tasks: [{
-				advancement: "apothic_enchanting:60ench"
-				criterion: ""
-				id: "790E696F56345B32"
-				type: "advancement"
-			}]
-			x: -3.5d
-			y: 10.5d
-		}
-		{
-			dependencies: ["75EB4D8A1ADA0CE1"]
-			id: "708DFC51741721BA"
-			rewards: [
-				{
-					id: "4F0BCFCF56BD952D"
-					item: {
-						count: 1
-						id: "apothic_enchanting:blazing_hellshelf"
-					}
-					type: "item"
-				}
-				{
-					id: "0F1FD532E25643A2"
-					type: "xp"
-					xp: 800
-				}
-				{
-					id: "5C6F98C83A95B7BA"
-					item: {
-						count: 1
-						id: "enigmaticlegacyplus:void_tome"
-					}
-					type: "item"
-				}
-			]
-			tasks: [{
-				advancement: "apothic_enchanting:80ench"
-				criterion: ""
-				id: "6D598D8AA5D4B4A2"
-				type: "advancement"
-			}]
-			x: -3.5d
-			y: 12.0d
-		}
-		{
-			dependencies: ["016FC2B5041148D6"]
-			id: "5E15117793DFCC3D"
-			rewards: [{
-				id: "6E14969EB85A26F7"
-				type: "xp"
-				xp: 100
-			}]
-			tasks: [{
-				advancement: "apothic_enchanting:hellshelf"
-				criterion: ""
-				id: "26384D87B2A019FF"
-				type: "advancement"
-			}]
-			x: -5.0d
-			y: 9.0d
-		}
-		{
-			dependencies: ["016FC2B5041148D6"]
-			id: "0353CA115945D8CC"
-			rewards: [{
-				id: "530A518E0D9AD515"
-				type: "xp"
-				xp: 100
-			}]
-			tasks: [{
-				advancement: "apothic_enchanting:enchanting_stats"
-				criterion: ""
-				id: "31EBDCE84E38CEF6"
-				type: "advancement"
-			}]
-			x: -2.0d
+			x: -4.5d
 			y: 9.0d
 		}
 		{
@@ -662,6 +514,15 @@
 					id: "5C06F7E7C0FFABE8"
 					type: "xp"
 					xp: 30
+				}
+				{
+					count: 8
+					id: "65C31D425997BA15"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
 				}
 			]
 			tasks: [
@@ -707,6 +568,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 48
+					id: "6AD18677A7E21165"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [
 				{
@@ -736,19 +606,30 @@
 		{
 			dependencies: ["078E09A6283D607D"]
 			id: "3460E28FAD1187CA"
-			rewards: [{
-				id: "729AAFF498739276"
-				item: {
-					components: {
-						"minecraft:custom_data": {
-							AmmoUsed: 0
+			rewards: [
+				{
+					id: "729AAFF498739276"
+					item: {
+						components: {
+							"minecraft:custom_data": {
+								AmmoUsed: 0
+							}
 						}
+						count: 1
+						id: "spartan_weaponry_unofficial:boomerang_diamond"
 					}
-					count: 1
-					id: "spartan_weaponry_unofficial:boomerang_diamond"
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 64
+					id: "3C3B61ECE5B47003"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			tasks: [
 				{
 					id: "5D32639C5CE77AB7"
@@ -782,19 +663,30 @@
 		{
 			dependencies: ["6D1C9E652CE9007A"]
 			id: "2F1B0D8E1D18AB3C"
-			rewards: [{
-				id: "4E11EDBA6819FD6F"
-				item: {
-					components: {
-						"minecraft:custom_data": {
-							AmmoUsed: 0
+			rewards: [
+				{
+					id: "4E11EDBA6819FD6F"
+					item: {
+						components: {
+							"minecraft:custom_data": {
+								AmmoUsed: 0
+							}
 						}
+						count: 1
+						id: "spartan_weaponry_unofficial:boomerang_iron"
 					}
-					count: 1
-					id: "spartan_weaponry_unofficial:boomerang_iron"
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 16
+					id: "6036E56290640D1A"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			tasks: [
 				{
 					id: "42490E4771CBEBEF"
@@ -824,6 +716,26 @@
 			]
 			x: -6.5d
 			y: 4.0d
+		}
+		{
+			dependencies: ["2B42A1CB36B3751A"]
+			id: "0451F8A8783102BB"
+			rewards: [{
+				count: 2
+				id: "2C5DD721FA017762"
+				item: {
+					count: 1
+					id: "waystones:warp_dust"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				id: "1A39B0F4B2D13D76"
+				item: { count: 1, id: "waystones:warp_stone" }
+				type: "item"
+			}]
+			x: -3.5d
+			y: 10.0d
 		}
 	]
 }

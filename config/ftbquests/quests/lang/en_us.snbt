@@ -1,0 +1,814 @@
+{
+	chapter.0100000000000000.title: "Getting Started"
+	chapter.0200000000000000.title: "Combat & Gear"
+	chapter.0300000000000000.title: "Artifacts & Relics"
+	chapter.0400000000000000.title: "Exploration"
+	chapter.0500000000000000.title: "Magic & Curios"
+	chapter.0600000000000000.title: "Found a Colony"
+	chapter.0700000000000000.title: "Cataclysm"
+	chapter.07DDCEA56A248369.chapter_subtitle: ["Track Cataclysm eyes, structures, and boss victories."]
+	chapter.07DDCEA56A248369.title: "Cataclysm Bosses"
+	chapter.0800000000000000.title: "Chaos & Bosses"
+	chapter.0900000000000000.title: "Endgame"
+	chapter.0E21FB2EFB41A583.chapter_subtitle: ["Build a functioning colony through logistics, production, defense, and population growth."]
+	chapter.0E21FB2EFB41A583.title: "MineColonies"
+	chapter.1473010E94DC31F5.chapter_subtitle: ["Follow the early survival, exploration, gear, and enchanting path."]
+	chapter.1473010E94DC31F5.title: "The Beginning"
+	chapter.53CE9BF04888A6F5.chapter_subtitle: ["Hunt extra bosses and complete optional flawless challenges."]
+	chapter.53CE9BF04888A6F5.title: "Boss Challenges"
+	chapter.5A24B0F4C08450E8.chapter_subtitle: ["Spend Coins on repeatable caches and special progression trades."]
+	chapter.5A24B0F4C08450E8.title: "Shop"
+	chapter.5A68256C8616EE36.chapter_subtitle: ["Master Enigmatic Legacy through curses, scrolls, materials, relics, and late-game gear."]
+	chapter.5A68256C8616EE36.title: "Just Cry"
+	chapter.6500C4D7C61AF53E.chapter_subtitle: ["Learn Apothic Enchanting through shelves, stats, infusion, and endgame table tuning."]
+	chapter.6500C4D7C61AF53E.title: "Apothic Enchanting"
+	chapter.6DE5EF1B23714EBB.title: "a"
+	chapter.71B0A0C51E1159E1.chapter_subtitle: ["Build your spellcasting path through spellbooks, scrollcraft, inks, runes, upgrades, and the Catacombs."]
+	chapter.71B0A0C51E1159E1.title: "Iron's Spells"
+	chapter.7BEE420E690C035A.title: "Bounty Hunter"
+	chapter_group.1EA4480B120F415D.title: "Hunt Or Get Hunted"
+	quest.0038426316854F1C.quest_desc: ["Receive Copper Coins for basic shop use."]
+	quest.0038426316854F1C.title: "Silver to Copper Exchange"
+	quest.00A3AD4BD4EE0FC7.quest_desc: ["Build a Guard Tower to protect the colony perimeter. Guard towers improve safety, expand coverage, and help defend citizens from raids and hostile mobs."]
+	quest.00A3AD4BD4EE0FC7.quest_subtitle: "Build a Guard Tower and Hire a Guard"
+	quest.00A3AD4BD4EE0FC7.title: "Guard Tower"
+	quest.0100000000000001.quest_desc: ["Punch a tree. Everything starts here."]
+	quest.0100000000000001.title: "Wood First"
+	quest.0100000000000004.title: "A Proper Workbench"
+	quest.0100000000000007.title: "Stone Tools"
+	quest.010000000000000A.quest_desc: ["Craft a Backpack â€” your inventory will thank you."]
+	quest.010000000000000A.quest_subtitle: "Sophisticated Backpacks"
+	quest.010000000000000A.title: "Pack It Up"
+	quest.010000000000000D.quest_desc: ["Craft and place a Waystone to unlock fast travel."]
+	quest.010000000000000D.quest_subtitle: "Waystones"
+	quest.010000000000000D.title: "Fast Travel"
+	quest.010F20E85B157B42.quest_desc: ["Acquire a Sacred Crystal after the Pure Heart milestone."]
+	quest.010F20E85B157B42.title: "Sacred Crystal"
+	quest.016FC2B5041148D6.quest_desc: ["Build the enchanter setup and begin improving your gear."]
+	quest.016FC2B5041148D6.title: "Apothic Enchanter"
+	quest.0200000000000001.title: "Iron-Clad"
+	quest.0200000000000004.title: "Diamond Edge"
+	quest.0200000000000007.quest_desc: ["Enchant any item at an Enchanting Table."]
+	quest.0200000000000007.title: "Enchanted"
+	quest.020000000000000A.quest_desc: ["Prove your blade on a Ravager."]
+	quest.020000000000000A.title: "Cull the Herd"
+	quest.020000000000000D.quest_desc: ["Forge a Netherite-Diamond Ingot."]
+	quest.020000000000000D.quest_subtitle: "Advanced Netherite"
+	quest.020000000000000D.title: "Beyond Netherite"
+	quest.0284A14D1953215B.quest_desc: ["Craft a Prismatic Cobweb. Use this utility when you need a controlled way to remove curses from enchanted gear without rebuilding the item from scratch."]
+	quest.0284A14D1953215B.quest_subtitle: "Utility Route - Curse Control"
+	quest.0284A14D1953215B.title: "Curse Removal"
+	quest.0300000000000001.quest_desc: ["Survive to day 10 and the world's trinkets reveal themselves."]
+	quest.0300000000000001.title: "Day 10: Curiosities Surface"
+	quest.0300000000000004.title: "Cloud in a Bottle"
+	quest.0300000000000007.title: "Cross Necklace"
+	quest.030000000000000A.quest_subtitle: "Relics"
+	quest.030000000000000A.title: "Mirror, Mirror"
+	quest.030000000000000D.quest_subtitle: "Relics"
+	quest.030000000000000D.title: "Holy Locket"
+	quest.0316E30A250105ED.quest_desc: ["Receive a random wood reward. Common overworld woods are likely; Nether woods are rarer."]
+	quest.0316E30A250105ED.title: "Wood Supply Crate"
+	quest.0347B872A2C8896C.quest_desc: ["Claim The Infinitum as the final Abyssal relic milestone."]
+	quest.0347B872A2C8896C.title: "The Infinitum"
+	quest.03E3259694F8C307.quest_desc: ["Collect Evil Essence after the Ichor branch opens hostile materials."]
+	quest.03E3259694F8C307.title: "Evil Essence"
+	quest.0400000000000001.title: "Day 10: Wanderlust"
+	quest.0400000000000004.quest_desc: ["Place a second Waystone to build a travel network."]
+	quest.0400000000000004.title: "Network of Waystones"
+	quest.0400000000000007.title: "Into the Nether"
+	quest.040000000000000A.quest_desc: ["Loot a Nether Fortress for blaze rods."]
+	quest.040000000000000A.title: "Fortress Plunder"
+	quest.040000000000000D.quest_desc: ["Earn the vanilla 'Adventuring Time' spirit â€” visit a new biome."]
+	quest.040000000000000D.title: "Adventuring Time"
+	quest.0451F8A8783102BB.quest_subtitle: "Harder Then You Think"
+	quest.04D1B2FE07C5A96A.quest_desc: ["Receive a stronger repeatable relic roll with higher-value random rewards."]
+	quest.04D1B2FE07C5A96A.title: "Rare Relic Cache"
+	quest.0500000000000001.title: "Day 25: Arcane Awakening"
+	quest.0500000000000004.quest_desc: ["Surround an Enchanting Table with bookshelves (collect 15)."]
+	quest.0500000000000004.title: "Bookshelf Sanctum"
+	quest.0500000000000007.quest_desc: ["Open your Curios slots and equip any trinket."]
+	quest.0500000000000007.title: "Equip a Curio"
+	quest.050000000000000A.quest_subtitle: "Relics"
+	quest.050000000000000A.title: "Ender's Hand"
+	quest.0600000000000001.title: "Day 25: Settle Down"
+	quest.0600000000000004.quest_desc: ["Deploy a Supply Camp or Supply Ship to begin your colony."]
+	quest.0600000000000004.title: "Place the Supply Camp"
+	quest.0600000000000007.title: "Raise the Town Hall"
+	quest.060000000000000A.title: "A Growing Settlement"
+	quest.0700000000000001.title: "Day 50: The Earth Trembles"
+	quest.0700000000000004.quest_desc: ["Craft the Infernal Forge to make Cataclysm gear."]
+	quest.0700000000000004.title: "Forge of Legends"
+	quest.0700000000000007.quest_subtitle: "The Fire Giant"
+	quest.0700000000000007.title: "Slay Ignis"
+	quest.070000000000000A.title: "The Netherite Monstrosity"
+	quest.070000000000000D.title: "Guardian of the End"
+	quest.078E09A6283D607D.quest_desc: ["Upgrade into full diamond armor for midgame exploration."]
+	quest.078E09A6283D607D.title: "Diamond Armor Set"
+	quest.0800000000000001.title: "Day 50: Trials Await"
+	quest.0800000000000004.quest_desc: ["Obtain an Ancient Trial Key to open a boss trial."]
+	quest.0800000000000004.title: "Ancient Trial Key"
+	quest.0800000000000007.title: "Release the Kraken"
+	quest.080000000000000A.title: "Infernal Dragon"
+	quest.085F473094778DCD.quest_desc: ["Obtain a Resource Scroll to inspect Builder material requests. Link it to a Builder Hut, then use it to see exactly what resources are missing."]
+	quest.085F473094778DCD.quest_subtitle: "Micromanagement at it's finest"
+	quest.085F473094778DCD.title: "Resource Scroll"
+	quest.08EC21D0F20FBEF8.quest_desc: ["Receive a random food reward. Basic meals are common; golden food is rare."]
+	quest.08EC21D0F20FBEF8.title: "Food Supply Crate"
+	quest.0900000000000001.quest_desc: ["One hundred days. You have outlasted the world's worst."]
+	quest.0900000000000001.title: "Day 100: Survivor"
+	quest.0900000000000004.title: "Master of Netherite"
+	quest.0900000000000007.quest_desc: ["Defeat Ignis once more to claim the trophy."]
+	quest.0900000000000007.title: "Slayer of Giants"
+	quest.090000000000000A.title: "Legend"
+	quest.09356B5CE3839F2C.quest_desc: ["Upgrade into the Library of Alexandria through tightly tuned Infusion Enchanting. Keep Eterna and Arcana maxed while holding Quanta in the required narrow range."]
+	quest.09356B5CE3839F2C.quest_subtitle: "Utility Route - Ultimate Library"
+	quest.09356B5CE3839F2C.title: "Library of Alexandria"
+	quest.0AB503478883A9BC.quest_desc: ["Infuse a Dormant Deepshelf after the Hell and Sea tiers are stable. Deepshelves move the table into the Deep Dark tier and prepare the path to level 80."]
+	quest.0AB503478883A9BC.quest_subtitle: "Step 08 - Deep Dark Tier"
+	quest.0AB503478883A9BC.title: "Delving Into Darkness"
+	quest.0B009391E3F76D6E.quest_desc: ["Build the Fisherman Hut to add reliable food production. A good fishing setup helps feed citizens while sometimes producing useful extra loot."]
+	quest.0B009391E3F76D6E.title: "Fisherman Hut"
+	quest.0B1150037754A4EB.quest_desc: ["Infuse Seashelves when the table has enough Eterna, Quanta, and Arcana, then craft Heart-Forged or Crystalline variants. This branch gives the table cleaner high-quality rolls."]
+	quest.0B1150037754A4EB.quest_subtitle: "Step 05B - Infused Seashelves"
+	quest.0B1150037754A4EB.title: "Sleeping in the Cold Below"
+	quest.0BCD3AEC3A4ACC8B.quest_desc: ["Craft or obtain an Enchanting Table to open the Apothic system. The table now shows enchanting stats, supports higher power levels, and becomes the center of every later shelf setup."]
+	quest.0BCD3AEC3A4ACC8B.quest_subtitle: "Step 01 - Table Foundation"
+	quest.0BCD3AEC3A4ACC8B.title: "The Secrets of Enchanting"
+	quest.0BF93E0CDEDCB004.quest_desc: ["Defeat Frostmaw and continue the Mowzie boss route."]
+	quest.0BF93E0CDEDCB004.title: "Frostmaw"
+	quest.0C5DA84E0E5FD721.quest_desc: ["Build a level 1 Station after logistics are stable. This starts the travel branch and prepares the colony for broader trade connections."]
+	quest.0C5DA84E0E5FD721.title: "Station"
+	quest.0C6336145194DF5F.quest_desc: ["Continue the Zombie bounty with a larger target. Complete it to unlock the next tier."]
+	quest.0D6E099A1A242153.quest_desc: ["Collect the Build Tool and Town Hall block, then place the colony center. This is the foundation for every MineColonies building and the point where your settlement officially begins."]
+	quest.0D6E099A1A242153.title: "Found the Colony"
+	quest.0D7D0A11D7517585.quest_desc: ["Obtain a Diamond Trade Coin. This completes the Trade Post coin progression from basic coin to the highest-value currency."]
+	quest.0D7D0A11D7517585.title: "Bling Bling"
+	quest.0DB241AA8AB171C9.quest_desc: ["Find the Soul Blacksmith before challenging the Monstrosity."]
+	quest.0DB241AA8AB171C9.title: "Soul Blacksmith"
+	quest.0DD8CE32CA2D3810.quest_desc: ["Build the Spellstone Table before controlled Spellstone crafting."]
+	quest.0DD8CE32CA2D3810.title: "Spellstone Table"
+	quest.0DE3777240F80A5D.quest_desc: ["Craft an Enchantment Library. Insert enchanted books to store their enchantments as points, then extract specific levels when you need clean book management."]
+	quest.0DE3777240F80A5D.quest_subtitle: "Utility Route - Book Storage"
+	quest.0DE3777240F80A5D.title: "Enchantment Library"
+	quest.0E9ABFF41F038D8B.quest_desc: ["Receive a Mending Mixture after opening the Cursed Ring shop route."]
+	quest.0E9ABFF41F038D8B.title: "Mending Mixture"
+	quest.0EBB4E5195610A82.quest_desc: ["Build the Sawmill so the Carpenter can craft wood-based items for the colony. Teaching common Builder recipes here reduces manual crafting dramatically."]
+	quest.0EBB4E5195610A82.quest_subtitle: "Build a Sawmill"
+	quest.0EBB4E5195610A82.title: "Sawmill"
+	quest.0EC5A9479172DD7C.quest_desc: ["Train a pet through the Pet Shop. Finish this step to turn a cute companion into useful colony support."]
+	quest.0EC5A9479172DD7C.title: "Train a Pet"
+	quest.0F409DACBEB7BBF8.quest_desc: ["Place or prepare a Supply Ship as an alternate colony start. It provides early resources, but it needs enough open space and careful placement to deploy correctly."]
+	quest.0F409DACBEB7BBF8.title: "Supply Ship"
+	quest.10B41FCF6D3D548C.quest_desc: ["Build a level 1 Pet Shop after the colony has proper housing. This opens the functional pet branch for companion-based support."]
+	quest.10B41FCF6D3D548C.title: "Pet Shop"
+	quest.11274B9716914F83.quest_desc: ["Forge Etherium Ingots after Astral Dust."]
+	quest.11274B9716914F83.title: "Etherium Ingot"
+	quest.113615E96E320BB0.quest_desc: ["Trigger a rare Trade Post find through the travel network. Keep the Station branch active until a valuable discovery appears."]
+	quest.113615E96E320BB0.title: "Rare Find"
+	quest.11A858C09DB25C9B.quest_desc: ["Craft a Tome of Extraction. This is the clean version of the scrapping path: it removes all enchantments while keeping the original item intact."]
+	quest.11A858C09DB25C9B.quest_subtitle: "Utility Route - Safe Extraction"
+	quest.11A858C09DB25C9B.title: "Tome of Extraction"
+	quest.11A8C08EA0F615E3.quest_desc: ["Build a level 1 Recycling Center. Use it to convert clutter and low-value stock into useful output for the colony supply chain."]
+	quest.11A8C08EA0F615E3.title: "Recycling Center"
+	quest.120152510AD4B59A.quest_desc: ["Obtain Build Goggles to preview higher-level building shapes. They help plan layouts before committing resources to upgrades."]
+	quest.120152510AD4B59A.quest_subtitle: "Itâ€™s A Samsquanch!"
+	quest.120152510AD4B59A.title: "Build Goggles"
+	quest.128AB24F072E82BD.quest_desc: ["Defeat the Ender Guardian and finish the void route."]
+	quest.128AB24F072E82BD.title: "Ender Guardian"
+	quest.130E8FC7479E4271.quest_desc: ["Craft the Shepherd hut block to raise sheep. This supports wool production and adds another stable food source once animals are supplied."]
+	quest.130E8FC7479E4271.title: "Shepherd Hut"
+	quest.1326AD9EC7A362E8.quest_desc: ["Defeat Ignis and finish the flame route."]
+	quest.1326AD9EC7A362E8.title: "Ignis"
+	quest.132AF80A62FFF98D.quest_desc: ["Build the Tavern to house visitors and recruit new citizens. This is one of the strongest early buildings for growing your workforce beyond the starting colonists."]
+	quest.132AF80A62FFF98D.title: "Tavern"
+	quest.13C5FAB90F6EAACA.quest_desc: ["Craft or find a Cursed Scroll after mastering the darker scroll path."]
+	quest.13C5FAB90F6EAACA.title: "Cursed Scroll"
+	quest.1447D48FBE3286B6.quest_desc: ["Upgrade the currency path by obtaining a Gold Trade Coin. This step follows directly after your first basic Trade Coin."]
+	quest.1447D48FBE3286B6.title: "High Roller"
+	quest.149C8729A5AF48A5.quest_desc: ["Start the Trade Post branch after establishing a Town Hall. This addon expands your colony with trade, travel, recycling, pets, tourism, and wishes."]
+	quest.149C8729A5AF48A5.title: "Trade Post Charter"
+	quest.14DA3DC7C0009A6A.quest_desc: ["Grow the colony to fifty citizens. This is a major midgame settlement milestone that requires stable housing and jobs."]
+	quest.14DA3DC7C0009A6A.title: "Population 50"
+	quest.150B22BC04F1A682.quest_desc: ["Smelt iron to unlock reliable tools and the next mining tier."]
+	quest.150B22BC04F1A682.title: "First Iron"
+	quest.153216DF47821D6F.quest_desc: ["Infuse Hellshelves once your table reaches the Hell infusion requirements, then craft Blazing or Glowing Hellshelves. This branch pushes power and Quanta toward level 60."]
+	quest.153216DF47821D6F.quest_subtitle: "Step 05A - Infused Hellshelves"
+	quest.153216DF47821D6F.title: "Mastering the Inferno"
+	quest.154F2CD44BB7EC38.quest_desc: ["Find the Ancient Factory before challenging the Harbinger."]
+	quest.154F2CD44BB7EC38.title: "Ancient Factory"
+	quest.1552D2ED4A036712.quest_desc: ["Finish the final Piglin Brute bounty for the largest reward in this chain."]
+	quest.155725BD5EEF4DB4.quest_desc: ["Find the Sunken City before challenging the Leviathan."]
+	quest.155725BD5EEF4DB4.title: "Sunken City"
+	quest.159A20BC9424EADC.quest_desc: ["Find the Acropolis before challenging Scylla."]
+	quest.159A20BC9424EADC.title: "Acropolis"
+	quest.15B51FB56A64C303.quest_desc: ["Craft the University hut block to unlock research. Research controls many later buildings, upgrades, and colony improvements, so this is a major progression step."]
+	quest.15B51FB56A64C303.title: "University"
+	quest.15F03A5E7E14C022.quest_desc: ["Build the Stonemason to craft stone-based blocks for Builders. This is a key production building for upgrades that require large amounts of refined stone."]
+	quest.15F03A5E7E14C022.quest_subtitle: "Build a Stonemason's Hut"
+	quest.15F03A5E7E14C022.title: "Stonemason"
+	quest.160CD8B65B2BD16B.quest_desc: ["Defeat the Kraken and unlock its flawless challenge."]
+	quest.160CD8B65B2BD16B.title: "Kraken"
+	quest.17371E278B5E8441.quest_desc: ["Claim The Cube after completing the core Spellstone collection."]
+	quest.17371E278B5E8441.title: "The Cube"
+	quest.179F0314EF6F15F9.quest_desc: ["Obtain the Storm Eye to begin the skyward route."]
+	quest.179F0314EF6F15F9.title: "Storm Eye"
+	quest.17AB0649B90CFE9B.quest_desc: ["Defeat the Ferrous Wroughtnaut and continue the Mowzie boss route."]
+	quest.17AB0649B90CFE9B.title: "Ferrous Wroughtnaut"
+	quest.18F224F39CFD0B35.quest_desc: ["Gather Ichor after Infernal Cinder to unlock the darker material chain."]
+	quest.18F224F39CFD0B35.title: "Ichor Droplet"
+	quest.19D03831EB5EED02.quest_desc: ["Build the Blacksmith to craft tools, weapons, and armor for the colony. Teach it the recipes your workers and guards need most often."]
+	quest.19D03831EB5EED02.quest_subtitle: "Build a Blacksmith Hut"
+	quest.19D03831EB5EED02.title: "Blacksmith"
+	quest.1AFB23B86AFA4C64.quest_desc: ["Enchant an item at 0% Quanta. Low Quanta removes chaotic swings and is best when you want predictable results instead of gambling on variance."]
+	quest.1AFB23B86AFA4C64.quest_subtitle: "Stat Route - Clean Rolls"
+	quest.1AFB23B86AFA4C64.title: "Begone, Flux"
+	quest.1B416F55DB53C59C.quest_desc: ["Hunt Creepers to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.1B8F8360FA7CAB0D.quest_desc: ["Receive Silver Coins for regular shop use."]
+	quest.1B8F8360FA7CAB0D.title: "Gold to Silver Exchange"
+	quest.1BAE0E9F2EF84463.quest_desc: ["Build a level 1 Marketplace after your basic delivery network is running. This becomes the economic hub for Trade Coins and addon buildings."]
+	quest.1BAE0E9F2EF84463.title: "Marketplace"
+	quest.1C16AEE8E29FB5A0.quest_desc: ["Obtain a Rallying Banner to command guards during threats. Bind it to towers so defenders can respond when raids or emergencies happen."]
+	quest.1C16AEE8E29FB5A0.title: "Rally Banner"
+	quest.1C47017E1661966A.quest_desc: ["Acquire an Abyssal Heart after The Twist."]
+	quest.1C47017E1661966A.title: "Abyssal Heart"
+	quest.1D21918DEB56B1A6.quest_desc: ["Obtain the Cursed Eye to open the Frosted Prison route."]
+	quest.1D21918DEB56B1A6.title: "Cursed Eye"
+	quest.1D7F6CDB5830460A.quest_desc: ["Receive a repeatable artifact or relic reward. The reward is claimed automatically."]
+	quest.1D7F6CDB5830460A.title: "Artifact Cache"
+	quest.1DCA014C0D986B5E.quest_desc: ["Defeat the Harbinger and secure its Cataclysm rewards."]
+	quest.1DCA014C0D986B5E.title: "The Harbinger"
+	quest.1E133F29216F6E4A.quest_desc: ["Defeat Scylla and claim the storm route reward."]
+	quest.1E133F29216F6E4A.title: "Scylla"
+	quest.1E1870FAD295DEDE.quest_desc: ["Place or prepare a Supply Camp as a starting route for your colony. Clear enough terrain first, then use the preview controls to position it cleanly."]
+	quest.1E1870FAD295DEDE.title: "Supply Camp"
+	quest.1E771F8D69CD355D.quest_desc: ["Receive a special cursed reward roll after opening the Cursed Ring shop route."]
+	quest.1E771F8D69CD355D.title: "Cursed Relic Cache"
+	quest.1F3AB832FE0B45A0.quest_desc: ["Receive a random utility reward. Arrows and torches are common; Ender Pearls and Eyes are rare."]
+	quest.1F3AB832FE0B45A0.title: "Utility Supply Crate"
+	quest.201CB898A399F1D5.quest_desc: ["Craft the Swineherder hut block to raise pigs for food. Bring animals to the hut so the worker can maintain production."]
+	quest.201CB898A399F1D5.title: "Swineherder Hut"
+	quest.206159A3C7A78447.quest_desc: ["Build the Mystical Site to unlock special colony services. It pushes the settlement beyond basic production into more advanced support roles."]
+	quest.206159A3C7A78447.quest_subtitle: "Build a Mystical Site"
+	quest.206159A3C7A78447.title: "Mystical Site"
+	quest.21302453E6311BC9.quest_desc: ["Collect every core Spellstone after establishing the table route."]
+	quest.21302453E6311BC9.title: "Spellstone Collection"
+	quest.219A93D1B55C768D.quest_desc: ["Obtain the Desert Eye to begin the cursed desert route."]
+	quest.219A93D1B55C768D.title: "Desert Eye"
+	quest.21AA7D04E58FDD78.quest_desc: ["Build a level 1 Resort after the Tavern path is open. This introduces tourism and comfort as a support system for the colony economy."]
+	quest.21AA7D04E58FDD78.title: "Resort"
+	quest.2270662C32BFDF81.quest_desc: ["Enchant an item at level 30. This proves the vanilla baseline is working before you replace ordinary shelves with Apothic shelves for stronger stats."]
+	quest.2270662C32BFDF81.quest_subtitle: "Step 03 - Vanilla Baseline"
+	quest.2270662C32BFDF81.title: "The Basics"
+	quest.23012F6C4C522CEB.quest_desc: ["Build the Lumberjack Hut to create a steady wood supply. Wood is required constantly for building upgrades, tools, decorations, and early automation."]
+	quest.23012F6C4C522CEB.title: "Lumberjack Hut"
+	quest.23C3704D131B2DF1.quest_desc: ["Enchant an item at 100% Quanta. This is the full chaos route and shows the strongest possible random swing before Stability is added."]
+	quest.23C3704D131B2DF1.quest_subtitle: "Stat Route - Full Quanta"
+	quest.23C3704D131B2DF1.title: "Rolling the Dice"
+	quest.23C3ADD73281CAB2.quest_desc: ["Start the Cataclysm path and unlock its boss routes."]
+	quest.23C3ADD73281CAB2.title: "Cataclysm Begins"
+	quest.26E4868B7C280A98.quest_desc: ["Use an Escape Scroll after securing recall-based travel."]
+	quest.26E4868B7C280A98.title: "Emergency Exit"
+	quest.272558ECD49E41B3.quest_desc: ["Build a level 1 Outpost. Use it to extend your colony influence and support remote trade activity beyond the main settlement."]
+	quest.272558ECD49E41B3.title: "Outpost"
+	quest.2768BCABBE854AE2.quest_desc: ["Obtain the Mech Eye to begin the factory route."]
+	quest.2768BCABBE854AE2.title: "Mech Eye"
+	quest.27EF4C1254D06288.quest_desc: ["Build a level 1 Marketplace. This is the first real Trade Post building and the parent step for coins, services, transport, recycling, and pets."]
+	quest.27EF4C1254D06288.title: "Marketplace"
+	quest.28F188346E50DD6A.quest_desc: ["Receive a random ore reward. Common ores are frequent; Diamond Ore and Ancient Debris are very rare."]
+	quest.28F188346E50DD6A.title: "Ore Supply Crate"
+	quest.2913D198FA2B860D.quest_desc: ["Complete a vacation at the Resort. Finish this to prove the tourism side of the colony is working end to end."]
+	quest.2913D198FA2B860D.title: "Put Your Feet Up"
+	quest.2A7FFD785EAB2DE0.quest_desc: ["Collect cobblestone, granite, andesite, and diorite. This starts the addon side path that leads into Mixed Stone and wishes."]
+	quest.2A7FFD785EAB2DE0.title: "Got Stone?"
+	quest.2B01B964638DFBD1.quest_desc: ["Craft the Crusher hut block to expand material processing. The Crusher helps break down resources into forms other workers can use."]
+	quest.2B01B964638DFBD1.quest_subtitle: "Build a Crusher's Hut"
+	quest.2B01B964638DFBD1.title: "Crusher Hut"
+	quest.2B42A1CB36B3751A.quest_desc: ["Create obsidian and prepare for stronger crafting and portals."]
+	quest.2B42A1CB36B3751A.title: "Obsidian Work"
+	quest.2B490712D752F2AA.quest_desc: ["Continue the Skeleton bounty with a larger target. Complete it to unlock the next tier."]
+	quest.2C039F5007E909A4.quest_desc: ["Defeat the Sandworm without taking a hit for a mastery reward."]
+	quest.2C039F5007E909A4.title: "Flawless Sandworm"
+	quest.2C0EC05D1BEA77B1.quest_desc: ["Find a Woodland Mansion and secure its survival rewards."]
+	quest.2C0EC05D1BEA77B1.title: "Woodland Mansion"
+	quest.2C9F7712321854BE.quest_desc: ["Begin the adventure path and prepare to seek dangerous structures."]
+	quest.2C9F7712321854BE.title: "Adventure Calls"
+	quest.2D3422284A9EFF23.quest_desc: ["Accept the Cursed Ring path before opening the deeper relic routes."]
+	quest.2D3422284A9EFF23.title: "Wear the Curse"
+	quest.2DDFBA95A9138CA4.quest_desc: ["Craft the Twisted Mirror after the Twisted Heart."]
+	quest.2DDFBA95A9138CA4.title: "Twisted Mirror"
+	quest.2F1B0D8E1D18AB3C.quest_desc: ["Craft the full iron tool set as your reliable early kit."]
+	quest.2F1B0D8E1D18AB3C.title: "Iron Toolkit"
+	quest.3002F31614B0F257.quest_desc: ["Enchant with at least 10 Eterna, Quanta, and Arcana. Eterna sets the level, Quanta changes the amount of randomness, and Arcana improves rare enchantments and extra rolls."]
+	quest.3002F31614B0F257.quest_subtitle: "Step 07 - Read the Table Stats"
+	quest.3002F31614B0F257.title: "Eterna, Quanta, Arcana"
+	quest.31A3BDCF12B7AF43.quest_desc: ["Enchant an item at level 80. Use Deepshelf and Sculkshelf progression to break past the Hell and Sea ceiling before entering End-tier enchanting."]
+	quest.31A3BDCF12B7AF43.quest_subtitle: "Step 10 - Level 80 Enchanting"
+	quest.31A3BDCF12B7AF43.title: "Enchantments from the Depths"
+	quest.32546F7C7B7AFC83.quest_desc: ["Build a level 1 Resort. This adds tourism and relaxation to the colony, creating a new support path beyond production buildings."]
+	quest.32546F7C7B7AFC83.title: "Resort"
+	quest.326677DEA12C0398.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
+	quest.32F975D288A18F4A.quest_desc: ["Train a pet through the Pet Shop. This shows how the addon turns pets from flavor into useful colony helpers."]
+	quest.32F975D288A18F4A.title: "Train a Pet"
+	quest.33058894ACD9CB06.quest_desc: ["Craft the Graveyard hut block to support death recovery systems. This gives the colony a proper way to handle losses and related duties."]
+	quest.33058894ACD9CB06.quest_subtitle: "Build a Graveyard"
+	quest.33058894ACD9CB06.title: "Graveyard Hut"
+	quest.338AAED917FC8BD1.quest_desc: ["Receive a random ore reward. Common ores are frequent; Diamond Ore and Ancient Debris are very rare."]
+	quest.338AAED917FC8BD1.title: "Ore Supply Crate"
+	quest.33BA6855BBED8FEA.quest_desc: ["Claim The Bless after proving the Sacred Crystal route."]
+	quest.33BA6855BBED8FEA.title: "The Bless"
+	quest.342A1EF584823D2C.quest_desc: ["Teach the colony how to craft torches. This helps Builders request and use basic lighting without relying on you to craft every piece manually."]
+	quest.342A1EF584823D2C.title: "Teach Torches"
+	quest.3460E28FAD1187CA.quest_desc: ["Craft the full diamond tool set to finish the core mining tier."]
+	quest.3460E28FAD1187CA.title: "Diamond Toolkit"
+	quest.34D7731987C3DE5A.quest_desc: ["Collect cobblestone, granite, andesite, and diorite. These materials start the mixed-stone route toward Trade Post wishing mechanics."]
+	quest.34D7731987C3DE5A.title: "Got Stone?"
+	quest.359B4C333CD4394A.quest_desc: ["Enchant with maximum Eterna, Quanta, and Arcana. This proves the table can reach full power, full chaos, and full rare-enchantment quality at the same time."]
+	quest.359B4C333CD4394A.quest_subtitle: "Endgame Route - Max Stats"
+	quest.359B4C333CD4394A.title: "Maximum Strength"
+	quest.360E9E02A494217C.quest_desc: ["Build a Barracks Tower to extend organized military coverage. It strengthens your defensive network beyond individual guard posts."]
+	quest.360E9E02A494217C.title: "Barracks Tower"
+	quest.367899B66A4BC30F.quest_desc: ["Finish the final Pillager bounty for the largest reward in this chain."]
+	quest.3694D22867FF07EF.quest_desc: ["Build a level 1 Station. This begins the travel and logistics branch for connecting the colony to wider trade routes."]
+	quest.3694D22867FF07EF.title: "Station"
+	quest.36CFAF2E18974908.quest_desc: ["Receive Silver Coins for regular shop use."]
+	quest.36CFAF2E18974908.title: "Copper to Silver Exchange"
+	quest.37BE190EE466D697.quest_desc: ["Upgrade the Town Hall to level 5. This is a major administrative milestone and proves the colony has reached a mature build stage."]
+	quest.37BE190EE466D697.title: "Town Hall Level 5"
+	quest.37E43341FA234E84.quest_desc: ["Build the Florist to supply flowers, dyes, and decorative resources. This adds a softer production branch that still supports many recipes."]
+	quest.37E43341FA234E84.quest_subtitle: "Build a Flower Shop"
+	quest.37E43341FA234E84.title: "Florist"
+	quest.3831CD0CAEEE8E4F.quest_desc: ["Defeat the Underworld Knight and unlock its flawless challenge."]
+	quest.3831CD0CAEEE8E4F.title: "Underworld Knight"
+	quest.38E7B79D2C6D8483.quest_desc: ["Enchant an item at level 60. Eterna is the main power stat, so combine upgraded Hell and Sea shelves until the table reaches the next major tier."]
+	quest.38E7B79D2C6D8483.quest_subtitle: "Step 06 - Level 60 Enchanting"
+	quest.38E7B79D2C6D8483.title: "Mastering Hell and Sea"
+	quest.39A0C8C98F8C7D0D.quest_desc: ["Receive focused Enigmatic materials from the Cursed Ring shop route."]
+	quest.39A0C8C98F8C7D0D.title: "Cursed Material Cache"
+	quest.39CBE1417FEE719A.quest_desc: ["Claim The Twist before pursuing Abyssal relics."]
+	quest.39CBE1417FEE719A.title: "The Twist"
+	quest.3AE1C3290500638F.quest_desc: ["Grow the colony to ten citizens. This confirms the early housing, food, and job systems are working together."]
+	quest.3AE1C3290500638F.title: "Population 10"
+	quest.3B40A769EDB26EA2.quest_desc: ["Prepare a Postbox and Stash for colony item routing. These tools help transfer resources and support logistics before the settlement is fully automated."]
+	quest.3B40A769EDB26EA2.title: "Mail and Stash"
+	quest.3B6C0A0C144F0CEE.quest_desc: ["Prepare the Wishing Well route with Mixed Stone. This follows Got Stone and sets up the wish mechanic."]
+	quest.3B6C0A0C144F0CEE.title: "Make a Wishing Well"
+	quest.3B91163DE3DA885C.quest_desc: ["Craft the Nether Worker hut block for dangerous resource gathering. This prepares the colony for materials that normal workers cannot safely handle."]
+	quest.3B91163DE3DA885C.quest_subtitle: "Build a Nether Mine"
+	quest.3B91163DE3DA885C.title: "Nether Worker Hut"
+	quest.3CB8AFABD435DAFD.quest_desc: ["Unlock the cursed shop route after reaching the Cursed Ring milestone and receive startup currency."]
+	quest.3CB8AFABD435DAFD.title: "Cursed Investor"
+	quest.3F2B5FC5EB6467B2.quest_desc: ["Enchant an item at 50% Quanta. Mid Quanta demonstrates how randomness can raise or lower the effective result behind the visible table level."]
+	quest.3F2B5FC5EB6467B2.quest_subtitle: "Stat Route - Controlled Chaos"
+	quest.3F2B5FC5EB6467B2.title: "Introduction to Chaos"
+	quest.3F36AFBB7CFBD4A3.quest_desc: ["Enchant with max stats and Quantic Stability. Stability turns Quanta into a positive-only modifier, making the strongest chaotic setup safer to use."]
+	quest.3F36AFBB7CFBD4A3.quest_subtitle: "Final Route - Quantic Stability"
+	quest.3F36AFBB7CFBD4A3.title: "Only the Best"
+	quest.409CAA9FC686CC59.quest_desc: ["Defeat any hostile mob to open the extra boss board."]
+	quest.409CAA9FC686CC59.title: "First Blood"
+	quest.40A420EAEEBDB544.quest_desc: ["Defeat the Sandworm and unlock its flawless challenge."]
+	quest.40A420EAEEBDB544.title: "Sandworm"
+	quest.41089C0F0B9E9621.quest_desc: ["Obtain the Abyss Eye to begin the deep ocean route."]
+	quest.41089C0F0B9E9621.title: "Abyss Eye"
+	quest.4142367445F42CF7.quest_desc: ["Craft a Seashelf with Prismarine materials. This shelf starts the Sea branch, adding Eterna and Arcana so rare and multi-enchantment results become more common."]
+	quest.4142367445F42CF7.quest_subtitle: "Step 04B - Sea Branch"
+	quest.4142367445F42CF7.title: "The Purity of the Seas"
+	quest.417325440A91B09F.quest_desc: ["Build a level 1 Outpost from the Station branch. Use it to extend your reach beyond the main settlement and support remote trade activity."]
+	quest.417325440A91B09F.title: "Outpost"
+	quest.41B1C88067F9ADB8.quest_desc: ["Locate the Frosted Prison before facing Maledictus."]
+	quest.41B1C88067F9ADB8.title: "Frosted Prison"
+	quest.41D4412079EEC5EC.quest_desc: ["Craft the full Etherium armor set after forging Etherium."]
+	quest.41D4412079EEC5EC.title: "Etherium Armor"
+	quest.41E0C4A2DFB4A709.quest_desc: ["Reach the Deep Mine milestone for advanced mining progress. This pushes the colony resource chain into deeper and more valuable materials."]
+	quest.41E0C4A2DFB4A709.quest_subtitle: "Your MIner Should Rich the bottom of the world"
+	quest.41E0C4A2DFB4A709.title: "Deep Mine"
+	quest.430475E11D259B74.quest_desc: ["Build the Stone Smeltery to refine stone materials. This supports higher-level construction and reduces the need for manual smelting."]
+	quest.430475E11D259B74.quest_subtitle: "Build a Stone Smelter"
+	quest.430475E11D259B74.title: "Stone Smeltery"
+	quest.431FE96D8045138D.quest_desc: ["Hunt Skeletons to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.4454DC053175B397.quest_desc: ["Gather Astral Dust after Ichor to unlock Etherium progression."]
+	quest.4454DC053175B397.title: "Astral Dust"
+	quest.44B1D7CD5CCE18FD.quest_desc: ["Hunt Piglin Brutes to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.457DF4079907B9F1.quest_desc: ["Obtain your first Trade Coin. Use the Marketplace and trade loop to start turning surplus colony resources into currency."]
+	quest.457DF4079907B9F1.title: "Big Spender"
+	quest.46A64FE462A309A2.quest_desc: ["Hunt Zombies to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.46C19773B8CF7A2C.quest_desc: ["Complete the Sculptor challenge to earn a key boss-route reward."]
+	quest.46C19773B8CF7A2C.title: "Sculptor Challenge"
+	quest.472C6FAECDD0CBA0.quest_desc: ["Obtain the Monstrous Eye to open the Soul Blacksmith route."]
+	quest.472C6FAECDD0CBA0.title: "Monstrous Eye"
+	quest.47A5CE8F2E46F18F.quest_desc: ["Defeat the Sculptor and secure the movement reward."]
+	quest.47A5CE8F2E46F18F.title: "The Sculptor"
+	quest.47B4C6C23BA97AD0.quest_desc: ["Acquire a Pure Heart after accepting the Cursed Ring path."]
+	quest.47B4C6C23BA97AD0.title: "Pure Heart"
+	quest.47FA2D57ADD8DFA7.quest_desc: ["Enchant an item at 50% Arcana. Arcana improves rare enchantment chances and can increase how many enchantments are added to the item."]
+	quest.47FA2D57ADD8DFA7.quest_subtitle: "Stat Route - Rare Rolls"
+	quest.47FA2D57ADD8DFA7.title: "Magical Energy"
+	quest.48AC8545D66B71B7.quest_desc: ["Upgrade the Builder Hut to expand construction speed and capability. Stronger Builders can handle larger projects and higher-level structures more efficiently."]
+	quest.48AC8545D66B71B7.quest_subtitle: "Level Up a Builders Hut"
+	quest.48AC8545D66B71B7.title: "Upgrade the Builder"
+	quest.48E90987280BF5DF.quest_desc: ["Make one wish through the Trade Post wishing system. Pick a useful wish and complete it to understand this optional support mechanic."]
+	quest.48E90987280BF5DF.title: "Make a Wish"
+	quest.490628CE108A833A.quest_desc: ["Build the Deliveryman hut to automate logistics. Delivery workers move resources between the Warehouse, Builder, and production buildings so the colony runs with less micromanagement."]
+	quest.490628CE108A833A.quest_subtitle: "Build a Courier Hut"
+	quest.490628CE108A833A.title: "Delivery Person"
+	quest.49359D8913FB0BD2.quest_desc: ["Acquire a Diamond Trade Coin. This is the top currency milestone for the Trade Post economy branch."]
+	quest.49359D8913FB0BD2.title: "Bling Bling"
+	quest.493B9FC17C3CF3CA.quest_desc: ["Craft the Rabbit Hutch to complete the animal worker lineup. Rabbits add another specialized source of food and materials."]
+	quest.493B9FC17C3CF3CA.title: "Rabbit Hutch"
+	quest.49793060345FB28C.quest_desc: ["Craft the Cowboy hut block to begin cattle work. Cows provide food and leather, making this a useful support building for both survival and crafting."]
+	quest.49793060345FB28C.title: "Cowboy Hut"
+	quest.49B3EA9E16620709.quest_desc: ["Build a level 1 Recycling Center once storage is established. Use it to convert clutter and unwanted stock into useful colony output."]
+	quest.49B3EA9E16620709.title: "Recycling Center"
+	quest.49CD80F28CE04D39.quest_desc: ["Obtain your first Trade Coin from the Marketplace loop. This teaches how surplus colony resources turn into spendable currency."]
+	quest.49CD80F28CE04D39.title: "First Trade Coin"
+	quest.4AFD222259C9360A.quest_desc: ["Use the Unholy Grail after gathering Evil Essence."]
+	quest.4AFD222259C9360A.title: "Unholy Grail"
+	quest.4CA7ACB8384A6CB8.quest_desc: ["Defeat the Leviathan and finish the abyss route."]
+	quest.4CA7ACB8384A6CB8.title: "The Leviathan"
+	quest.4CD3E2872D53B1A9.quest_desc: ["Craft a Tome of Scrapping. Scrapping tomes pull enchantments off gear into books, but the basic tome destroys the item and only extracts part of its enchantments."]
+	quest.4CD3E2872D53B1A9.quest_subtitle: "Utility Route - Lossy Extraction"
+	quest.4CD3E2872D53B1A9.title: "Tome of Scrapping"
+	quest.4CDC2E55A9584A0C.quest_desc: ["Defeat Umvuthi and continue the Mowzie boss route."]
+	quest.4CDC2E55A9584A0C.title: "Umvuthi"
+	quest.4D54DD7ACE7E734F.quest_desc: ["Defeat the Yeti without taking a hit for a mastery reward."]
+	quest.4D54DD7ACE7E734F.title: "Flawless Yeti"
+	quest.4D5854E87F8B8F3F.quest_desc: ["Acquire Infernal Cinder to begin the material ascent."]
+	quest.4D5854E87F8B8F3F.title: "Infernal Cinder"
+	quest.4D61009737D94BDA.quest_desc: ["Grow the colony to twenty-five citizens. At this point, logistics and food production need to be reliable, not improvised."]
+	quest.4D61009737D94BDA.title: "Population 25"
+	quest.4D9DC4973FD340E5.quest_desc: ["Build the Combat Academy to train stronger melee guards. Better-trained defenders make the colony much safer during raids and night attacks."]
+	quest.4D9DC4973FD340E5.quest_subtitle: "Build a Combat Academy"
+	quest.4D9DC4973FD340E5.title: "Combat Academy"
+	quest.4DC0476240C74913.quest_desc: ["Continue the Skeleton bounty with a larger target. Complete it to unlock the next tier."]
+	quest.4DD7E2BD8508A117.quest_desc: ["Complete the main herder chain for animal-based production. These buildings supply meat, wool, leather, eggs, and other materials needed by a mature colony."]
+	quest.4DD7E2BD8508A117.quest_subtitle: "Build one of every herder hut."
+	quest.4DD7E2BD8508A117.title: "All Herders"
+	quest.4FAD724CA501BB15.quest_desc: ["Create a Bookshelf and learn table placement. Valid stat blocks sit in the two rings around the table, on the same level or one block higher, with air between the shelf and table."]
+	quest.4FAD724CA501BB15.quest_subtitle: "Step 02 - Shelf Placement"
+	quest.4FAD724CA501BB15.title: "Local Librarian"
+	quest.50AECE055AD40AAF.quest_desc: ["Connect a colony through the Station system. This turns Trade Post from a local market into a true transport network."]
+	quest.50AECE055AD40AAF.title: "Express Line"
+	quest.51220C5BC6F1F179.quest_desc: ["Receive a random wood reward. Common overworld woods are likely; Nether woods are rarer."]
+	quest.51220C5BC6F1F179.title: "Wood Supply Crate"
+	quest.51DCE7CCB7BE3A57.quest_desc: ["Craft the Chaos Elytra after the Abyssal Heart."]
+	quest.51DCE7CCB7BE3A57.title: "Chaos Elytra"
+	quest.52453550206EC770.quest_desc: ["Craft the Dyer hut block to add dye and color production. This supports decoration, recipes, and later colony crafting needs."]
+	quest.52453550206EC770.title: "Dyer Hut"
+	quest.52C9E92A9CC991F8.quest_desc: ["Receive a premium relic roll from the top regular cache in the shop."]
+	quest.52C9E92A9CC991F8.title: "Premium Relic Cache"
+	quest.537A8F99CC3F525D.quest_desc: ["Grow the colony military to eight guards. This is the first real defensive threshold for a settlement that expects trouble."]
+	quest.537A8F99CC3F525D.title: "Eight Guards"
+	quest.53AB7EFD8D1A6F5E.quest_desc: ["Discover any Enigmatic scroll to open the scrollcraft branch."]
+	quest.53AB7EFD8D1A6F5E.title: "First Scroll"
+	quest.53F8923B85A8A9CC.quest_desc: ["Grow the colony military to eighty guards. This represents a large, fortified settlement ready for serious threats."]
+	quest.53F8923B85A8A9CC.title: "Eighty Guards"
+	quest.552A5BBC9AC53420.quest_desc: ["Defeat Maledictus and close the frozen branch."]
+	quest.552A5BBC9AC53420.title: "Maledictus"
+	quest.5626294477EA4DCB.quest_desc: ["Find a Better Stronghold and prepare for the End route."]
+	quest.5626294477EA4DCB.title: "Stronghold Trail"
+	quest.562C9082EA53DE02.quest_desc: ["Finish the final Evoker bounty for the largest reward in this chain."]
+	quest.56F019E26B073560.quest_desc: ["Unlock the Trade Post addon path after your colony has a Town Hall. This branch follows the addon advancements from economy into travel, services, pets, and wishes."]
+	quest.56F019E26B073560.title: "Trade Post for MineColonies"
+	quest.5707E1C306DE7F69.quest_desc: ["Survive a Trial Chamber and bring back its key."]
+	quest.5707E1C306DE7F69.title: "Trial Chamber"
+	quest.57C889EC980D33D9.quest_desc: ["Build the Farmer Hut and start crop production for the colony. Farming is the backbone of long-term food supply and supports later cooking chains."]
+	quest.57C889EC980D33D9.title: "Farmer Hut"
+	quest.583A7AA84FEC027F.quest_desc: ["Build the Builder Hut so your colony can construct and upgrade structures. The Builder is the worker that turns your plans into actual buildings."]
+	quest.583A7AA84FEC027F.quest_subtitle: "Say that 10 times real fast! "
+	quest.583A7AA84FEC027F.title: "Builder Hut"
+	quest.58B729AF39986B86.quest_desc: ["Create an Echoing or Soul-Touched Sculkshelf with a Warden Tendril. Sculk shelves add late-game stats and Enchanting Clues, which reveal more of a roll before you commit."]
+	quest.58B729AF39986B86.quest_subtitle: "Step 09 - Warden-Tier Shelves"
+	quest.58B729AF39986B86.title: "Embracing the Sculk"
+	quest.58B7D24C1A208A0A.quest_desc: ["Craft or obtain Mixed Stone and prepare the Wishing Well path. This sets up the special wish mechanics from Trade Post."]
+	quest.58B7D24C1A208A0A.title: "Make a Wishing Well"
+	quest.59EA669ABE8ABD8D.quest_desc: ["Receive Gold Coins for premium shop use."]
+	quest.59EA669ABE8ABD8D.title: "Silver to Gold Exchange"
+	quest.5A11A2FC20E5CE2A.quest_desc: ["Build the Barracks to establish organized military defense. This is the main step from scattered guard towers to a coordinated colony army."]
+	quest.5A11A2FC20E5CE2A.quest_subtitle: "Build a Barracks"
+	quest.5A11A2FC20E5CE2A.title: "Barracks"
+	quest.5A6266BFD238B9B9.quest_desc: ["Mine diamonds to open the next equipment and enchanting path."]
+	quest.5A6266BFD238B9B9.title: "Diamonds Below"
+	quest.5AFFF6D2AB06C8E5.quest_desc: ["Enter the world and claim the first supplies for the road ahead."]
+	quest.5AFFF6D2AB06C8E5.title: "Awakening"
+	quest.5B22BA665F0E928F.quest_desc: ["Trigger a rare find from the Station branch. Keep the travel network active until the addon rewards exploration and trade luck."]
+	quest.5B22BA665F0E928F.title: "Rare Find"
+	quest.5B26284490667F2E.quest_desc: ["Find the Burning Arena before challenging Ignis."]
+	quest.5B26284490667F2E.title: "Burning Arena"
+	quest.5B737BAFEFFBB698.quest_desc: ["Complete a recycling action through the Trade Post system. This proves the building is doing more than storing junk."]
+	quest.5B737BAFEFFBB698.title: "Reduce, Reuse, Recycle"
+	quest.5D609E5854B16471.quest_desc: ["Enchant an item at 100% Arcana. High Arcana is the cleanest way to make rare and multi-enchantment rolls more consistent at endgame."]
+	quest.5D609E5854B16471.quest_subtitle: "Stat Route - Full Arcana"
+	quest.5D609E5854B16471.title: "Arcane Power"
+	quest.5D670C12B672F45F.quest_desc: ["Collect cobblestone, granite, andesite, and diorite after the Builder route is active. These materials introduce the mixed-stone side path."]
+	quest.5D670C12B672F45F.title: "Got Stone?"
+	quest.5D94C77F410EB746.quest_desc: ["Upgrade your earnings into a Gold Trade Coin. This confirms your Marketplace can support larger trade payouts and stronger buying power."]
+	quest.5D94C77F410EB746.title: "High Roller"
+	quest.5E56057555772780.quest_desc: ["Unlock the Trade Post addon branch after your Town Hall is established. This opens colony trade, tourism, pets, recycling, travel, and outpost goals."]
+	quest.5E56057555772780.title: "Trade Post Charter"
+	quest.5F5DB67F6A470C73.quest_desc: ["Grow the colony military to thirty guards. At this size, defense becomes a major system instead of a small support role."]
+	quest.5F5DB67F6A470C73.title: "Thirty Guards"
+	quest.5F719198E56C9417.quest_desc: ["Upgrade an Endshelf into a Draconic Endshelf. Draconic shelves provide the highest Eterna cap in this chain and form the core of level 100 setups."]
+	quest.5F719198E56C9417.quest_subtitle: "Step 12 - Draconic Shelf Core"
+	quest.5F719198E56C9417.title: "The Final Bookshelf"
+	quest.5F73123B6664C1A9.quest_desc: ["Craft an Etherium tool or weapon after forging Etherium."]
+	quest.5F73123B6664C1A9.title: "Etherium Arsenal"
+	quest.5F895C96E1163335.quest_desc: ["Obtain a Recall Potion before relying on emergency escape tools."]
+	quest.5F895C96E1163335.title: "Recall Potion"
+	quest.5FC01763770A062E.quest_desc: ["Build the Town Hall to establish the administrative center of the colony. Upgrading it raises the settlement ceiling and anchors future expansion."]
+	quest.5FC01763770A062E.title: "Town Hall Built"
+	quest.60CB4B59DF9639E5.quest_desc: ["Locate an Ancient City before pushing deeper into high-risk exploration."]
+	quest.60CB4B59DF9639E5.title: "Ancient City"
+	quest.60DCDD30EE93F6D2.quest_desc: ["Receive a random food reward. Basic meals are common; golden food is rare."]
+	quest.60DCDD30EE93F6D2.title: "Food Supply Crate"
+	quest.62DA05A109DCFA92.quest_desc: ["Continue the Pillager bounty with a larger target. Complete it to unlock the next tier."]
+	quest.635C194330BA9376.quest_desc: ["Continue the Enderman bounty with a larger target. Complete it to unlock the next tier."]
+	quest.63B158B616DF7AFC.quest_desc: ["Acquire a Twisted Heart after accepting the Cursed Ring path."]
+	quest.63B158B616DF7AFC.title: "Twisted Heart"
+	quest.647F95EED59927B7.quest_desc: ["Build the Cook Hut to turn raw ingredients into better meals. A Cook improves food quality and helps keep citizens productive during longer projects."]
+	quest.647F95EED59927B7.title: "Cook Hut"
+	quest.6576C98A4DB6221C.quest_desc: ["Obtain the Flame Eye to open the Burning Arena route."]
+	quest.6576C98A4DB6221C.title: "Flame Eye"
+	quest.65D23E7683812E26.quest_desc: ["Have a citizen eat rotten flesh in a pinch. It is not ideal food, but it proves the colony can survive rough moments while better food production is being built."]
+	quest.65D23E7683812E26.title: "Emergency Rations"
+	quest.66205FF8691A9FD7.quest_desc: ["Find the Ruined Citadel before challenging the Ender Guardian."]
+	quest.66205FF8691A9FD7.title: "Ruined Citadel"
+	quest.66BBED961CBFADF3.quest_desc: ["Find the Cursed Pyramid before challenging the Ancient Remnant."]
+	quest.66BBED961CBFADF3.title: "Cursed Pyramid"
+	quest.67688DF5FCCD3447.quest_desc: ["Defeat the Kraken without taking a hit for a mastery reward."]
+	quest.67688DF5FCCD3447.title: "Flawless Kraken"
+	quest.67E8B8DCFC93F832.quest_desc: ["Build the Warehouse to centralize colony storage. This becomes the main inventory hub that delivery workers use to move items between buildings."]
+	quest.67E8B8DCFC93F832.title: "Warehouse"
+	quest.68500900087F92BC.quest_desc: ["Teach the colony how to craft doors. Builders request them often, so this recipe reduces a common manual crafting bottleneck."]
+	quest.68500900087F92BC.title: "Teach Doors"
+	quest.68C6BAA469343646.quest_desc: ["Enchant with maximum Eterna and Arcana while keeping Quanta at 0%. This creates a high-power setup for clean, predictable enchanting."]
+	quest.68C6BAA469343646.quest_subtitle: "Endgame Route - Stable Power"
+	quest.68C6BAA469343646.title: "Stable Power"
+	quest.68C704D802430B1D.quest_desc: ["Defeat the Underworld Knight without taking a hit for a mastery reward."]
+	quest.68C704D802430B1D.title: "Flawless Underworld Knight"
+	quest.68FC81E133443E76.quest_desc: ["Build the Library to support knowledge and worker development. It strengthens the colony infrastructure around learning, records, and advanced professions."]
+	quest.68FC81E133443E76.quest_subtitle: "Build a Library"
+	quest.68FC81E133443E76.title: "Library"
+	quest.696BDC29ACCBBE29.quest_desc: ["Complete the Undertaker Totem milestone to improve recovery after deaths. This supports colony stability during dangerous phases."]
+	quest.696BDC29ACCBBE29.title: "Undertaker Totem"
+	quest.69967785A2080B94.quest_desc: ["Use the wishing system once. Pick a useful wish and complete it to unlock this side of the addon progression."]
+	quest.69967785A2080B94.title: "Make a Wish"
+	quest.69EAF1072D492F1A.quest_desc: ["Obtain an Ancient Tome for knowledge-based rewards and later utility. Keep it as a useful progression item while the colony grows."]
+	quest.69EAF1072D492F1A.quest_subtitle: "Keep one in your hotbar"
+	quest.69EAF1072D492F1A.title: "Ancient Tome"
+	quest.6A60B76053393288.quest_desc: ["Build the Smeltery to process metals for tools and equipment. It becomes a core part of advanced production chains."]
+	quest.6A60B76053393288.quest_subtitle: "Builder a Smelter"
+	quest.6A60B76053393288.title: "Smeltery"
+	quest.6B0CE8AD86991E28.quest_desc: ["Build the Composter to support farms and handle organic waste. This keeps food production moving and helps close the farming loop."]
+	quest.6B0CE8AD86991E28.quest_subtitle: "Build a Composter Hut"
+	quest.6B0CE8AD86991E28.title: "Composter"
+	quest.6B26495A9E7D77FC.quest_desc: ["Grow the colony to five citizens. This is the first sign that recruitment, housing, and food are all starting to function."]
+	quest.6B26495A9E7D77FC.title: "Population 5"
+	quest.6BB0C51EE8CA5966.quest_desc: ["Build the Miner Hut to start gathering stone and ores through colony labor. This gives your settlement a renewable source of basic construction materials."]
+	quest.6BB0C51EE8CA5966.quest_subtitle: "Build a Mine"
+	quest.6BB0C51EE8CA5966.title: "Miner Hut"
+	quest.6C5AD5C4C843A11D.quest_desc: ["Trigger the Perpetual Stew milestone. Keep Trade Post food and service systems moving until the stew route completes."]
+	quest.6C5AD5C4C843A11D.title: "Runs on Stew"
+	quest.6D1C9E652CE9007A.quest_desc: ["Assemble a full iron armor set before taking harder fights."]
+	quest.6D1C9E652CE9007A.title: "Iron Armor Set"
+	quest.6D56AD1BEC644A10.quest_desc: ["Build the Archery to train ranged defenders. Archers give your military coverage against flying, distant, and dangerous enemies."]
+	quest.6D56AD1BEC644A10.quest_subtitle: "Build an Archery"
+	quest.6D56AD1BEC644A10.title: "Archery"
+	quest.6D80D38812B5B2D0.quest_desc: ["Discover a Spellstone to open the relic crafting branch."]
+	quest.6D80D38812B5B2D0.title: "First Spellstone"
+	quest.6E023211E6D1194F.quest_desc: ["Prepare the Wishing Well route with Mixed Stone. This step introduces the special wish mechanics without overwhelming the main colony path."]
+	quest.6E023211E6D1194F.title: "Make a Wishing Well"
+	quest.6E75402CC8F32092.quest_desc: ["Receive a random utility reward. Arrows and torches are common; Ender Pearls and Eyes are rare."]
+	quest.6E75402CC8F32092.title: "Utility Supply Crate"
+	quest.6F60F67F81C1CC7C.quest_desc: ["Create an Endshelf with Infused Dragon's Breath. The End branch begins after Sculk progression and bridges the table into the final Eterna tier."]
+	quest.6F60F67F81C1CC7C.quest_subtitle: "Step 11 - End Branch"
+	quest.6F60F67F81C1CC7C.title: "Dragon-Slaying Enchanter"
+	quest.6FC427158E014F38.quest_desc: ["Complete the major Enigmatic branches to finish this chapter."]
+	quest.6FC427158E014F38.title: "Beyond the Curse"
+	quest.71B0A0C51E115901.quest_desc: ["Discover Iron's Spells by collecting early arcane materials or loot. This opens the spellcasting path and prepares you for your first spellbook."]
+	quest.71B0A0C51E115901.title: "Arcane Awakening"
+	quest.71B0A0C51E115902.quest_desc: ["Craft or obtain a Copper Spell Book. Use it as the first container for basic scrolls before moving into stronger books."]
+	quest.71B0A0C51E115902.title: "First Spellbook"
+	quest.71B0A0C51E115903.quest_desc: ["Upgrade to an Iron Spell Book. Higher-tier spellbooks provide better room for spells and make the rest of the system worth building around."]
+	quest.71B0A0C51E115903.title: "Iron Spellbook"
+	quest.71B0A0C51E115904.quest_desc: ["Equip a spellbook and confirm your casting setup works. After this, focus on adding useful scrolls instead of carrying loose spells."]
+	quest.71B0A0C51E115904.title: "Ready to Cast"
+	quest.71B0A0C51E115905.quest_desc: ["Craft an Inscription Table. This station lets you place scrolls into spellbooks, turning found spells into a reusable casting loadout."]
+	quest.71B0A0C51E115905.title: "Inscription Table"
+	quest.71B0A0C51E115906.quest_desc: ["Find or craft a scroll for your spellbook. Scrolls hold individual spells and are the main source of new casting options."]
+	quest.71B0A0C51E115906.title: "First Scroll"
+	quest.71B0A0C51E115907.quest_desc: ["Craft a Scroll Forge. Use it to create specific scrolls from paper, ink, and the correct school focus instead of relying only on loot."]
+	quest.71B0A0C51E115907.title: "Scroll Forge"
+	quest.71B0A0C51E115908.quest_desc: ["Obtain magical ink for scrollcraft. Ink quality controls what spell tiers you can forge, so better inks become important as your book improves."]
+	quest.71B0A0C51E115908.title: "Ink Craft"
+	quest.71B0A0C51E115909.quest_desc: ["Craft a Blank Rune. Runes are the base for school runes and upgrade crafting, so keep a supply before specializing your gear."]
+	quest.71B0A0C51E115909.title: "Blank Rune"
+	quest.71B0A0C51E11590A.quest_desc: ["Craft an Arcane Rune. This confirms you can move from basic materials into the upgrade components used by advanced spell gear."]
+	quest.71B0A0C51E11590A.title: "Arcane Rune"
+	quest.71B0A0C51E11590B.quest_desc: ["Craft an Arcane Anvil. This station is used for spellbook upgrades, imbues, and higher-tier magical equipment progression."]
+	quest.71B0A0C51E11590B.title: "Arcane Anvil"
+	quest.71B0A0C51E11590C.quest_desc: ["Craft an Upgrade Orb. Upgrade orbs improve casting stats such as mana, cooldown, protection, or school power through Arcane Anvil work."]
+	quest.71B0A0C51E11590C.title: "Upgrade Orb"
+	quest.71B0A0C51E11590D.quest_desc: ["Create a Spell Slot Upgrade. Add more room to supported spellbooks so your loadout can carry utility, damage, and defensive spells together."]
+	quest.71B0A0C51E11590D.title: "More Spell Slots"
+	quest.71B0A0C51E11590E.quest_desc: ["Upgrade to a Gold Spell Book. This is the next general book tier before diamond and gives your magic build more space to grow."]
+	quest.71B0A0C51E11590E.title: "Gold Spellbook"
+	quest.71B0A0C51E11590F.quest_desc: ["Upgrade to a Diamond Spell Book. Pair it with stronger scrolls, better ink, and an upgraded casting setup before late-game fights."]
+	quest.71B0A0C51E11590F.title: "Diamond Spellbook"
+	quest.71B0A0C51E115910.quest_desc: ["Upgrade to a Netherite Spell Book. This is the durable endgame book tier for carrying your best spells into dangerous structures and bosses."]
+	quest.71B0A0C51E115910.title: "Netherite Spellbook"
+	quest.71B0A0C51E115911.quest_desc: ["Craft an Alchemist Cauldron. Use it for brewing inks, elixirs, and magical fluids that support scrollcraft and combat preparation."]
+	quest.71B0A0C51E115911.title: "Alchemist Cauldron"
+	quest.71B0A0C51E115912.quest_desc: ["Create Legendary Ink. This unlocks the highest scrollcraft tier and marks the point where your spellbook can support endgame spells."]
+	quest.71B0A0C51E115912.title: "Legendary Ink"
+	quest.71B0A0C51E115913.quest_desc: ["Acquire Mithril Ingots. Mithril supports advanced Iron's Spells crafting and prepares you for structure tools and stronger magical gear."]
+	quest.71B0A0C51E115913.title: "Mithril Work"
+	quest.71B0A0C51E115914.quest_desc: ["Craft a Wayward Compass. Use it to track Iron's Spells structures instead of wandering blindly for major progression locations."]
+	quest.71B0A0C51E115914.title: "Wayward Compass"
+	quest.71B0A0C51E115915.quest_desc: ["Enter the Catacombs. Bring a prepared spellbook, upgraded gear, and keys, because this structure pushes the mod into boss progression."]
+	quest.71B0A0C51E115915.title: "Enter the Catacombs"
+	quest.71B0A0C51E115916.quest_desc: ["Claim the Dead King's spellbook path. This completes the Catacombs branch and gives the chapter its major boss-tier milestone."]
+	quest.71B0A0C51E115916.title: "Dead King's Grimoire"
+	quest.71FCF06A98CC66D7.quest_desc: ["Obtain a Clipboard to inspect citizens, work orders, and colony problems. It is one of the best tools for quickly understanding what your settlement needs next."]
+	quest.71FCF06A98CC66D7.title: "Clipboard"
+	quest.72C749AD9F1C634E.quest_desc: ["Build citizen housing so the colony can grow beyond temporary beds. More homes mean more workers, more jobs, and smoother expansion."]
+	quest.72C749AD9F1C634E.quest_subtitle: "Build a Residence"
+	quest.72C749AD9F1C634E.title: "Citizen Housing"
+	quest.743D7D9204915A13.quest_desc: ["Handle a citizen burial and keep the colony stable after loss. This marks the point where recovery systems become part of colony management."]
+	quest.743D7D9204915A13.title: "Burial Duty"
+	quest.74AF1CE2FEEF22BC.quest_desc: ["Defeat the Ancient Remnant and finish the desert route."]
+	quest.74AF1CE2FEEF22BC.title: "Ancient Remnant"
+	quest.74C114D0C0D4D374.quest_desc: ["Craft the Hospital hut block to prepare medical support. Health services become important as the population grows and danger increases."]
+	quest.74C114D0C0D4D374.quest_subtitle: "Build a Hospital"
+	quest.74C114D0C0D4D374.title: "Hospital Hut"
+	quest.74D320BC2CE035A6.quest_desc: ["Defeat the Netherite Monstrosity and finish the forge route."]
+	quest.74D320BC2CE035A6.title: "Netherite Monstrosity"
+	quest.7500C6B1E70EDE99.quest_desc: ["Enchant an item at level 100. This is the main power cap of Apothic Enchanting and requires a tuned setup built around End-tier shelves."]
+	quest.7500C6B1E70EDE99.quest_subtitle: "Step 13 - Level 100 Enchanting"
+	quest.7500C6B1E70EDE99.title: "Draconic Enchanting"
+	quest.7553083A4719E09B.quest_desc: ["Finish the final Zombie bounty for the largest reward in this chain."]
+	quest.75599A9909C7A8C8.quest_desc: ["Make sure a citizen successfully eats food. A fed colony works more reliably, and this confirms your early food supply is reaching the people who need it."]
+	quest.75599A9909C7A8C8.title: "First Meal"
+	quest.75CC6A3ABF5E66E2.quest_desc: ["Grow the colony to seventy-five citizens. This is a late colony milestone that demands strong logistics, food, housing, and defense."]
+	quest.75CC6A3ABF5E66E2.title: "Population 75"
+	quest.761C7DF67620DC29.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
+	quest.767FA524371C9480.quest_desc: ["Hunt Endermen to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.7870800C28A7E199.quest_desc: ["Craft the Chicken Herder hut block to support poultry production. Chickens provide eggs, feathers, and food for the colony chain."]
+	quest.7870800C28A7E199.title: "Chicken Herder Hut"
+	quest.789AA17C4D02BE94.quest_desc: ["Defeat the Yeti and unlock its flawless challenge."]
+	quest.789AA17C4D02BE94.title: "Yeti"
+	quest.78C886330EF984E8.quest_desc: ["Obtain the Void Eye to open the Ruined Citadel route."]
+	quest.78C886330EF984E8.title: "Void Eye"
+	quest.7923F12E91B8E241.quest_desc: ["Obtain your first Trade Coin. This confirms the Marketplace economy is working and starts the currency progression."]
+	quest.7923F12E91B8E241.title: "Big Spender"
+	quest.792FFB9899C14E0A.quest_desc: ["Build a level 1 Marketplace. This is the economic core of Trade Post and lets the colony begin minting Trade Coins from unwanted resources."]
+	quest.792FFB9899C14E0A.title: "Marketplace"
+	quest.7966BC6250F38D48.quest_desc: ["Make one wish through the Trade Post wishing system. This completes the addon wish progression after the Wishing Well step."]
+	quest.7966BC6250F38D48.title: "Make a Wish"
+	quest.7A73657F0C2B5062.quest_desc: ["Craft a Hellshelf with Nether materials. This shelf starts the Hell branch, raising Eterna for stronger enchant levels and Quanta for more unstable rolls."]
+	quest.7A73657F0C2B5062.quest_subtitle: "Step 04A - Hell Branch"
+	quest.7A73657F0C2B5062.title: "The Chaos of Hell"
+	quest.7B5E2CD676A1A1C4.quest_desc: ["Build the Baker to improve food quality and variety. Better meals help keep citizens fed during larger building projects."]
+	quest.7B5E2CD676A1A1C4.quest_subtitle: "Build a Bakery"
+	quest.7B5E2CD676A1A1C4.title: "Baker"
+	quest.7BCF084B6C070D66.quest_desc: ["Acquire the Darkest Scroll before attempting cursed scrollcraft."]
+	quest.7BCF084B6C070D66.title: "Darkest Scroll"
+	quest.7D50111C051FD8E5.quest_desc: ["Build a level 1 Pet Shop. This opens the pet training branch and adds functional companions to the colony workflow."]
+	quest.7D50111C051FD8E5.title: "Pet Shop"
+	quest.7D7BFA807275B79B.quest_desc: ["Locate an Ocean Monument and gather tools for underwater progress."]
+	quest.7D7BFA807275B79B.title: "Ocean Monument"
+	quest.7F9A15CD13D2D7CE.quest_desc: ["Continue the Zombie bounty with a larger target. Complete it to unlock the next tier."]
+	quest.7FABA4362B1747BD.quest_desc: ["Continue the Piglin Brute bounty with a larger target. Complete it to unlock the next tier."]
+	quest.84390AE7CFC99D39.quest_desc: ["Continue the Evoker bounty with a larger target. Complete it to unlock the next tier."]
+	quest.84A4755ADAD80AB9.quest_desc: ["Finish the final Enderman bounty for the largest reward in this chain."]
+	quest.95456713042B648A.quest_desc: ["Finish the final Skeleton bounty for the largest reward in this chain."]
+	quest.A100000000000001.quest_desc: ["Obtain the Enigmatic guide or amulet to reveal the mod's main path."]
+	quest.A100000000000001.title: "The Acknowledgment"
+	quest.A100000000000004.quest_desc: ["Discover any Enigmatic scroll before branching into scrollcraft."]
+	quest.A100000000000004.title: "First Scroll"
+	quest.A100000000000007.quest_desc: ["Craft or find a Cursed Scroll to deepen the risk-reward path."]
+	quest.A100000000000007.title: "Cursed Scroll"
+	quest.A10000000000000A.quest_desc: ["Acquire an Escape Scroll to add a survival tool to the kit."]
+	quest.A10000000000000A.title: "Emergency Exit"
+	quest.A10000000000000D.quest_desc: ["Discover a Spellstone to open the relic crafting branch."]
+	quest.A10000000000000D.title: "First Spellstone"
+	quest.A100000000000010.quest_desc: ["Build the Spellstone Table to begin controlled Spellstone crafting."]
+	quest.A100000000000010.title: "Spellstone Table"
+	quest.A100000000000013.quest_desc: ["Collect every core Spellstone to complete the relic branch."]
+	quest.A100000000000013.title: "Spellstone Collection"
+	quest.A100000000000016.quest_desc: ["Acquire a Sacred Crystal to start the rare material route."]
+	quest.A100000000000016.title: "Sacred Crystal"
+	quest.A100000000000019.quest_desc: ["Gather Astral Dust to unlock Etherium and higher crafting goals."]
+	quest.A100000000000019.title: "Astral Dust"
+	quest.A10000000000001C.quest_desc: ["Forge Etherium Ingots and prepare for the advanced gear tier."]
+	quest.A10000000000001C.title: "Etherium Ingot"
+	quest.A10000000000001F.quest_desc: ["Craft the full Etherium armor set before the final Enigmatic goals."]
+	quest.A10000000000001F.title: "Etherium Armor"
+	quest.A100000000000022.quest_desc: ["Craft an Etherium tool or weapon to finish the offensive branch."]
+	quest.A100000000000022.title: "Etherium Arsenal"
+	quest.A100000000000025.quest_desc: ["Gather Ichor to unlock the darker crafting branch."]
+	quest.A100000000000025.title: "Ichor Droplet"
+	quest.A100000000000028.quest_desc: ["Acquire Infernal Cinder to prepare fire-aspected relic crafting."]
+	quest.A100000000000028.title: "Infernal Cinder"
+	quest.A10000000000002B.quest_desc: ["Collect Evil Essence to advance the hostile relic branch."]
+	quest.A10000000000002B.title: "Evil Essence"
+	quest.A10000000000002E.quest_desc: ["Use the Unholy Grail and prove you can survive its bargain."]
+	quest.A10000000000002E.title: "Unholy Grail"
+	quest.A100000000000031.quest_desc: ["Acquire a Twisted Heart to open mirror and late-game relic goals."]
+	quest.A100000000000031.title: "Twisted Heart"
+	quest.A100000000000034.quest_desc: ["Craft the Twisted Mirror to complete the mobility relic branch."]
+	quest.A100000000000034.title: "Twisted Mirror"
+	quest.A100000000000037.quest_desc: ["Acquire an Abyssal Heart to unlock the final flight branch."]
+	quest.A100000000000037.title: "Abyssal Heart"
+	quest.A10000000000003A.quest_desc: ["Craft the Chaos Elytra as the chapter's final movement milestone."]
+	quest.A10000000000003A.title: "Chaos Elytra"
+	quest.A10000000000003D.quest_desc: ["Complete the major Enigmatic branches to finish this chapter."]
+	quest.A10000000000003D.title: "Beyond the Curse"
+	quest.A340A7804D65B550.quest_desc: ["Continue the Enderman bounty with a larger target. Complete it to unlock the next tier."]
+	quest.A8B76DA8386046AB.quest_desc: ["Hunt Vindicators to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B100000000000001.quest_desc: ["Acquire a Pure Heart after accepting the Cursed Ring path."]
+	quest.B100000000000001.title: "Pure Heart"
+	quest.B100000000000004.quest_desc: ["Acquire the Darkest Scroll before attempting cursed scrollcraft."]
+	quest.B100000000000004.title: "Darkest Scroll"
+	quest.B100000000000007.quest_desc: ["Obtain a Recall Potion before relying on emergency escape tools."]
+	quest.B100000000000007.title: "Recall Potion"
+	quest.B10000000000000A.quest_desc: ["Claim The Twist before pursuing Abyssal relics."]
+	quest.B10000000000000A.title: "The Twist"
+	quest.B10000000000000D.quest_desc: ["Claim The Cube after completing the core Spellstone collection."]
+	quest.B10000000000000D.title: "The Cube"
+	quest.B100000000000010.quest_desc: ["Claim The Bless after proving the Sacred Crystal route."]
+	quest.B100000000000010.title: "The Bless"
+	quest.B100000000000013.quest_desc: ["Claim The Infinitum as the final Abyssal relic milestone."]
+	quest.B100000000000013.title: "The Infinitum"
+	quest.B3611D956F1604C4.quest_desc: ["Hunt Pillagers to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B4102572534FBA62.quest_desc: ["Continue the Vindicator bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B788081CBECA1472.quest_desc: ["Continue the Evoker bounty with a larger target. Complete it to unlock the next tier."]
+	quest.BF13ED19626F2933.quest_desc: ["Continue the Piglin Brute bounty with a larger target. Complete it to unlock the next tier."]
+	quest.C0FFEE0000000101.quest_desc: ["Receive a random wood reward. Common overworld woods are likely; Nether woods are rarer."]
+	quest.C0FFEE0000000101.title: "Wood Supply Crate"
+	quest.C0FFEE0000000102.quest_desc: ["Receive a random food reward. Basic meals are common; golden food is rare."]
+	quest.C0FFEE0000000102.title: "Food Supply Crate"
+	quest.C0FFEE0000000103.quest_desc: ["Receive a random utility reward. Arrows and torches are common; Ender Pearls and Eyes are rare."]
+	quest.C0FFEE0000000103.title: "Utility Supply Crate"
+	quest.C0FFEE0000000104.quest_desc: ["Receive a random ore reward. Common ores are frequent; Diamond Ore and Ancient Debris are very rare."]
+	quest.C0FFEE0000000104.title: "Ore Supply Crate"
+	quest.CF32B419671346B1.quest_desc: ["Finish the final Creeper bounty for the largest reward in this chain."]
+	quest.DAD0000000000001.quest_desc: ["Unlock the Trade Post addon path after your colony has a Town Hall. This branch follows the addon advancements from economy into travel, services, pets, and wishes."]
+	quest.DAD0000000000001.title: "Trade Post for MineColonies"
+	quest.DAD0000000000002.quest_desc: ["Build a level 1 Marketplace. This is the first real Trade Post building and the parent step for coins, services, transport, recycling, and pets."]
+	quest.DAD0000000000002.title: "Marketplace"
+	quest.DAD0000000000003.quest_desc: ["Obtain your first Trade Coin. This confirms the Marketplace economy is working and starts the currency progression."]
+	quest.DAD0000000000003.title: "Big Spender"
+	quest.DAD0000000000004.quest_desc: ["Upgrade the currency path by obtaining a Gold Trade Coin. This step follows directly after your first basic Trade Coin."]
+	quest.DAD0000000000004.title: "High Roller"
+	quest.DAD0000000000005.quest_desc: ["Obtain a Diamond Trade Coin. This completes the Trade Post coin progression from basic coin to the highest-value currency."]
+	quest.DAD0000000000005.title: "Bling Bling"
+	quest.DAD0000000000006.quest_desc: ["Build a level 1 Recycling Center. This Marketplace branch teaches how the addon turns unwanted items into useful colony value."]
+	quest.DAD0000000000006.title: "Recycling Center"
+	quest.DAD0000000000007.quest_desc: ["Recycle an item through the Trade Post system. Complete this after building the Recycling Center to prove the mechanic is active."]
+	quest.DAD0000000000007.title: "Reduce, Reuse, Recycle"
+	quest.DAD0000000000008.quest_desc: ["Build a level 1 Resort. This Marketplace branch introduces tourism, relaxation, and service-based colony support."]
+	quest.DAD0000000000008.title: "Resort"
+	quest.DAD0000000000009.quest_desc: ["Complete a vacation at the Resort. This follows the Resort build and shows the service loop working."]
+	quest.DAD0000000000009.title: "Put Your Feet Up"
+	quest.DAD000000000000A.quest_desc: ["Build a level 1 Station. This Marketplace branch opens Trade Post travel, connection, outpost, and rare-find progression."]
+	quest.DAD000000000000A.title: "Station"
+	quest.DAD000000000000B.quest_desc: ["Connect a colony through the Station system. This follows the Station advancement and proves the transport network is functional."]
+	quest.DAD000000000000B.title: "Express Line"
+	quest.DAD000000000000C.quest_desc: ["Build a level 1 Outpost after unlocking the Station branch. This expands Trade Post activity beyond the main settlement."]
+	quest.DAD000000000000C.title: "Outpost"
+	quest.DAD000000000000D.quest_desc: ["Trigger a rare find from the Station branch. Keep the travel network active until the addon rewards exploration and trade luck."]
+	quest.DAD000000000000D.title: "Rare Find"
+	quest.DAD000000000000E.quest_desc: ["Build a level 1 Pet Shop. This Marketplace branch opens the addon pet-training progression."]
+	quest.DAD000000000000E.title: "Pet Shop"
+	quest.DAD000000000000F.quest_desc: ["Train a pet through the Pet Shop. Complete this after the Pet Shop to show how pets become functional colony helpers."]
+	quest.DAD000000000000F.title: "Train a Pet"
+	quest.DAD0000000000010.quest_desc: ["Collect cobblestone, granite, andesite, and diorite. This starts the addon side path that leads into Mixed Stone and wishes."]
+	quest.DAD0000000000010.title: "Got Stone?"
+	quest.DAD0000000000011.quest_desc: ["Prepare the Wishing Well route with Mixed Stone. This follows Got Stone and sets up the wish mechanic."]
+	quest.DAD0000000000011.title: "Make a Wishing Well"
+	quest.DAD0000000000012.quest_desc: ["Make one wish through the Trade Post wishing system. This completes the addon wish progression after the Wishing Well step."]
+	quest.DAD0000000000012.title: "Make a Wish"
+	quest.DAD0000000000013.quest_desc: ["Trigger the Perpetual Stew advancement. This is a root-level Trade Post side milestone separate from the Marketplace building chain."]
+	quest.DAD0000000000013.title: "Runs on Stew"
+	quest.E87F3E42F4200288.quest_desc: ["Hunt Evokers to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.EFAE976AF7EE9BB5.quest_desc: ["Continue the Pillager bounty with a larger target. Complete it to unlock the next tier."]
+	quest.F0EBC458C9636398.quest_desc: ["Continue the Vindicator bounty with a larger target. Complete it to unlock the next tier."]
+	quest.FA4875BC0617EF25.quest_desc: ["Finish the final Vindicator bounty for the largest reward in this chain."]
+	reward_table.074C461988BC8A64.title: "Perks Tire 1"
+	reward_table.21291284C4DCB97E.title: "Enigmatic Material"
+	reward_table.4BC174D743CFA536.title: "Perks Tire 2"
+	reward_table.5E6B5CA8723C9B45.title: "Perks Tire 3"
+	reward_table.60FFEE0000000A01.title: "Woods"
+	reward_table.60FFEE0000000A02.title: "Ore"
+	reward_table.60FFEE0000000A03.title: "Tools"
+	reward_table.60FFEE0000000A04.title: "Foods"
+	task.0500000000000008.title: "Equip a curio in a Curios slot"
+	task.0600000000000005.title: "Place a MineColonies supply camp/ship"
+	task.0600000000000008.title: "Build and place a Town Hall"
+	task.060000000000000B.title: "Reach colony level 5"
+	task.090000000000000B.title: "Claim your legend"
+	task.12135B574D6B6BBA.title: "You all meet in a tavern..."
+	task.3F271D09198AE025.title: "Find IT!"
+	task.44CB12F671435930.title: "Restaurant"
+	task.6DE4A94B6AB968A9.title: "a"
+	task.7BD0EEAD4D643C4F.title: "Chapter Complete"
+}

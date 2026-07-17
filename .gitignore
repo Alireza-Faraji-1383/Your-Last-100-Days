@@ -146,6 +146,7 @@ config/sounds/
 config/relics.yaml
 
 # FTB Quests lang (auto-generated translations)
-config/ftbquests/quests/lang/
+config/ftbquests/quests/lang/*
+!config/ftbquests/quests/lang/en_us.snbt
 config/reliquified_lenders_cataclysm
 config/relics

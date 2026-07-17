@@ -15,6 +15,8 @@
 	"Fix swimmers swimming attribute" = true
 	#Removes the random bonus health given to Leader Zombies. In vanilla it's useless since doesn't work. https://minecraft.wiki/Attribute#Vanilla_modifiers
 	"Remove zombies bonus health" = true
+	#If true, https://bugs.mojang.com/browse/MC/issues/MC-145114 will be fixed.
+	"Fix mob crossbow firework shooting" = true
 
 	[Fixes."Fix air speed"]
 		#When affected by slowness the player can still jump really far away. When true, jumps length will be calculated based off player's movement speed.
@@ -39,3 +41,7 @@
 	"Break instabreak blocks" = true
 	#Fix dupe exploit through dimensions.
 	"Fix dupe exploit" = true
+
+#Set and use some tags to get and set some mobs properties. E.g. cause fire explosion for mobs, or get current light level.
+["Nbt tags"]
+	"Apply no ammo consumption to pillagers" = false

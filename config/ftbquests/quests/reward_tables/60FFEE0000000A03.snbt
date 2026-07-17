@@ -4,7 +4,7 @@
 	order_index: 7
 	rewards: [
 		{
-			count: 32
+			count: 64
 			id: "2B0517C1B399D6E9"
 			item: {
 				count: 1
@@ -31,13 +31,13 @@
 			weight: 10.0f
 		}
 		{
-			count: 12
+			count: 6
 			id: "0185793769EB667F"
 			item: {
 				count: 1
 				id: "minecraft:experience_bottle"
 			}
-			weight: 7.0f
+			weight: 3.0f
 		}
 		{
 			count: 16
@@ -89,7 +89,6 @@
 				count: 1
 				id: "minecraft:blaze_rod"
 			}
-			weight: 2.0f
 		}
 		{
 			count: 8
@@ -116,6 +115,14 @@
 				id: "minecraft:ender_eye"
 			}
 			weight: 0.8f
+		}
+		{
+			count: 2
+			id: "2CF864612955326D"
+			item: {
+				count: 1
+				id: "minecraft:breeze_rod"
+			}
 		}
 	]
 }
