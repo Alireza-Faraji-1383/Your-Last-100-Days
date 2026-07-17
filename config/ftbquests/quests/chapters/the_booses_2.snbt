@@ -8,7 +8,7 @@
 		{
 			height: 2.0d
 			image: "cataclysm:textures/gui/boss_bar/life_remain_sans.png"
-			order: 2
+			order: 11
 			rotation: 0.0d
 			width: 2.0d
 			x: 0.0d
@@ -301,6 +301,14 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "004EEA3ED315B781"
+			rewards: [{
+				id: "73787E1307784AA9"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "born_in_chaos_v1:pumpkin_lord"
 				criterion: ""
@@ -309,6 +317,29 @@
 			}]
 			x: -3.5d
 			y: -2.0d
+		}
+		{
+			dependencies: ["409CAA9FC686CC59"]
+			id: "386F7567AECE38AF"
+			rewards: [{
+				count: 3
+				id: "039D8FE65CE46E73"
+				item: {
+					count: 1
+					id: "kubejs:coin"
+				}
+				type: "item"
+			}]
+			shape: "gear"
+			size: 3.4d
+			tasks: [{
+				advancement: "darkdoppelganger:kill"
+				criterion: ""
+				id: "1248444CB740A5FC"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: -10.799999999999999d
 		}
 	]
 }

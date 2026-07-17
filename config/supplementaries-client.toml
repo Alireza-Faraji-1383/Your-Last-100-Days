@@ -154,7 +154,7 @@
 	#Enable Supplementaries to base textures off external Resource Packs rather than mod's default textures. 
 	use_external_resource_pack = false
 	#Enable Quark style config button on main menu
-	configs_button = true
+	configs_button = false
 	#Config button Y offset
 	# Default: 0
 	# Range: -10000 ~ 10000

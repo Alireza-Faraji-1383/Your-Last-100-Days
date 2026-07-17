@@ -1,0 +1,44 @@
+type = fancymenu_layout
+
+layout-meta {
+  identifier = pack_selection_screen
+  render_custom_elements_behind_vanilla = true
+  last_edited_time = 1784247201000
+  is_enabled = true
+  randommode = false
+  randomgroup = y100d_resource_packs
+  randomonlyfirsttime = false
+  layout_index = 20
+}
+
+menu_background {
+  image_path = [source:local]/config/fancymenu/assets/your_last_100_days/home/background-lite.png
+  slide = false
+  repeat_texture = false
+  parallax = false
+  background_type = image
+}
+
+customization {
+  action = backgroundoptions
+  keepaspectratio = true
+}
+
+element {
+  source = [source:local]/config/fancymenu/assets/your_last_100_days/branding/modpack-icon.png
+  repeat_texture = false
+  nine_slice_texture = false
+  restart_animated_on_menu_load = false
+  enable_parallax = false
+  element_type = image
+  instance_identifier = y100d_brand_emblem_resource_packs
+  anchor_point = top-left
+  sticky_anchor = true
+  x = 8
+  y = 7
+  width = 26
+  height = 26
+  stay_on_screen = true
+}
+
+# Vanilla owns both pack lists and every control on this screen.

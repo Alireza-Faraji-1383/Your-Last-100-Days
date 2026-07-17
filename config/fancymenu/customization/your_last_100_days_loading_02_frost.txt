@@ -1,0 +1,65 @@
+type = fancymenu_layout
+
+layout-meta {
+  identifier = drippy_loading_overlay
+  render_custom_elements_behind_vanilla = true
+  last_edited_time = 1784247203000
+  is_enabled = true
+  randommode = true
+  randomgroup = y100d_loading_variants
+  randomonlyfirsttime = true
+  layout_index = 10
+}
+
+menu_background {
+  image_path = [source:local]/config/fancymenu/assets/your_last_100_days/variants/frostbound-oath/background-lite.png
+  slide = false
+  repeat_texture = false
+  parallax = false
+  background_type = image
+}
+
+customization {
+  action = backgroundoptions
+  keepaspectratio = true
+}
+
+element {
+  source = [source:local]/config/fancymenu/assets/your_last_100_days/branding/modpack-icon.png
+  repeat_texture = false
+  nine_slice_texture = false
+  restart_animated_on_menu_load = false
+  enable_parallax = false
+  element_type = image
+  instance_identifier = y100d_brand_emblem_loading
+  anchor_point = top-right
+  sticky_anchor = true
+  x = -42
+  y = 8
+  width = 34
+  height = 34
+  stay_on_screen = true
+}
+
+element {
+  interactable = false
+  source = {"placeholder":"file_text","path_or_url":"/logs/latest.log","mode":"last","last_lines":"6"}
+  source_mode = direct
+  shadow = true
+  scale = 0.76
+  base_color = #E8E0D1FF
+  text_border = 1
+  line_spacing = 1
+  enable_scrolling = false
+  auto_line_wrapping = true
+  remove_html_breaks = true
+  parse_markdown = false
+  element_type = text_v2
+  instance_identifier = y100d_live_loading_log
+  anchor_point = bottom-left
+  x = 10
+  y = -58
+  width = 412
+  height = 56
+  stay_on_screen = true
+}

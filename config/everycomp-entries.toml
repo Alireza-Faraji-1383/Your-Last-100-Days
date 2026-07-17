@@ -8,10 +8,3 @@
 
 		[types.wood_type.born_in_chaos_v1]
 			scorched = true
-
-		[types.wood_type.alexscaves]
-			pewen = true
-			thornwood = true
-
-		[types.leaves_type.alexscaves]
-			ancient = true

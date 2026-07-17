@@ -116,7 +116,6 @@
 			y: 2.0d
 		}
 		{
-			dependencies: ["5AFFF6D2AB06C8E5"]
 			icon: {
 				id: "artifacts:rooted_boots"
 			}

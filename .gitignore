@@ -54,6 +54,8 @@ server-resource-packs/
 # User-specific runtime files
 # -------------------------------------------------
 options.txt
+!config/drippyloadingscreen/options.txt
+!config/fancymenu/options.txt
 optionsof.txt
 usercache.json
 usernamecache.json
