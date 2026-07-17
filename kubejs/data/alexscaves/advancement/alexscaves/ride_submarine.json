@@ -1,0 +1,8 @@
+{
+  "parent": "alexscaves:alexscaves/discover_abyssal_ruins",
+  "criteria": {
+    "disabled": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
