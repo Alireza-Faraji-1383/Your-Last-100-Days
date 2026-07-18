@@ -19,5 +19,7 @@
 		{ id: "76B52C7A8F9B68E4", item: { count: 1, id: "artifacts:rooted_boots" } }
 		{ id: "1DF214D505BEA754", item: { count: 1, id: "artifacts:novelty_drinking_hat" } }
 		{ id: "78EAF9A72F5BC0E5", item: { count: 1, id: "artifacts:plastic_drinking_hat" } }
+		{ id: "65D4D70A2F96FF38", item: { count: 1, id: "irons_spellbooks:amethyst_resonance_charm" } }
+		{ id: "7A0B144A0BB16442", item: { count: 1, id: "irons_spellbooks:silver_ring" } }
 	]
 }

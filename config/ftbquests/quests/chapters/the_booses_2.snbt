@@ -302,6 +302,7 @@
 			dependencies: ["409CAA9FC686CC59"]
 			id: "004EEA3ED315B781"
 			rewards: [{
+				count: 3
 				id: "73787E1307784AA9"
 				item: {
 					count: 1
@@ -340,6 +341,40 @@
 			}]
 			x: 0.0d
 			y: -10.799999999999999d
+		}
+		{
+			dependencies: [
+				"71B0A0C51E115915"
+				"409CAA9FC686CC59"
+			]
+			icon: {
+				id: "irons_spellbooks:dead_king_phylactery"
+			}
+			id: "3FE15E98FA70385F"
+			rewards: [
+				{
+					count: 4
+					id: "3D0FCE7474443819"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "5D97F9C713C0F3E6"
+					type: "xp"
+					xp: 220
+				}
+			]
+			tasks: [{
+				advancement: "irons_spellbooks:irons_spellbooks/spell_book_dead_king"
+				criterion: ""
+				id: "5DA3404B67CEBCFD"
+				type: "advancement"
+			}]
+			x: 3.5d
+			y: -2.0d
 		}
 	]
 }

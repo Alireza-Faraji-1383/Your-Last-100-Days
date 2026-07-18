@@ -691,7 +691,7 @@
 			tasks: [
 				{
 					consume_items: true
-					count: 32L
+					count: 45L
 					disable_toast: true
 					id: "366F0C634C507948"
 					item: { count: 1, id: "kubejs:silver_coin" }

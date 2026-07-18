@@ -1,8 +1,0 @@
-{
-  "parent": "alexscaves:alexscaves/uranium_rod",
-  "criteria": {
-    "disabled": {
-      "trigger": "minecraft:impossible"
-    }
-  }
-}

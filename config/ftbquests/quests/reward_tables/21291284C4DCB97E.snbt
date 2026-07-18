@@ -13,10 +13,40 @@
 				count: 1
 				id: "enigmaticlegacyplus:abyssal_heart"
 			}
-			weight: 0.05f
+			weight: 0.003f
 		}
 		{ id: "5A5179D48DDB2760", item: { count: 1, id: "enigmaticlegacyplus:spellstone_debris" } }
-		{ id: "6483FFA1DCFCBAD9", item: { count: 1, id: "enigmaticlegacyplus:etherium_nugget" } }
-		{ id: "3DE5583A75C48DD1", item: { count: 1, id: "enigmaticlegacyplus:evil_essence" } }
+		{
+			id: "6483FFA1DCFCBAD9"
+			item: {
+				count: 1
+				id: "enigmaticlegacyplus:etherium_nugget"
+			}
+			weight: 0.3f
+		}
+		{
+			id: "3DE5583A75C48DD1"
+			item: {
+				count: 1
+				id: "enigmaticlegacyplus:evil_essence"
+			}
+			weight: 0.7f
+		}
+		{
+			count: 3
+			id: "0C4738D0875533BE"
+			item: {
+				count: 1
+				id: "irons_spellbooks:arcane_essence"
+			}
+		}
+		{
+			count: 5
+			id: "5D1B9BD8872F8283"
+			item: {
+				count: 1
+				id: "irons_spellbooks:deepslate_mithril_ore"
+			}
+		}
 	]
 }

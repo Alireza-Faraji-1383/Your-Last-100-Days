@@ -37,5 +37,27 @@
 		{ id: "6DEEA2F2DB119A92", item: { components: { "relics:data": { abilities: { abilities: { vacuum_slowdown: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { radius: { initialValue: 6.24123d }, slowdown: { initialValue: 0.32989d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "reliquified_lenders_cataclysm:vacuum_glove" } }
 		{ id: "690024F6B0433230", item: { components: { "relics:data": { abilities: { abilities: { protective_bubble: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { attack_blocks: { initialValue: 2.73126d }, cooldown: { initialValue: 25.12038d }, damage: { initialValue: 0.59043d }, projectiles: { initialValue: 17.96043d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "reliquified_lenders_cataclysm:void_bubble" } }
 		{ id: "217942AEABB15DEC", item: { components: { "relics:data": { abilities: { abilities: { spawn_vortex: { extender: { cooldown: 0, cooldownCap: 0, ticking: 0b }, lock: { breaks: 5 }, points: 0, research: { links: { }, researched: 0b }, stats: { cooldown: { initialValue: 26.65629d }, damage: { initialValue: 6.32045d }, height: { initialValue: 3.66476d } } } } }, leveling: { experience: 0, level: 0, luck: 0, points: 0 } } }, count: 1, id: "reliquified_lenders_cataclysm:void_vortex_in_bottle" } }
+		{
+			id: "0A5439B80500A7CC"
+			item: {
+				components: {
+					"irons_spellbooks:spell_container": {
+						data: [{
+							id: "darkdoppelganger:doppel_portal"
+							index: 0
+							level: 1
+							locked: 1b
+						}]
+						maxSpells: 1
+						mustEquip: 1b
+						spellWheel: 1b
+					}
+				}
+				count: 1
+				id: "darkdoppelganger:doppelganger_ring"
+			}
+			weight: 0.02f
+		}
+		{ id: "1897B869A283BDDA", item: { count: 1, id: "darkdoppelganger:summons_necklace" } }
 	]
 }

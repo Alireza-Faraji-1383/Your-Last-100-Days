@@ -1,8 +1,0 @@
-{
-  "parent": "alexscaves:alexscaves/ride_submarine",
-  "criteria": {
-    "disabled": {
-      "trigger": "minecraft:impossible"
-    }
-  }
-}

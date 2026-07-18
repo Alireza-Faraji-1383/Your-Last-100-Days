@@ -218,7 +218,6 @@
 		#This is a map of special blocks that can be cleaned with soap. For items you will also need to add a recipe
 		[functional.soap.special_blocks]
 			"quark:dirty_glass" = "minecraft:glass"
-			"#alexscaves:cave_paintings" = "alexscaves:smooth_limestone"
 			"quark:dirty_glass_pane" = "minecraft:glass_pane"
 
 	[functional.cannon]

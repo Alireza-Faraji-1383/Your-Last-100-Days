@@ -166,8 +166,8 @@
 			leaves = ["#minecraft:wart_blocks", "minecraft:shroomlight"]
 
 		[compatibility.trees.problematicLeavesTrees]
-			logs = ["tropicraft:.*_log(_.*)?", "mysticbiomes:.*_log", "betternether:.*_bark", "betternether:.*_log", "alexscaves:.*_log", "alexscaves:pewen_wood"]
-			leaves = ["tropicraft:.*_leaves(_.*)?", "betternether:.*_leaves", "regions_unexplored:brimwood_leaves", "alexscaves:.*_branch", "alexscaves:pewen_pines"]
+			logs = ["tropicraft:.*_log(_.*)?", "mysticbiomes:.*_log", "betternether:.*_bark", "betternether:.*_log"]
+			leaves = ["tropicraft:.*_leaves(_.*)?", "betternether:.*_leaves", "regions_unexplored:brimwood_leaves"]
 
 	[compatibility.silentgear]
 		#https://www.curseforge.com/minecraft/mc-mods/tinkers-construct
