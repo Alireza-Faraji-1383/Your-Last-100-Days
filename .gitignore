@@ -152,3 +152,16 @@ config/ftbquests/quests/lang/*
 !config/ftbquests/quests/lang/en_us.snbt
 config/reliquified_lenders_cataclysm
 config/relics
+
+# -------------------------------------------------
+# Project-owned branding and vanilla UI customization
+# -------------------------------------------------
+# These files are part of the distributable modpack, not local runtime noise.
+!/icon.png
+!/options.txt
+!/config/fml.toml
+
+# Keep downloaded/user resource packs ignored, but version our lightweight UI pack.
+!/resourcepacks/
+/resourcepacks/*
+!/resourcepacks/Y100D_Vanilla_Menu_1.21.1.zip
