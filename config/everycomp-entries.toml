@@ -1,5 +1,7 @@
+#Disables certain types. Note that all these configs, like in any other mod, only hide stuff from tabs and disable their recipes
+[types]
+
 		[types.wood_type.domum_ornamentum]
-			#Disables certain types. Note that all these configs, like in any other mod, only hide stuff from tabs and disable their recipes
 			cactus = true
 			cactus_extra = true
 

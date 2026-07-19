@@ -3,5 +3,7 @@
 	# Default: 0
 	# Range: 0 ~ 64
 	maxEnabledBackpacksScanned = 0
-	#When true, all equipped backpacks can be used as recipe transfer sources without requiring the JEI Index Upgrade. Existing upgrade items remain registered, but the upgrade is hidden from the creative tab and JEI ingredient list. Client and server should use the same value.
-	enableTransferWithoutUpgrade = false
+	#Virtual slot id stride reserved for each indexed backpack source. Increase this if an Inception Upgrade makes one indexed backpack expose more slots than the default. Client and server must use the same value.
+	# Default: 100000
+	# Range: 10000 ~ 10000000
+	backpackSlotIdStride = 100000
