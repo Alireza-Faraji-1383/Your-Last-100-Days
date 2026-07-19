@@ -48,6 +48,23 @@ author's personal keybind, graphics, audio, or fullscreen settings.
 Do not export this `tools/` directory. CurseForge requires public packs to be
 exported by its app, and the app should generate `manifest.json` itself.
 
+## Prism Launcher
+
+The in-game window, taskbar, and Alt-Tab icon need no launcher support: the
+provider jar sits in `mods/` and NeoForge loads it the same way under Prism,
+MultiMC, or the CurseForge app.
+
+The launcher-side instance icon works two ways:
+
+- **Importing the CurseForge pack**: Prism downloads the project avatar
+  automatically and stores it as `icons/curseforge_<slug>.png`, so players who
+  install through Prism's CurseForge browser get the pack icon without extra
+  files. This is why the project avatar upload matters.
+- **Direct Prism instance export**: this instance uses the custom icon key
+  `y100d` (`PrismLauncher/icons/y100d.png`, a copy of
+  `y100d_icons/icon_256x256.png`). **File > Export Instance** bundles that
+  icon into the zip, so a shared Prism export shows it on import.
+
 ## Developer build
 
 `build.ps1` is only for changing the provider later. It uses Java 21 and the
