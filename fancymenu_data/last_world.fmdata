@@ -1,7 +1,0 @@
-type = last_world
-
-last_world {
-  is_server = false
-  world = C:/Users/Alireza/AppData/Roaming/PrismLauncher/instances/1.21.1/minecraft/saves/Test4
-}
-

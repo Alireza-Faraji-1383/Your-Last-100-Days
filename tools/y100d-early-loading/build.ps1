@@ -11,9 +11,8 @@ $BuildDir = [IO.Path]::GetFullPath((Join-Path $ProjectDir 'build'))
 $ClassesDir = Join-Path $BuildDir 'classes'
 $ResourcesDir = Join-Path $BuildDir 'resources'
 $HiddenClassesDir = Join-Path $BuildDir 'hidden-classes'
-$DistDir = Join-Path $ProjectDir 'dist'
-$OutputJar = Join-Path $DistDir 'y100d-early-loading.jar'
-$Atlas = Join-Path $MinecraftDir 'branding\loading\y100d-neoforge-loading-animation-atlas-427x1440.png'
+$OutputJar = Join-Path $MinecraftDir 'mods\y100d-early-loading-1.0.0+mc1.21.1-neoforge.jar'
+$Atlas = Join-Path $ProjectDir 'src\main\resources\y100d_loading_atlas.png'
 
 if (!(Test-Path -LiteralPath $Javac) -or !(Test-Path -LiteralPath $Jar)) {
     throw "Java 21 toolchain was not found at $JavaHome"
@@ -53,7 +52,7 @@ foreach ($Dependency in $CompileJars) {
 if (Test-Path -LiteralPath $BuildDir) {
     Remove-Item -LiteralPath $BuildDir -Recurse -Force
 }
-New-Item -ItemType Directory -Path $ClassesDir, $ResourcesDir, $HiddenClassesDir, $DistDir -Force | Out-Null
+New-Item -ItemType Directory -Path $ClassesDir, $ResourcesDir, $HiddenClassesDir, (Split-Path -Parent $OutputJar) -Force | Out-Null
 
 $Source = Join-Path $ProjectDir 'src\main\java\dev\y100d\loading\Y100DAnimatedWindowProvider.java'
 $FramebufferSource = Join-Path $ProjectDir 'src\framebuffer\java\net\neoforged\fml\earlydisplay\Y100DCoverFramebuffer.java'
@@ -69,6 +68,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Copy-Item -LiteralPath (Join-Path $ProjectDir 'src\main\resources\META-INF') -Destination $ResourcesDir -Recurse -Force
 Copy-Item -LiteralPath $Atlas -Destination (Join-Path $ResourcesDir 'y100d_loading_atlas.png') -Force
+Copy-Item -LiteralPath (Join-Path $ProjectDir 'LICENSE.txt') -Destination (Join-Path $ResourcesDir 'META-INF\LICENSE_y100d.txt') -Force
 $HiddenClass = Join-Path $HiddenClassesDir 'net\neoforged\fml\earlydisplay\Y100DCoverFramebuffer.class'
 $HiddenResourceDir = Join-Path $ResourcesDir 'META-INF\y100d'
 if (!(Test-Path -LiteralPath $HiddenClass)) {
@@ -94,10 +94,10 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $Hash = (Get-FileHash -LiteralPath $OutputJar -Algorithm SHA256).Hash.ToLowerInvariant()
-[IO.File]::WriteAllText(
-    (Join-Path $DistDir 'y100d-early-loading.jar.sha256'),
-    "$Hash  y100d-early-loading.jar`n",
-    [Text.UTF8Encoding]::new($false))
+
+if (Test-Path -LiteralPath $BuildDir) {
+    Remove-Item -LiteralPath $BuildDir -Recurse -Force
+}
 
 Write-Output "Built $OutputJar"
 Write-Output "SHA256 $Hash"

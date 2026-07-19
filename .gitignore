@@ -26,6 +26,8 @@ desktop.ini
 # ProbeJS temp
 # -------------------------------------------------
 .probe/
+kubejs/documentation/
+kubejs/**/jsconfig.json
 
 # -------------------------------------------------
 # Launcher metadata (auto-generated)
@@ -49,13 +51,12 @@ hs_err_pid*.log
 saves/
 backup/
 server-resource-packs/
+blueprints/
 
 # -------------------------------------------------
 # User-specific runtime files
 # -------------------------------------------------
 options.txt
-!config/drippyloadingscreen/options.txt
-!config/fancymenu/options.txt
 optionsof.txt
 usercache.json
 usernamecache.json
@@ -63,6 +64,7 @@ command_history.txt
 TrashSlotSaveState.json
 patchouli_data.json
 emi.json
+fancymenu_data/
 
 # -------------------------------------------------
 # Xaero maps & waypoints (personal per-player data)
@@ -107,6 +109,7 @@ tlm_custom_pack/
 # -------------------------------------------------
 config/*.bak
 config/**/*.bak
+config/**/*-had-error.json5
 
 # -------------------------------------------------
 # Config: auto-generated / user-specific (changes every launch)
@@ -158,7 +161,6 @@ config/relics
 # -------------------------------------------------
 # These files are part of the distributable modpack, not local runtime noise.
 !/icon.png
-!/options.txt
 !/config/fml.toml
 
 # Keep downloaded/user resource packs ignored, but version our lightweight UI pack.
@@ -166,5 +168,11 @@ config/relics
 /resourcepacks/*
 !/resourcepacks/Y100D_Vanilla_Menu_1.21.1.zip
 
-# Reproducible loader build scratch (source and deployable JAR stay versioned)
+# NeoForge discovers this tiny early-window service directly from mods/. All
+# downloaded gameplay mods remain ignored; only the pack-owned loader ships.
+!/mods/
+/mods/*
+!/mods/y100d-early-loading-1.0.0+mc1.21.1-neoforge.jar
+
+# Reproducible loader build scratch
 /tools/y100d-early-loading/build/

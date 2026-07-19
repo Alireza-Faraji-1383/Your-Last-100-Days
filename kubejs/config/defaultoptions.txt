@@ -1,0 +1,2 @@
+resourcePacks:["vanilla","mod_resources","file/Y100D_Vanilla_Menu_1.21.1.zip"]
+incompatibleResourcePacks:[]
