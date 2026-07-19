@@ -11,7 +11,7 @@ defaultConfigPath = "defaultconfigs"
 #Disables Optimized DFU client-side - already disabled on servers
 disableOptimizedDFU = true
 #Early window provider
-earlyWindowProvider = "fmlearlywindow"
+earlyWindowProvider = "y100danimated"
 #Early window width
 earlyWindowWidth = 854
 #Early window height
@@ -19,7 +19,7 @@ earlyWindowHeight = 480
 #Early window framebuffer scale
 earlyWindowFBScale = 1
 #Early window starts maximized
-earlyWindowMaximized = false
+earlyWindowMaximized = true
 #Skip specific GL versions, may help with buggy graphics card drivers
 earlyWindowSkipGLVersions = []
 #Squir?

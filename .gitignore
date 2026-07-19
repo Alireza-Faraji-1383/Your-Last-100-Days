@@ -165,3 +165,6 @@ config/relics
 !/resourcepacks/
 /resourcepacks/*
 !/resourcepacks/Y100D_Vanilla_Menu_1.21.1.zip
+
+# Reproducible loader build scratch (source and deployable JAR stay versioned)
+/tools/y100d-early-loading/build/

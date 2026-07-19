@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: y100d.earlyloading
+FMLModType: LIBRARY
+Implementation-Title: Y100D Early Loading
+Implementation-Version: 1.0.0-fml4.0.42
+
