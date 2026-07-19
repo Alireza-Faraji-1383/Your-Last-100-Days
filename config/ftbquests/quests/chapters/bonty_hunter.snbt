@@ -51,9 +51,9 @@
 			height: 3.0d
 			image: "minecraft:textures/gui/title/minecraft.png"
 			rotation: 0.0d
-			width: 8.0d
-			x: 0.5d
-			y: -4.5d
+			width: 12.0d
+			x: 1.0d
+			y: -5.0d
 		}
 	]
 	order_index: 2

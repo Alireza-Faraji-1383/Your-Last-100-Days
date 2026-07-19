@@ -191,10 +191,7 @@
 		{
 			dependencies: ["2C9F7712321854BE"]
 			icon: {
-				components: {
-					"ftbquests:icon": "minecraft:item/warden_spawn_egg"
-				}
-				id: "ftbquests:custom_icon"
+				id: "mctradepost:marine_lapis"
 			}
 			id: "60CB4B59DF9639E5"
 			rewards: [
