@@ -13,13 +13,16 @@ The ready-to-ship file is:
 NeoForge discovers its `ImmediateWindowProvider` directly from `mods/` before
 the early window is created. No Prism component, installer, mixin framework,
 FancyMenu, Drippy, Konkrete, or Melody is required. The six-frame pixel-art
-atlas is embedded in the JAR, so players do not need a separate image file.
+atlas and the five Windows icon sizes are embedded in the JAR, so players do
+not need a separate image file.
 
 The provider wraps NeoForge's stock `DisplayWindow`. The fox, live startup
 logs, version, memory bar, and all progress bars remain present. Runtime cost
 is one 427x1440 texture upload (about 2.35 MiB decoded), one background quad,
 one UI-composite quad, and UV-only animation at NeoForge's 20 Hz refresh rate.
 There is no per-frame file access, image decode, texture upload, or allocation.
+The small icon PNGs are decoded only twice during startup: once for NeoForge's
+early window and once after Minecraft replaces the window icon during handoff.
 
 The background uses centered cover scaling against the real framebuffer. The
 stock 854x480 UI is alpha-composited at centered contain scale, keeping its
@@ -31,6 +34,9 @@ For a public CurseForge modpack, publish the prebuilt JAR once as the pack's
 small companion Mod project, tagged for NeoForge 1.21.1, then add that project
 to the profile through **Add More Content**. CurseForge will place it in
 `mods/` and reference it from the generated manifest.
+
+Use the repository's square `icon.png` as the project avatar for both the
+modpack and its companion Mod project.
 
 The exported overrides must include `config/fml.toml`; it selects
 `earlyWindowProvider = "y100danimated"`. The custom menu also needs

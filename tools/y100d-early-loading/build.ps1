@@ -13,12 +13,20 @@ $ResourcesDir = Join-Path $BuildDir 'resources'
 $HiddenClassesDir = Join-Path $BuildDir 'hidden-classes'
 $OutputJar = Join-Path $MinecraftDir 'mods\y100d-early-loading-1.0.0+mc1.21.1-neoforge.jar'
 $Atlas = Join-Path $ProjectDir 'src\main\resources\y100d_loading_atlas.png'
+$IconsDir = Join-Path $ProjectDir 'src\main\resources\y100d_icons'
+$IconSizes = @(16, 32, 48, 128, 256)
 
 if (!(Test-Path -LiteralPath $Javac) -or !(Test-Path -LiteralPath $Jar)) {
     throw "Java 21 toolchain was not found at $JavaHome"
 }
 if (!(Test-Path -LiteralPath $Atlas)) {
     throw "Production atlas was not found at $Atlas"
+}
+foreach ($IconSize in $IconSizes) {
+    $Icon = Join-Path $IconsDir "icon_${IconSize}x${IconSize}.png"
+    if (!(Test-Path -LiteralPath $Icon)) {
+        throw "Production window icon was not found at $Icon"
+    }
 }
 if (!$BuildDir.StartsWith($ProjectDir, [StringComparison]::OrdinalIgnoreCase)) {
     throw 'Refusing to clean a build directory outside this project.'
@@ -68,6 +76,12 @@ if ($LASTEXITCODE -ne 0) {
 
 Copy-Item -LiteralPath (Join-Path $ProjectDir 'src\main\resources\META-INF') -Destination $ResourcesDir -Recurse -Force
 Copy-Item -LiteralPath $Atlas -Destination (Join-Path $ResourcesDir 'y100d_loading_atlas.png') -Force
+$BuiltIconsDir = Join-Path $ResourcesDir 'y100d_icons'
+New-Item -ItemType Directory -Path $BuiltIconsDir -Force | Out-Null
+foreach ($IconSize in $IconSizes) {
+    $IconName = "icon_${IconSize}x${IconSize}.png"
+    Copy-Item -LiteralPath (Join-Path $IconsDir $IconName) -Destination (Join-Path $BuiltIconsDir $IconName) -Force
+}
 Copy-Item -LiteralPath (Join-Path $ProjectDir 'LICENSE.txt') -Destination (Join-Path $ResourcesDir 'META-INF\LICENSE_y100d.txt') -Force
 $HiddenClass = Join-Path $HiddenClassesDir 'net\neoforged\fml\earlydisplay\Y100DCoverFramebuffer.class'
 $HiddenResourceDir = Join-Path $ResourcesDir 'META-INF\y100d'

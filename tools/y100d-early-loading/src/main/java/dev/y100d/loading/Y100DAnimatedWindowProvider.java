@@ -7,6 +7,7 @@
 package dev.y100d.loading;
 
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 import static org.lwjgl.opengl.GL32C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL32C.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL32C.GL_ONE;
@@ -65,6 +66,7 @@ import net.neoforged.fml.earlydisplay.QuadHelper;
 import net.neoforged.fml.earlydisplay.RenderElement;
 import net.neoforged.fml.earlydisplay.SimpleBufferBuilder;
 import net.neoforged.neoforgespi.earlywindow.ImmediateWindowProvider;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -78,6 +80,8 @@ import org.lwjgl.system.MemoryUtil;
 public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvider {
     private static final String PROVIDER_NAME = "y100danimated";
     private static final String ATLAS_RESOURCE = "/y100d_loading_atlas.png";
+    private static final String ICON_RESOURCE_DIRECTORY = "/y100d_icons/";
+    private static final int[] ICON_SIZES = {16, 32, 48, 128, 256};
     private static final String COVER_FRAMEBUFFER_RESOURCE =
             "/META-INF/y100d/Y100DCoverFramebuffer.bin";
     private static final int ATLAS_WIDTH = 427;
@@ -93,6 +97,9 @@ public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvide
     private final AtomicInteger currentAtlasFrame = new AtomicInteger();
     private final AtomicBoolean backgroundActive = new AtomicBoolean();
     private final AtomicBoolean coverCompositorActive = new AtomicBoolean();
+    private final AtomicBoolean iconReadyReported = new AtomicBoolean();
+    private final AtomicBoolean iconFailureReported = new AtomicBoolean();
+    private volatile long windowHandle;
     private volatile List<RenderElement> elements;
 
     @Override
@@ -103,8 +110,19 @@ public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvide
     @Override
     public Runnable initialize(final String[] arguments) {
         final Runnable stockTick = delegate.initialize(arguments);
+        captureEarlyWindowAndApplyIcon();
         scheduleBackgroundInjection();
         return stockTick;
+    }
+
+    private void captureEarlyWindowAndApplyIcon() {
+        try {
+            final long window = accessibleField("window").getLong(delegate);
+            windowHandle = window;
+            applyWindowIcon(window);
+        } catch (Throwable failure) {
+            reportIconFailure(failure);
+        }
     }
 
     private void scheduleBackgroundInjection() {
@@ -475,6 +493,77 @@ public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvide
         }
     }
 
+    private void applyWindowIcon(final long window) throws IOException {
+        if (window == 0L) {
+            throw new IOException("NeoForge window handle is not ready");
+        }
+
+        final ByteBuffer[] decodedIcons = new ByteBuffer[ICON_SIZES.length];
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            final GLFWImage.Buffer icons = GLFWImage.malloc(ICON_SIZES.length, stack);
+            for (int index = 0; index < ICON_SIZES.length; index++) {
+                final int size = ICON_SIZES[index];
+                final ByteBuffer pixels = decodeIcon(size);
+                decodedIcons[index] = pixels;
+                icons.position(index);
+                icons.width(size);
+                icons.height(size);
+                icons.pixels(pixels);
+            }
+
+            icons.position(0);
+            glfwSetWindowIcon(window, icons);
+            if (iconReadyReported.compareAndSet(false, true)) {
+                System.out.println(
+                        "[Y100D Early Loading] Custom window icon ready "
+                                + "(16/32/48/128/256 px)");
+            }
+        } finally {
+            for (ByteBuffer decoded : decodedIcons) {
+                if (decoded != null) {
+                    STBImage.stbi_image_free(decoded);
+                }
+            }
+        }
+    }
+
+    private static ByteBuffer decodeIcon(final int expectedSize) throws IOException {
+        final String resource = ICON_RESOURCE_DIRECTORY
+                + "icon_" + expectedSize + "x" + expectedSize + ".png";
+        final byte[] encodedBytes;
+        try (InputStream input = Y100DAnimatedWindowProvider.class.getResourceAsStream(resource)) {
+            if (input == null) {
+                throw new IOException("Missing " + resource);
+            }
+            encodedBytes = input.readAllBytes();
+        }
+
+        final ByteBuffer encoded = MemoryUtil.memAlloc(encodedBytes.length);
+        try {
+            encoded.put(encodedBytes).flip();
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                final IntBuffer width = stack.mallocInt(1);
+                final IntBuffer height = stack.mallocInt(1);
+                final IntBuffer channels = stack.mallocInt(1);
+                final ByteBuffer decoded =
+                        STBImage.stbi_load_from_memory(encoded, width, height, channels, 4);
+                if (decoded == null) {
+                    throw new IOException(
+                            "Cannot decode " + resource + ": " + STBImage.stbi_failure_reason());
+                }
+                if (width.get(0) != expectedSize || height.get(0) != expectedSize) {
+                    STBImage.stbi_image_free(decoded);
+                    throw new IOException(
+                            "Unexpected icon size " + width.get(0) + "x" + height.get(0)
+                                    + " for " + resource);
+                }
+                return decoded;
+            }
+        } finally {
+            MemoryUtil.memFree(encoded);
+        }
+    }
+
     private void disableBackground(final Throwable failure) {
         if (backgroundActive.compareAndSet(true, false)) {
             coverCompositorActive.set(false);
@@ -496,6 +585,14 @@ public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvide
                         + failure);
     }
 
+    private void reportIconFailure(final Throwable failure) {
+        if (iconFailureReported.compareAndSet(false, true)) {
+            System.err.println(
+                    "[Y100D Early Loading] Custom window icon disabled; "
+                            + "the game will use its stock icon: " + failure);
+        }
+    }
+
     @Override
     public void updateFramebufferSize(final IntConsumer width, final IntConsumer height) {
         delegate.updateFramebufferSize(width, height);
@@ -507,7 +604,9 @@ public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvide
             final IntSupplier height,
             final Supplier<String> title,
             final LongSupplier monitor) {
-        return delegate.setupMinecraftWindow(width, height, title, monitor);
+        final long window = delegate.setupMinecraftWindow(width, height, title, monitor);
+        windowHandle = window;
+        return window;
     }
 
     @Override
@@ -526,6 +625,14 @@ public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvide
             final Supplier<?> reloadInstance,
             final Consumer<Optional<Throwable>> completion,
             final boolean fade) {
+        // Minecraft applies its vanilla icon immediately after adopting the
+        // early NeoForge window. This callback runs later on the same main
+        // thread, so restore the pack icon once without any per-frame work.
+        try {
+            applyWindowIcon(windowHandle);
+        } catch (Throwable failure) {
+            reportIconFailure(failure);
+        }
         return delegate.loadingOverlay(minecraft, reloadInstance, completion, fade);
     }
 
