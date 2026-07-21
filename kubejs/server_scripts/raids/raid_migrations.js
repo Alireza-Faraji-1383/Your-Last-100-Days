@@ -15,7 +15,11 @@
 //
 // Runs at two points so no stale mob can tick with the bad value:
 //   - entity join (chunk load / spawn) — covers mobs streaming in later
-//   - server loaded — covers entities already loaded after a /reload
+//   - server tick sweep — first tick after script load (ServerEvents.loaded
+//     does NOT re-fire on /reload, so a load-time sweep misses entities that
+//     are already loaded when the script arrives mid-session — that exact gap
+//     crashed a server on 2026-07-21), then repeated every 600 ticks as a
+//     safety net in case a join event is ever missed.
 //
 // Rhino quirk (same as raid_core.js): function-internal declarations use var.
 
@@ -55,11 +59,9 @@
         fixCanPickUp(event.entity);
     });
 
-    // Post-/reload safety net: entities already loaded never re-fire spawned.
-    ServerEvents.loaded(function (event) {
+    function sweepLoaded(server) {
         var fixed = 0;
         try {
-            var server = event.server;
             if (!server || typeof server.getAllLevels !== "function") return;
             var lit = server.getAllLevels().iterator();
             while (lit.hasNext()) {
@@ -72,7 +74,19 @@
                     if (fixCanPickUp(eit.next())) fixed++;
                 }
             }
-        } catch (e) { warn("load sweep: " + e); }
-        if (fixed) console.info("[RaidMigrate] load sweep repaired " + fixed + " mob(s)");
+        } catch (e) { warn("sweep: " + e); }
+        if (fixed) console.info("[RaidMigrate] sweep repaired " + fixed + " mob(s)");
+    }
+
+    // First tick after script load (covers server start AND mid-session
+    // /reload — a stale mob crashes on its very first goal tick, so this must
+    // run before any grace period), then every 600 ticks (~30s) as a safety
+    // net. NBT contains-check per entity is cheap.
+    var SWEEP_EVERY = 600;
+    var _sweepIn = 0;
+    ServerEvents.tick(function (event) {
+        if (_sweepIn-- > 0) return;
+        _sweepIn = SWEEP_EVERY;
+        sweepLoaded(event.server);
     });
 })();
