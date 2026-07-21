@@ -9,16 +9,21 @@
 //   - Vanilla humanoids spawn EMPTY-handed via the raid spawner (no
 //     finalizeSpawn), so every skeleton/pillager/vindicator/drowned/wither
 //     skeleton archetype carries an explicit mainhand weapon.
+//   - Skeleton AI cannot fire a crossbow (reassessWeaponGoal only wires the
+//     bow goal) — every ranged skeleton gets a BOW. Crossbows only go to
+//     pillagers, whose own AI handles them.
 //   - Modded mobs (Born in Chaos / Cataclysm / Iron's Spellbooks) bring their
 //     own AI + weapons; they get NO equip and no vanilla-AI presets. The raid
 //     engine's targeting loop drives them regardless.
-//   - Infiltration layer: MINER_* dig to the player (needs mobGriefing),
-//     PEARL_ZOMBIE teleports past walls, TNT_CREEPER + DEMOMAN breach,
-//     DOOR_KNIGHT smashes doors, PHANTOM_CREEPER phases through blocks.
+//   - Infiltration layer: MINER_* dig to the player with diamond picks (needs
+//     mobGriefing), PEARL_ZOMBIE teleports past walls, TNT_CREEPER + DEMOMAN
+//     breach, DOOR_KNIGHT smashes doors, PHANTOM_CREEPER phases through
+//     blocks, TOSSER grabs the player and throws them off their own wall.
+//   - EAI fisher (rod hook) is intentionally NOT used anywhere.
 //
 // EAI presets referenced (see enhancedai_factory.js):
-//   superMiner, pearlThrower, fisherAggro, webShooter, skirmisher, mobile,
-//   tntCreeper, sharpTargeting, farSight.
+//   superMiner, pearlThrower, webShooter, skirmisher, mobile, tntCreeper,
+//   thrower, antiCheese, sharpTargeting, farSight.
 
 (function (global) {
     "use strict";
@@ -31,19 +36,19 @@
 
     var Mobs = {
         // ================= Vanilla — infiltration layer =================
-        // Miner: digs straight toward the player. Pickaxe cosmetic
+        // Miner: digs straight toward the player. Diamond pick cosmetic
         // (tool_requirement=NONE). Fire:-1 so daylight leftovers don't burn.
         MINER_ZOMBIE:   { type: "minecraft:zombie", presets: ["mobile", "superMiner"],
-                          equip: { mainhand: "minecraft:iron_pickaxe", head: "minecraft:iron_helmet" },
+                          equip: { mainhand: "minecraft:diamond_pickaxe", head: "minecraft:iron_helmet" },
                           nbt: { IsBaby: false, Fire: -1 } },
         // Mid-game miner: double health.
         MINER_STRONG:   { type: "minecraft:zombie", presets: ["mobile", "superMiner"],
-                          equip: { mainhand: "minecraft:iron_pickaxe", head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate" },
+                          equip: { mainhand: "minecraft:diamond_pickaxe", head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate" },
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=40"] },
         // Late-game miner: 60 HP, faster, iron-clad.
         MINER_ELITE:    { type: "minecraft:zombie", presets: ["mobile", "superMiner"],
-                          equip: { mainhand: "minecraft:iron_pickaxe",
+                          equip: { mainhand: "minecraft:diamond_pickaxe",
                                    head: "minecraft:iron_helmet", chest: "minecraft:iron_chestplate", legs: "minecraft:iron_leggings" },
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=60", "attributes/movement_speed=0.28"] },
@@ -51,10 +56,11 @@
         PEARL_ZOMBIE:   { type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: { mainhand: "minecraft:ender_pearl", head: "minecraft:chainmail_helmet" },
                           nbt: { IsBaby: false, Fire: -1 } },
-        // Casts a rod and reels the player off walls/towers.
-        FISHER_ZOMBIE:  { type: "minecraft:zombie", presets: ["mobile", "fisherAggro"],
-                          equip: { mainhand: "minecraft:fishing_rod", head: "minecraft:leather_helmet" },
-                          nbt: { IsBaby: false, Fire: -1 } },
+        // Grabs the player and hurls them off their wall/tower (EAI thrower).
+        TOSSER:         { type: "minecraft:zombie", presets: ["mobile", "thrower"],
+                          equip: { head: "minecraft:iron_helmet", chest: "minecraft:iron_chestplate" },
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
         // Breaching creeper: launches at walls, TNT-like blast.
         TNT_CREEPER:    { type: "minecraft:creeper", presets: ["tntCreeper"] },
         // Poison-web artillery spider.
@@ -64,9 +70,12 @@
         BOW_SKELETON:      { type: "minecraft:skeleton", presets: ["mobile", "skirmisher"],
                              equip: { mainhand: "minecraft:bow", head: "minecraft:iron_helmet" },
                              nbt: { Fire: -1 } },
-        CROSSBOW_SKELETON: { type: "minecraft:skeleton", presets: ["mobile", "skirmisher"],
-                             equip: { mainhand: "minecraft:crossbow", chest: "minecraft:chainmail_chestplate" },
-                             nbt: { Fire: -1 } },
+        // Heavier bow line (skeletons can't fire crossbows — bow + armor).
+        ARMORED_SKELETON:  { type: "minecraft:skeleton", presets: ["mobile", "skirmisher"],
+                             equip: { mainhand: "minecraft:bow",
+                                      head: "minecraft:chainmail_helmet", chest: "minecraft:chainmail_chestplate" },
+                             nbt: { Fire: -1 },
+                             extraArgs: ["attributes/max_health=30"] },
         TRIDENT_DROWNED:   { type: "minecraft:drowned", presets: ["mobile", "skirmisher"],
                              equip: { mainhand: "minecraft:trident" } },
         WITHER_SKELETON:   { type: "minecraft:wither_skeleton", presets: ["mobile"],
@@ -90,6 +99,9 @@
         ZOMBIE_BRUISER:  { type: BIC + "zombie_bruiser" },
         LUMBERJACK:      { type: BIC + "zombie_lumberjack" },
         MAGGOT:          { type: BIC + "maggot" },
+        SWARMER:         { type: BIC + "swarmer" },
+        PUMPKIN_BRUISER: { type: BIC + "pumpkin_bruiser" },
+        MISSIONARY:      { type: BIC + "missioner" },
 
         // ================= Born in Chaos — bones ========================
         DECREPIT_SKELETON:{ type: BIC + "decrepit_skeleton" },
@@ -110,6 +122,8 @@
         NIGHTMARE_STALKER:{ type: BIC + "nightmare_stalker" },
         LIFESTEALER:     { type: BIC + "lifestealer" },
         PHANTOM_CREEPER: { type: BIC + "phantom_creeper" },    // phases through walls, explodes
+        MOTHER_SPIDER:   { type: BIC + "mother_spider" },      // spawns baby spiders
+        BLOODY_GADFLY:   { type: BIC + "bloody_gadfly" },      // flying harasser
 
         // ================= Born in Chaos — elite & minibosses ===========
         DOOR_KNIGHT:     { type: BIC + "door_knight" },        // smashes doors
@@ -122,14 +136,19 @@
         // ================= Cataclysm — the deep =========================
         DEEPLING:        { type: CAT + "deepling" },
         DEEPLING_BRUTE:  { type: CAT + "deepling_brute" },
-        DEEPLING_ANGLER: { type: CAT + "deepling_angler" },    // built-in hook pull
+        DEEPLING_ANGLER: { type: CAT + "deepling_angler" },    // built-in hook pull (mod AI, not EAI fisher)
         DEEPLING_PRIEST: { type: CAT + "deepling_priest" },
         DEEPLING_WARLOCK:{ type: CAT + "deepling_warlock" },
-        CORALSSUS:       { type: CAT + "coralssus" },          // day-60 miniboss pair
+        CORALSSUS:       { type: CAT + "coralssus" },          // day-60 miniboss trio
 
-        // ================= Cataclysm — fire & draugr ====================
+        // ================= Cataclysm — fire, sand & draugr ==============
         IGNITED_BERSERKER:{ type: CAT + "ignited_berserker" },
         IGNITED_REVENANT:{ type: CAT + "ignited_revenant" },
+        KOBOLETON:       { type: CAT + "koboleton" },          // kobold skirmisher
+        KOBOLEDIATOR:    { type: CAT + "kobolediator" },       // kobold gladiator elite
+        WADJET:          { type: CAT + "wadjet" },             // serpent sorcerer
+        WATCHER:         { type: CAT + "the_watcher" },        // Harbinger-factory construct
+        PROWLER:         { type: CAT + "the_prowler" },        // Harbinger-factory hunter
         DRAUGR:          { type: CAT + "draugr" },
         ELITE_DRAUGR:    { type: CAT + "elite_draugr" },
         ROYAL_DRAUGR:    { type: CAT + "royal_draugr" },
@@ -142,6 +161,8 @@
                            extraArgs: ["attributes/max_health=250"] },
 
         // ================= Iron's Spellbooks — the covenant =============
+        // No standalone "summoner" mob exists in the mod — the NECROMANCER is
+        // its skeleton-summoning wizard; raids lean on it as the summoner.
         CULTIST:         { type: ISS + "cultist" },
         CATACOMBS_ZOMBIE:{ type: ISS + "catacombs_zombie" },
         PYROMANCER:      { type: ISS + "pyromancer" },

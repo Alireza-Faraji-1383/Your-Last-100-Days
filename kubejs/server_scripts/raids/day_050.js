@@ -2,8 +2,10 @@
 // kubejs/server_scripts/raids/day_050.js
 //
 // NIGHT 50 — "The Arcane Covenant" (chapter 5: the mages pick a side)
-// Iron's Spellbooks night. Battle mages + a healer priest that must die
-// first. Miniboss finale: the Ancient Knight (citadel keeper, 120 HP).
+// Iron's Spellbooks night. Necromancers are the covenant's skeleton-wizard
+// summoners; the priest keeps everything alive — kill it first. Miniboss
+// finale: the Ancient Knight (citadel keeper, 120 HP). antiCheese preset
+// active from this night on: no pillar/boat cheese, mobs teleport to you.
 
 (function () {
     "use strict";
@@ -15,41 +17,44 @@
 
     Raid("day50_arcane_covenant")
         .title("The Arcane Covenant")
-        .spawn(34, 52)
+        .spawn(68, 104)
         .aggroRadius(26)
-        .defaultPresets("farSight")
+        .defaultPresets("farSight", "antiCheese")
         .barColor("BLUE")
         // --- Round 1: expendable faithful ---
         .round("The Faithful")
             .breather(200)
-            .timeLimit(4800)
-            .mob(M.CULTIST).count(6)
-            .mob(M.CATACOMBS_ZOMBIE).count(4)
-            .mob(M.MINER_STRONG).count(3)
+            .timeLimit(6000)
+            .mob(M.CULTIST).count(8)
+            .mob(M.CATACOMBS_ZOMBIE).count(6)
+            .mob(M.MINER_STRONG).count(4)
         // --- Round 2: fire and ice ---
         .round("Battle Mages")
             .breather(200)
-            .timeLimit(6000)
-            .mob(M.PYROMANCER).count(2)
-            .mob(M.CRYOMANCER).count(2)
-            .mob(M.CULTIST).count(4)
-            .mob(M.PEARL_ZOMBIE).count(2)
-        // --- Round 3: death magic + a healer keeping it all alive ---
-        .round("Death Coven")
-            .breather(200)
             .timeLimit(7200)
-            .mob(M.NECROMANCER).count(2)
-            .mob(M.PRIEST).count(1)
-            .mob(M.ARCHEVOKER).count(1)
-            .mob(M.CULTIST).count(4)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.PYROMANCER).count(3)
+            .mob(M.CRYOMANCER).count(3)
+            .mob(M.CULTIST).count(5)
+            .mob(M.TOSSER).count(3)
+            .mob(M.MINER_STRONG).count(3)
+        // --- Round 3: the summoners + their healer ---
+        .round("Death Coven")
+            .breather(300)
+            .timeLimit(8400)
+            .mob(M.NECROMANCER).count(3)
+            .mob(M.PRIEST).count(2)
+            .mob(M.ARCHEVOKER).count(2)
+            .mob(M.CULTIST).count(5)
+            .mob(M.PEARL_ZOMBIE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 4 (FINAL): the Ancient Knight ---
         .round("The Ancient Knight")
-            .timeLimit(12000)
+            .timeLimit(14400)
             .mob(M.CITADEL_KEEPER).count(1)
-            .mob(M.MAGEHUNTER).count(2)
-            .mob(M.NECROMANCER).count(1)
-            .mob(M.PYROMANCER).count(1)
+            .mob(M.MAGEHUNTER).count(3)
+            .mob(M.NECROMANCER).count(2)
+            .mob(M.PYROMANCER).count(2)
+            .mob(M.MINER_ELITE).count(3)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("irons_spellbooks:arcane_essence 8");

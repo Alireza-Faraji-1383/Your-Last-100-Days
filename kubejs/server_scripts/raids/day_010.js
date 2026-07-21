@@ -17,31 +17,33 @@
 
     Raid("day10_rotting_dawn")
         .title("The Rotting Dawn")
-        .spawn(30, 45)
+        .spawn(60, 90)
         .aggroRadius(24)
         .defaultPresets("farSight")
         .barColor("GREEN")
-        // --- Round 1: first shamblers, one miner probing the walls ---
+        // --- Round 1: first shamblers, miners probing the walls ---
         .round("Shamblers")
             .breather(200)
-            .timeLimit(4800)
+            .timeLimit(6000)
             .mob({ type: "minecraft:zombie", presets: ["mobile"],
                    equip: { head: "minecraft:iron_helmet" }, nbt: { IsBaby: false, Fire: -1 } }).count(4)
-            .mob(M.MINER_ZOMBIE).count(2)
+            .mob(M.ROTTING_ZOMBIE).count(6)
+            .mob(M.MINER_ZOMBIE).count(3)
         // --- Round 2: Born in Chaos rot joins in ---
         .round("Grave Rot")
             .breather(200)
-            .timeLimit(4800)
-            .mob(M.ROTTING_ZOMBIE).count(5)
-            .mob(M.LUMBERJACK).count(2)
-            .mob(M.MINER_ZOMBIE).count(2)
+            .timeLimit(6000)
+            .mob(M.ROTTING_ZOMBIE).count(6)
+            .mob(M.LUMBERJACK).count(3)
+            .mob(M.SWARMER).count(4)
+            .mob(M.MINER_ZOMBIE).count(3)
         // --- Round 3 (FINAL): bruisers + maggot swarm + arrows ---
         .round("The Bruisers")
-            .timeLimit(9600)
-            .mob(M.ZOMBIE_BRUISER).count(2)
-            .mob(M.MAGGOT).count(4)
-            .mob(M.BOW_SKELETON).count(3)
-            .mob(M.MINER_STRONG).count(2)
+            .timeLimit(12000)
+            .mob(M.ZOMBIE_BRUISER).count(3)
+            .mob(M.MAGGOT).count(6)
+            .mob(M.BOW_SKELETON).count(4)
+            .mob(M.MINER_STRONG).count(3)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:iron_ingot 12");

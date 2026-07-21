@@ -616,6 +616,22 @@
         } catch (e) {}
     }
 
+    // Colored glow outline: every raid mob joins the "raidmobs" scoreboard team
+    // (dark_red). The vanilla glowing effect renders its outline in the team
+    // color, so glowing raid mobs are instantly tellable from ambient mobs.
+    // Team creation is idempotent ("team add" on an existing team just fails
+    // silently); _teamReady only skips the redundant setup calls.
+    var _teamReady = false;
+    function joinRaidTeam(server, entity) {
+        if (!server || typeof server.runCommandSilent !== "function" || !entity) return;
+        if (!_teamReady) {
+            try { server.runCommandSilent("team add raidmobs"); } catch (e) {}
+            try { server.runCommandSilent("team modify raidmobs color dark_red"); } catch (e2) {}
+            _teamReady = true;
+        }
+        try { server.runCommandSilent("team join raidmobs " + String(entity.uuid)); } catch (e3) {}
+    }
+
     // Spawn telegraph: cloud puff at the spot so waves read as "arriving".
     function spawnPoof(player, pos) {
         if (!player) return;
@@ -898,6 +914,8 @@
         var out = [];
         var pp = null;
         try { pp = player.position(); } catch (ePp) { warn(`spawnRound: player.position() failed: ${ePp}`); return []; }
+        var server = null;
+        try { server = player.server; } catch (eSv) {}
         // total mob count -> evenly spaced ring angle by global index (no Math.random).
         var total = 0;
         for (var ti = 0; ti < round.mobs.length; ti++) total += round.mobs[ti].count;
@@ -956,6 +974,7 @@
                 try { EAI.applyDeferred(level, entity, EAI.resolveArgs(names, xtra)); }
                 catch (eD) { warn(`applyDeferred: ${eD}`); }
                 equipMob(entity, mob.equip);        // weapons/armor — post-spawn
+                joinRaidTeam(server, entity);       // colored glow outline team
                 forceTarget(entity, player);
                 spawnPoof(player, pos);
                 out.push(entity);
@@ -1000,14 +1019,15 @@
         var C = barClasses();
         try { this.bar.setColor(enumVal(C.Color, name, "RED")); } catch (e) {}
     };
-    // Straggler highlight: glow every live raid mob during the second half of the
-    // final round's timer (and all of WIN_WAIT) so lost/stuck mobs are findable
-    // through terrain. Refreshed every 4th aggro pass (~1s) — same cadence as
-    // waterAssist, offset so both don't run on the same pass.
+    // Straggler highlight: glow every live raid mob during the second half of
+    // EVERY round's timer (and all of WIN_WAIT) so raid mobs read apart from
+    // ambient mobs and stuck ones are findable through terrain. Outline renders
+    // in the raid team color (see joinRaidTeam). Refreshed every 4th aggro pass
+    // (~1s) — same cadence as waterAssist, offset so both don't share a pass.
     RaidInstance.prototype.glowStragglers = function () {
         if ((this._assistTick & 3) !== 2) return;
         var glow = (this.phase === "WIN_WAIT");
-        if (!glow && this.phase === "FIGHTING" && this.roundIdx === this.def.rounds.length - 1) {
+        if (!glow && this.phase === "FIGHTING") {
             var tl = this.def.rounds[this.roundIdx].timeLimit;
             glow = (tl != null && this.roundTimeLeft != null && this.roundTimeLeft < tl / 2);
         }

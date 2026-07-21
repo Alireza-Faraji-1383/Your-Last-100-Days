@@ -2,8 +2,8 @@
 // kubejs/server_scripts/raids/day_040.js
 //
 // NIGHT 40 — "Night of Spirits" (chapter 4: the veil tears)
-// Born in Chaos horror night: spirits, hounds, phasing creepers. Walls stop
-// mattering — phantom creepers slip through, fishers reel you off towers.
+// Born in Chaos horror night: spirits, hounds, spider broods, phasing
+// creepers. Walls stop mattering — phantom creepers slip straight through.
 
 (function () {
     "use strict";
@@ -15,40 +15,43 @@
 
     Raid("day40_night_of_spirits")
         .title("Night of Spirits")
-        .spawn(30, 50)
+        .spawn(60, 100)
         .aggroRadius(26)
         .defaultPresets("farSight")
         .barColor("PURPLE")
         // --- Round 1: the restless dead ---
         .round("Restless Dead")
             .breather(200)
-            .timeLimit(4800)
-            .mob(M.RESTLESS_SPIRIT).count(5)
-            .mob(M.ROTTING_ZOMBIE).count(4)
-            .mob(M.MINER_STRONG).count(2)
-        // --- Round 2: wisps and embers ---
+            .timeLimit(6000)
+            .mob(M.RESTLESS_SPIRIT).count(6)
+            .mob(M.ROTTING_ZOMBIE).count(6)
+            .mob(M.MINER_STRONG).count(3)
+        // --- Round 2: wisps, embers and bloodflies ---
         .round("Grave Lights")
             .breather(200)
-            .timeLimit(6000)
-            .mob(M.FIRELIGHT).count(3)
-            .mob(M.PUMPKIN_SPIRIT).count(3)
-            .mob(M.SEARED_SPIRIT).count(2)
-            .mob(M.FISHER_ZOMBIE).count(2)
+            .timeLimit(7200)
+            .mob(M.FIRELIGHT).count(4)
+            .mob(M.PUMPKIN_SPIRIT).count(4)
+            .mob(M.SEARED_SPIRIT).count(3)
+            .mob(M.BLOODY_GADFLY).count(4)
+            .mob(M.MINER_STRONG).count(3)
         // --- Round 3: the hunt is loosed ---
         .round("The Hunt")
             .breather(200)
-            .timeLimit(6000)
-            .mob(M.DREAD_HOUND).count(4)
-            .mob(M.HOUND_LEADER).count(1)
-            .mob(M.PHANTOM_CREEPER).count(3)
-        // --- Round 4 (FINAL): the nightmare itself ---
-        .round("The Nightmare")
-            .timeLimit(12000)
-            .mob(M.NIGHTMARE_STALKER).count(1)
-            .mob(M.LIFESTEALER).count(2)
-            .mob(M.RESTLESS_SPIRIT).count(4)
-            .mob(M.PEARL_ZOMBIE).count(3)
+            .timeLimit(7200)
+            .mob(M.DREAD_HOUND).count(6)
+            .mob(M.HOUND_LEADER).count(2)
+            .mob(M.PHANTOM_CREEPER).count(4)
+            .mob(M.MOTHER_SPIDER).count(2)
             .mob(M.MINER_STRONG).count(3)
+        // --- Round 4 (FINAL): the nightmares themselves ---
+        .round("The Nightmares")
+            .timeLimit(14400)
+            .mob(M.NIGHTMARE_STALKER).count(2)
+            .mob(M.LIFESTEALER).count(3)
+            .mob(M.RESTLESS_SPIRIT).count(5)
+            .mob(M.PEARL_ZOMBIE).count(4)
+            .mob(M.MINER_ELITE).count(4)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:golden_apple 4");
