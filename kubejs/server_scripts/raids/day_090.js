@@ -16,8 +16,10 @@
 
     Raid("day90_dark_concord")
         .title("The Dark Concord")
-        .spawn(64, 104)
-        .aggroRadius(28)
+        .spawn(80, 100)
+        .spawnPattern("horde")
+        .aggroRadius(40)
+        .followRange(300)
         .defaultPresets("farSight", "antiCheese")
         .barColor("PURPLE")
         // --- Round 1: the draugr host ---
@@ -26,7 +28,7 @@
             .timeLimit(7200)
             .mob(M.DRAUGR).count(8)
             .mob(M.ELITE_DRAUGR).count(4)
-            .mob(M.MINER_ELITE).count(5)
+            .mob(M.MINER_ELITE).count(6)
         // --- Round 2: knights of chaos ---
         .round("Chaos Knights")
             .breather(200)
@@ -35,7 +37,7 @@
             .mob(M.ROYAL_DRAUGR).count(3)
             .mob(M.DOOR_KNIGHT).count(4)
             .mob(M.TOSSER).count(3)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 3: the covenant reborn ---
         .round("Covenant Reborn")
             .breather(300)
@@ -45,7 +47,7 @@
             .mob(M.CRYOMANCER).count(3)
             .mob(M.PRIEST).count(2)
             .mob(M.PEARL_ZOMBIE).count(5)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 4: the summoner (miniboss) ---
         .round("The Summoner")
             .breather(300)
@@ -55,7 +57,7 @@
             .mob(M.THRASHER).count(3)
             .mob(M.WATCHER).count(2)
             .mob(M.TNT_CREEPER).count(5)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 5 (FINAL): the risen giants ---
         .round("The Risen Giants")
             .timeLimit(16800)
@@ -63,7 +65,7 @@
             .mob(M.NIGHTMARE_STALKER).count(2)
             .mob(M.ELITE_DRAUGR).count(5)
             .mob(M.PROWLER).count(2)
-            .mob(M.MINER_ELITE).count(5)
+            .mob(M.MINER_ELITE).count(6)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:netherite_ingot 2");

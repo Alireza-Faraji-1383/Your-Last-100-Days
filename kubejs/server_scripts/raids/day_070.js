@@ -16,9 +16,10 @@
 
     Raid("day70_rotten_legion")
         .title("The Rotten Legion")
-        .spawn(72, 108)
+        .spawn(80, 100)
         .spawnPattern("horde")
-        .aggroRadius(28)
+        .aggroRadius(40)
+        .followRange(300)
         .defaultPresets("farSight", "antiCheese")
         .barColor("RED")
         // --- Round 1: legion vanguard ---
@@ -29,7 +30,7 @@
             .mob(M.FALLEN_KNIGHT).count(3)
             .mob(M.ROTTING_ZOMBIE).count(8)
             .mob(M.PUMPKIN_BRUISER).count(3)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.MINER_ELITE).count(5)
         // --- Round 2: siege breakers — the walls come down ---
         .round("Siege Breakers")
             .breather(200)
@@ -38,7 +39,7 @@
             .mob(M.TNT_CREEPER).count(6)
             .mob(M.DEMOMAN).count(3)
             .mob(M.PEARL_ZOMBIE).count(4)
-            .mob(M.MINER_ELITE).count(5)
+            .mob(M.MINER_ELITE).count(6)
         // --- Round 3: the general's hounds and henchmen ---
         .round("The Henchmen")
             .breather(300)
@@ -47,7 +48,7 @@
             .mob(M.DREAD_HOUND).count(5)
             .mob(M.THRASHER).count(2)
             .mob(M.SCARLET_PERSECUTOR).count(3)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 4 (FINAL): KRAMPUS ---
         .round("Krampus")
             .timeLimit(16800)
@@ -55,7 +56,7 @@
             .mob(M.KRAMPUS_HENCHMAN).count(3)
             .mob(M.ZOMBIE_BRUISER).count(4)
             .mob(M.TOSSER).count(3)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:netherite_scrap 4");

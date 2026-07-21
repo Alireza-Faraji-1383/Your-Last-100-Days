@@ -17,8 +17,10 @@
 
     Raid("day50_arcane_covenant")
         .title("The Arcane Covenant")
-        .spawn(68, 104)
-        .aggroRadius(26)
+        .spawn(80, 100)
+        .spawnPattern("horde")
+        .aggroRadius(40)
+        .followRange(300)
         .defaultPresets("farSight", "antiCheese")
         .barColor("BLUE")
         // --- Round 1: expendable faithful ---
@@ -27,7 +29,7 @@
             .timeLimit(6000)
             .mob(M.CULTIST).count(8)
             .mob(M.CATACOMBS_ZOMBIE).count(6)
-            .mob(M.MINER_STRONG).count(4)
+            .mob(M.MINER_STRONG).count(5)
         // --- Round 2: fire and ice ---
         .round("Battle Mages")
             .breather(200)
@@ -36,7 +38,7 @@
             .mob(M.CRYOMANCER).count(3)
             .mob(M.CULTIST).count(5)
             .mob(M.TOSSER).count(3)
-            .mob(M.MINER_STRONG).count(3)
+            .mob(M.MINER_STRONG).count(5)
         // --- Round 3: the summoners + their healer ---
         .round("Death Coven")
             .breather(300)
@@ -46,7 +48,7 @@
             .mob(M.ARCHEVOKER).count(2)
             .mob(M.CULTIST).count(5)
             .mob(M.PEARL_ZOMBIE).count(3)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.MINER_ELITE).count(5)
         // --- Round 4 (FINAL): the Ancient Knight ---
         .round("The Ancient Knight")
             .timeLimit(14400)
@@ -54,7 +56,7 @@
             .mob(M.MAGEHUNTER).count(3)
             .mob(M.NECROMANCER).count(2)
             .mob(M.PYROMANCER).count(2)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("irons_spellbooks:arcane_essence 8");

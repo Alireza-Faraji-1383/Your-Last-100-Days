@@ -16,9 +16,10 @@
 
     Raid("day80_burning_siege")
         .title("The Burning Siege")
-        .spawn(72, 108)
+        .spawn(80, 100)
         .spawnPattern("horde")
-        .aggroRadius(28)
+        .aggroRadius(40)
+        .followRange(300)
         .defaultPresets("farSight", "antiCheese")
         .barColor("YELLOW")
         // --- Round 1: embers on the wind ---
@@ -29,7 +30,7 @@
             .mob(M.INFERNAL_SPIRIT).count(4)
             .mob(M.BLAZE).count(4)
             .mob(M.KOBOLETON).count(4)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.MINER_ELITE).count(5)
         // --- Round 2: the ignited warband ---
         .round("Ignited Warband")
             .breather(200)
@@ -38,7 +39,7 @@
             .mob(M.WITHER_SKELETON).count(5)
             .mob(M.DEMOMAN).count(4)
             .mob(M.KOBOLEDIATOR).count(2)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 3: revenants breach the line ---
         .round("The Revenants")
             .breather(300)
@@ -47,7 +48,7 @@
             .mob(M.IGNITED_BERSERKER).count(4)
             .mob(M.PEARL_ZOMBIE).count(5)
             .mob(M.TNT_CREEPER).count(4)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.MINER_ELITE).count(5)
         // --- Round 4 (FINAL): MALEDICTUS ---
         .round("Maledictus")
             .timeLimit(16800)
@@ -55,7 +56,7 @@
             .mob(M.WADJET).count(2)
             .mob(M.IGNITED_BERSERKER).count(3)
             .mob(M.SEARED_SPIRIT).count(4)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:netherite_ingot 1");

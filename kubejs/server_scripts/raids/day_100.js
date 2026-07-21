@@ -16,8 +16,10 @@
 
     Raid("day100_last_dawn")
         .title("The Last Dawn")
-        .spawn(68, 112)
-        .aggroRadius(30)
+        .spawn(80, 100)
+        .spawnPattern("horde")
+        .aggroRadius(40)
+        .followRange(300)
         .defaultPresets("farSight", "antiCheese")
         .barColor("RED")
         // --- Round 1: the risen (chapter 1 echo) ---
@@ -28,7 +30,7 @@
             .mob(M.ROTTING_ZOMBIE).count(8)
             .mob(M.THRASHER).count(2)
             .mob(M.PUMPKIN_BRUISER).count(3)
-            .mob(M.MINER_ELITE).count(5)
+            .mob(M.MINER_ELITE).count(6)
         // --- Round 2: the bones (chapter 2 echo) ---
         .round("The Bones")
             .breather(200)
@@ -37,7 +39,7 @@
             .mob(M.BONESCALLER).count(3)
             .mob(M.DEMOMAN).count(4)
             .mob(M.ARMORED_SKELETON).count(5)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 3: the breach — everything that digs, blasts or phases ---
         .round("The Breach")
             .breather(300)
@@ -57,7 +59,7 @@
             .mob(M.ARCHEVOKER).count(3)
             .mob(M.PRIEST).count(2)
             .mob(M.TOSSER).count(3)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 5: the elite guard ---
         .round("The Elite Guard")
             .breather(400)
@@ -68,7 +70,7 @@
             .mob(M.IGNITED_REVENANT).count(3)
             .mob(M.CITADEL_KEEPER).count(1)
             .mob(M.WATCHER).count(2)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.MINER_ELITE).count(5)
         // --- Round 6 (FINAL): IGNIS, the Last Flame ---
         .round("Ignis, the Last Flame")
             .timeLimit(20400)
@@ -76,7 +78,7 @@
             .mob(M.IGNITED_BERSERKER).count(4)
             .mob(M.SEARED_SPIRIT).count(4)
             .mob(M.PEARL_ZOMBIE).count(3)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:netherite_ingot 4");

@@ -16,8 +16,10 @@
 
     Raid("day60_rise_of_the_deep")
         .title("Rise of the Deep")
-        .spawn(60, 100)
-        .aggroRadius(26)
+        .spawn(80, 100)
+        .spawnPattern("horde")
+        .aggroRadius(40)
+        .followRange(300)
         .defaultPresets("farSight", "antiCheese")
         .barColor("BLUE")
         // --- Round 1: tidal vanguard ---
@@ -26,7 +28,7 @@
             .timeLimit(6000)
             .mob(M.DEEPLING).count(8)
             .mob(M.TRIDENT_DROWNED).count(4)
-            .mob(M.MINER_STRONG).count(3)
+            .mob(M.MINER_STRONG).count(5)
         // --- Round 2: hooks from the dark ---
         .round("The Anglers")
             .breather(200)
@@ -34,7 +36,7 @@
             .mob(M.DEEPLING_ANGLER).count(4)
             .mob(M.DEEPLING).count(5)
             .mob(M.DEEPLING_BRUTE).count(3)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.MINER_ELITE).count(5)
         // --- Round 3: abyssal clergy ---
         .round("Abyssal Clergy")
             .breather(300)
@@ -43,7 +45,7 @@
             .mob(M.DEEPLING_WARLOCK).count(3)
             .mob(M.DEEPLING_BRUTE).count(4)
             .mob(M.PEARL_ZOMBIE).count(4)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         // --- Round 4 (FINAL): coral colossi ---
         .round("Coral Colossi")
             .timeLimit(14400)
@@ -51,7 +53,7 @@
             .mob(M.DEEPLING_BRUTE).count(4)
             .mob(M.DEEPLING_WARLOCK).count(3)
             .mob(M.TNT_CREEPER).count(4)
-            .mob(M.MINER_ELITE).count(3)
+            .mob(M.MINER_ELITE).count(4)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:trident 1");
