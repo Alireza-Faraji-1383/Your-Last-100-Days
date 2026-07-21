@@ -89,10 +89,11 @@
         LEATHER_ZOMBIE:   { type: "minecraft:zombie",     presets: ["mobile"],
                             equip: { head: "minecraft:iron_helmet" },
                             nbt:   { IsBaby: false, Fire: -1 } },
-        // Full movement zombie: climbing + sprint via entity tags, mobile preset.
+        // Fast zombie: full mobility (mobile preset) + ~30% speed boost (0.23 -> 0.3).
         MOVEMENT_ZOMBIE:  { type: "minecraft:zombie",     presets: ["mobile"],
                             equip: { head: "minecraft:iron_helmet" },
-                            nbt:   { IsBaby: false, Fire: -1 } },
+                            nbt:   { IsBaby: false, Fire: -1 },
+                            extraArgs: ["attributes/movement_speed=0.3"] },
         // Miner with double health (40 HP).
         MINER_STRONG:     { type: "minecraft:zombie",     presets: ["mobile", "superMiner"],
                             equip: { mainhand: "minecraft:iron_pickaxe", head: "minecraft:iron_helmet" },

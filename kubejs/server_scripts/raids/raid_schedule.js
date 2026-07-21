@@ -17,8 +17,11 @@
 // (not "=== day") fire rule guarantees a missed/offline night still triggers on
 // the next eligible night, rather than being skipped forever.
 //
-// In-memory only: a /reload mid-night re-arms entries, so a raid can refire the
-// same night. Guard with a world flag if that matters.
+// Fired flags persist in server.persistentData ("raidsched_day<N>_<raidId>"), so
+// a /reload or restart cannot refire an already-fired entry. An entry is only
+// marked fired once it actually launched for >= 1 player — a night with nobody
+// online (or everyone already raiding) retries the next eligible night instead
+// of silently burning the raid.
 //
 // Depends on RaidManager (raid_core.js, priority 90 -> loads first). Rhino: var-only.
 
@@ -29,8 +32,24 @@
     var NIGHT_START = 13000;   // overworld time-of-day (ticks past dawn) when night raids may fire
     var _accum = 0;
     var _schedule = [];        // [{ day, raidId, fired }]
+    var _server = null;        // captured each tick — lets reset() reach persistentData
 
     function warn(m) { console.warn("[RaidSched] " + m); }
+
+    function pdKey(s) { return "raidsched_day" + s.day + "_" + s.raidId; }
+    // fired = in-memory flag OR the persisted world flag (cached back in-memory).
+    function pdFired(server, s) {
+        if (s.fired) return true;
+        try {
+            if (server.persistentData.getBoolean(pdKey(s))) { s.fired = true; return true; }
+        } catch (e) {}
+        return false;
+    }
+    function markFired(server, s) {
+        s.fired = true;
+        try { server.persistentData.putBoolean(pdKey(s), true); }
+        catch (e) { warn("persist " + pdKey(s) + ": " + e); }
+    }
 
     function overworldTime(server) {
         try {
@@ -65,6 +84,9 @@
             while (it.hasNext()) {
                 var p = it.next();
                 if (!p) continue;
+                // Quiet skip (no RaidManager warn spam) — an unfired entry retries
+                // every check while a player is mid-raid.
+                try { if (M.isInRaid && M.isInRaid(p)) continue; } catch (eIR) {}
                 try { if (M.start(M.playerLevel(p), p, raidId)) n++; }
                 catch (e) { warn("start " + raidId + " for a player: " + e); }
             }
@@ -91,11 +113,16 @@
             }
             return out;
         },
-        // Re-arm one-shot entries (testing). raidId omitted -> re-arm all. Returns count.
+        // Re-arm one-shot entries (testing). raidId omitted -> re-arm all. Returns
+        // count. Also clears the persisted world flags.
         reset: function (raidId) {
             var n = 0;
             for (var i = 0; i < _schedule.length; i++) {
-                if (!raidId || _schedule[i].raidId === String(raidId)) { _schedule[i].fired = false; n++; }
+                var s = _schedule[i];
+                if (!raidId || s.raidId === String(raidId)) {
+                    s.fired = false; n++;
+                    try { if (_server) _server.persistentData.remove(pdKey(s)); } catch (e) {}
+                }
             }
             return n;
         }
@@ -108,16 +135,21 @@
         if (_schedule.length === 0) return;
 
         var server = event.server;
+        _server = server;
         var t = overworldTime(server);
         if ((t % 24000) < NIGHT_START) return;          // daytime — wait for nightfall
         var day = Math.floor(t / 24000);
 
         for (var i = 0; i < _schedule.length; i++) {
             var s = _schedule[i];
-            if (s.fired || day < s.day) continue;
+            if (day < s.day || pdFired(server, s)) continue;
             var launched = fireForAll(server, s.raidId);
-            s.fired = true;
-            console.info("[RaidSched] day " + day + " night: fired '" + s.raidId + "' for " + launched + " player(s)");
+            if (launched > 0) {
+                markFired(server, s);
+                console.info("[RaidSched] day " + day + " night: fired '" + s.raidId + "' for " + launched + " player(s)");
+            }
+            // launched === 0 (empty server / everyone mid-raid): stay armed, retry
+            // next check / next eligible night.
         }
     });
 

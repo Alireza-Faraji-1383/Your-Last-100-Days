@@ -108,14 +108,84 @@
     }
     function sumHealth(arr) { var s = 0; for (var i = 0; i < arr.length; i++) s += entHealth(arr[i]); return s; }
     function sumMax(arr)    { var s = 0; for (var i = 0; i < arr.length; i++) s += entMaxHealth(arr[i]); return s; }
+    function fmtTicks(t) {
+        var s = Math.ceil(t / 20); if (s < 0) s = 0;
+        var m = Math.floor(s / 60), r = s % 60;
+        return m + ":" + (r < 10 ? "0" : "") + r;
+    }
     function prettyId(id) {
         var parts = String(id).split("_"), out = [];
         for (var i = 0; i < parts.length; i++) { var w = parts[i]; if (w) out.push(w.charAt(0).toUpperCase() + w.slice(1)); }
         return out.join(" ");
     }
+    // KubeJS 1.21 has no playSound(String, float, float) overload on the player
+    // wrapper — that call throws and used to be silently swallowed, so no raid
+    // sound ever played. Vanilla /playsound via runCommandSilent (the same
+    // proven path spawnPoof uses) targets just the named player.
     function playSnd(player, s) {
         if (!player || !s || !s.id) return;
-        try { player.playSound(s.id, (s.vol != null ? s.vol : 1.0), (s.pitch != null ? s.pitch : 1.0)); } catch (e) {}
+        var vol = (s.vol != null ? s.vol : 1.0), pitch = (s.pitch != null ? s.pitch : 1.0);
+        try {
+            var server = player.server;
+            if (server && typeof server.runCommandSilent === "function") {
+                var p = player.position();
+                server.runCommandSilent(
+                    "playsound " + s.id + " master " + player.username + " " +
+                    p.x.toFixed(1) + " " + p.y.toFixed(1) + " " + p.z.toFixed(1) + " " +
+                    vol + " " + pitch);
+                return;
+            }
+        } catch (e) { warn("playSnd(" + s.id + "): " + e); }
+        try { player.playSound(s.id, vol, pitch); } catch (e2) {}
+    }
+    // Play s to the center player plus every same-dimension player within radius
+    // blocks. One-shot (raid start only) — findOnlinePlayer is abused as a
+    // forEach by always returning false from the predicate.
+    const RAIDSTART_RADIUS = 64;
+    function broadcastSnd(server, center, s, radius) {
+        if (!center || !s || !s.id) return;
+        playSnd(center, s);
+        if (!server) return;
+        var cp, cdim = "";
+        try { cp = center.position(); } catch (e) { return; }
+        try { cdim = String(playerLevel(center).dimension); } catch (e2) {}
+        var r2 = radius * radius;
+        findOnlinePlayer(server, function (p) {
+            try {
+                if (String(p.uuid) === String(center.uuid)) return false;
+                var pdim = "";
+                try { pdim = String(playerLevel(p).dimension); } catch (eD) {}
+                if (cdim && pdim && pdim !== cdim) return false;
+                var pp = p.position();
+                var dx = pp.x - cp.x, dy = pp.y - cp.y, dz = pp.z - cp.z;
+                if (dx * dx + dy * dy + dz * dz <= r2) playSnd(p, s);
+            } catch (e3) {}
+            return false;
+        });
+    }
+    // Title flash via /title (subtitle set first so the title displays both).
+    function showTitle(player, title, subtitle, color) {
+        if (!player) return;
+        try {
+            var server = player.server;
+            if (!server || typeof server.runCommandSilent !== "function") return;
+            var name = player.username;
+            server.runCommandSilent('title ' + name + ' subtitle {"text":"' + String(subtitle || "") + '","color":"gray"}');
+            server.runCommandSilent('title ' + name + ' title {"text":"' + String(title) + '","color":"' + (color || "white") + '"}');
+        } catch (e) {}
+    }
+    // Victory particle burst around the player.
+    function victoryBurst(player) {
+        if (!player) return;
+        try {
+            var server = player.server;
+            if (!server || typeof server.runCommandSilent !== "function") return;
+            var p = player.position();
+            server.runCommandSilent(
+                "particle minecraft:totem_of_undying " +
+                p.x.toFixed(1) + " " + (p.y + 1.0).toFixed(1) + " " + p.z.toFixed(1) +
+                " 1 1 1 0.4 80 force");
+        } catch (e) {}
     }
     // Shallow-copy a plain object (null otherwise). Lets a reusable archetype's
     // equip/nbt be referenced by many raids without a later .equip()/.nbt() chain
@@ -201,9 +271,11 @@
             aggroRadius: 20,         // blocks: mobs proactively attack players/villagers/golems within this
             followRange: null,       // blocks: player detection + chase range (sets attributes/follow_range on every mob)
             sounds: {                // played to the target player (id null/"" = silent)
-                roundStart: { id: "minecraft:event.raid.horn",            vol: 1.0, pitch: 1.0 },
+                raidStart:  { id: "minecraft:entity.wither.spawn",         vol: 0.7, pitch: 1.0 }, // once at raid start, broadcast to nearby players
+                roundStart: { id: "minecraft:block.bell.use",              vol: 1.0, pitch: 0.8 }, // per-wave cue (skipped on wave 1 — raidStart covers it)
+                roundEnd:   { id: "minecraft:entity.player.levelup",       vol: 1.0, pitch: 1.2 }, // wave-clear stinger (non-final waves)
                 win:        { id: "minecraft:ui.toast.challenge_complete", vol: 1.0, pitch: 1.0 },
-                lose:       { id: "minecraft:entity.ravager.roar",        vol: 1.0, pitch: 0.8 }
+                lose:       { id: "minecraft:entity.elder_guardian.curse", vol: 1.0, pitch: 0.9 }
             }
         };
         this._round = null;   // current round being configured
@@ -318,7 +390,9 @@
             pitch: numberOr(pitch, 1.0)
         };
     }
+    RaidBuilder.prototype.raidStartSound  = function (id, vol, pitch) { this.def.sounds.raidStart  = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.roundStartSound = function (id, vol, pitch) { this.def.sounds.roundStart = _snd(id, vol, pitch); return this; };
+    RaidBuilder.prototype.roundEndSound   = function (id, vol, pitch) { this.def.sounds.roundEnd   = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.winSound        = function (id, vol, pitch) { this.def.sounds.win        = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.loseSound       = function (id, vol, pitch) { this.def.sounds.lose       = _snd(id, vol, pitch); return this; };
     RaidBuilder.prototype.onStart      = function (fn) { this.def.callbacks.onStart = fn; return this; };
@@ -916,22 +990,60 @@
     // Freeze the bar on an end state (victory green / defeat red) before it closes.
     RaidInstance.prototype.barEnd = function (name, colorName, progress) {
         if (!this.bar) return;
+        this._barText = name;   // keep the setBarName cache in sync
         try { this.bar.setName(Text.of(name)); } catch (e) {}
         if (colorName) { var C = barClasses(); try { this.bar.setColor(enumVal(C.Color, colorName, "RED")); } catch (e2) {} }
         try { this.bar.setProgress(progress); } catch (e3) {}
     };
+    RaidInstance.prototype.barColorSet = function (name) {
+        if (!this.bar) return;
+        var C = barClasses();
+        try { this.bar.setColor(enumVal(C.Color, name, "RED")); } catch (e) {}
+    };
+    // Straggler highlight: glow every live raid mob during the second half of the
+    // final round's timer (and all of WIN_WAIT) so lost/stuck mobs are findable
+    // through terrain. Refreshed every 4th aggro pass (~1s) — same cadence as
+    // waterAssist, offset so both don't run on the same pass.
+    RaidInstance.prototype.glowStragglers = function () {
+        if ((this._assistTick & 3) !== 2) return;
+        var glow = (this.phase === "WIN_WAIT");
+        if (!glow && this.phase === "FIGHTING" && this.roundIdx === this.def.rounds.length - 1) {
+            var tl = this.def.rounds[this.roundIdx].timeLimit;
+            glow = (tl != null && this.roundTimeLeft != null && this.roundTimeLeft < tl / 2);
+        }
+        if (!glow) return;
+        eachMob(this, function (m) {
+            try { m.potionEffects.add("minecraft:glowing", 120, 0, false, false); } catch (e) {}
+        });
+    };
     RaidInstance.prototype.lose = function (player) {
         killMobs(this);
         playSnd(player, this.def.sounds.lose);
+        showTitle(player, "DEFEAT", this.barBase, "dark_red");
         fireCb(this.def, "onLose", [this.ctx(player)]);
         this.barEnd("§4§l✖ DEFEATED", "RED", 0.0);
         this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
         this.phase = "ENDING";
     };
-    RaidInstance.prototype.barRoundName = function (round, idx) {
-        if (!this.bar) return;
+    // Set the bar name only when the rendered text actually changed — the live
+    // FIGHTING text refreshes every throttle tick but the string only changes
+    // ~once a second (timer tick / kill), so packet traffic stays minimal.
+    RaidInstance.prototype.setBarName = function (txt) {
+        if (!this.bar || txt === this._barText) return;
+        this._barText = txt;
+        try { this.bar.setName(Text.of(txt)); } catch (e) {}
+    };
+    // Live combat bar: title — wave (i/n) • ⚔ alive • ⌛ m:ss (red in the last minute).
+    RaidInstance.prototype.barFight = function (round) {
         var n = this.def.rounds.length;
-        try { this.bar.setName(Text.of("§c" + this.barBase + " §7— " + round.name + " (" + (idx + 1) + "/" + n + ")")); } catch (e) {}
+        var alive = this.roundMobs.length + this.carryover.length;
+        var txt = "§c" + this.barBase + " §7— " + round.name + " §8(" + (this.roundIdx + 1) + "/" + n + ")" +
+                  " §7• §f⚔ " + alive;
+        if (this.roundTimeLeft != null) {
+            var col = (this.roundTimeLeft <= 1200) ? "§c" : "§e";
+            txt += " §7• " + col + "⌛ " + fmtTicks(this.roundTimeLeft);
+        }
+        this.setBarName(txt);
     };
     RaidInstance.prototype.updateBar = function (player) {
         if (!this.bar) return;
@@ -965,6 +1077,7 @@
         // conversion needs 600 in-water ticks, so a 20-tick reset is plenty.
         this._assistTick++;
         if ((this._assistTick & 3) === 0) waterAssist(this);
+        this.glowStragglers();
         var radius = (this.def.aggroRadius != null) ? this.def.aggroRadius : 20;
         if (this.def.spawnPattern === "horde") radius += 8;   // cluster sits in one spot — widen detection
         var center = mainRaw || firstRaw(this);
@@ -995,9 +1108,10 @@
         this.roundMobs = spawnRound(this.level, player, this.def, round, this.id);
         this.roundTimeLeft = (round.timeLimit != null) ? round.timeLimit : null;
         this.roundTotalHealth = Math.max(1, sumMax(this.roundMobs) + sumMax(this.carryover));
-        this.barRoundName(round, idx);
+        this.barFight(round);
+        this.barColorSet(this.def.barColor);   // back from BREATHER yellow
         this.updateBar(player);
-        playSnd(player, this.def.sounds.roundStart);
+        if (idx > 0) playSnd(player, this.def.sounds.roundStart);   // wave 1 covered by raidStart
         fireCb(this.def, "onRoundStart", [this.ctx(player), round, idx]);
         this.phase = "FIGHTING";
     };
@@ -1026,12 +1140,15 @@
                 this.roundMobs = pruneDead(this.roundMobs);
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
+                this.barFight(round);
                 this.updateBar(player);
 
                 if (this.roundMobs.length === 0) {
                     fireCb(this.def, "onRoundEnd", [this.ctx(player), round, this.roundIdx]);
                     if (this.roundIdx + 1 < this.def.rounds.length) {
+                        playSnd(player, this.def.sounds.roundEnd);   // wave-clear stinger (final wave -> win sound instead)
                         this.breatherLeft = round.breather;
+                        this.barColorSet("YELLOW");                  // breather lull; startRound restores
                         this.phase = "BREATHER";
                     } else {
                         this.phase = "WIN_WAIT";
@@ -1058,7 +1175,7 @@
             case "BREATHER":
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
-                if (this.bar) { try { this.bar.setName(Text.of("§c" + this.barBase + " §7— next wave incoming…")); } catch (e) {} }
+                this.setBarName("§e" + this.barBase + " §7— next wave in §f" + Math.ceil(this.breatherLeft / 20) + "s§7…");
                 this.updateBar(player);
                 this.breatherLeft -= TICK_THROTTLE;
                 if (this.breatherLeft <= 0) {
@@ -1071,10 +1188,13 @@
                 this.roundMobs = pruneDead(this.roundMobs);
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
+                this.setBarName("§6" + this.barBase + " §7— §f⚔ " + (this.roundMobs.length + this.carryover.length) + " §7stragglers §e(glowing!)");
                 this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
                     fireCb(this.def, "onWin", [this.ctx(player)]);
                     playSnd(player, this.def.sounds.win);
+                    showTitle(player, "VICTORY", this.barBase, "green");
+                    victoryBurst(player);
                     this.barEnd("§a§l✔ VICTORY", "GREEN", 1.0);
                     this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
                     this.phase = "ENDING";
@@ -1147,9 +1267,13 @@
 
     function newInstanceId(defId) { _idSeq++; return defId + "_" + _idSeq; }
 
+    // ENDING counts as "raid over" — fight is done, the instance only lets the
+    // victory/defeat bar linger. Not blocking here lets a new raid start
+    // immediately after a win/loss instead of waiting out barHold.
     function playerInRaid(playerUuid) {
         for (var k in _active) {
-            if (_active[k].playerUuid === playerUuid && _active[k].phase !== "DONE") return _active[k];
+            var ph = _active[k].phase;
+            if (_active[k].playerUuid === playerUuid && ph !== "DONE" && ph !== "ENDING") return _active[k];
         }
         return null;
     }
@@ -1264,9 +1388,17 @@
                 if (inst.bar) { try { inst.bar.addPlayer(player); } catch (eB) {} }
             }
             _active[id] = inst;
+            broadcastSnd(Manager._server, player, def.sounds.raidStart, RAIDSTART_RADIUS);
+            showTitle(player, "RAID INCOMING", inst.barBase, "red");
+            try { player.tell(Text.of("§c⚔ " + inst.barBase + " begins...")); } catch (eT) {}
             fireCb(def, "onStart", [inst.ctx(player)]);
             info(`started "${defId}" as ${id} for ${player.username}`);
             return id;
+        },
+
+        // True when the player has a raid still fighting (ENDING/DONE excluded).
+        isInRaid: function (player) {
+            try { return !!playerInRaid(String(player.uuid)); } catch (e) { return false; }
         },
 
         stop: function (idOrPlayer) {
