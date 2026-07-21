@@ -49,8 +49,23 @@
             });
         }
 
+        // Tab completion for <id>: every registered raid id, prefix-filtered.
+        // Plain JS function auto-converts to the SuggestionProvider SAM in Rhino.
+        function suggestRaidIds(ctx, builder) {
+            var R = reg();
+            var ids = R ? R.list() : [];
+            var rem = "";
+            try { rem = String(builder.getRemaining()).toLowerCase(); } catch (e) {}
+            for (var i = 0; i < ids.length; i++) {
+                var id = String(ids[i]);
+                if (!rem || id.toLowerCase().indexOf(rem) === 0) builder.suggest(id);
+            }
+            return builder.buildFuture();
+        }
+
         var startNode = Commands.literal("start")
             .then(Commands.argument("id", StringArg.word())
+                .suggests(suggestRaidIds)
                 .executes(function (ctx) { return safeExec(ctx.source, function () {
                     var M = mgr(); if (!M) return 0;
                     var player = getPlayer(ctx.source);
