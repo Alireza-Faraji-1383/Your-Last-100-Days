@@ -42,6 +42,10 @@
 	#Fix dupe exploit through dimensions.
 	"Fix dupe exploit" = true
 
+#Set and use some tags to get and set some mobs properties. E.g. cause fire explosion for mobs, or get current light level.
+["Nbt tags"]
+	"Apply no ammo consumption to pillagers" = false
+
 #Allows modifying item data components via data packs
 ["Item components"]
 	#Vanilla limits max stack sizes to 99 for some reasons. This replaces that limit
@@ -50,7 +54,3 @@
 	"Stack limit" = 9999
 	#Always render the item stack count at a smaller scale, even when it's 99 or below
 	"Always shrink stack count" = false
-
-#Set and use some tags to get and set some mobs properties. E.g. cause fire explosion for mobs, or get current light level.
-["Nbt tags"]
-	"Apply no ammo consumption to pillagers" = false

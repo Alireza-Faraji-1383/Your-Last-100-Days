@@ -176,3 +176,5 @@ config/relics
 
 # Reproducible loader build scratch
 /tools/y100d-early-loading/build/
+config/jei/world
+config/voicechat
