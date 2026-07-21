@@ -618,8 +618,15 @@
             "avoid_explosions/can_run_from_tnt=true"
         ],
 
+        // can_pick_up holds an ENTITY-TYPE TAG id as a plain string — the goal
+        // runs ResourceLocation.parse(value) then TagKey.create, so a leading
+        // "#" crashes PickUpAndThrowGoal.canUse with ResourceLocationException.
+        // Semantics: the tag of entities this mob may PICK UP and hurl at its
+        // target (Mob instances only — players can never be picked up). The
+        // mod's default tag covers creepers, zombies and spiders, so a thrower
+        // lobs fellow raid mobs at/over the player's defenses.
         thrower: [
-            "pick_up_and_throw/can_pick_up=#minecraft:players",
+            "pick_up_and_throw/can_pick_up=enhancedai:mobs/pick_up_and_throw/can_be_picked_up",
             "pick_up_and_throw/min_distance_to_pick_up=2",
             "pick_up_and_throw/max_distance_to_throw=12",
             "pick_up_and_throw/speed_modifier_to_pick_up=1.2",

@@ -118,6 +118,9 @@
         for (var i = 0; i < parts.length; i++) { var w = parts[i]; if (w) out.push(w.charAt(0).toUpperCase() + w.slice(1)); }
         return out.join(" ");
     }
+    // Vec3 coords off player.position() can surface as java.lang.Double, which
+    // has no toFixed — Number() first, always.
+    function fmt1(v) { return Number(v).toFixed(1); }
     // KubeJS 1.21 has no playSound(String, float, float) overload on the player
     // wrapper — that call throws and used to be silently swallowed, so no raid
     // sound ever played. Vanilla /playsound via runCommandSilent (the same
@@ -131,7 +134,7 @@
                 var p = player.position();
                 server.runCommandSilent(
                     "playsound " + s.id + " master " + player.username + " " +
-                    p.x.toFixed(1) + " " + p.y.toFixed(1) + " " + p.z.toFixed(1) + " " +
+                    fmt1(p.x) + " " + fmt1(p.y) + " " + fmt1(p.z) + " " +
                     vol + " " + pitch);
                 return;
             }
@@ -183,7 +186,7 @@
             var p = player.position();
             server.runCommandSilent(
                 "particle minecraft:totem_of_undying " +
-                p.x.toFixed(1) + " " + (p.y + 1.0).toFixed(1) + " " + p.z.toFixed(1) +
+                fmt1(p.x) + " " + fmt1(p.y + 1.0) + " " + fmt1(p.z) +
                 " 1 1 1 0.4 80 force");
         } catch (e) {}
     }

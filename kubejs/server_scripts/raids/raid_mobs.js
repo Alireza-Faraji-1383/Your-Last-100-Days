@@ -21,7 +21,7 @@
 //   - Infiltration layer: MINER_* dig to the player with diamond picks (needs
 //     mobGriefing), PEARL_ZOMBIE teleports past walls, TNT_CREEPER + DEMOMAN
 //     breach, DOOR_KNIGHT smashes doors, PHANTOM_CREEPER phases through
-//     blocks, TOSSER grabs the player and throws them off their own wall.
+//     blocks, TOSSER hurls fellow raid mobs over the player's defenses.
 //   - EAI fisher (rod hook) is intentionally NOT used anywhere.
 //
 // EAI presets referenced (see enhancedai_factory.js):
@@ -67,7 +67,8 @@
                                    head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate" },
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=40"] },
-        // Grabs the player and hurls them off their wall/tower (EAI thrower).
+        // Picks up a fellow raid mob and hurls it at the player — delivers
+        // melee over walls (EAI thrower; players themselves can't be grabbed).
         TOSSER:         { type: "minecraft:zombie", presets: ["mobile", "thrower"],
                           equip: { head: DM_HELM, chest: DM_CHEST },
                           nbt: { IsBaby: false, Fire: -1 },
