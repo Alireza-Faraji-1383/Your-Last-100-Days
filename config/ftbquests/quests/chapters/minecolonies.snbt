@@ -3094,6 +3094,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 16
+					id: "31A0CAC96E4D49B8"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "hexagon"
 			size: 3.0d
@@ -3274,6 +3283,14 @@
 					}
 					type: "item"
 				}
+				{
+					id: "455E9E99FFEADA84"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "circle"
 			size: 2.0d
@@ -3292,11 +3309,22 @@
 				id: "mctradepost:mixed_stone"
 			}
 			id: "2A7FFD785EAB2DE0"
-			rewards: [{
-				id: "26C0EC3E10C5EC02"
-				type: "xp"
-				xp: 20
-			}]
+			rewards: [
+				{
+					id: "26C0EC3E10C5EC02"
+					type: "xp"
+					xp: 20
+				}
+				{
+					count: 16
+					id: "6DF0B9BCEFD597B8"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "circle"
 			size: 2.0d
 			tasks: [{

@@ -733,5 +733,54 @@
 			x: -3.5d
 			y: 10.0d
 		}
+		{
+			dependencies: ["5707E1C306DE7F69"]
+			id: "06118286585618F2"
+			rewards: [{
+				count: 32
+				id: "30AB0CA6A759B068"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				advancement: "minecraft:adventure/revaulting"
+				criterion: ""
+				id: "697A4C59A665F6AF"
+				type: "advancement"
+			}]
+			x: -3.5d
+			y: -9.5d
+		}
+		{
+			dependencies: ["2B42A1CB36B3751A"]
+			id: "64886F972C47E615"
+			rewards: [
+				{
+					count: 8
+					id: "2EA7EFAF614746E6"
+					item: {
+						count: 1
+						id: "minecraft:lapis_lazuli"
+					}
+					type: "item"
+				}
+				{
+					id: "1808DEE0BFE5DB65"
+					type: "xp"
+					xp: 200
+				}
+			]
+			tasks: [{
+				advancement: "apothic_enchanting:enchanter"
+				criterion: ""
+				id: "5733C3EB7571FBB5"
+				type: "advancement"
+			}]
+			x: -2.5d
+			y: 9.0d
+		}
 	]
 }
