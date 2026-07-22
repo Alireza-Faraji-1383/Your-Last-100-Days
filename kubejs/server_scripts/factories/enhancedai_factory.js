@@ -672,7 +672,8 @@
             "targeting/target_chance=1",
             "targeting/unseen_forget_ticks=2400",
             "targeting/alert_range=64",
-            "targeting/hurt_by_prefer_players=true"
+            "targeting/hurt_by_prefer_players=true",
+            "targeting/hurt_by_prevent_infighting=true"
         ]
     };
 

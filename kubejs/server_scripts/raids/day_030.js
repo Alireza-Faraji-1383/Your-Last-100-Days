@@ -31,7 +31,7 @@
         // --- Round 2: sappers hit the walls ---
         .round("Sappers")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.TNT_CREEPER).count(6)
             .mob(M.DOOR_KNIGHT).count(4)
             .mob(M.DEMOMAN).count(4)
@@ -39,19 +39,20 @@
         // --- Round 3: the warlocks' escort ---
         .round("The Warlocks")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.EVOKER).count(2)
             .mob(M.VINDICATOR).count(6)
             .mob(M.PILLAGER).count(6)
             .mob(M.PEARL_ZOMBIE).count(4)
             .mob(M.MINER_STRONG).count(4)
-        // --- Round 4 (FINAL): the warbeasts ---
+        // --- Round 4 (FINAL): the warbeasts, led by the Missionary miniboss ---
         .round("The Warbeasts")
             .timeLimit(14400)
+            .mob(M.MISSIONARY_BOSS).count(1)
             .mob(M.WARBEAST_RAVAGER).count(2)
             .mob(M.VINDICATOR_ELITE).count(4)
-            .mob(M.MISSIONARY).count(3)
-            .mob(M.PILLAGER).count(6)
+            .mob(M.MAGEHUNTER).count(2)
+            .mob(M.PILLAGER).count(5)
             .mob(M.MINER_STRONG).count(4)
         .onWin(function (ctx) {
             try {

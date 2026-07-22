@@ -25,7 +25,7 @@
         // --- Round 1: embers on the wind ---
         .round("Embers")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.SEARED_SPIRIT).count(5)
             .mob(M.INFERNAL_SPIRIT).count(4)
             .mob(M.BLAZE).count(4)
@@ -34,7 +34,7 @@
         // --- Round 2: the ignited warband ---
         .round("Ignited Warband")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.IGNITED_BERSERKER).count(6)
             .mob(M.WITHER_SKELETON).count(5)
             .mob(M.DEMOMAN).count(4)
@@ -43,7 +43,7 @@
         // --- Round 3: revenants breach the line ---
         .round("The Revenants")
             .breather(300)
-            .timeLimit(8400)
+            .timeLimit(6000)
             .mob(M.IGNITED_REVENANT).count(4)
             .mob(M.IGNITED_BERSERKER).count(4)
             .mob(M.PEARL_ZOMBIE).count(5)

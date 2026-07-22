@@ -70,7 +70,7 @@
         // Picks up a fellow raid mob and hurls it at the player — delivers
         // melee over walls (EAI thrower; players themselves can't be grabbed).
         TOSSER:         { type: "minecraft:zombie", presets: ["mobile", "thrower"],
-                          equip: { head: DM_HELM, chest: DM_CHEST },
+                          equip: { mainhand: "minecraft:iron_axe", head: DM_HELM, chest: DM_CHEST },
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=50"] },
         // Breaching creeper: launches at walls, TNT-like blast.
@@ -113,11 +113,11 @@
         // ================= Born in Chaos — undead rabble ================
         // Iron helmets = sunscreen for the burnable zombie/skeleton family.
         ROTTING_ZOMBIE:  { type: BIC + "decaying_zombie",
-                           equip: { head: "minecraft:iron_helmet" } },
+                           equip: { mainhand: "minecraft:stone_sword", head: "minecraft:iron_helmet" } },
         ZOMBIE_BRUISER:  { type: BIC + "zombie_bruiser",
-                           equip: { head: "minecraft:iron_helmet" } },
+                           equip: { mainhand: "minecraft:iron_axe", head: "minecraft:iron_helmet" } },
         LUMBERJACK:      { type: BIC + "zombie_lumberjack",
-                           equip: { head: "minecraft:iron_helmet" } },
+                           equip: { mainhand: "minecraft:iron_axe", head: "minecraft:iron_helmet" } },
         MAGGOT:          { type: BIC + "maggot" },
         SWARMER:         { type: BIC + "swarmer" },
         PUMPKIN_BRUISER: { type: BIC + "pumpkin_bruiser" },
@@ -147,6 +147,12 @@
         BLOODY_GADFLY:   { type: BIC + "bloody_gadfly" },      // flying harasser
 
         // ================= Born in Chaos — elite & minibosses ===========
+        // Miniboss cuts of the Lifestealer / Missionary — buffed HP, meant to
+        // anchor a mid/late round with a small escort.
+        LIFESTEALER_BOSS:{ type: BIC + "lifestealer",
+                           extraArgs: ["attributes/max_health=150"] },
+        MISSIONARY_BOSS: { type: BIC + "missioner",
+                           extraArgs: ["attributes/max_health=120"] },
         DOOR_KNIGHT:     { type: BIC + "door_knight" },        // smashes doors
         FALLEN_KNIGHT:   { type: BIC + "fallen_chaos_knight" },
         SCARLET_PERSECUTOR:{ type: BIC + "scarlet_persecutor" },
@@ -155,9 +161,10 @@
         SUPREME_BONESCALLER:{ type: BIC + "supreme_bonescaller" }, // day-90 miniboss
 
         // ================= Cataclysm — the deep =========================
+        // deepling_angler intentionally ABSENT — its fishing-rod hook AI is banned
+        // from raids along with the EAI fisher preset.
         DEEPLING:        { type: CAT + "deepling" },
         DEEPLING_BRUTE:  { type: CAT + "deepling_brute" },
-        DEEPLING_ANGLER: { type: CAT + "deepling_angler" },    // built-in hook pull (mod AI, not EAI fisher)
         DEEPLING_PRIEST: { type: CAT + "deepling_priest" },
         DEEPLING_WARLOCK:{ type: CAT + "deepling_warlock" },
         CORALSSUS:       { type: CAT + "coralssus" },          // day-60 miniboss trio
@@ -171,11 +178,11 @@
         WATCHER:         { type: CAT + "the_watcher" },        // Harbinger-factory construct
         PROWLER:         { type: CAT + "the_prowler" },        // Harbinger-factory hunter
         DRAUGR:          { type: CAT + "draugr",
-                           equip: { head: "minecraft:iron_helmet" } },
+                           equip: { mainhand: "minecraft:iron_axe", head: "minecraft:iron_helmet" } },
         ELITE_DRAUGR:    { type: CAT + "elite_draugr",
-                           equip: { head: DM_HELM } },
+                           equip: { mainhand: "minecraft:diamond_sword", head: DM_HELM } },
         ROYAL_DRAUGR:    { type: CAT + "royal_draugr",
-                           equip: { head: DM_HELM } },
+                           equip: { mainhand: "minecraft:diamond_axe", head: DM_HELM } },
         APTRGANGR:       { type: CAT + "aptrgangr" },          // draugr giant — day-90/100 elite
         // Burning Arena boss, HP-balanced for an open-field raid.
         MALEDICTUS:      { type: CAT + "maledictus",
@@ -189,7 +196,7 @@
         // its skeleton-summoning wizard; raids lean on it as the summoner.
         CULTIST:         { type: ISS + "cultist" },
         CATACOMBS_ZOMBIE:{ type: ISS + "catacombs_zombie",
-                           equip: { head: "minecraft:iron_helmet" } },
+                           equip: { mainhand: "minecraft:iron_sword", head: "minecraft:iron_helmet" } },
         PYROMANCER:      { type: ISS + "pyromancer" },
         CRYOMANCER:      { type: ISS + "cryomancer" },
         NECROMANCER:     { type: ISS + "necromancer" },        // summons undead

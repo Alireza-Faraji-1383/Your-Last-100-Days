@@ -39,7 +39,7 @@
         // --- Round 3: summoners + bomb throwers + webs ---
         .round("The Callers")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.BONESCALLER).count(3)
             .mob(M.BONE_IMP).count(6)
             .mob(M.DEMOMAN).count(4)

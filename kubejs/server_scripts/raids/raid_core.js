@@ -788,6 +788,13 @@
     function decideTarget(raw, mainRaw, victims, radiusSqr) {
         var atk = null;
         try { atk = (typeof raw.getLastHurtByMob === "function") ? raw.getLastHurtByMob() : null; } catch (x) {}
+        // Ally friendly-fire scrub: a raid mob accidentally hurt by another raid
+        // mob must never retaliate — wipe the memory so vanilla HurtByTargetGoal
+        // can't pick it up between our passes either.
+        if (atk && isAlly(atk)) {
+            try { raw.setLastHurtByMob(null); } catch (xC) {}
+            atk = null;
+        }
         if (validVictim(raw, atk)) return atk;                       // 1 retaliate
 
         var cur = null;
@@ -979,6 +986,13 @@
                 equipMob(entity, mob.equip);        // weapons/armor — post-spawn
                 joinRaidTeam(server, entity);       // colored glow outline team
                 forceTarget(entity, player);
+                // Instant charge: start pathing toward the player on the spawn
+                // tick so nobody stands around waiting for its first AI pass.
+                try {
+                    var rawNew = rawMobOf(entity);
+                    var nav = (rawNew && typeof rawNew.getNavigation === "function") ? rawNew.getNavigation() : null;
+                    if (nav) nav.moveTo(unwrapPlayer(player), 1.0);
+                } catch (eNav) {}
                 spawnPoof(player, pos);
                 out.push(entity);
             }
@@ -1111,12 +1125,17 @@
             var raw = rawMobOf(m);
             if (!raw || typeof raw.setTarget !== "function") return;
             var t = decideTarget(raw, mainRaw, victims, radiusSqr);
-            if (!t) return;
+            var cur = null;
+            try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (eG) {}
+            if (!t) {
+                // No valid target this pass — if the mob is locked on a raid
+                // ally (mod AI retaliation), break the lock instead of leaving it.
+                if (cur && isAlly(cur)) { try { raw.setTarget(null); } catch (eN) {} }
+                return;
+            }
             // setTarget only on an actual change — re-setting the same target
             // every pass fires target-change events + goal re-evaluation on
             // every mob, and constantly restarts pathing (the "stuck" jitter).
-            var cur = null;
-            try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (eG) {}
             if (!cur || !sameEnt(cur, t)) { try { raw.setTarget(t); } catch (eS) {} }
             unstick(inst, raw, t);
         });
@@ -1474,6 +1493,31 @@
 
     ServerEvents.tick(function (event) {
         Manager._drive(event.server);
+    });
+
+    // ---------- Friendly fire off -------------------------------------------
+    // Raid mobs never damage each other: any hit where BOTH attacker (or the
+    // projectile's owner) and victim carry the raid_mob tag is zeroed, and the
+    // victim's retaliation memory is wiped on the spot (setLastHurtByMob runs
+    // in LivingEntity.hurt BEFORE this Pre-damage event, so clearing here
+    // sticks). Handler early-exits on the no-active-raid flag + victim tag, so
+    // ambient combat costs two cheap checks.
+    function anyActive() {
+        for (var k in _active) { if (_active[k].phase !== "DONE") return true; }
+        return false;
+    }
+    EntityEvents.beforeHurt(function (event) {
+        try {
+            if (!anyActive()) return;
+            var victim = event.entity;
+            if (!victim || !isAlly(victim)) return;
+            var src = event.source;
+            var attacker = null;
+            try { attacker = (src && typeof src.getEntity === "function") ? src.getEntity() : null; } catch (eA) {}
+            if (!attacker || !isAlly(attacker)) return;
+            event.setNewDamage(0);
+            try { victim.setLastHurtByMob(null); } catch (eC) {}
+        } catch (e) { /* never break the damage pipeline */ }
     });
 
     // Clean up mobs + boss bars orphaned by a crash/restart/reload (bug #1).

@@ -2,8 +2,8 @@
 // kubejs/server_scripts/raids/day_060.js
 //
 // NIGHT 60 — "Rise of the Deep" (chapter 6: the sea marches inland)
-// Cataclysm deepling invasion. Anglers drag the player off walls with the
-// mod's own hook AI; finale is a coralssus trio with breach support.
+// Cataclysm deepling invasion; finale is a coralssus trio with breach
+// support. No anglers — fishing-hook mobs are banned from raids.
 // Raids are waterproof by default — moats won't save anyone.
 
 (function () {
@@ -29,18 +29,18 @@
             .mob(M.DEEPLING).count(8)
             .mob(M.TRIDENT_DROWNED).count(4)
             .mob(M.MINER_STRONG).count(5)
-        // --- Round 2: hooks from the dark ---
-        .round("The Anglers")
+        // --- Round 2: the tide presses in ---
+        .round("The Undertow")
             .breather(200)
-            .timeLimit(7200)
-            .mob(M.DEEPLING_ANGLER).count(4)
+            .timeLimit(6000)
+            .mob(M.TRIDENT_DROWNED).count(4)
             .mob(M.DEEPLING).count(5)
-            .mob(M.DEEPLING_BRUTE).count(3)
+            .mob(M.DEEPLING_BRUTE).count(4)
             .mob(M.MINER_ELITE).count(5)
         // --- Round 3: abyssal clergy ---
         .round("Abyssal Clergy")
             .breather(300)
-            .timeLimit(8400)
+            .timeLimit(6000)
             .mob(M.DEEPLING_PRIEST).count(3)
             .mob(M.DEEPLING_WARLOCK).count(3)
             .mob(M.DEEPLING_BRUTE).count(4)

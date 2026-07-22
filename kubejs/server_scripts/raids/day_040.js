@@ -31,7 +31,7 @@
         // --- Round 2: wisps, embers and bloodflies ---
         .round("Grave Lights")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.FIRELIGHT).count(5)
             .mob(M.PUMPKIN_SPIRIT).count(5)
             .mob(M.SEARED_SPIRIT).count(3)
@@ -40,19 +40,20 @@
         // --- Round 3: the hunt is loosed ---
         .round("The Hunt")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.DREAD_HOUND).count(7)
             .mob(M.HOUND_LEADER).count(2)
             .mob(M.PHANTOM_CREEPER).count(5)
             .mob(M.MOTHER_SPIDER).count(2)
             .mob(M.MINER_STRONG).count(4)
-        // --- Round 4 (FINAL): the nightmares themselves ---
+        // --- Round 4 (FINAL): the Lifestealer miniboss leads the nightmares ---
         .round("The Nightmares")
             .timeLimit(14400)
+            .mob(M.LIFESTEALER_BOSS).count(1)
             .mob(M.NIGHTMARE_STALKER).count(2)
-            .mob(M.LIFESTEALER).count(3)
+            .mob(M.LIFESTEALER).count(2)
             .mob(M.RESTLESS_SPIRIT).count(6)
-            .mob(M.PEARL_ZOMBIE).count(5)
+            .mob(M.PEARL_ZOMBIE).count(3)
             .mob(M.MINER_ELITE).count(5)
         .onWin(function (ctx) {
             try {

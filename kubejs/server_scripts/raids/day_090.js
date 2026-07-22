@@ -25,14 +25,14 @@
         // --- Round 1: the draugr host ---
         .round("Draugr Host")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.DRAUGR).count(8)
             .mob(M.ELITE_DRAUGR).count(4)
             .mob(M.MINER_ELITE).count(6)
         // --- Round 2: knights of chaos ---
         .round("Chaos Knights")
             .breather(200)
-            .timeLimit(7200)
+            .timeLimit(6000)
             .mob(M.FALLEN_KNIGHT).count(5)
             .mob(M.ROYAL_DRAUGR).count(3)
             .mob(M.DOOR_KNIGHT).count(4)
@@ -41,7 +41,8 @@
         // --- Round 3: the covenant reborn ---
         .round("Covenant Reborn")
             .breather(300)
-            .timeLimit(8400)
+            .timeLimit(6000)
+            .mob(M.MISSIONARY_BOSS).count(1)
             .mob(M.NECROMANCER).count(3)
             .mob(M.ARCHEVOKER).count(3)
             .mob(M.CRYOMANCER).count(3)
@@ -51,7 +52,7 @@
         // --- Round 4: the summoner (miniboss) ---
         .round("The Summoner")
             .breather(300)
-            .timeLimit(9600)
+            .timeLimit(6000)
             .mob(M.SUPREME_BONESCALLER).count(1)
             .mob(M.BONESCALLER).count(3)
             .mob(M.THRASHER).count(3)
