@@ -21,7 +21,20 @@
     const DEFAULT_MAX_R  = 40;
     const DEFAULT_BREATHER = 60;   // ticks after an all-dead round before the next
     const DEFAULT_BAR_HOLD  = 300; // ticks the victory/defeat bar lingers before closing (15s)
-    const MIN_ROUND_MOBS = 21;     // every authored wave must meet this floor
+    const MIN_ROUND_MOBS = 22;     // every authored wave must meet this floor
+    const BOSSES_RISE_NS = "block_factorys_bosses:";
+    // Bosses' Rise also registers props, projectiles, arena pieces and summons
+    // as entity types. Only these independently mobile soldiers may enter raids.
+    const ALLOWED_BOSSES_RISE_RAID_MOBS = {
+        "block_factorys_bosses:soul_skeleton": true,
+        "block_factorys_bosses:soul_knight_wither_skeleton": true,
+        "block_factorys_bosses:dragon_guard_sword": true,
+        "block_factorys_bosses:flaming_skeleton_guard_sword": true,
+        "block_factorys_bosses:flaming_skeleton_guard_fireball": true,
+        "block_factorys_bosses:pirate_rook": true,
+        "block_factorys_bosses:crossbow_pirate": true,
+        "block_factorys_bosses:pirate_captain": true
+    };
     const DEFEAT_PENALTY_TICKS = 6000; // 5 minutes
     const DEFEAT_PENALTY_AMP   = 3;    // zero-based amplifier 3 = effect level IV
     const FINAL_GLOW_AFTER_TICKS = 3600; // reveal every final-wave mob after 3 minutes
@@ -491,6 +504,10 @@
                 var m = r.mobs[j];
                 if (!m.type || m.type.indexOf(":") === -1) { err(`raid "${d.id}" round ${i}: bad mob type "${m.type}"`); return false; }
                 if (!(m.count >= 1)) { err(`raid "${d.id}" round ${i}: mob "${m.type}" count < 1`); return false; }
+                if (m.type.indexOf(BOSSES_RISE_NS) === 0 && !ALLOWED_BOSSES_RISE_RAID_MOBS[m.type]) {
+                    err(`raid "${d.id}" round ${i}: Bosses' Rise entity is not raid-safe "${m.type}"`);
+                    return false;
+                }
                 roundMobCount += m.count;
                 var names = m.noDefaults ? m.presets : d.defaultPresets.concat(m.presets);
                 for (var k = 0; k < names.length; k++) {
@@ -675,17 +692,21 @@
     }
 
     // ---- Ring pattern: multiple assault groups ----------------------------
-    // A ring wave becomes 3-5 compact squads in different player-facing
+    // A ring wave becomes 4-5 compact squads in different player-facing
     // sectors. All work happens once while planning the spawn; there is no new
     // tick handler, entity scan or pathfinding pass.
     const RING_GROUP_ANCHOR_TRIES = 6;
     const RING_GROUP_SPREAD_MAX   = 6;
     const RING_GROUP_ANGLE_STEP   = Math.PI / 12;
+    const RING_GROUP_MIN_SIZE     = 5;
+    const RING_GROUP_MIN_COUNT    = 4;
+    const RING_GROUP_MAX_COUNT    = 5;
 
     function wantedRingGroups(total) {
-        if (total <= 15) return 3;
-        if (total <= 20) return 4;
-        return 5;
+        // floor(total / 5) guarantees the smallest squad still has at least
+        // five members: 22-24 mobs -> 4 squads; 25+ -> 5 squads.
+        var byMinSize = Math.floor(total / RING_GROUP_MIN_SIZE);
+        return Math.max(RING_GROUP_MIN_COUNT, Math.min(RING_GROUP_MAX_COUNT, byMinSize));
     }
 
     // Deterministic per-wave rotation keeps attack directions varied without

@@ -240,7 +240,6 @@
 
         // ============== Block Factory Bosses — field troops ============
         // Only self-contained soldiers are used; arena-bound bosses stay out.
-        FROZEN_SKELETON: { type: BFB + "frozen_skeleton" },
         SOUL_SKELETON:   { type: BFB + "soul_skeleton" },
         WITHER_KNIGHT:   { type: BFB + "soul_knight_wither_skeleton" },
         ASH_GUARD:       { type: BFB + "dragon_guard_sword" },
