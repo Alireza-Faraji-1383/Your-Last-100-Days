@@ -595,7 +595,7 @@
             "miner_mobs/tool_requirement=NONE",
             "miner_mobs/max_y=320",
             "miner_mobs/max_target_distance=0",
-            "miner_mobs/time_to_break_multiplier=1.0",
+            "miner_mobs/time_to_break_multiplier=0.6",
             "miner_mobs/dimension_whitelist=[minecraft:overworld,minecraft:the_nether,minecraft:the_end]",
             "parkour/can_parkour=true",
             "sprint/can_sprint=true",
