@@ -3,7 +3,7 @@
 //
 // NIGHT 100 — "The Last Dawn" (finale: everything comes at once)
 // Six combined-arms rounds recapping every faction in the pack — wild hunt,
-// bones, pirate breach, magic and elites — then IGNIS as the final boss.
+// bones, pirate breach, magic and elites — then Dark Doppelganger alone as boss.
 // Survive this and the hundred days are over.
 
 (function () {
@@ -37,8 +37,9 @@
         .round("The Bones")
             .breather(200)
             .timeLimit(6000)
+            .mob(M.SUPREME_BONESCALLER).count(1)
             .mob(M.SIAMESE_SKELETON).count(3)
-            .mob(M.BONESCALLER).count(4)
+            .mob(M.BONESCALLER).count(3)
             .mob(M.SOUL_SKELETON).count(4)
             .mob(M.BOW_SKELETON).count(5)
             .mob(M.DEMOMAN).count(3)
@@ -47,10 +48,11 @@
         .round("The Breach")
             .breather(300)
             .timeLimit(6000)
+            .mob(M.CITADEL_KEEPER).count(1)
             .mob(M.PIRATE_CAPTAIN).count(1)
             .mob(M.CROSSBOW_PIRATE).count(5)
             .mob(M.PIRATE_ROOK).count(4)
-            .mob(M.DOOR_KNIGHT).count(4)
+            .mob(M.DOOR_KNIGHT).count(3)
             .mob(M.TNT_CREEPER).count(5)
             .mob(M.PHANTOM_CREEPER).count(2)
             .mob(M.MINER_ELITE).count(9)
@@ -79,10 +81,10 @@
             .mob(M.WATCHER).count(2)
             .mob(M.WITHER_KNIGHT).count(2)
             .mob(M.MINER_ELITE).count(9)
-        // --- Round 6 (FINAL): IGNIS, the Last Flame ---
-        .round("Ignis, the Last Flame")
+        // --- Round 6 (FINAL): DARK DOPPELGANGER, the Last Shadow ---
+        .round("Dark Doppelganger, the Last Shadow")
             .timeLimit(20400)
-            .mob(M.IGNIS).count(1)
+            .mob(M.DARK_DOPPELGANGER).count(1)
             .mob(M.ASH_GUARD).count(3)
             .mob(M.FLAMING_SHOOTER).count(3)
             .mob(M.IGNITED_BERSERKER).count(3)

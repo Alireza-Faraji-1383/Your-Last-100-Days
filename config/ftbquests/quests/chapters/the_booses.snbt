@@ -35,25 +35,7 @@
 			rotation: 0.0d
 			width: 5.0d
 			x: -3.0d
-			y: -9.25d
-		}
-		{
-			height: 4.666666666666667d
-			image: "cataclysm:textures/quests/cataclysm_frame.png"
-			order: -28
-			rotation: 0.0d
-			width: 7.0d
-			x: -3.0d
-			y: -0.5d
-		}
-		{
-			height: 1.6066666666666667d
-			image: "cataclysm:textures/quests/cataclysm_factory.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: -3.0d
-			y: -4.5d
+			y: -11.5d
 		}
 		{
 			height: 2.4802631578947367d
@@ -62,7 +44,7 @@
 			rotation: 0.0d
 			width: 2.6d
 			x: -3.0d
-			y: -6.5d
+			y: -9.0d
 		}
 		{
 			height: 0.7457627118644068d
@@ -71,16 +53,7 @@
 			rotation: 0.0d
 			width: 3.2d
 			x: -3.0d
-			y: -7.9d
-		}
-		{
-			height: 1.5933333333333333d
-			image: "cataclysm:textures/quests/cataclysm_prison.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: 0.5d
-			y: -4.0d
+			y: -7.5d
 		}
 		{
 			height: 2.0276497695852536d
@@ -88,8 +61,8 @@
 			order: -15
 			rotation: 0.0d
 			width: 2.7d
-			x: 2.5d
-			y: -6.0d
+			x: 4.0d
+			y: -7.5d
 		}
 		{
 			height: 0.7541436464088398d
@@ -97,17 +70,8 @@
 			order: -10
 			rotation: 0.0d
 			width: 3.0d
-			x: 2.5d
-			y: -7.4d
-		}
-		{
-			height: 1.7677083333333334d
-			image: "cataclysm:textures/quests/cataclysm_acropolis.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: 1.0d
-			y: -0.5d
+			x: 4.0d
+			y: -9.0d
 		}
 		{
 			height: 2.496617050067659d
@@ -115,7 +79,7 @@
 			order: -15
 			rotation: 0.0d
 			width: 2.5d
-			x: 3.0d
+			x: 4.5d
 			y: -0.5d
 		}
 		{
@@ -124,25 +88,16 @@
 			order: -10
 			rotation: 0.0d
 			width: 1.75d
-			x: 3.0d
+			x: 4.5d
 			y: -2.0d
 		}
 		{
-			height: 1.6532150776053216d
-			image: "cataclysm:textures/quests/cataclysm_city.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: -7.0d
-			y: -0.5d
-		}
-		{
-			height: 2.0992616899097623d
+			height: 2.0992616899097625d
 			image: "cataclysm:textures/quests/cataclysm_leviathan.png"
 			order: -15
 			rotation: 0.0d
 			width: 2.5d
-			x: -9.0d
+			x: -10.5d
 			y: -0.5d
 		}
 		{
@@ -151,17 +106,8 @@
 			order: -10
 			rotation: 0.0d
 			width: 3.0d
-			x: -9.0d
+			x: -10.5d
 			y: -2.0d
-		}
-		{
-			height: 1.6d
-			image: "cataclysm:textures/quests/cataclysm_pyramid.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: -6.5d
-			y: -4.0d
 		}
 		{
 			height: 2.484076433121019d
@@ -169,8 +115,8 @@
 			order: -15
 			rotation: 0.0d
 			width: 2.5d
-			x: -8.5d
-			y: -6.0d
+			x: -10.0d
+			y: -7.5d
 		}
 		{
 			height: 0.4831858407079646d
@@ -178,26 +124,17 @@
 			order: -10
 			rotation: 0.0d
 			width: 3.0d
-			x: -8.5d
-			y: -7.4d
+			x: -10.0d
+			y: -9.0d
 		}
 		{
-			height: 1.5933333333333333d
-			image: "cataclysm:textures/quests/cataclysm_blacksmith.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: 0.5d
-			y: 3.0d
-		}
-		{
-			height: 2.5226586102719033d
+			height: 2.522658610271903d
 			image: "cataclysm:textures/quests/cataclysm_monstrosity.png"
 			order: -15
 			rotation: 0.0d
 			width: 2.5d
-			x: 2.5d
-			y: 5.0d
+			x: 4.0d
+			y: 6.5d
 		}
 		{
 			height: 0.4291287386215865d
@@ -205,17 +142,8 @@
 			order: -10
 			rotation: 0.0d
 			width: 3.0d
-			x: 2.5d
-			y: 6.5d
-		}
-		{
-			height: 1.5993674222456509d
-			image: "cataclysm:textures/quests/cataclysm_arena.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: -3.0d
-			y: 3.5d
+			x: 4.0d
+			y: 8.0d
 		}
 		{
 			height: 2.273361227336122d
@@ -224,7 +152,7 @@
 			rotation: 0.0d
 			width: 2.5d
 			x: -3.0d
-			y: 5.5d
+			y: 7.0d
 		}
 		{
 			height: 1.0754189944134078d
@@ -233,25 +161,16 @@
 			rotation: 0.0d
 			width: 1.75d
 			x: -3.0d
-			y: 7.0d
+			y: 8.5d
 		}
 		{
-			height: 1.5933333333333333d
-			image: "cataclysm:textures/quests/cataclysm_citadel.png"
-			order: -20
-			rotation: 0.0d
-			width: 3.2d
-			x: -6.5d
-			y: 3.0d
-		}
-		{
-			height: 2.4914236706689536d
+			height: 2.4914236706689534d
 			image: "cataclysm:textures/quests/cataclysm_guardian.png"
 			order: -15
 			rotation: 0.0d
 			width: 2.5d
-			x: -8.5d
-			y: 5.0d
+			x: -10.0d
+			y: 6.5d
 		}
 		{
 			height: 0.5363457760314342d
@@ -259,8 +178,8 @@
 			order: -10
 			rotation: 0.0d
 			width: 3.0d
-			x: -8.5d
-			y: 6.5d
+			x: -10.0d
+			y: 8.0d
 		}
 	]
 	order_index: 1

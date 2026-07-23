@@ -26,13 +26,13 @@
 			y: -15.25d
 		}
 		{
-			height: 5.31413612565445d
+			height: 4.7d
 			image: "irons_spellbooks:textures/quests/spells_frame.png"
 			order: -25
 			rotation: 0.0d
-			width: 7.0d
-			x: 0.0d
-			y: -12.0d
+			width: 6.0d
+			x: -6.0d
+			y: 0.0d
 		}
 		{
 			height: 2.2104166666666667d
@@ -40,7 +40,7 @@
 			order: -20
 			rotation: 0.0d
 			width: 4.0d
-			x: -3.0d
+			x: -6.0d
 			y: 0.0d
 		}
 		{
@@ -49,11 +49,11 @@
 			order: -15
 			rotation: 0.0d
 			width: 2.2d
-			x: -3.0d
+			x: -1.5d
 			y: 3.0d
 		}
 		{
-			height: 2.1201413427561835d
+			height: 2.1201413427561837d
 			image: "irons_spellbooks:textures/quests/spells_scroll_gui.png"
 			order: -20
 			rotation: 0.0d
@@ -71,7 +71,7 @@
 			y: 9.0d
 		}
 		{
-			height: 2.6361516034985423d
+			height: 2.636151603498542d
 			image: "irons_spellbooks:textures/quests/spells_anvil_gui.png"
 			order: -20
 			rotation: 0.0d
@@ -85,7 +85,7 @@
 			order: -15
 			rotation: 0.0d
 			width: 2.4d
-			x: 6.0d
+			x: 7.5d
 			y: 6.0d
 		}
 		{
@@ -94,7 +94,7 @@
 			order: -20
 			rotation: 0.0d
 			width: 4.0d
-			x: -6.0d
+			x: -10.0d
 			y: 15.0d
 		}
 		{
@@ -113,7 +113,7 @@
 			rotation: 0.0d
 			width: 1.5d
 			x: -3.0d
-			y: 18.0d
+			y: 16.5d
 		}
 		{
 			height: 2.528328611898017d
@@ -122,16 +122,16 @@
 			rotation: 0.0d
 			width: 1.5d
 			x: 0.0d
-			y: 18.0d
+			y: 20.5d
 		}
 		{
-			height: 2.1759036144578314d
+			height: 2.175903614457831d
 			image: "irons_spellbooks:textures/quests/spells_outfit_shadow.png"
 			order: -15
 			rotation: 0.0d
 			width: 1.5d
 			x: 3.0d
-			y: 18.0d
+			y: 16.5d
 		}
 		{
 			height: 2.25d

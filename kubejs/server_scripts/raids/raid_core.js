@@ -22,6 +22,20 @@
     const DEFAULT_BREATHER = 60;   // ticks after an all-dead round before the next
     const DEFAULT_BAR_HOLD  = 300; // ticks the victory/defeat bar lingers before closing (15s)
     const MIN_ROUND_MOBS = 22;     // every authored wave must meet this floor
+    const BANNED_RAID_MOB_TYPES = {
+        "cataclysm:netherite_ministrosity": true // stationary encounter construct
+    };
+    // These Cataclysm mobs spawn with their own dormant AI state. Wake them
+    // once, after finalizeSpawn, so the normal raid target/navigation logic
+    // can take over without adding another tick scan.
+    const FORCE_AWAKE_RAID_MOB_TYPES = {
+        "cataclysm:kobolediator": "cataclysm_sleep",
+        "cataclysm:wadjet": "cataclysm_sleep",
+        "cataclysm:ender_golem": "cataclysm_awaken",
+        "mowziesmobs:umvuthana": "active",
+        "mowziesmobs:umvuthana_crane": "active",
+        "mowziesmobs:umvuthana_raptor": "active"
+    };
     const BOSSES_RISE_NS = "block_factorys_bosses:";
     // Bosses' Rise also registers props, projectiles, arena pieces and summons
     // as entity types. Only these independently mobile soldiers may enter raids.
@@ -42,6 +56,12 @@
     const LIFESTEALER_TRUE_FORM_ID = "born_in_chaos_v1:lifestealer_true_form";
     const LIFESTEALER_TRANSFORM_RADIUS_SQR = 16; // true form is created at the old mob's position
     const LIFESTEALER_TRANSFORM_RETRY_TICKS = 40;
+    const DARK_DOPPELGANGER_ID = "darkdoppelganger:dark_doppelganger";
+    const DARK_DOPPELGANGER_MINION_ID = "darkdoppelganger:dark_doppelganger_minion";
+    // Boss minions are created within two blocks of their owner. A slightly
+    // wider one-shot match tolerates knockback during the synchronous spawn
+    // callback without ever scanning the world or touching player minions.
+    const DARK_DOPPELGANGER_MINION_ADOPT_RADIUS_SQR = 36;
     const RAID_VICTORY_ADVANCEMENTS = {
         day10_rotting_dawn:       "y100d:raid_victories/day10_rotting_dawn",
         day20_night_of_bones:     "y100d:raid_victories/day20_night_of_bones",
@@ -313,17 +333,23 @@
     function normalizeMobSpec(typeOrSpec) {
         if (typeOrSpec && typeof typeOrSpec === "object") {
             var s = typeOrSpec;
+            var isBoss = !!s.boss;
+            var isMiniboss = !!s.miniboss;
             return {
                 type:       String(s.type || s.id || ""),
                 count:      positiveIntOr(s.count, 1),
                 presets:    Array.isArray(s.presets) ? s.presets.slice() : [],
                 extraArgs:  Array.isArray(s.extraArgs) ? s.extraArgs.slice() : [],
                 noDefaults: !!s.noDefaults,
+                boss:       isBoss,
+                miniboss:   isMiniboss,
+                breacher:   !!s.breacher || isBoss || isMiniboss,
                 equip:      shallowCopy(s.equip),   // copied so a shared archetype isn't mutated
                 nbt:        shallowCopy(s.nbt)
             };
         }
-        return { type: String(typeOrSpec || ""), count: 1, presets: [], extraArgs: [], noDefaults: false, equip: null, nbt: null };
+        return { type: String(typeOrSpec || ""), count: 1, presets: [], extraArgs: [], noDefaults: false,
+                 boss: false, miniboss: false, breacher: false, equip: null, nbt: null };
     }
 
     function RaidBuilder(id) {
@@ -331,7 +357,7 @@
             id: String(id || ""),
             spawn: normalizedSpawn(DEFAULT_MIN_R, DEFAULT_MAX_R),
             spawnPattern: "ring",   // "ring" (spread around player) | "horde" (one cluster, one direction)
-            hordeAngle: null,       // degrees: fixed horde direction; null -> per-round deterministic pick
+            hordeAngle: null,       // degrees: optional wave-1 direction; later waves rotate automatically
             defaultPresets: [],
             rounds: [],
             callbacks: {},
@@ -366,8 +392,8 @@
         this.def.spawnPattern = s;
         return this;
     };
-    // Fixed horde direction in degrees (0 = +X / east, 90 = +Z / south).
-    // Overrides the per-round deterministic angle pick. Only used by "horde".
+    // Starting horde direction in degrees (0 = +X / east, 90 = +Z / south).
+    // Later waves still rotate to another side. Only used by "horde".
     RaidBuilder.prototype.hordeAngle = function (deg) {
         var n = Number(deg);
         this.def.hordeAngle = isFinite(n) ? n : null;
@@ -398,7 +424,7 @@
         return this;
     };
     // Accepts a type id string OR a full spec object:
-    //   .mob({ type, count, presets, extraArgs, noDefaults, equip, nbt })
+    //   .mob({ type, count, presets, extraArgs, noDefaults, boss, miniboss, breacher, equip, nbt })
     // Modded mobs work as long as type carries a namespace ("modid:mob").
     RaidBuilder.prototype.mob = function (typeOrSpec) {
         if (!this._round) { warn("mob() before round(); opening a default round"); this.round(null); }
@@ -422,6 +448,24 @@
     };
     RaidBuilder.prototype.noDefaults = function () {
         if (this._mob) this._mob.noDefaults = true; else warn("noDefaults() before mob()");
+        return this;
+    };
+    RaidBuilder.prototype.breacher = function (on) {
+        if (this._mob) this._mob.breacher = (on !== false); else warn("breacher() before mob()");
+        return this;
+    };
+    RaidBuilder.prototype.boss = function (on) {
+        if (this._mob) {
+            this._mob.boss = (on !== false);
+            if (on !== false) this._mob.breacher = true;
+        } else warn("boss() before mob()");
+        return this;
+    };
+    RaidBuilder.prototype.miniboss = function (on) {
+        if (this._mob) {
+            this._mob.miniboss = (on !== false);
+            if (on !== false) this._mob.breacher = true;
+        } else warn("miniboss() before mob()");
         return this;
     };
     // Equipment — item id strings ("minecraft:bow"), "count id", or {id,count}.
@@ -497,6 +541,8 @@
         for (var i = 0; i < d.rounds.length; i++) {
             var r = d.rounds[i];
             var roundMobCount = 0;
+            var finalHasBoss = false;
+            var finalHasMiniboss = false;
             if (!(r.breather >= 0)) { err(`raid "${d.id}" round ${i}: bad breather "${r.breather}"`); return false; }
             if (r.timeLimit != null && !(r.timeLimit >= 0)) { err(`raid "${d.id}" round ${i}: bad timeLimit "${r.timeLimit}"`); return false; }
             if (!r.mobs || r.mobs.length === 0) { err(`raid "${d.id}" round ${i} "${r.name}": no mobs`); return false; }
@@ -504,15 +550,27 @@
                 var m = r.mobs[j];
                 if (!m.type || m.type.indexOf(":") === -1) { err(`raid "${d.id}" round ${i}: bad mob type "${m.type}"`); return false; }
                 if (!(m.count >= 1)) { err(`raid "${d.id}" round ${i}: mob "${m.type}" count < 1`); return false; }
+                if (BANNED_RAID_MOB_TYPES[m.type]) {
+                    err(`raid "${d.id}" round ${i}: banned immobile mob "${m.type}"`);
+                    return false;
+                }
                 if (m.type.indexOf(BOSSES_RISE_NS) === 0 && !ALLOWED_BOSSES_RISE_RAID_MOBS[m.type]) {
                     err(`raid "${d.id}" round ${i}: Bosses' Rise entity is not raid-safe "${m.type}"`);
                     return false;
                 }
                 roundMobCount += m.count;
+                if (i === d.rounds.length - 1) {
+                    if (m.boss) finalHasBoss = true;
+                    if (m.miniboss) finalHasMiniboss = true;
+                }
                 var names = m.noDefaults ? m.presets : d.defaultPresets.concat(m.presets);
                 for (var k = 0; k < names.length; k++) {
                     if (!presetMap[names[k]]) warn(`raid "${d.id}": unknown preset "${names[k]}" (mob ${m.type}) — EAI will skip it`);
                 }
+            }
+            if (finalHasBoss && finalHasMiniboss) {
+                err(`raid "${d.id}" final round "${r.name}": a main boss cannot share the wave with a miniboss`);
+                return false;
             }
             if (roundMobCount < MIN_ROUND_MOBS) {
                 err(`raid "${d.id}" round ${i} "${r.name}": ${roundMobCount} mobs, minimum is ${MIN_ROUND_MOBS}`);
@@ -678,17 +736,27 @@
 
     // ---- Horde pattern ------------------------------------------------------
     // All mobs of a round cluster around one anchor point in one direction from
-    // the player. Anchor angle: fixed via def.hordeAngle, else a deterministic
-    // per-round pick hashed from instanceId + round index (no Math.random).
+    // the player. The first direction is deterministic (or set by hordeAngle);
+    // every later wave advances through a different one of eight sectors.
 
     const HORDE_ZONE_R    = 2;  // landing-zone sample radius around the anchor
     const HORDE_SPREAD_MAX = 4; // max blocks a mob offsets from the anchor
+    const HORDE_DIRECTION_COUNT = 8;
+    const HORDE_WAVE_DIRECTION_STEP = 3; // 3/8 turn = 135°; coprime with 8, so no repeats for 8 waves
     const GOLDEN_ANG      = 2.399963; // radians — spreads cluster offsets evenly
 
     function hashStr(s) {
         var h = 5381;
         for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) & 0x7fffffff;
         return h;
+    }
+
+    function hordeWaveBaseAngle(def, instanceId, roundIdx) {
+        var startDeg = (def.hordeAngle != null)
+            ? Number(def.hordeAngle)
+            : (hashStr(String(instanceId) + "#horde-origin") % 360);
+        var sector = ((roundIdx || 0) * HORDE_WAVE_DIRECTION_STEP) % HORDE_DIRECTION_COUNT;
+        return (startDeg + sector * (360 / HORDE_DIRECTION_COUNT)) * Math.PI / 180;
     }
 
     // ---- Ring pattern: multiple assault groups ----------------------------
@@ -776,9 +844,7 @@
     // through the other 7 directions. No unvalidated fallback is returned.
     function findHordeAnchor(level, pp, def, instanceId, roundIdx) {
         var rad = (def.spawn.minRadius + def.spawn.maxRadius) / 2;
-        var baseAng = (def.hordeAngle != null)
-            ? def.hordeAngle * Math.PI / 180
-            : ((hashStr(String(instanceId) + "#" + roundIdx) % 360) * Math.PI / 180);
+        var baseAng = hordeWaveBaseAngle(def, instanceId, roundIdx);
         for (var d = 0; d < 8; d++) {
             var ang = baseAng + d * (Math.PI / 4);
             var ax = pp.x + Math.cos(ang) * rad;
@@ -920,6 +986,24 @@
         try { if (typeof p.unwrap === "function") return p.unwrap(); } catch (e2) {}
         return p;
     }
+    // Dark Doppelganger's normal summon ritual calls setSummonerPlayer before
+    // adding it to the level. Direct KubeJS spawning must mirror that ordering:
+    // it binds the boss AI to the raid owner and lets the mod copy the owner's
+    // usable armor/weapon and spell-power attributes.
+    function preparePlayerBoundRaidMob(entity, type, player) {
+        if (!entity || String(type) !== DARK_DOPPELGANGER_ID) return;
+        try {
+            var raw = rawMobOf(entity);
+            var owner = unwrapPlayer(player);
+            if (!raw || !owner || typeof raw.setSummonerPlayer !== "function") {
+                warn("Dark Doppelganger could not bind to its raid player");
+                return;
+            }
+            raw.setSummonerPlayer(owner);
+        } catch (e) {
+            warn("Dark Doppelganger player binding: " + e);
+        }
+    }
     function isLiveEnt(e) { try { return e && (!e.isAlive || e.isAlive()); } catch (x) { return false; } }
     function isAlly(e)    { try { var t = e.getTags(); return t && t.contains("raid_mob"); } catch (x) { return false; } }
     function sameEnt(a, b) {
@@ -1045,6 +1129,145 @@
     const STUCK_KICK    = 4;    // idle passes before a nav recompute (repeats every 4)
     const STUCK_TP      = 32;   // idle passes (~8s at 5-tick cadence) before hard teleport
     const STUCK_TP_R    = 12;   // teleport ring radius around the target
+    const BOSS_BREACH_START = 2;       // first breach after ~0.5s stuck
+    const BOSS_BREACH_RETRY = 4;       // retry every ~1s when no breakable wall was found
+    const BOSS_BREACH_MAX_BLOCKS = 8;  // hard cap per attempt across every ray
+    const BOSS_BREACH_MAX_HARDNESS = 10.0;
+    const BOSS_BREACH_PROTECTED_IDS = {
+        "minecraft:bedrock": true,
+        "minecraft:barrier": true,
+        "minecraft:end_portal": true,
+        "minecraft:end_portal_frame": true,
+        "minecraft:nether_portal": true,
+        "minecraft:command_block": true,
+        "minecraft:chain_command_block": true,
+        "minecraft:repeating_command_block": true,
+        "minecraft:structure_block": true,
+        "minecraft:jigsaw": true,
+        "minecraft:spawner": true,
+        "minecraft:trial_spawner": true,
+        "minecraft:vault": true,
+        "minecraft:reinforced_deepslate": true,
+        "minecraft:beacon": true,
+        "minecraft:conduit": true,
+        "minecraft:lodestone": true,
+        "minecraft:respawn_anchor": true
+    };
+
+    function isRaidBreacher(raw) {
+        try {
+            var tags = raw.getTags();
+            return !!(tags && tags.contains("raid_breacher"));
+        } catch (e) { return false; }
+    }
+    var _bossBreachCls = null;
+    function bossBreachClasses() {
+        if (_bossBreachCls) return _bossBreachCls;
+        _bossBreachCls = {
+            BlockPos: RC("net.minecraft.core.BlockPos"),
+            Registries: RC("net.minecraft.core.registries.BuiltInRegistries"),
+            GameRules: RC("net.minecraft.world.level.GameRules"),
+            EventHooks: RC("net.neoforged.neoforge.event.EventHooks")
+        };
+        return _bossBreachCls;
+    }
+    function bossBreachBlockId(state, C) {
+        try { return String(C.Registries.BLOCK.getKey(state.getBlock())); }
+        catch (e) { return ""; }
+    }
+    function canBossBreach(level, raw, pos, C) {
+        var state = null;
+        try { state = level.getBlockState(pos); } catch (e) { return false; }
+        if (!state) return false;
+        try { if (state.isAir()) return false; } catch (eAir) {}
+        try {
+            var fluid = state.getFluidState();
+            if (fluid && !fluid.isEmpty()) return false;
+        } catch (eFluid) {}
+        try { if (level.getBlockEntity(pos) != null) return false; } catch (eBe) {}
+
+        var id = bossBreachBlockId(state, C);
+        if (BOSS_BREACH_PROTECTED_IDS[id]) return false;
+        if (id.indexOf("portal") !== -1 || id.indexOf("command_block") !== -1 ||
+            id.indexOf("structure_block") !== -1) return false;
+
+        var hardness = -1;
+        try { hardness = Number(state.getDestroySpeed(level, pos)); } catch (eHard) { return false; }
+        if (!(hardness >= 0) || hardness > BOSS_BREACH_MAX_HARDNESS) return false;
+        try {
+            if (typeof state.canEntityDestroy === "function" && !state.canEntityDestroy(level, pos, raw)) return false;
+        } catch (eCan) { return false; }
+        try {
+            if (C.EventHooks && !C.EventHooks.onEntityDestroyBlock(raw, pos, state)) return false;
+        } catch (eEvent) { return false; }
+        return true;
+    }
+    function destroyBossBreachBlock(level, raw, pos, C) {
+        if (!canBossBreach(level, raw, pos, C)) return false;
+        try { return !!level.destroyBlock(pos, false, raw); }
+        catch (e3) {
+            try { return !!level.destroyBlock(pos, false); }
+            catch (e2) { return false; }
+        }
+    }
+    // Open a short corridor through obstructions directly in front of the boss.
+    // No downward rays, no drops and no continuous mining goal; one invocation
+    // is hard-capped even when several rays hit a thick wall.
+    function breachBossObstruction(raw, target) {
+        if (!target) return 0; // caller already checked the cached breacher flag
+        var C = bossBreachClasses();
+        if (!C.BlockPos || !C.Registries) return 0;
+        var level = null;
+        try { level = (typeof raw.level === "function") ? raw.level() : raw.level; } catch (eLvl) {}
+        if (!level) return 0;
+        try {
+            if (C.GameRules && !level.getGameRules().getBoolean(C.GameRules.RULE_MOBGRIEFING)) return 0;
+        } catch (eRule) { return 0; }
+
+        var rx, ry, rz, tx, tz;
+        try {
+            rx = Number(raw.getX()); rz = Number(raw.getZ());
+            tx = Number(target.getX()); tz = Number(target.getZ());
+            var box = raw.getBoundingBox();
+            ry = Math.floor(Number(box.minY) + 0.1);
+        } catch (ePos) { return 0; }
+        var dx = tx - rx, dz = tz - rz;
+        var len = Math.sqrt(dx * dx + dz * dz);
+        if (!(len > 0.01)) return 0;
+        dx /= len; dz /= len;
+        var sideX = -dz, sideZ = dx;
+        var width = 1.0, height = 2;
+        try { width = Math.max(1.0, Number(raw.getBbWidth())); } catch (eW) {}
+        try { height = Math.max(2, Math.min(3, Math.ceil(Number(raw.getBbHeight())))); } catch (eH) {}
+        var front = width * 0.5 + 0.55;
+        var sideSpread = Math.max(0.3, Math.min(1.1, width * 0.35));
+        var sides = width >= 1.8 ? [-sideSpread, 0, sideSpread] : [-sideSpread, sideSpread];
+        var broken = 0;
+
+        for (var yOff = 0; yOff < height && broken < BOSS_BREACH_MAX_BLOCKS; yOff++) {
+            for (var si = 0; si < sides.length && broken < BOSS_BREACH_MAX_BLOCKS; si++) {
+                // Continue a short distance after a successful break so one
+                // fast attempt can open a usable two-block-deep entrance.
+                for (var depth = 0; depth < 3 && broken < BOSS_BREACH_MAX_BLOCKS; depth++) {
+                    var reach = front + depth * 0.75;
+                    var bx = Math.floor(rx + dx * reach + sideX * sides[si]);
+                    var bz = Math.floor(rz + dz * reach + sideZ * sides[si]);
+                    var pos = new C.BlockPos(bx, ry + yOff, bz);
+                    var state = null;
+                    try { state = level.getBlockState(pos); } catch (eState) { break; }
+                    var air = false;
+                    try { air = state.isAir(); } catch (eAir2) {}
+                    if (air) continue;
+                    if (destroyBossBreachBlock(level, raw, pos, C)) {
+                        broken++;
+                        continue;
+                    }
+                    break; // protected/unbreakable block stops this ray
+                }
+            }
+        }
+        return broken;
+    }
 
     function unstick(inst, raw, target) {
         var key;
@@ -1053,7 +1276,16 @@
         var x, y, z;
         try { x = raw.getX(); y = raw.getY(); z = raw.getZ(); } catch (e3) { return; }
         var st = inst._mobState[key];
-        if (!st) { inst._mobState[key] = { x: x, y: y, z: z, idle: 0, tp: 0 }; return; }
+        // Entity tags are read once per mob per wave. The hot anti-stuck path
+        // then uses this cached boolean, so ordinary raid mobs never enter the
+        // block-scanning code and stuck bosses do not repeatedly scan tags.
+        if (!st) {
+            inst._mobState[key] = {
+                x: x, y: y, z: z, idle: 0, tp: 0,
+                breacher: isRaidBreacher(raw)
+            };
+            return;
+        }
         var dx = x - st.x, dy = y - st.y, dz = z - st.z;
         var movedSq = dx * dx + dy * dy + dz * dz;
         st.x = x; st.y = y; st.z = z;
@@ -1063,6 +1295,19 @@
         try { seesTarget = (typeof raw.hasLineOfSight === "function") && raw.hasLineOfSight(target); } catch (eLos) {}
         if (movedSq > STUCK_MOVE_SQ || (distSq < STUCK_NEAR_SQ && seesTarget)) { st.idle = 0; return; }
         st.idle++;
+        var breachDue = (st.idle === BOSS_BREACH_START) ||
+                        (st.idle > BOSS_BREACH_START && st.idle % BOSS_BREACH_RETRY === 0);
+        if (st.breacher && breachDue) {
+            var breached = breachBossObstruction(raw, target);
+            if (breached > 0) {
+                st.idle = 0;
+                try {
+                    var breachNav = (typeof raw.getNavigation === "function") ? raw.getNavigation() : null;
+                    if (breachNav) breachNav.moveTo(target, 1.0);
+                } catch (eBreachNav) {}
+                return;
+            }
+        }
         if (st.idle >= STUCK_TP) {
             st.idle = 0; st.tp++;
             var ang = ((hashStr(key) % 360) * Math.PI / 180) + st.tp * GOLDEN_ANG;
@@ -1143,6 +1388,40 @@
         if (!nbt) return;
         try { if (typeof entity.mergeNbt === "function") entity.mergeNbt(nbt); }
         catch (e) { warn("mergeNbt(entity): " + e); }
+    }
+    function forceAwakeRaidMob(entity, type) {
+        var mode = FORCE_AWAKE_RAID_MOB_TYPES[String(type || "")];
+        if (!mode) return;
+        var raw = rawMobOf(entity);
+        if (!raw) return;
+
+        // Use only the public switch owned by each mod. This is deliberately
+        // type-scoped: similarly named methods on unrelated mobs are untouched.
+        if (mode === "cataclysm_sleep") {
+            try {
+                if (typeof raw.setAwaken === "function") raw.setAwaken(true);
+            } catch (eAwake) {
+                warn("setAwaken " + type + ": " + eAwake);
+            }
+            try {
+                if (typeof raw.setSleep === "function") raw.setSleep(false);
+                else if (typeof raw.setAttackState === "function") raw.setAttackState(0);
+            } catch (eSleep) {
+                warn("clear sleep state " + type + ": " + eSleep);
+            }
+        } else if (mode === "cataclysm_awaken") {
+            try {
+                if (typeof raw.setIsAwaken === "function") raw.setIsAwaken(true);
+            } catch (eGolem) {
+                warn("setIsAwaken " + type + ": " + eGolem);
+            }
+        } else if (mode === "active") {
+            try {
+                if (typeof raw.setActive === "function") raw.setActive(true);
+            } catch (eActive) {
+                warn("setActive " + type + ": " + eActive);
+            }
+        }
     }
 
     // Plan and spawn every mob in a round. Returns entity refs.
@@ -1265,14 +1544,17 @@
                 facePlayer(entity, pos, pp);
                 try { entity.addTag("raid_mob"); } catch (e1) {}
                 try { entity.addTag("raid_" + instanceId); } catch (e2) {}
+                if (mob.breacher) { try { entity.addTag("raid_breacher"); } catch (eBreachTag) {} }
                 try { entity.setPersistenceRequired(); } catch (e3) {}
                 // Stable identity used by Xaero's custom RAID radar category.
                 // The boss bar already carries the wave name, while keeping
                 // this exact makes the client-side filter future-proof.
                 try { entity.setCustomName(Text.of("[RAID]")); } catch (e4) {}
                 applyEntityNbt(entity, mob.nbt);   // variants/skins/baby/mod data — pre-spawn
+                preparePlayerBoundRaidMob(entity, mob.type, player);
                 try { entity.spawn(); }
                 catch (eSp) { err(`spawn failed ${mob.type}: ${eSp}`); continue; }
+                forceAwakeRaidMob(entity, mob.type);
                 try { EAI.applyDeferred(level, entity, EAI.resolveArgs(names, xtra)); }
                 catch (eD) { warn(`applyDeferred: ${eD}`); }
                 equipMob(entity, mob.equip);        // weapons/armor — post-spawn
@@ -1802,6 +2084,7 @@
 
         try { form.addTag("raid_mob"); } catch (e1) {}
         try { form.addTag("raid_" + best.id); } catch (e2) {}
+        try { form.addTag("raid_breacher"); } catch (eBreach) {}
         try { form.setPersistenceRequired(); } catch (e3) {}
         try { form.setCustomName(Text.of("[RAID]")); } catch (e4) {}
         joinRaidTeam(Manager._server, form);
@@ -1836,6 +2119,57 @@
         }
         _pendingLifestealerForms.length = 0;
         for (var j = 0; j < keep.length; j++) _pendingLifestealerForms.push(keep[j]);
+    }
+
+    // The Dark Doppelganger creates 2-5 special boss minions at low health.
+    // The mod deliberately stores no summoner UUID for these, so associate only
+    // entities carrying its boss-minion flag with a tracked Doppelganger within
+    // the mod's tiny summon radius. This event-only adoption keeps them in raid
+    // aggro, cleanup and victory accounting without adding a tick/world scan.
+    function adoptDarkDoppelgangerMinion(minion) {
+        if (!minion || entityTypeId(minion) !== DARK_DOPPELGANGER_MINION_ID) return false;
+        var rawMinion = rawMobOf(minion);
+        try {
+            if (!rawMinion || typeof rawMinion.isBossMinion !== "function" || !rawMinion.isBossMinion()) return false;
+        } catch (eFlag) { return false; }
+
+        var best = null, bestList = null;
+        var bestDist = DARK_DOPPELGANGER_MINION_ADOPT_RADIUS_SQR + 1;
+        for (var k in _active) {
+            var inst = _active[k];
+            if (inst.phase === "DONE" || inst.phase === "ENDING") continue;
+            var lists = [inst.roundMobs, inst.carryover];
+            for (var li = 0; li < lists.length; li++) {
+                var arr = lists[li];
+                for (var i = 0; i < arr.length; i++) {
+                    var candidate = arr[i];
+                    if (sameEnt(candidate, minion)) return true;
+                    if (!candidate || entityTypeId(candidate) !== DARK_DOPPELGANGER_ID ||
+                        !sameEntityLevel(candidate, minion)) continue;
+                    var d = distanceSqr(candidate, minion);
+                    if (d <= DARK_DOPPELGANGER_MINION_ADOPT_RADIUS_SQR && d < bestDist) {
+                        best = inst;
+                        bestList = arr;
+                        bestDist = d;
+                    }
+                }
+            }
+        }
+        if (!best || !bestList) return false;
+
+        bestList.push(minion);
+        try { minion.addTag("raid_mob"); } catch (e1) {}
+        try { minion.addTag("raid_" + best.id); } catch (e2) {}
+        try { minion.setPersistenceRequired(); } catch (e3) {}
+        try { minion.setCustomName(Text.of("[RAID]")); } catch (e4) {}
+        try { minion.setCustomNameVisible(false); } catch (e5) {}
+        joinRaidTeam(Manager._server, minion);
+        forceTarget(minion, resolvePlayer(best));
+
+        best.roundTotalHealth = Math.max(1, best.roundTotalHealth + Math.max(0, entMaxHealth(minion)));
+        best.roundTotalMobs++;
+        info("raid " + best.id + ": adopted Dark Doppelganger boss minion");
+        return true;
     }
 
     // Very small lifecycle hook used by the day scheduler. Active raid state is
@@ -2064,14 +2398,20 @@
         Manager._drive(event.server);
     });
 
-    // Lifestealer's second phase is a newly spawned entity, not a state flag on
-    // the original one. Adopt it immediately when possible and retain a short
-    // retry only for the edge case where the mod fires its spawn callback before
-    // finishing removal/tag transfer on the first form.
+    // Rare mod-created combat entities are adopted at their spawn event, so the
+    // ordinary raid tick remains unchanged.
     EntityEvents.spawned(function (event) {
         var form = event.entity;
-        if (!form || !anyActive() || entityTypeId(form) !== LIFESTEALER_TRUE_FORM_ID) return;
-        if (!adoptLifestealerTrueForm(form)) {
+        if (!form || !anyActive()) return;
+        var type = entityTypeId(form);
+        if (type === DARK_DOPPELGANGER_MINION_ID) {
+            adoptDarkDoppelgangerMinion(form);
+            return;
+        }
+        // Lifestealer's second phase is a replacement entity. Retain a short
+        // retry for the edge case where its old form is removed just after this
+        // callback fires.
+        if (type === LIFESTEALER_TRUE_FORM_ID && !adoptLifestealerTrueForm(form)) {
             _pendingLifestealerForms.push({
                 entity: form,
                 ticks: LIFESTEALER_TRANSFORM_RETRY_TICKS

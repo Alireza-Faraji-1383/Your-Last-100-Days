@@ -47,7 +47,7 @@
             .breather(300)
             .timeLimit(6000)
             .mob(M.IGNITED_REVENANT).count(4)
-            .mob(M.NETHERITE_MINISTROSITY).count(4)
+            .mob(M.KOBOLEDIATOR).count(4)
             .mob(M.FLAMING_SHOOTER).count(3)
             .mob(M.TNT_CREEPER).count(4)
             .mob(M.PEARL_ZOMBIE).count(2)

@@ -63,14 +63,15 @@
             .mob(M.ENDERMAPTERA).count(4)
             .mob(M.TNT_CREEPER).count(3)
             .mob(M.MINER_ELITE).count(9)
-        // --- Round 5 (FINAL): the risen giants ---
-        .round("The Risen Giants")
+        // --- Round 5 (FINAL): IGNIS with regular troops, no minibosses ---
+        .round("Ignis, the Dark Flame")
             .timeLimit(16800)
-            .mob(M.APTRGANGR).count(3)
-            .mob(M.ENDER_GOLEM).count(2)
+            .mob(M.IGNIS).count(1)
+            .mob(M.ROYAL_DRAUGR).count(2)
+            .mob(M.FALLEN_KNIGHT).count(2)
             .mob(M.NIGHTMARE_STALKER).count(2)
             .mob(M.ELITE_DRAUGR).count(2)
-            .mob(M.PROWLER).count(2)
+            .mob(M.IGNITED_BERSERKER).count(2)
             .mob(M.NAGA).count(2)
             .mob(M.MINER_ELITE).count(9)
         .onWin(function (ctx) {

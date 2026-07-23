@@ -43,6 +43,7 @@
     var SW  = "spartan_weaponry_unofficial:";
     var MOW = "mowziesmobs:";
     var BFB = "block_factorys_bosses:";
+    var DDG = "darkdoppelganger:";
     var DM_HELM  = BIC + "dark_metal_armor_helmet";
     var DM_CHEST = BIC + "dark_metal_armor_chestplate";
     var DM_LEGS  = BIC + "dark_metal_armor_leggings";
@@ -151,7 +152,7 @@
         DREAD_HOUND:     { type: BIC + "dread_hound" },
         HOUND_LEADER:    { type: BIC + "dire_hound_leader" },
         NIGHTMARE_STALKER:{ type: BIC + "nightmare_stalker" },
-        LIFESTEALER:     { type: BIC + "lifestealer" },
+        LIFESTEALER:     { type: BIC + "lifestealer", breacher: true },
         PHANTOM_CREEPER: { type: BIC + "phantom_creeper" },    // phases through walls, explodes
         MOTHER_SPIDER:   { type: BIC + "mother_spider" },      // spawns baby spiders
         BLOODY_GADFLY:   { type: BIC + "bloody_gadfly" },      // flying harasser
@@ -163,16 +164,16 @@
         // ================= Born in Chaos — elite & minibosses ===========
         // Miniboss cuts of the Lifestealer / Missionary — buffed HP, meant to
         // anchor a mid/late round with a small escort.
-        LIFESTEALER_BOSS:{ type: BIC + "lifestealer",
+        LIFESTEALER_BOSS:{ type: BIC + "lifestealer", miniboss: true, breacher: true,
                            extraArgs: ["attributes/max_health=150"] },
-        MISSIONARY_BOSS: { type: BIC + "missioner",
+        MISSIONARY_BOSS: { type: BIC + "missioner", miniboss: true, breacher: true,
                            extraArgs: ["attributes/max_health=120"] },
         DOOR_KNIGHT:     { type: BIC + "door_knight" },        // smashes doors
         FALLEN_KNIGHT:   { type: BIC + "fallen_chaos_knight" },
         SCARLET_PERSECUTOR:{ type: BIC + "scarlet_persecutor" },
         KRAMPUS_HENCHMAN:{ type: BIC + "krampus_henchman" },
-        KRAMPUS:         { type: BIC + "krampus" },            // day-70 miniboss
-        SUPREME_BONESCALLER:{ type: BIC + "supreme_bonescaller" }, // day-90 miniboss
+        KRAMPUS:         { type: BIC + "krampus", boss: true, breacher: true }, // day-70 final boss
+        SUPREME_BONESCALLER:{ type: BIC + "supreme_bonescaller", miniboss: true, breacher: true },
 
         // ================= Cataclysm — the deep =========================
         // deepling_angler intentionally ABSENT — its fishing-rod hook AI is banned
@@ -181,36 +182,43 @@
         DEEPLING_BRUTE:  { type: CAT + "deepling_brute" },
         DEEPLING_PRIEST: { type: CAT + "deepling_priest" },
         DEEPLING_WARLOCK:{ type: CAT + "deepling_warlock" },
-        CORALSSUS:       { type: CAT + "coralssus" },          // day-60 miniboss trio
+        CORALSSUS:       { type: CAT + "coralssus", miniboss: true, breacher: true },
         CORAL_GOLEM:     { type: CAT + "coral_golem" },
-        AMETHYST_CRAB:   { type: CAT + "amethyst_crab" },
+        AMETHYST_CRAB:   { type: CAT + "amethyst_crab", miniboss: true, breacher: true },
         CLAWDIAN:        { type: CAT + "clawdian" },
         URCHINKIN:       { type: CAT + "urchinkin" },
 
         // ================= Cataclysm — fire, sand & draugr ==============
         IGNITED_BERSERKER:{ type: CAT + "ignited_berserker" },
-        IGNITED_REVENANT:{ type: CAT + "ignited_revenant" },
+        // Signature-loot miniboss (Burning Ashes outside raids).
+        IGNITED_REVENANT:{ type: CAT + "ignited_revenant", miniboss: true, breacher: true },
         KOBOLETON:       { type: CAT + "koboleton" },          // kobold skirmisher
-        KOBOLEDIATOR:    { type: CAT + "kobolediator" },       // kobold gladiator elite
-        WADJET:          { type: CAT + "wadjet" },             // serpent sorcerer
+        KOBOLEDIATOR:    { type: CAT + "kobolediator",
+                           nbt: { Awaken: true } },             // core also clears post-spawn Sleep
+        WADJET:          { type: CAT + "wadjet",
+                           nbt: { Awaken: true } },             // remains awake across saves
         WATCHER:         { type: CAT + "the_watcher" },        // Harbinger-factory construct
-        PROWLER:         { type: CAT + "the_prowler" },        // Harbinger-factory hunter
+        PROWLER:         { type: CAT + "the_prowler", miniboss: true, breacher: true },
         ENDERMAPTERA:    { type: CAT + "endermaptera" },
-        ENDER_GOLEM:     { type: CAT + "ender_golem" },
-        NETHERITE_MINISTROSITY:{ type: CAT + "netherite_ministrosity" },
+        ENDER_GOLEM:     { type: CAT + "ender_golem", miniboss: true, breacher: true,
+                           nbt: { is_Awaken: true } },
         DRAUGR:          { type: CAT + "draugr",
                            equip: { mainhand: SW + "iron_battleaxe", head: "minecraft:iron_helmet" } },
         ELITE_DRAUGR:    { type: CAT + "elite_draugr",
                            equip: { mainhand: BIC + "sharpened_dark_metal_sword", head: DM_HELM } },
         ROYAL_DRAUGR:    { type: CAT + "royal_draugr",
                            equip: { mainhand: SW + "diamond_halberd", head: DM_HELM } },
-        APTRGANGR:       { type: CAT + "aptrgangr" },          // draugr giant — day-90/100 elite
+        APTRGANGR:       { type: CAT + "aptrgangr", miniboss: true, breacher: true },
         // Burning Arena boss, HP-balanced for an open-field raid.
-        MALEDICTUS:      { type: CAT + "maledictus",
+        MALEDICTUS:      { type: CAT + "maledictus", boss: true, breacher: true,
                            extraArgs: ["attributes/max_health=200"] },
-        // Final boss of night 100, HP-balanced (vanilla 400 -> 250).
-        IGNIS:           { type: CAT + "ignis",
+        // Final boss of night 90, HP-balanced (vanilla 400 -> 250).
+        IGNIS:           { type: CAT + "ignis", boss: true, breacher: true,
                            extraArgs: ["attributes/max_health=250"] },
+
+        // Night 100 final boss. The core binds it to the raid player before
+        // spawn so its native gear-copy, spells and phase logic initialize.
+        DARK_DOPPELGANGER:{ type: DDG + "dark_doppelganger", boss: true, breacher: true },
 
         // ================= Iron's Spellbooks — the covenant =============
         // No standalone "summoner" mob exists in the mod — the NECROMANCER is
@@ -227,7 +235,7 @@
         ARCHEVOKER:      { type: ISS + "archevoker" },
         MAGEHUNTER:      { type: ISS + "magehunter_vindicator" },
         // "Ancient Knight" — heavy melee elite, day-50 miniboss.
-        CITADEL_KEEPER:  { type: ISS + "citadel_keeper",
+        CITADEL_KEEPER:  { type: ISS + "citadel_keeper", miniboss: true, breacher: true,
                            extraArgs: ["attributes/max_health=120"] },
 
         // ================= Mowzie's Mobs — mobile wild hunt =============
@@ -245,7 +253,8 @@
         ASH_GUARD:       { type: BFB + "dragon_guard_sword" },
         FLAMING_GUARD:   { type: BFB + "flaming_skeleton_guard_sword" },
         FLAMING_SHOOTER: { type: BFB + "flaming_skeleton_guard_fireball" },
-        PIRATE_ROOK:     { type: BFB + "pirate_rook" },
+        PIRATE_ROOK:     { type: BFB + "pirate_rook",
+                           equip: { mainhand: "minecraft:iron_sword" } },
         CROSSBOW_PIRATE: { type: BFB + "crossbow_pirate" },
         PIRATE_CAPTAIN:  { type: BFB + "pirate_captain" }
     };

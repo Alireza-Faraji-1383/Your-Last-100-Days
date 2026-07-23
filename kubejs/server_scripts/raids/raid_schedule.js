@@ -40,6 +40,7 @@
 
     function pdKey(s) { return "raidsched_day" + s.day + "_" + s.raidId; }
     function pendingKey(s) { return pdKey(s) + "_in_progress"; }
+    function warningKey(s) { return "raidwarn_day" + s.day + "_" + s.raidId; }
     // fired = in-memory flag OR the persisted world flag (cached back in-memory).
     function pdFired(server, s) {
         if (s.fired) return true;
@@ -115,6 +116,68 @@
         try {
             return (typeof RaidRegistry !== "undefined" && RaidRegistry && RaidRegistry.has(String(raidId)));
         } catch (e) { return false; }
+    }
+
+    function raidDisplayName(s) {
+        try {
+            var def = (typeof RaidRegistry !== "undefined" && RaidRegistry)
+                ? RaidRegistry.get(String(s.raidId)) : null;
+            if (def && def.title) return String(def.title);
+        } catch (e) {}
+        return String(s.raidId).replace(/_/g, " ");
+    }
+
+    // One compact, persistent warning per player and scheduled raid. This uses
+    // the scheduler's existing 5-second check, so it adds no tick/event loop.
+    // Players who missed the previous day get a final daytime warning on raid
+    // day; never show it at night immediately on top of the raid-start title.
+    function showRaidWarning(server, player, s, tonight) {
+        if (!server || !player) return false;
+        var key = warningKey(s);
+        try { if (player.persistentData.getBoolean(key)) return false; } catch (eRead) {}
+
+        var when = tonight ? "RAID TONIGHT" : "RAID TOMORROW";
+        var raidName = raidDisplayName(s);
+        var username = String(player.username);
+        try {
+            server.runCommandSilent("title " + username + " times 10 70 20");
+            server.runCommandSilent(
+                "title " + username + " title " +
+                JSON.stringify({ text: "\u26a0 " + when, color: "gold", bold: true })
+            );
+            server.runCommandSilent(
+                "title " + username + " subtitle " +
+                JSON.stringify({ text: "Day " + s.day + " \u2022 " + raidName, color: "yellow" })
+            );
+            server.runCommandSilent(
+                "playsound minecraft:block.bell.resonate master " + username + " ~ ~ ~ 0.8 0.85"
+            );
+        } catch (eTitle) { warn("warning display " + s.raidId + ": " + eTitle); }
+        try {
+            player.tell(Text.of(
+                "\u00a76\u00a7l\u26a0 " + when + "\u00a7r\u00a77  Day " + s.day + " \u2022 \u00a7e" + raidName +
+                "\u00a7r\u00a78  Prepare armor, food, healing and defenses."
+            ));
+        } catch (eTell) {}
+        try { player.persistentData.putBoolean(key, true); }
+        catch (eWrite) { warn("warning save " + s.raidId + ": " + eWrite); }
+        return true;
+    }
+
+    function warnEligiblePlayers(server, day, timeOfDay) {
+        var next = null;
+        for (var i = 0; i < _schedule.length; i++) {
+            var s = _schedule[i];
+            if (day < s.day - 1 || pdFired(server, s)) continue;
+            if (!next || s.day < next.day) next = s;
+        }
+        if (!next) return;
+        var tonight = day >= next.day;
+        if (tonight && timeOfDay >= NIGHT_START) return;
+        try {
+            var it = server.players.iterator();
+            while (it.hasNext()) showRaidWarning(server, it.next(), next, tonight);
+        } catch (e) { warn("warning player iteration: " + e); }
     }
 
     function findEntry(day, raidId) {
@@ -224,8 +287,10 @@
             recoverInterrupted(server);
         }
         var t = overworldTime(server);
-        if ((t % 24000) < NIGHT_START) return;          // daytime — wait for nightfall
+        var timeOfDay = t % 24000;
         var day = Math.floor(t / 24000);
+        warnEligiblePlayers(server, day, timeOfDay);
+        if (timeOfDay < NIGHT_START) return;          // daytime — wait for nightfall
 
         for (var i = 0; i < _schedule.length; i++) {
             var s = _schedule[i];
