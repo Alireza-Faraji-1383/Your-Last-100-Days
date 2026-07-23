@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/root",
+  "criteria": {
+    "win": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Day 70: Defeat The Rotten Legion raid."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day70"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "dark_gray",
+      "text": "Day 70 — Legion Put to Rest"
+    }
+  },
+  "requirements": [
+    [
+      "win"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

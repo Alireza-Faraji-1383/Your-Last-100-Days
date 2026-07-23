@@ -2,8 +2,8 @@
 // kubejs/server_scripts/raids/day_030.js
 //
 // NIGHT 30 — "The Warband" (chapter 3: men are worse than monsters)
-// Illager army marching from one direction (horde pattern) with a Born in
-// Chaos missionary. Real siege: TNT creepers + door knights + miners.
+// Illagers, pirate mercenaries and spell-hunters march as one army. Real
+// siege roles: crossfire, TNT creepers, door knights, throwers and miners.
 
 (function () {
     "use strict";
@@ -25,35 +25,41 @@
         .round("Raiding Party")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.PILLAGER).count(8)
-            .mob(M.VINDICATOR).count(6)
-            .mob(M.MINER_ZOMBIE).count(4)
+            .mob(M.PILLAGER).count(6)
+            .mob(M.VINDICATOR).count(4)
+            .mob(M.CROSSBOW_PIRATE).count(3)
+            .mob(M.PIRATE_ROOK).count(2)
+            .mob(M.MINER_ZOMBIE).count(6)
         // --- Round 2: sappers hit the walls ---
         .round("Sappers")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.TNT_CREEPER).count(6)
-            .mob(M.DOOR_KNIGHT).count(4)
-            .mob(M.DEMOMAN).count(4)
-            .mob(M.MINER_STRONG).count(5)
+            .mob(M.TNT_CREEPER).count(5)
+            .mob(M.DOOR_KNIGHT).count(3)
+            .mob(M.DEMOMAN).count(2)
+            .mob(M.BARREL_ZOMBIE).count(3)
+            .mob(M.TOSSER).count(2)
+            .mob(M.MINER_STRONG).count(6)
         // --- Round 3: the warlocks' escort ---
         .round("The Warlocks")
             .breather(200)
             .timeLimit(6000)
             .mob(M.EVOKER).count(2)
-            .mob(M.VINDICATOR).count(6)
-            .mob(M.PILLAGER).count(6)
-            .mob(M.PEARL_ZOMBIE).count(4)
-            .mob(M.MINER_STRONG).count(4)
-        // --- Round 4 (FINAL): the warbeasts, led by the Missionary miniboss ---
+            .mob(M.APOTHECARIST).count(1)
+            .mob(M.MAGEHUNTER).count(2)
+            .mob(M.VINDICATOR).count(4)
+            .mob(M.PILLAGER).count(4)
+            .mob(M.PEARL_ZOMBIE).count(2)
+            .mob(M.MINER_STRONG).count(6)
+        // --- Round 4 (FINAL): Missionary + pirate captain + warbeasts ---
         .round("The Warbeasts")
             .timeLimit(14400)
             .mob(M.MISSIONARY_BOSS).count(1)
-            .mob(M.WARBEAST_RAVAGER).count(2)
+            .mob(M.PIRATE_CAPTAIN).count(1)
+            .mob(M.WARBEAST_RAVAGER).count(3)
             .mob(M.VINDICATOR_ELITE).count(4)
-            .mob(M.MAGEHUNTER).count(2)
-            .mob(M.PILLAGER).count(5)
-            .mob(M.MINER_STRONG).count(4)
+            .mob(M.CROSSBOW_PIRATE).count(4)
+            .mob(M.MINER_STRONG).count(8)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:diamond 6");

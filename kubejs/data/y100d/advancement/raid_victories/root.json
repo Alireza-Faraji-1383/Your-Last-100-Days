@@ -1,0 +1,32 @@
+{
+  "criteria": {
+    "open": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "description": {
+      "text": "Victories earned across the hundred-day raids."
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:shield"
+    },
+    "show_toast": false,
+    "title": {
+      "bold": true,
+      "color": "dark_red",
+      "text": "Raid Victories"
+    }
+  },
+  "requirements": [
+    [
+      "open"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

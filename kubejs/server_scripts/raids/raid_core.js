@@ -5,8 +5,8 @@
 // global (enhancedai_factory.js, priority 100 -> loads first).
 //
 // Sequential rounds (never overlap), ring-spawn around the target player,
-// far-aggro via the farSight preset + a per-tick setTarget loop. No lose
-// condition; win = all rounds completed AND all spawned mobs dead -> onWin.
+// far-aggro via the farSight preset + a throttled hard-target loop. Intermediate
+// survivors carry forward; final win requires every spawned raid mob to be dead.
 //
 // Rhino quirk: const/let inside try{} hoists to a function-scope var and throws
 // "redeclaration of var X" on the 2nd call. All function-internal declarations
@@ -21,10 +21,67 @@
     const DEFAULT_MAX_R  = 40;
     const DEFAULT_BREATHER = 60;   // ticks after an all-dead round before the next
     const DEFAULT_BAR_HOLD  = 300; // ticks the victory/defeat bar lingers before closing (15s)
+    const MIN_ROUND_MOBS = 21;     // every authored wave must meet this floor
+    const DEFEAT_PENALTY_TICKS = 6000; // 5 minutes
+    const DEFEAT_PENALTY_AMP   = 3;    // zero-based amplifier 3 = effect level IV
+    const FINAL_GLOW_AFTER_TICKS = 3600; // reveal every final-wave mob after 3 minutes
+    const LIFESTEALER_ID = "born_in_chaos_v1:lifestealer";
+    const LIFESTEALER_TRUE_FORM_ID = "born_in_chaos_v1:lifestealer_true_form";
+    const LIFESTEALER_TRANSFORM_RADIUS_SQR = 16; // true form is created at the old mob's position
+    const LIFESTEALER_TRANSFORM_RETRY_TICKS = 40;
+    const RAID_VICTORY_ADVANCEMENTS = {
+        day10_rotting_dawn:       "y100d:raid_victories/day10_rotting_dawn",
+        day20_night_of_bones:     "y100d:raid_victories/day20_night_of_bones",
+        day30_warband:            "y100d:raid_victories/day30_warband",
+        day40_night_of_spirits:   "y100d:raid_victories/day40_night_of_spirits",
+        day50_arcane_covenant:    "y100d:raid_victories/day50_arcane_covenant",
+        day60_rise_of_the_deep:   "y100d:raid_victories/day60_rise_of_the_deep",
+        day70_rotten_legion:      "y100d:raid_victories/day70_rotten_legion",
+        day80_burning_siege:      "y100d:raid_victories/day80_burning_siege",
+        day90_dark_concord:       "y100d:raid_victories/day90_dark_concord",
+        day100_last_dawn:         "y100d:raid_victories/day100_last_dawn"
+    };
+    // Explicit screen coordinates avoid Minecraft's hash-set child ordering.
+    // UI Y grows downward: day 100 is the top entry and day 10 the bottom.
+    const RAID_ADVANCEMENT_LAYOUT = [
+        ["y100d:raid_victories/day100_last_dawn", 0],
+        ["y100d:raid_victories/day90_dark_concord", 1],
+        ["y100d:raid_victories/day80_burning_siege", 2],
+        ["y100d:raid_victories/day70_rotten_legion", 3],
+        ["y100d:raid_victories/day60_rise_of_the_deep", 4],
+        ["y100d:raid_victories/day50_arcane_covenant", 5],
+        ["y100d:raid_victories/day40_night_of_spirits", 6],
+        ["y100d:raid_victories/day30_warband", 7],
+        ["y100d:raid_victories/day20_night_of_bones", 8],
+        ["y100d:raid_victories/day10_rotting_dawn", 9]
+    ];
 
     function warn(m) { console.warn(`[Raid] ${m}`); }
     function err(m)  { console.error(`[Raid] ${m}`); }
     function info(m) { if (DEBUG) console.info(`[Raid] ${m}`); }
+
+    function setAdvancementLocation(manager, RL, id, x, y) {
+        var holder = manager.get(RL.parse(id));
+        if (!holder) { warn("advancement layout missing " + id); return; }
+        var display = holder.value().display();
+        if (!display.isPresent()) { warn("advancement layout has no display " + id); return; }
+        display.get().setLocation(x, y);
+    }
+
+    // Runs once per server start; no tick handler and no runtime raid overhead.
+    function layoutRaidAdvancements(server) {
+        try {
+            var RL = Java.loadClass("net.minecraft.resources.ResourceLocation");
+            var manager = server.getAdvancements();
+            setAdvancementLocation(manager, RL, "y100d:raid_victories/root", 0, 4.5);
+            for (var i = 0; i < RAID_ADVANCEMENT_LAYOUT.length; i++) {
+                var entry = RAID_ADVANCEMENT_LAYOUT[i];
+                setAdvancementLocation(manager, RL, entry[0], 1, entry[1]);
+            }
+        } catch (e) {
+            warn("could not apply raid advancement layout: " + e);
+        }
+    }
 
     function getEAI() {
         var EAI = (typeof EnhancedAI !== "undefined") ? EnhancedAI : null;
@@ -426,6 +483,7 @@
         var presetMap = (EAI && EAI.presets) ? EAI.presets : {};
         for (var i = 0; i < d.rounds.length; i++) {
             var r = d.rounds[i];
+            var roundMobCount = 0;
             if (!(r.breather >= 0)) { err(`raid "${d.id}" round ${i}: bad breather "${r.breather}"`); return false; }
             if (r.timeLimit != null && !(r.timeLimit >= 0)) { err(`raid "${d.id}" round ${i}: bad timeLimit "${r.timeLimit}"`); return false; }
             if (!r.mobs || r.mobs.length === 0) { err(`raid "${d.id}" round ${i} "${r.name}": no mobs`); return false; }
@@ -433,10 +491,15 @@
                 var m = r.mobs[j];
                 if (!m.type || m.type.indexOf(":") === -1) { err(`raid "${d.id}" round ${i}: bad mob type "${m.type}"`); return false; }
                 if (!(m.count >= 1)) { err(`raid "${d.id}" round ${i}: mob "${m.type}" count < 1`); return false; }
+                roundMobCount += m.count;
                 var names = m.noDefaults ? m.presets : d.defaultPresets.concat(m.presets);
                 for (var k = 0; k < names.length; k++) {
                     if (!presetMap[names[k]]) warn(`raid "${d.id}": unknown preset "${names[k]}" (mob ${m.type}) — EAI will skip it`);
                 }
+            }
+            if (roundMobCount < MIN_ROUND_MOBS) {
+                err(`raid "${d.id}" round ${i} "${r.name}": ${roundMobCount} mobs, minimum is ${MIN_ROUND_MOBS}`);
+                return false;
             }
         }
         return true;
@@ -449,8 +512,10 @@
 
     // ---------- Spawner -----------------------------------------------------
 
-    const SPAWN_TRIES  = 10;   // candidate positions tried per mob before fallback
-    const SPAWN_Y_SCAN = 16;   // vertical search range (blocks) around the player's Y
+    const SPAWN_Y_SCAN           = 16;  // ceiling-dimension / API fallback only
+    const SPAWN_EMERGENCY_TRIES  = 16;  // paid only once when a whole plan needs rescue
+    const SPAWN_EMERGENCY_Y_SCAN = 64;  // bounded fallback in ceiling dimensions
+    const SPAWN_RETRY_TICKS      = 200; // no-safe-ground retry interval (10 seconds)
 
     // Hard cap on the follow_range actually applied to raid mobs. Vanilla path
     // search cost scales with follow_range (it bounds the A* search region per
@@ -474,50 +539,124 @@
         "minecraft:dead_bush": 1, "minecraft:dandelion": 1, "minecraft:poppy": 1
     };
     function blockId(b) { try { return String(b.id); } catch (e) { return ""; } }
+    function isWaterBlock(b) { return blockId(b) === "minecraft:water"; }
     function isPassable(b)  { return isAirBlock(b) || !!_passable[blockId(b)]; }
     function isSafeFloor(b) { return b && !isAirBlock(b) && !_passable[blockId(b)] && !_dangerBelow[blockId(b)]; }
 
-    // Ground Y near the player's elevation: from playerY outward (0,+1,-1,+2,-2…)
-    // find solid safe floor with 2 passable blocks above. Nearest-to-player-Y wins,
-    // so mobs spawn on the player's terrace, not a cliff top or cave roof above.
-    // Returns null when the column has no safe spot (caller tries another column).
-    function groundY(level, x, baseY, z) {
+    function safeSpawnY(level, bx, y, bz, allowWater) {
+        var below = level.getBlock(bx, y - 1, bz);
+        if (!isSafeFloor(below)) return null;
+        var feet = level.getBlock(bx, y, bz);
+        var head = level.getBlock(bx, y + 1, bz);
+        var feetClear = isPassable(feet) || (allowWater && isWaterBlock(feet));
+        var headClear = isPassable(head) || (allowWater && isWaterBlock(head));
+        return (feetClear && headClear) ? y : null;
+    }
+
+    var _heightTypes = null;
+    var _heightTypesTried = false;
+    var _heightRuntimeBroken = false;
+    function heightTypes() {
+        if (_heightTypesTried) return _heightTypes;
+        _heightTypesTried = true;
+        try { _heightTypes = Java.loadClass("net.minecraft.world.level.levelgen.Heightmap$Types"); }
+        catch (e) { _heightTypes = null; }
+        return _heightTypes;
+    }
+
+    function heightLevel(level) {
+        if (!level) return null;
+        try { if (typeof level.getHeight === "function") return level; } catch (e) {}
+        try {
+            var raw = (typeof level.getLevel === "function") ? level.getLevel() : null;
+            if (raw && typeof raw.getHeight === "function") return raw;
+        } catch (e2) {}
+        try { if (level.minecraftLevel && typeof level.minecraftLevel.getHeight === "function") return level.minecraftLevel; }
+        catch (e3) {}
+        return null;
+    }
+
+    function levelHasCeiling(rawLevel) {
+        try {
+            var dt = (typeof rawLevel.dimensionType === "function") ? rawLevel.dimensionType() : null;
+            return !!(dt && typeof dt.hasCeiling === "function" && dt.hasCeiling());
+        } catch (e) { return false; }
+    }
+
+    // Returns {supported, y}. In normal dimensions this reads the world's
+    // heightmap, so an underground player still gets an above-ground raid.
+    // OCEAN_FLOOR is allowed only for waterproof raids.
+    function surfaceGroundY(level, x, z, allowWater) {
+        if (_heightRuntimeBroken) return { supported: false, y: null };
+        var Types = heightTypes();
+        var raw = heightLevel(level);
+        if (!Types || !raw || levelHasCeiling(raw)) return { supported: false, y: null };
+        var bx = Math.floor(x), bz = Math.floor(z);
+        var offsets = [0, 1, -1, 2, -2];
+        try {
+            var top = Number(raw.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, bx, bz));
+            for (var i = 0; i < offsets.length; i++) {
+                var sy = safeSpawnY(level, bx, top + offsets[i], bz, false);
+                if (sy != null) return { supported: true, y: sy };
+            }
+            if (allowWater) {
+                var ocean = Number(raw.getHeight(Types.OCEAN_FLOOR, bx, bz));
+                for (var j = 0; j < offsets.length; j++) {
+                    var oy = safeSpawnY(level, bx, ocean + offsets[j], bz, true);
+                    if (oy != null) return { supported: true, y: oy };
+                }
+            }
+            return { supported: true, y: null };
+        } catch (e) {
+            _heightRuntimeBroken = true;
+            warn("surfaceGroundY: " + e);
+            return { supported: false, y: null };
+        }
+    }
+
+    // Local Y fallback for ceiling dimensions (Nether-like) or an unavailable
+    // heightmap API. Normal dimensions use surfaceGroundY and never choose a
+    // cave merely because it is close to the player's current Y.
+    function groundYRange(level, x, baseY, z, scan, allowWater) {
         try {
             var bx = Math.floor(x), bz = Math.floor(z), py = Math.floor(baseY);
-            for (var off = 0; off <= SPAWN_Y_SCAN; off++) {
+            for (var off = 0; off <= scan; off++) {
                 for (var s = 0; s < (off === 0 ? 1 : 2); s++) {
                     var y = py + (s === 0 ? off : -off);
-                    var below = level.getBlock(bx, y - 1, bz);
-                    if (!isSafeFloor(below)) continue;
-                    if (isPassable(level.getBlock(bx, y, bz)) && isPassable(level.getBlock(bx, y + 1, bz))) return y;
+                    if (safeSpawnY(level, bx, y, bz, allowWater) != null) return y;
                 }
             }
         } catch (e) { warn(`groundY: ${e}`); }
         return null;
     }
+    function groundY(level, x, baseY, z, allowWater) {
+        var surface = surfaceGroundY(level, x, z, allowWater);
+        if (surface.supported) return surface.y;
+        return groundYRange(level, x, baseY, z, SPAWN_Y_SCAN, allowWater);
+    }
+    function emergencyGroundY(level, x, baseY, z, allowWater) {
+        var surface = surfaceGroundY(level, x, z, allowWater);
+        if (surface.supported) return surface.y;
+        return groundYRange(level, x, baseY, z, SPAWN_EMERGENCY_Y_SCAN, allowWater);
+    }
 
-    // Pick a safe ring position for global mob index idx (of total). Base angle is
-    // evenly spaced; each retry nudges angle + radius deterministically (no
-    // Math.random — Rhino-safe and reproducible). Falls back to minR at the base
-    // angle on the player's Y if every candidate column is unsafe (mid-ocean, void).
-    function findSpawnPos(level, pp, def, idx, total) {
-        var minR = def.spawn.minRadius, maxR = def.spawn.maxRadius;
+    // Rare rescue path shared by every failed position in a wave. It expands
+    // horizontal candidates; only ceiling/API fallbacks pay the wider Y scan.
+    // It runs at most once per plan and returns only fully validated positions.
+    function findEmergencyAnchor(level, pp, def, seed) {
+        var minR = Math.max(6, def.spawn.minRadius);
+        var maxR = Math.max(minR, def.spawn.maxRadius + 16);
         var span = Math.max(1, maxR - minR + 1);
-        var baseAng = (idx / total) * Math.PI * 2;
-        for (var t = 0; t < SPAWN_TRIES; t++) {
-            var ang = baseAng + t * 0.618 * (t % 2 === 0 ? 1 : -1) * 0.35;
-            var rad = minR + ((idx * 13 + t * 7) % span);
+        var baseAng = ((seed || 0) % 360) * Math.PI / 180;
+        for (var t = 0; t < SPAWN_EMERGENCY_TRIES; t++) {
+            var ang = baseAng + t * GOLDEN_ANG;
+            var rad = minR + ((t * 11 + (seed || 0)) % span);
             var x = pp.x + Math.cos(ang) * rad;
             var z = pp.z + Math.sin(ang) * rad;
-            var y = groundY(level, x, pp.y, z);
+            var y = emergencyGroundY(level, x, pp.y, z, def.waterproof !== false);
             if (y != null) return { x: x, y: y, z: z };
         }
-        warn("findSpawnPos: no safe column after " + SPAWN_TRIES + " tries — fallback at player Y");
-        return {
-            x: pp.x + Math.cos(baseAng) * minR,
-            y: Math.floor(pp.y),
-            z: pp.z + Math.sin(baseAng) * minR
-        };
+        return null;
     }
 
     // ---- Horde pattern ------------------------------------------------------
@@ -535,23 +674,85 @@
         return h;
     }
 
+    // ---- Ring pattern: multiple assault groups ----------------------------
+    // A ring wave becomes 3-5 compact squads in different player-facing
+    // sectors. All work happens once while planning the spawn; there is no new
+    // tick handler, entity scan or pathfinding pass.
+    const RING_GROUP_ANCHOR_TRIES = 6;
+    const RING_GROUP_SPREAD_MAX   = 6;
+    const RING_GROUP_ANGLE_STEP   = Math.PI / 12;
+
+    function wantedRingGroups(total) {
+        if (total <= 15) return 3;
+        if (total <= 20) return 4;
+        return 5;
+    }
+
+    // Deterministic per-wave rotation keeps attack directions varied without
+    // Math.random. Unsafe sectors are skipped rather than forcing a bad column.
+    function findRingGroupAnchors(level, pp, def, total, instanceId, roundIdx) {
+        var wanted = wantedRingGroups(total);
+        var anchors = [];
+        var minR = def.spawn.minRadius, maxR = def.spawn.maxRadius;
+        var span = Math.max(1, maxR - minR + 1);
+        var seed = hashStr(String(instanceId) + "#" + roundIdx + "#groups");
+        var rotation = (seed % 360) * Math.PI / 180;
+        var allowWater = def.waterproof !== false;
+
+        for (var g = 0; g < wanted; g++) {
+            var baseAng = rotation + (g / wanted) * Math.PI * 2;
+            var found = null;
+            for (var t = 0; t < RING_GROUP_ANCHOR_TRIES; t++) {
+                var step = Math.ceil(t / 2) * RING_GROUP_ANGLE_STEP;
+                var ang = baseAng + (t === 0 ? 0 : (t % 2 === 1 ? step : -step));
+                var rad = minR + ((seed + g * 17 + t * 11) % span);
+                var x = pp.x + Math.cos(ang) * rad;
+                var z = pp.z + Math.sin(ang) * rad;
+                var y = groundY(level, x, pp.y, z, allowWater);
+                if (y != null) { found = { x: x, y: y, z: z }; break; }
+            }
+            if (found) anchors.push(found);
+        }
+        return anchors;
+    }
+
+    // Global mob indices are distributed round-robin, so each squad receives a
+    // mixture of the wave's roles. Golden-angle offsets prevent collision piles.
+    function ringGroupMobPos(level, anchors, idx, total, allowWater) {
+        if (!anchors || anchors.length === 0) return null;
+        var group = idx % anchors.length;
+        var localIdx = Math.floor(idx / anchors.length);
+        var groupSize = Math.ceil((total - group) / anchors.length);
+        var anchor = anchors[group];
+        if (localIdx === 0) return anchor;
+
+        var spread = Math.min(RING_GROUP_SPREAD_MAX, Math.max(3, Math.ceil(Math.sqrt(groupSize) * 1.6)));
+        var ang = localIdx * GOLDEN_ANG + group * 0.73;
+        var rad = 1 + ((localIdx * 3 + group * 2) % spread);
+        var x = anchor.x + Math.cos(ang) * rad;
+        var z = anchor.z + Math.sin(ang) * rad;
+        var y = groundY(level, x, anchor.y, z, allowWater);
+        if (y != null) return { x: x, y: y, z: z };
+        return anchor;
+    }
+
     // Validate a whole landing zone, not just one column: anchor + 4 side samples
     // at HORDE_ZONE_R must all have safe floor (same rules as groundY) at a
     // similar elevation. Returns the anchor Y, or null if the zone is unusable.
-    function hordeZoneY(level, pp, ax, az) {
-        var ay = groundY(level, ax, pp.y, az);
+    function hordeZoneY(level, pp, def, ax, az) {
+        var allowWater = def.waterproof !== false;
+        var ay = groundY(level, ax, pp.y, az, allowWater);
         if (ay == null) return null;
         var samples = [[HORDE_ZONE_R, 0], [-HORDE_ZONE_R, 0], [0, HORDE_ZONE_R], [0, -HORDE_ZONE_R]];
         for (var i = 0; i < samples.length; i++) {
-            var sy = groundY(level, ax + samples[i][0], ay, az + samples[i][1]);
+            var sy = groundY(level, ax + samples[i][0], ay, az + samples[i][1], allowWater);
             if (sy == null || Math.abs(sy - ay) > 3) return null;
         }
         return ay;
     }
 
     // Find the horde anchor: try the base angle, then rotate 45° per retry
-    // through the other 7 directions. Falls back to the base angle at the
-    // player's Y if no direction validates (mid-ocean, void).
+    // through the other 7 directions. No unvalidated fallback is returned.
     function findHordeAnchor(level, pp, def, instanceId, roundIdx) {
         var rad = (def.spawn.minRadius + def.spawn.maxRadius) / 2;
         var baseAng = (def.hordeAngle != null)
@@ -561,30 +762,27 @@
             var ang = baseAng + d * (Math.PI / 4);
             var ax = pp.x + Math.cos(ang) * rad;
             var az = pp.z + Math.sin(ang) * rad;
-            var ay = hordeZoneY(level, pp, ax, az);
+            var ay = hordeZoneY(level, pp, def, ax, az);
             if (ay != null) return { x: ax, y: ay, z: az };
         }
-        warn("findHordeAnchor: no valid zone in 8 directions — fallback at player Y");
-        return {
-            x: pp.x + Math.cos(baseAng) * rad,
-            y: Math.floor(pp.y),
-            z: pp.z + Math.sin(baseAng) * rad
-        };
+        return null;
     }
 
     // Deterministic small offset around the anchor for cluster mob idx:
     // golden-angle direction, radius scaled to the wave size so big hordes
     // don't cram into a 4-block ring and jam each other (collision shoving
     // freezes pathing). ~sqrt(total) keeps density roughly constant. Per-column
-    // ground lookup; anchor Y is the fallback when a column is unsafe.
-    function hordeMobPos(level, anchor, idx, total) {
+    // ground lookup; an unsafe offset collapses to the already validated anchor
+    // column instead of mixing unsafe X/Z with anchor Y.
+    function hordeMobPos(level, anchor, idx, total, allowWater) {
         var spread = Math.max(HORDE_SPREAD_MAX, Math.ceil(Math.sqrt(total || 1) * 1.5));
         var ang = idx * GOLDEN_ANG;
         var rad = 1 + ((idx * 5) % spread);
         var x = anchor.x + Math.cos(ang) * rad;
         var z = anchor.z + Math.sin(ang) * rad;
-        var y = groundY(level, x, anchor.y, z);
-        return { x: x, y: (y != null ? y : anchor.y), z: z };
+        var y = groundY(level, x, anchor.y, z, allowWater);
+        if (y != null) return { x: x, y: y, z: z };
+        return { x: anchor.x, y: anchor.y, z: anchor.z };
     }
 
     // ---- Water assist -------------------------------------------------------
@@ -648,33 +846,28 @@
         } catch (e) {}
     }
 
-    // Steer the mob toward the player ONLY when it has no valid target of its
-    // own. Lets natural AI win when it kicks in: HurtByTargetGoal (retaliate vs
-    // whoever attacks it), raider villager-hunting, other players. Player is the
-    // fallback that re-aggros an idle mob, so the wave always drifts inward.
+    // Initial hard lock: raid mobs never inherit a nearby ambient target when
+    // they spawn. The throttled aggro pass below continuously maintains it.
     function forceTarget(entity, player) {
         if (!player) return;
         try {
             var EAI = getEAI();
             var raw = EAI ? EAI.rawMob(entity) : entity;
             if (!raw || typeof raw.setTarget !== "function") return;
+            var target = unwrapPlayer(player);
+            if (!target || !isLiveEnt(target)) return;
             var cur = null;
             try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (eGt) {}
-            var hasValid = false;
-            if (cur) { try { hasValid = (!cur.isAlive || cur.isAlive()); } catch (eAl) { hasValid = true; } }
-            if (!hasValid) raw.setTarget(player);
+            if (!cur || !sameEnt(cur, target)) raw.setTarget(target);
         } catch (e) { /* mob may be dead/unloaded */ }
     }
 
     // ---------- Targeting engine (mod-agnostic) -----------------------------
     // Drives every raid mob's target each throttle tick so behavior is identical
-    // for vanilla and modded mobs (no reliance on a mob having HurtByTargetGoal
-    // or a villager-targeting goal). Priority per mob:
-    //   1. retaliate vs whoever last hurt it (any player/mob, not a raid ally)
-    //   2. keep its current non-player victim until that victim dies
-    //   3. nearest player/villager/golem within aggroRadius
-    //   4. fall back to the main player (the long pull inward)
-    //   5. main player dead/offline -> only (3); idle until they respawn
+    // for vanilla and modded mobs. The raid owner is an ABSOLUTE priority while
+    // alive: retaliation, villagers, golems and other players cannot steal the
+    // target. Only while the owner is dead/offline may mobs pick nearby fallback
+    // victims; the next pass after respawn locks every mob back to the owner.
 
     var _rc = {};
     function RC(fqn) {
@@ -716,6 +909,12 @@
     }
     function canHit(raw, t) {
         try { if (typeof raw.canAttack === "function") return raw.canAttack(t); } catch (x) {}
+        return true;
+    }
+    function mainPlayerEligible(t) {
+        if (!isLiveEnt(t)) return false;
+        try { if (typeof t.isSpectator === "function" && t.isSpectator()) return false; } catch (x) {}
+        try { if (typeof t.isCreative === "function" && t.isCreative()) return false; } catch (y) {}
         return true;
     }
     function validVictim(raw, t) {
@@ -788,6 +987,14 @@
     function decideTarget(raw, mainRaw, victims, radiusSqr) {
         var atk = null;
         try { atk = (typeof raw.getLastHurtByMob === "function") ? raw.getLastHurtByMob() : null; } catch (x) {}
+        if (mainRaw && mainPlayerEligible(mainRaw)) {
+            // Prevent HurtByTargetGoal from stealing aggro between our 5-tick
+            // passes. Main-player attacks may remain in memory; all others go.
+            if (atk && !sameEnt(atk, mainRaw)) {
+                try { raw.setLastHurtByMob(null); } catch (xM) {}
+            }
+            return mainRaw;
+        }
         // Ally friendly-fire scrub: a raid mob accidentally hurt by another raid
         // mob must never retaliate — wipe the memory so vanilla HurtByTargetGoal
         // can't pick it up between our passes either.
@@ -795,25 +1002,23 @@
             try { raw.setLastHurtByMob(null); } catch (xC) {}
             atk = null;
         }
-        if (validVictim(raw, atk)) return atk;                       // 1 retaliate
+        if (validVictim(raw, atk)) return atk;
 
         var cur = null;
         try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (y) {}
-        if (cur && validVictim(raw, cur) && !(mainRaw && sameEnt(cur, mainRaw))) return cur; // 2 keep victim
+        if (cur && validVictim(raw, cur)) return cur;
 
-        var v = nearestFrom(raw, victims, radiusSqr);                // 3 nearest in radius
+        var v = nearestFrom(raw, victims, radiusSqr);
         if (v) return v;
-
-        if (mainRaw && validVictim(raw, mainRaw)) return mainRaw;    // 4 main player
-        return null;                                                 // 5 idle
+        return null;
     }
 
     // ---- Anti-stuck ---------------------------------------------------------
     // A mob that has a target but hasn't moved between aggro passes first gets a
-    // navigation recompute; if it stays frozen ~8s while far from its target it
-    // teleports onto safe ground near the target. Standstills inside STUCK_NEAR
-    // are legit (melee crowd, bow/skirmisher hold range) and never count as
-    // stuck, so ranged kiting and EAI digging/fishing goals aren't disturbed.
+    // navigation recompute; if it stays frozen ~8s without a useful approach it
+    // teleports onto safe ground near the target. A close standstill is exempt
+    // only with line of sight (legit melee crowd or ranged hold); a nearby mob
+    // separated by a wall still counts as stuck.
     const STUCK_MOVE_SQ = 0.25; // blocks² moved per pass below this = "not moving"
     const STUCK_NEAR_SQ = 576;  // 24² blocks — inside this idling is allowed
     const STUCK_KICK    = 4;    // idle passes before a nav recompute (repeats every 4)
@@ -833,7 +1038,9 @@
         st.x = x; st.y = y; st.z = z;
         var distSq;
         try { distSq = raw.distanceToSqr(target); } catch (e4) { return; }
-        if (movedSq > STUCK_MOVE_SQ || distSq < STUCK_NEAR_SQ) { st.idle = 0; return; }
+        var seesTarget = false;
+        try { seesTarget = (typeof raw.hasLineOfSight === "function") && raw.hasLineOfSight(target); } catch (eLos) {}
+        if (movedSq > STUCK_MOVE_SQ || (distSq < STUCK_NEAR_SQ && seesTarget)) { st.idle = 0; return; }
         st.idle++;
         if (st.idle >= STUCK_TP) {
             st.idle = 0; st.tp++;
@@ -842,7 +1049,7 @@
                 var lvl = (typeof raw.level === "function") ? raw.level() : raw.level;
                 var tx = target.getX() + Math.cos(ang) * STUCK_TP_R;
                 var tz = target.getZ() + Math.sin(ang) * STUCK_TP_R;
-                var ty = groundY(lvl, tx, target.getY(), tz);
+                var ty = groundY(lvl, tx, target.getY(), tz, inst.def.waterproof !== false);
                 if (ty != null) {
                     if (typeof raw.teleportTo === "function") raw.teleportTo(Math.floor(tx) + 0.5, ty, Math.floor(tz) + 0.5);
                     else raw.setPos(Math.floor(tx) + 0.5, ty, Math.floor(tz) + 0.5);
@@ -917,27 +1124,89 @@
         catch (e) { warn("mergeNbt(entity): " + e); }
     }
 
-    // Spawn every mob of a round in a ring around the player. Returns entity refs.
+    // Plan and spawn every mob in a round. Returns entity refs.
     function spawnRound(level, player, def, round, instanceId) {
         var EAI = getEAI();
-        if (!EAI || !player) return [];
+        if (!EAI || !player) return null;
         var out = [];
         var pp = null;
-        try { pp = player.position(); } catch (ePp) { warn(`spawnRound: player.position() failed: ${ePp}`); return []; }
+        try { pp = player.position(); } catch (ePp) { warn(`spawnRound: player.position() failed: ${ePp}`); return null; }
         var server = null;
         try { server = player.server; } catch (eSv) {}
-        // total mob count -> evenly spaced ring angle by global index (no Math.random).
+        // Total mob count drives horde spread or the ring squad count.
         var total = 0;
         for (var ti = 0; ti < round.mobs.length; ti++) total += round.mobs[ti].count;
         if (total < 1) total = 1;
-        var idx = 0;
+        var roundIdx = def.rounds.indexOf(round);
 
-        // Horde pattern: resolve the shared anchor once for the whole round.
+        // Resolve shared horde anchor or multiple ring squad anchors once.
         var anchor = null;
+        var ringAnchors = null;
         if (def.spawnPattern === "horde") {
-            var roundIdx = def.rounds.indexOf(round);
             anchor = findHordeAnchor(level, pp, def, instanceId, roundIdx);
+        } else {
+            ringAnchors = findRingGroupAnchors(level, pp, def, total, instanceId, roundIdx);
         }
+
+        // Plan every position before creating the first entity. This makes a
+        // no-safe-ground result atomic: no partial wave is spawned, and the
+        // caller can retry later without duplicates or cleanup drops.
+        var positions = [];
+        var emergencyAnchor = null;
+        var emergencyTried = false;
+        var emergencySeed = hashStr(String(instanceId) + "#" + roundIdx + "#emergency");
+        if (def.spawnPattern === "horde" && !anchor) {
+            emergencyTried = true;
+            emergencyAnchor = findEmergencyAnchor(level, pp, def, emergencySeed);
+            anchor = emergencyAnchor;
+        }
+        if (def.spawnPattern === "horde" && !anchor) {
+            warn("spawnRound: no safe horde anchor; delaying wave " + (roundIdx + 1));
+            return null;
+        }
+        // Difficult terrain may invalidate a sector. If fewer than two squads
+        // survived normal planning, pay for one bounded rescue search so the
+        // multi-direction attack is retained whenever any second safe area exists.
+        if (def.spawnPattern === "ring" && (!ringAnchors || ringAnchors.length < 2)) {
+            emergencyTried = true;
+            emergencyAnchor = findEmergencyAnchor(level, pp, def, emergencySeed + 97);
+            if (!ringAnchors) ringAnchors = [];
+            if (emergencyAnchor) {
+                var farEnough = true;
+                for (var ai = 0; ai < ringAnchors.length; ai++) {
+                    var dx = ringAnchors[ai].x - emergencyAnchor.x;
+                    var dz = ringAnchors[ai].z - emergencyAnchor.z;
+                    if (dx * dx + dz * dz < 64) { farEnough = false; break; }
+                }
+                if (farEnough || ringAnchors.length === 0) ringAnchors.push(emergencyAnchor);
+            }
+        }
+        if (def.spawnPattern === "ring" && (!ringAnchors || ringAnchors.length === 0)) {
+            warn("spawnRound: no safe ring group anchor; delaying wave " + (roundIdx + 1));
+            return null;
+        }
+        if (ringAnchors) info("wave " + (roundIdx + 1) + " planned as " + ringAnchors.length + " assault groups");
+
+        for (var pi = 0; pi < total; pi++) {
+            var planned = anchor ? hordeMobPos(level, anchor, pi, total, def.waterproof !== false)
+                                 : ringGroupMobPos(level, ringAnchors, pi, total, def.waterproof !== false);
+            if (!planned) {
+                if (!emergencyTried) {
+                    emergencyTried = true;
+                    emergencyAnchor = findEmergencyAnchor(level, pp, def, emergencySeed);
+                }
+                if (!emergencyAnchor) {
+                    warn("spawnRound: no safe spawn ground; delaying wave " + (roundIdx + 1));
+                    return null;
+                }
+                planned = anchor
+                    ? hordeMobPos(level, emergencyAnchor, pi, total, def.waterproof !== false)
+                    : ringGroupMobPos(level, [emergencyAnchor], pi, total, def.waterproof !== false);
+            }
+            positions.push(planned);
+        }
+
+        var idx = 0;
 
         for (var gi = 0; gi < round.mobs.length; gi++) {
             var mob = round.mobs[gi];
@@ -966,8 +1235,7 @@
                 ]);
             }
             for (var c = 0; c < mob.count; c++) {
-                var pos = anchor ? hordeMobPos(level, anchor, idx, total)
-                                 : findSpawnPos(level, pp, def, idx, total);
+                var pos = positions[idx];
                 idx++;
 
                 var entity = EAI.fromPresets(level, mob.type, names, xtra);
@@ -977,7 +1245,10 @@
                 try { entity.addTag("raid_mob"); } catch (e1) {}
                 try { entity.addTag("raid_" + instanceId); } catch (e2) {}
                 try { entity.setPersistenceRequired(); } catch (e3) {}
-                try { entity.setCustomName(Text.of("[" + round.name + "]")); } catch (e4) {}
+                // Stable identity used by Xaero's custom RAID radar category.
+                // The boss bar already carries the wave name, while keeping
+                // this exact makes the client-side filter future-proof.
+                try { entity.setCustomName(Text.of("[RAID]")); } catch (e4) {}
                 applyEntityNbt(entity, mob.nbt);   // variants/skins/baby/mod data — pre-spawn
                 try { entity.spawn(); }
                 catch (eSp) { err(`spawn failed ${mob.type}: ${eSp}`); continue; }
@@ -1012,6 +1283,7 @@
         this._ctxPlayer = player;     // fallback if live lookup fails
         this.roundIdx     = 0;
         this.phase        = "SPAWNING";
+        this.spawnRetryLeft = 0;       // backoff when terrain has no safe spawn plan
         this.breatherLeft = 0;
         this.roundTimeLeft = null;
         this.roundMobs = [];          // live mobs of the current round
@@ -1019,9 +1291,11 @@
         this.bar       = null;        // ServerBossEvent (or null if disabled/unavailable)
         this.barBase   = def.title || prettyId(def.id);
         this.roundTotalHealth = 1;    // sum of max-health for the current wave (bar denominator)
+        this.roundTotalMobs = 0;      // actual current + carryover count displayed in the bar
         this.endLeft   = 0;           // ENDING-phase linger countdown (victory/defeat bar)
         this._mobState = {};          // uuid -> {x,y,z,idle,tp} anti-stuck tracking
         this._assistTick = 0;         // aggro pass counter (waterAssist throttling)
+        this._terminalNotified = false;// terminal lifecycle event fires exactly once
     }
     // Freeze the bar on an end state (victory green / defeat red) before it closes.
     RaidInstance.prototype.barEnd = function (name, colorName, progress) {
@@ -1036,31 +1310,61 @@
         var C = barClasses();
         try { this.bar.setColor(enumVal(C.Color, name, "RED")); } catch (e) {}
     };
-    // Straggler highlight: glow every live raid mob during the second half of
-    // EVERY round's timer (and all of WIN_WAIT) so raid mobs read apart from
-    // ambient mobs and stuck ones are findable through terrain. Outline renders
-    // in the raid team color (see joinRaidTeam). Refreshed every 4th aggro pass
-    // (~1s) — same cadence as waterAssist, offset so both don't share a pass.
+    // Straggler highlight: non-final waves keep their second-half reveal; the
+    // final wave reveals ALL current + carryover mobs after exactly 3 minutes.
+    // WIN_WAIT remains permanently revealed. Refreshed every ~1s using the
+    // existing assist cadence, so this adds no new tick loop.
     RaidInstance.prototype.glowStragglers = function () {
         if ((this._assistTick & 3) !== 2) return;
         var glow = (this.phase === "WIN_WAIT");
         if (!glow && this.phase === "FIGHTING") {
-            var tl = this.def.rounds[this.roundIdx].timeLimit;
-            glow = (tl != null && this.roundTimeLeft != null && this.roundTimeLeft < tl / 2);
+            var round = this.def.rounds[this.roundIdx];
+            var tl = round.timeLimit;
+            var timed = (tl != null && this.roundTimeLeft != null);
+            var finalRound = (this.roundIdx + 1 >= this.def.rounds.length);
+            if (timed && finalRound) {
+                glow = (tl - this.roundTimeLeft >= FINAL_GLOW_AFTER_TICKS);
+            } else if (timed) {
+                glow = (this.roundTimeLeft < tl / 2);
+            }
         }
         if (!glow) return;
         eachMob(this, function (m) {
             try { m.potionEffects.add("minecraft:glowing", 120, 0, false, false); } catch (e) {}
         });
     };
+    function applyDefeatPenalty(player) {
+        if (!player) return;
+        try { player.potionEffects.add("minecraft:slowness", DEFEAT_PENALTY_TICKS, DEFEAT_PENALTY_AMP, false, true); }
+        catch (e1) { warn("defeat slowness: " + e1); }
+        try { player.potionEffects.add("minecraft:weakness", DEFEAT_PENALTY_TICKS, DEFEAT_PENALTY_AMP, false, true); }
+        catch (e2) { warn("defeat weakness: " + e2); }
+    }
+    function grantVictoryAdvancement(inst, player) {
+        if (!inst || !player) return;
+        var advancement = RAID_VICTORY_ADVANCEMENTS[inst.defId];
+        if (!advancement) return;
+        try {
+            var server = player.server;
+            if (!server || typeof server.runCommandSilent !== "function") return;
+            // Minecraft usernames cannot contain whitespace, so the owner name
+            // is safe as the single command target. "only" grants no parent or
+            // unrelated raid advancement and is idempotent on repeat victories.
+            server.runCommandSilent("advancement grant " + String(player.username) + " only " + advancement);
+        } catch (e) {
+            warn("victory advancement " + advancement + ": " + e);
+        }
+    }
     RaidInstance.prototype.lose = function (player) {
         killMobs(this);
+        applyDefeatPenalty(player);
         playSnd(player, this.def.sounds.lose);
         showTitle(player, "DEFEAT", this.barBase, "dark_red");
         fireCb(this.def, "onLose", [this.ctx(player)]);
         this.barEnd("§4§l✖ DEFEATED", "RED", 0.0);
         this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
         this.phase = "ENDING";
+        notifyTerminal(this, "lose");
     };
     // Set the bar name only when the rendered text actually changed — the live
     // FIGHTING text refreshes every throttle tick but the string only changes
@@ -1074,8 +1378,9 @@
     RaidInstance.prototype.barFight = function (round) {
         var n = this.def.rounds.length;
         var alive = this.roundMobs.length + this.carryover.length;
+        var totalMobs = Math.max(alive, this.roundTotalMobs);
         var txt = "§c" + this.barBase + " §7— " + round.name + " §8(" + (this.roundIdx + 1) + "/" + n + ")" +
-                  " §7• §f⚔ " + alive;
+                  " §7• §f⚔ " + alive + "/" + totalMobs;
         if (this.roundTimeLeft != null) {
             var col = (this.roundTimeLeft <= 1200) ? "§c" : "§e";
             txt += " §7• " + col + "⌛ " + fmtTicks(this.roundTimeLeft);
@@ -1087,7 +1392,14 @@
         if (player) { try { if (!this.bar.getPlayers().contains(player)) this.bar.addPlayer(player); } catch (e) {} }
         var alive = sumHealth(this.roundMobs) + sumHealth(this.carryover);
         var total = this.roundTotalHealth > 0 ? this.roundTotalHealth : 1;
-        var p = alive / total; if (p < 0) p = 0; if (p > 1) p = 1;
+        var aliveMobs = this.roundMobs.length + this.carryover.length;
+        var p = alive / total;
+        // A modded wrapper can briefly expose no readable health while the mob
+        // is still alive. Use count progress instead of flashing an empty bar.
+        if (aliveMobs > 0 && !(alive > 0)) {
+            p = aliveMobs / Math.max(aliveMobs, this.roundTotalMobs, 1);
+        }
+        if (p < 0) p = 0; if (p > 1) p = 1;
         try { this.bar.setProgress(p); } catch (e) {}
     };
     RaidInstance.prototype.closeBar = function () {
@@ -1118,7 +1430,10 @@
         var radius = (this.def.aggroRadius != null) ? this.def.aggroRadius : 20;
         if (this.def.spawnPattern === "horde") radius += 8;   // cluster sits in one spot — widen detection
         var center = mainRaw || firstRaw(this);
-        var victims = collectVictims(this, center, radius);
+        // While the owner is alive every raid mob is hard-locked to them, so an
+        // entity scan cannot affect the result. Keep the shared fallback scan
+        // only for the dead/offline interval; this is the common-path fast path.
+        var victims = mainRaw ? [] : collectVictims(this, center, radius);
         var radiusSqr = radius * radius;
         var inst = this;
         eachMob(this, function (m) {
@@ -1136,7 +1451,16 @@
             // setTarget only on an actual change — re-setting the same target
             // every pass fires target-change events + goal re-evaluation on
             // every mob, and constantly restarts pathing (the "stuck" jitter).
-            if (!cur || !sameEnt(cur, t)) { try { raw.setTarget(t); } catch (eS) {} }
+            if (!cur || !sameEnt(cur, t)) {
+                try { raw.setTarget(t); } catch (eS) {}
+                // A target assignment alone does not wake every modded mob's
+                // goal selector. Kick navigation once on acquisition/respawn;
+                // the regular unstick pass takes over without restarting paths.
+                try {
+                    var navLock = (typeof raw.getNavigation === "function") ? raw.getNavigation() : null;
+                    if (navLock) navLock.moveTo(t, 1.0);
+                } catch (eNav) {}
+            }
             unstick(inst, raw, t);
         });
     };
@@ -1147,15 +1471,25 @@
         var round = this.def.rounds[idx];
         info(`raid ${this.id}: start round ${idx} "${round.name}"`);
         this._mobState = {};   // drop stale anti-stuck entries from the previous wave
-        this.roundMobs = spawnRound(this.level, player, this.def, round, this.id);
+        var spawned = spawnRound(this.level, player, this.def, round, this.id);
+        if (spawned == null) {
+            this.spawnRetryLeft = SPAWN_RETRY_TICKS;
+            this.setBarName("§e" + this.barBase + " §7— waiting for safe spawn ground...");
+            this.barColorSet("YELLOW");
+            return false;
+        }
+        this.spawnRetryLeft = 0;
+        this.roundMobs = spawned;
         this.roundTimeLeft = (round.timeLimit != null) ? round.timeLimit : null;
         this.roundTotalHealth = Math.max(1, sumMax(this.roundMobs) + sumMax(this.carryover));
+        this.roundTotalMobs = this.roundMobs.length + this.carryover.length;
         this.barFight(round);
         this.barColorSet(this.def.barColor);   // back from BREATHER yellow
         this.updateBar(player);
         if (idx > 0) playSnd(player, this.def.sounds.roundStart);   // wave 1 covered by raidStart
         fireCb(this.def, "onRoundStart", [this.ctx(player), round, idx]);
         this.phase = "FIGHTING";
+        return true;
     };
     RaidInstance.prototype.tick = function () {
         var player = resolvePlayer(this);   // live player wrapper, or null if offline
@@ -1175,6 +1509,10 @@
                 // Need a live player to ring-spawn around. Offline -> wait (raid
                 // keeps running, just doesn't spawn the next round until they return).
                 if (!player) return;
+                if (this.spawnRetryLeft > 0) {
+                    this.spawnRetryLeft -= TICK_THROTTLE;
+                    return;
+                }
                 this.startRound(this.roundIdx, player);
                 break;
 
@@ -1185,9 +1523,16 @@
                 this.barFight(round);
                 this.updateBar(player);
 
-                if (this.roundMobs.length === 0) {
+                var finalRound = (this.roundIdx + 1 >= this.def.rounds.length);
+                // Intermediate waves advance when THEIR mobs are gone; older
+                // timed-out survivors remain in carryover and join later waves.
+                // The final wave is different: victory requires every current
+                // mob AND every carryover survivor to be dead before its timer.
+                var roundCleared = (this.roundMobs.length === 0);
+                var finalCleared = (roundCleared && this.carryover.length === 0);
+                if (roundCleared && (!finalRound || finalCleared)) {
                     fireCb(this.def, "onRoundEnd", [this.ctx(player), round, this.roundIdx]);
-                    if (this.roundIdx + 1 < this.def.rounds.length) {
+                    if (!finalRound) {
                         playSnd(player, this.def.sounds.roundEnd);   // wave-clear stinger (final wave -> win sound instead)
                         this.breatherLeft = round.breather;
                         this.barColorSet("YELLOW");                  // breather lull; startRound restores
@@ -1230,16 +1575,20 @@
                 this.roundMobs = pruneDead(this.roundMobs);
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
-                this.setBarName("§6" + this.barBase + " §7— §f⚔ " + (this.roundMobs.length + this.carryover.length) + " §7stragglers §e(glowing!)");
+                var stragglers = this.roundMobs.length + this.carryover.length;
+                this.setBarName("§6" + this.barBase + " §7— §f⚔ " + stragglers + "/" +
+                                Math.max(stragglers, this.roundTotalMobs) + " §7stragglers §e(glowing!)");
                 this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
                     fireCb(this.def, "onWin", [this.ctx(player)]);
+                    grantVictoryAdvancement(this, player);
                     playSnd(player, this.def.sounds.win);
                     showTitle(player, "VICTORY", this.barBase, "green");
                     victoryBurst(player);
                     this.barEnd("§a§l✔ VICTORY", "GREEN", 1.0);
                     this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
                     this.phase = "ENDING";
+                    notifyTerminal(this, "win");
                 }
                 break;
         }
@@ -1304,10 +1653,188 @@
     // ---------- Manager -----------------------------------------------------
 
     const _active = {};        // instanceId -> RaidInstance
+    const _terminalListeners = [];
+    const _pendingLifestealerForms = [];
     var _idSeq    = 0;
     var _tickAccum = 0;
 
     function newInstanceId(defId) { _idSeq++; return defId + "_" + _idSeq; }
+
+    function entityTypeId(entity) {
+        try { return String(entity.type); } catch (e) {}
+        try {
+            var raw = rawMobOf(entity);
+            if (raw && typeof raw.getType === "function") return String(raw.getType());
+        } catch (e2) {}
+        return "";
+    }
+
+    function entityCoord(entity, property, getter) {
+        try {
+            var direct = entity[property];
+            if (typeof direct === "function") direct = direct.call(entity);
+            if (direct != null) return Number(direct);
+        } catch (e) {}
+        try {
+            var raw = rawMobOf(entity);
+            if (raw && typeof raw[getter] === "function") return Number(raw[getter]());
+        } catch (e2) {}
+        return NaN;
+    }
+
+    function entityLevelOf(entity) {
+        try { return (typeof entity.level === "function") ? entity.level() : entity.level; } catch (e) {}
+        try {
+            var raw = rawMobOf(entity);
+            return raw ? ((typeof raw.level === "function") ? raw.level() : raw.level) : null;
+        } catch (e2) {}
+        return null;
+    }
+
+    function sameEntityLevel(a, b) {
+        var la = entityLevelOf(a), lb = entityLevelOf(b);
+        if (!la || !lb) return false;
+        if (la === lb) return true;
+        try { return String(la.dimension()) === String(lb.dimension()); } catch (e) {}
+        try { return String(la.dimension) === String(lb.dimension); } catch (e2) {}
+        return false;
+    }
+
+    function distanceSqr(a, b) {
+        var ax = entityCoord(a, "x", "getX"), ay = entityCoord(a, "y", "getY"), az = entityCoord(a, "z", "getZ");
+        var bx = entityCoord(b, "x", "getX"), by = entityCoord(b, "y", "getY"), bz = entityCoord(b, "z", "getZ");
+        if (isNaN(ax) || isNaN(ay) || isNaN(az) || isNaN(bx) || isNaN(by) || isNaN(bz)) return Infinity;
+        var dx = ax - bx, dy = ay - by, dz = az - bz;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    function trackedByInstance(inst, entity) {
+        var lists = [inst.roundMobs, inst.carryover];
+        for (var li = 0; li < lists.length; li++) {
+            for (var i = 0; i < lists[li].length; i++) {
+                if (sameEnt(lists[li][i], entity)) return true;
+            }
+        }
+        return false;
+    }
+
+    // Born in Chaos replaces a damaged Lifestealer with a separate true-form
+    // entity. Move the new wrapper into the exact old raid slot so wave counts,
+    // aggro, glow, cleanup and final victory all continue through phase two.
+    // This runs only for that rare spawn event; ordinary raid ticks do no scan.
+    function adoptLifestealerTrueForm(form) {
+        if (!form || entityTypeId(form) !== LIFESTEALER_TRUE_FORM_ID) return false;
+
+        var taggedOwner = null;
+        try {
+            var tags = form.getTags();
+            if (tags) {
+                for (var tk in _active) {
+                    if (tags.contains("raid_" + _active[tk].id)) { taggedOwner = _active[tk]; break; }
+                }
+            }
+        } catch (eT) {}
+
+        // Chunk reloads can emit a spawned/join callback for an entity that is
+        // already tracked. Treat that as success without touching health totals.
+        if (taggedOwner && trackedByInstance(taggedOwner, form)) return true;
+
+        var best = null, bestList = null, bestIndex = -1;
+        var bestDist = LIFESTEALER_TRANSFORM_RADIUS_SQR + 1;
+        for (var k in _active) {
+            var inst = _active[k];
+            if (inst.phase === "DONE" || inst.phase === "ENDING") continue;
+            if (taggedOwner && inst !== taggedOwner) continue;
+            var lists = [inst.roundMobs, inst.carryover];
+            for (var li = 0; li < lists.length; li++) {
+                var arr = lists[li];
+                for (var i = 0; i < arr.length; i++) {
+                    var old = arr[i];
+                    if (!old || entityTypeId(old) !== LIFESTEALER_ID || !sameEntityLevel(old, form)) continue;
+                    var d = distanceSqr(old, form);
+                    if (d <= LIFESTEALER_TRANSFORM_RADIUS_SQR && d < bestDist) {
+                        best = inst;
+                        bestList = arr;
+                        bestIndex = i;
+                        bestDist = d;
+                    }
+                }
+            }
+        }
+
+        // Some transformations preserve scoreboard tags even if the old wrapper
+        // vanished before our handler. In that case the owner tag is authoritative.
+        if (!best && taggedOwner && !trackedByInstance(taggedOwner, form)) {
+            best = taggedOwner;
+            bestList = (best.phase === "BREATHER" || best.phase === "SPAWNING")
+                ? best.carryover : best.roundMobs;
+        }
+        if (!best || !bestList) return false;
+
+        var replacedMaxHealth = 0;
+        if (bestIndex >= 0) {
+            replacedMaxHealth = Math.max(0, entMaxHealth(bestList[bestIndex]));
+            bestList[bestIndex] = form;
+        } else {
+            bestList.push(form);
+        }
+
+        try { form.addTag("raid_mob"); } catch (e1) {}
+        try { form.addTag("raid_" + best.id); } catch (e2) {}
+        try { form.setPersistenceRequired(); } catch (e3) {}
+        try { form.setCustomName(Text.of("[RAID]")); } catch (e4) {}
+        joinRaidTeam(Manager._server, form);
+        forceTarget(form, resolvePlayer(best));
+
+        // Swap the old form's max health for the new one in the fixed wave
+        // denominator. The tag-only fallback has no old wrapper to measure, so
+        // merely ensure the denominator covers all currently tracked health.
+        var formMaxHealth = Math.max(0, entMaxHealth(form));
+        if (bestIndex >= 0) {
+            best.roundTotalHealth = Math.max(1, best.roundTotalHealth - replacedMaxHealth + formMaxHealth);
+        } else {
+            best.roundTotalHealth = Math.max(
+                best.roundTotalHealth,
+                sumMax(best.roundMobs) + sumMax(best.carryover),
+                1
+            );
+        }
+        info("raid " + best.id + ": adopted Lifestealer true form");
+        return true;
+    }
+
+    function retryPendingLifestealerForms() {
+        if (_pendingLifestealerForms.length === 0) return;
+        var keep = [];
+        for (var i = 0; i < _pendingLifestealerForms.length; i++) {
+            var pending = _pendingLifestealerForms[i];
+            if (!pending || !isLiveEnt(pending.entity)) continue;
+            if (adoptLifestealerTrueForm(pending.entity)) continue;
+            pending.ticks -= TICK_THROTTLE;
+            if (pending.ticks > 0) keep.push(pending);
+        }
+        _pendingLifestealerForms.length = 0;
+        for (var j = 0; j < keep.length; j++) _pendingLifestealerForms.push(keep[j]);
+    }
+
+    // Very small lifecycle hook used by the day scheduler. Active raid state is
+    // intentionally in-memory, but the scheduler needs to know whether an
+    // auto-launched raid ended normally or was interrupted by a reload/crash.
+    // No polling and no per-tick persistence: listeners run once at win/loss/stop.
+    function notifyTerminal(inst, outcome) {
+        if (!inst || inst._terminalNotified) return;
+        inst._terminalNotified = true;
+        var ev = {
+            id: inst.id,
+            defId: inst.defId,
+            playerUuid: inst.playerUuid,
+            outcome: String(outcome || "ended")
+        };
+        for (var i = 0; i < _terminalListeners.length; i++) {
+            try { _terminalListeners[i](ev); }
+            catch (e) { warn("terminal listener: " + e); }
+        }
+    }
 
     // ENDING counts as "raid over" — fight is done, the instance only lets the
     // victory/defeat bar linger. Not blocking here lets a new raid start
@@ -1411,6 +1938,7 @@
 
     const Manager = {
         _server: null,
+        _loadedSweepDone: false,
 
         // Shared utilities reused by raid_commands.js (avoids duplicating them there).
         playerLevel: playerLevel,
@@ -1443,12 +1971,21 @@
             try { return !!playerInRaid(String(player.uuid)); } catch (e) { return false; }
         },
 
+        // Register a lightweight terminal listener. Used by raid_schedule.js to
+        // commit its small fired/in-progress persistence transaction.
+        onTerminal: function (listener) {
+            if (typeof listener !== "function") return false;
+            _terminalListeners.push(listener);
+            return true;
+        },
+
         stop: function (idOrPlayer) {
             var inst = null;
             if (typeof idOrPlayer === "string") inst = _active[idOrPlayer];
             else if (idOrPlayer && idOrPlayer.uuid) inst = playerInRaid(String(idOrPlayer.uuid));
             if (!inst) return false;
             cleanupMobs(inst);
+            notifyTerminal(inst, "stopped");
             delete _active[inst.id];
             info(`stopped raid ${inst.id}`);
             return true;
@@ -1456,12 +1993,22 @@
 
         stopAll: function () {
             var n = 0;
-            for (var k in _active) { cleanupMobs(_active[k]); delete _active[k]; n++; }
+            for (var k in _active) {
+                cleanupMobs(_active[k]);
+                notifyTerminal(_active[k], "stopped");
+                delete _active[k];
+                n++;
+            }
             sweepBars(Manager._server);   // also clears bars orphaned by a prior reload/crash
             return n;
         },
 
-        sweepOrphans: function () { var m = sweepOrphans(Manager._server); sweepBars(Manager._server); return m; },
+        sweepOrphans: function () {
+            var m = sweepOrphans(Manager._server);
+            sweepBars(Manager._server);
+            Manager._loadedSweepDone = true;
+            return m;
+        },
 
         getActive: function () {
             var out = [];
@@ -1479,6 +2026,7 @@
             _tickAccum++;
             if (_tickAccum < TICK_THROTTLE) return;
             _tickAccum = 0;
+            retryPendingLifestealerForms();
             var done = [];
             for (var k in _active) {
                 var inst = _active[k];
@@ -1493,6 +2041,21 @@
 
     ServerEvents.tick(function (event) {
         Manager._drive(event.server);
+    });
+
+    // Lifestealer's second phase is a newly spawned entity, not a state flag on
+    // the original one. Adopt it immediately when possible and retain a short
+    // retry only for the edge case where the mod fires its spawn callback before
+    // finishing removal/tag transfer on the first form.
+    EntityEvents.spawned(function (event) {
+        var form = event.entity;
+        if (!form || !anyActive() || entityTypeId(form) !== LIFESTEALER_TRUE_FORM_ID) return;
+        if (!adoptLifestealerTrueForm(form)) {
+            _pendingLifestealerForms.push({
+                entity: form,
+                ticks: LIFESTEALER_TRANSFORM_RETRY_TICKS
+            });
+        }
     });
 
     // ---------- Friendly fire off -------------------------------------------
@@ -1523,8 +2086,8 @@
     // Clean up mobs + boss bars orphaned by a crash/restart/reload (bug #1).
     ServerEvents.loaded(function (event) {
         Manager._server = event.server;
-        sweepOrphans(event.server);
-        sweepBars(event.server);
+        layoutRaidAdvancements(event.server);
+        Manager.sweepOrphans();
     });
 
     // ---------- Export ------------------------------------------------------

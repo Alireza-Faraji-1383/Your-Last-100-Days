@@ -17,36 +17,139 @@
 	id: "71B0A0C51E1159E1"
 	images: [
 		{
-			height: 6.0d
-			image: "irons_spellbooks:item/iron_spell_book"
+			height: 1.598694942903752d
+			image: "irons_spellbooks:textures/quests/spells_title.png"
+			order: -5
 			rotation: 0.0d
-			width: 6.0d
+			width: 5.0d
 			x: 0.0d
-			y: -13.0d
+			y: -15.25d
 		}
 		{
-			height: 2.0d
-			image: "irons_spellbooks:block/inscription_table"
+			height: 5.31413612565445d
+			image: "irons_spellbooks:textures/quests/spells_frame.png"
+			order: -25
 			rotation: 0.0d
-			width: 2.0d
+			width: 7.0d
+			x: 0.0d
+			y: -12.0d
+		}
+		{
+			height: 2.2104166666666667d
+			image: "irons_spellbooks:textures/quests/spells_table.png"
+			order: -20
+			rotation: 0.0d
+			width: 4.0d
 			x: -3.0d
-			y: -1.0d
+			y: 0.0d
 		}
 		{
-			height: 6.0d
-			image: "irons_spellbooks:item/lightning_bottle"
+			height: 1.8822222222222222d
+			image: "irons_spellbooks:textures/quests/spells_scroll.png"
+			order: -15
 			rotation: 0.0d
-			width: 6.0d
-			x: 0.0d
-			y: -1.0d
+			width: 2.2d
+			x: -3.0d
+			y: 3.0d
 		}
 		{
-			height: 2.0d
-			image: "irons_spellbooks:block/arcane_anvil"
+			height: 2.1201413427561835d
+			image: "irons_spellbooks:textures/quests/spells_scroll_gui.png"
+			order: -20
 			rotation: 0.0d
-			width: 2.0d
+			width: 2.835d
+			x: -3.0d
+			y: 5.0d
+		}
+		{
+			height: 2.393569844789357d
+			image: "irons_spellbooks:textures/quests/spells_anvil.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.3d
 			x: 0.0d
+			y: 9.0d
+		}
+		{
+			height: 2.6361516034985423d
+			image: "irons_spellbooks:textures/quests/spells_anvil_gui.png"
+			order: -20
+			rotation: 0.0d
+			width: 2.8d
+			x: 0.0d
+			y: 11.5d
+		}
+		{
+			height: 2.278362573099415d
+			image: "irons_spellbooks:textures/quests/spells_cauldron.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.4d
+			x: 6.0d
 			y: 6.0d
+		}
+		{
+			height: 2.2104166666666667d
+			image: "irons_spellbooks:textures/quests/spells_catacombs.png"
+			order: -20
+			rotation: 0.0d
+			width: 4.0d
+			x: -6.0d
+			y: 15.0d
+		}
+		{
+			height: 2.910994764397906d
+			image: "irons_spellbooks:textures/quests/spells_king.png"
+			order: -15
+			rotation: 0.0d
+			width: 1.7d
+			x: -6.0d
+			y: 18.0d
+		}
+		{
+			height: 2.6371681415929205d
+			image: "irons_spellbooks:textures/quests/spells_outfit_mage.png"
+			order: -15
+			rotation: 0.0d
+			width: 1.5d
+			x: -3.0d
+			y: 18.0d
+		}
+		{
+			height: 2.528328611898017d
+			image: "irons_spellbooks:textures/quests/spells_outfit_wizard.png"
+			order: -15
+			rotation: 0.0d
+			width: 1.5d
+			x: 0.0d
+			y: 18.0d
+		}
+		{
+			height: 2.1759036144578314d
+			image: "irons_spellbooks:textures/quests/spells_outfit_shadow.png"
+			order: -15
+			rotation: 0.0d
+			width: 1.5d
+			x: 3.0d
+			y: 18.0d
+		}
+		{
+			height: 2.25d
+			image: "irons_spellbooks:textures/quests/spells_mountaintower.png"
+			order: -20
+			rotation: 0.0d
+			width: 4.0d
+			x: -6.0d
+			y: 10.5d
+		}
+		{
+			height: 2.25d
+			image: "irons_spellbooks:textures/quests/spells_citadel.png"
+			order: -20
+			rotation: 0.0d
+			width: 4.0d
+			x: 6.0d
+			y: 10.5d
 		}
 	]
 	order_index: 5

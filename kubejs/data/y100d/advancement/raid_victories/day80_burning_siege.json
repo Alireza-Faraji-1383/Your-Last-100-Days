@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/root",
+  "criteria": {
+    "win": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Day 80: Defeat The Burning Siege raid."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day80"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "red",
+      "text": "Day 80 — Siege Extinguished"
+    }
+  },
+  "requirements": [
+    [
+      "win"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

@@ -2,9 +2,9 @@
 // kubejs/server_scripts/raids/day_080.js
 //
 // NIGHT 80 — "The Burning Siege" (chapter 8: the world starts to burn)
-// Cataclysm ignited legion + kobold mercenaries + Born in Chaos fire
-// spirits, one burning horde. Miniboss finale: MALEDICTUS (HP 200) with a
-// wadjet sorcerer escort.
+// Cataclysm ignited legion, Block Factory ash guards and Born in Chaos fire
+// spirits form a combined burning horde. Finale: MALEDICTUS (HP 200) with
+// wadjet, melee and fire-artillery escorts.
 
 (function () {
     "use strict";
@@ -26,37 +26,42 @@
         .round("Embers")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.SEARED_SPIRIT).count(5)
-            .mob(M.INFERNAL_SPIRIT).count(4)
-            .mob(M.BLAZE).count(4)
-            .mob(M.KOBOLETON).count(4)
-            .mob(M.MINER_ELITE).count(5)
+            .mob(M.SEARED_SPIRIT).count(4)
+            .mob(M.INFERNAL_SPIRIT).count(3)
+            .mob(M.BLAZE).count(2)
+            .mob(M.KOBOLETON).count(2)
+            .mob(M.FLAMING_SHOOTER).count(3)
+            .mob(M.MINER_ELITE).count(7)
         // --- Round 2: the ignited warband ---
         .round("Ignited Warband")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.IGNITED_BERSERKER).count(6)
-            .mob(M.WITHER_SKELETON).count(5)
-            .mob(M.DEMOMAN).count(4)
+            .mob(M.IGNITED_BERSERKER).count(5)
+            .mob(M.WITHER_SKELETON).count(3)
+            .mob(M.ASH_GUARD).count(3)
+            .mob(M.FLAMING_GUARD).count(3)
             .mob(M.KOBOLEDIATOR).count(2)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.MINER_ELITE).count(7)
         // --- Round 3: revenants breach the line ---
         .round("The Revenants")
             .breather(300)
             .timeLimit(6000)
-            .mob(M.IGNITED_REVENANT).count(4)
-            .mob(M.IGNITED_BERSERKER).count(4)
-            .mob(M.PEARL_ZOMBIE).count(5)
-            .mob(M.TNT_CREEPER).count(4)
-            .mob(M.MINER_ELITE).count(5)
+            .mob(M.IGNITED_REVENANT).count(3)
+            .mob(M.NETHERITE_MINISTROSITY).count(3)
+            .mob(M.FLAMING_SHOOTER).count(3)
+            .mob(M.TNT_CREEPER).count(3)
+            .mob(M.PEARL_ZOMBIE).count(2)
+            .mob(M.MINER_ELITE).count(7)
         // --- Round 4 (FINAL): MALEDICTUS ---
         .round("Maledictus")
             .timeLimit(16800)
             .mob(M.MALEDICTUS).count(1)
-            .mob(M.WADJET).count(2)
-            .mob(M.IGNITED_BERSERKER).count(3)
-            .mob(M.SEARED_SPIRIT).count(4)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.WADJET).count(3)
+            .mob(M.WITHER_KNIGHT).count(3)
+            .mob(M.FLAMING_GUARD).count(3)
+            .mob(M.IGNITED_BERSERKER).count(2)
+            .mob(M.SEARED_SPIRIT).count(2)
+            .mob(M.MINER_ELITE).count(7)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:netherite_ingot 1");

@@ -178,3 +178,11 @@ config/relics
 /tools/y100d-early-loading/build/
 config/jei/world
 config/voicechat
+
+# Project-owned Xaero entity radar categories. Keep the rest of Xaero's
+# per-user maps, waypoints, profiles and runtime settings ignored.
+!/config/xaero/
+/config/xaero/*
+!/config/xaero/minimap/
+/config/xaero/minimap/*
+!/config/xaero/minimap/default_radar_categories_client.json

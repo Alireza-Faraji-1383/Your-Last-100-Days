@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/root",
+  "criteria": {
+    "win": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Day 30: Defeat The Warband raid."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day30"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "gold",
+      "text": "Day 30 — Warband Crushed"
+    }
+  },
+  "requirements": [
+    [
+      "win"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

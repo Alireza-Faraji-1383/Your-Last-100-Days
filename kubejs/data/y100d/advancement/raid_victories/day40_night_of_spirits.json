@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/root",
+  "criteria": {
+    "win": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Day 40: Defeat the Night of Spirits raid."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day40"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "aqua",
+      "text": "Day 40 — Spirits Banished"
+    }
+  },
+  "requirements": [
+    [
+      "win"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

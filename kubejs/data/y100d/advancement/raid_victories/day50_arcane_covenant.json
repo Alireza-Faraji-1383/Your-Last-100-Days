@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/root",
+  "criteria": {
+    "win": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Day 50: Defeat The Arcane Covenant raid."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day50"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "light_purple",
+      "text": "Day 50 — Covenant Shattered"
+    }
+  },
+  "requirements": [
+    [
+      "win"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

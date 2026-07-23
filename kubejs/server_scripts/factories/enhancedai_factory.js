@@ -382,15 +382,25 @@
 
     // tool_requirement=ANY_TOOL needs DiggerItem offhand; auto-equip only
     // runs for mod's own minerChance roll — pre-setting MINER bypasses that.
+    function minerToolRequirement(entries) {
+        var toolReq = null;
+        for (var i = 0; i < entries.length; i++) {
+            var en = entries[i];
+            if (en.feature === "miner_mobs" && en.subkey === "tool_requirement") {
+                toolReq = String(en.value);
+            }
+        }
+        return toolReq;
+    }
+
     function equipPickaxeIfNeeded(entity, entries) {
         var needs = false;
-        var toolReq = null;
         for (var i = 0; i < entries.length; i++) {
             var en = entries[i];
             if (en.feature !== "miner_mobs") continue;
             if (en.subkey === "miner" && en.value === true) needs = true;
-            if (en.subkey === "tool_requirement") toolReq = String(en.value);
         }
+        var toolReq = minerToolRequirement(entries);
         if (!needs || toolReq === "NONE") return;
 
         try {
@@ -516,6 +526,9 @@
         if (built.count === 0) return;
 
         var wantMiner = entriesEnableMiner(built.entries);
+        // NONE does not reserve either hand. Preserve raid equipment while
+        // keeping the old cleanup path for miners that require a held tool.
+        var minerNeedsCleanHands = wantMiner && minerToolRequirement(built.entries) !== "NONE";
         var offsets = Array.isArray(ticks) ? ticks : [1, 5, 20, 60];
 
         for (var oi = 0; oi < offsets.length; oi++) {
@@ -527,7 +540,7 @@
                             if (!entity || (entity.isAlive && !entity.isAlive())) return;
                             applyNbt(entity, built.root);
                             if (wantMiner) {
-                                clearHands(entity);
+                                if (minerNeedsCleanHands) clearHands(entity);
                                 directApplyMiner(entity, built.entries);
                                 stripDistractionGoals(entity);
                             }

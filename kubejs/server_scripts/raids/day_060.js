@@ -2,8 +2,9 @@
 // kubejs/server_scripts/raids/day_060.js
 //
 // NIGHT 60 — "Rise of the Deep" (chapter 6: the sea marches inland)
-// Cataclysm deepling invasion; finale is a coralssus trio with breach
-// support. No anglers — fishing-hook mobs are banned from raids.
+// Cataclysm deepling invasion reinforced by reef beasts and armored crabs;
+// finale is a coralssus pair with a mixed breach escort.
+// No anglers — fishing-hook mobs are banned from raids.
 // Raids are waterproof by default — moats won't save anyone.
 
 (function () {
@@ -17,7 +18,7 @@
     Raid("day60_rise_of_the_deep")
         .title("Rise of the Deep")
         .spawn(80, 100)
-        .spawnPattern("horde")
+        .spawnPattern("ring")
         .aggroRadius(40)
         .followRange(300)
         .defaultPresets("farSight", "antiCheese")
@@ -26,34 +27,42 @@
         .round("Tidal Vanguard")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.DEEPLING).count(8)
+            .mob(M.DEEPLING).count(6)
             .mob(M.TRIDENT_DROWNED).count(4)
-            .mob(M.MINER_STRONG).count(5)
+            .mob(M.THORNSHELL_CRAB).count(2)
+            .mob(M.URCHINKIN).count(3)
+            .mob(M.MINER_STRONG).count(6)
         // --- Round 2: the tide presses in ---
         .round("The Undertow")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.TRIDENT_DROWNED).count(4)
-            .mob(M.DEEPLING).count(5)
-            .mob(M.DEEPLING_BRUTE).count(4)
-            .mob(M.MINER_ELITE).count(5)
+            .mob(M.DEEPLING).count(4)
+            .mob(M.DEEPLING_BRUTE).count(3)
+            .mob(M.CLAWDIAN).count(4)
+            .mob(M.CORAL_GOLEM).count(2)
+            .mob(M.TRIDENT_DROWNED).count(2)
+            .mob(M.MINER_ELITE).count(6)
         // --- Round 3: abyssal clergy ---
         .round("Abyssal Clergy")
             .breather(300)
             .timeLimit(6000)
             .mob(M.DEEPLING_PRIEST).count(3)
-            .mob(M.DEEPLING_WARLOCK).count(3)
-            .mob(M.DEEPLING_BRUTE).count(4)
-            .mob(M.PEARL_ZOMBIE).count(4)
-            .mob(M.MINER_ELITE).count(4)
-        // --- Round 4 (FINAL): coral colossi ---
+            .mob(M.DEEPLING_WARLOCK).count(2)
+            .mob(M.AMETHYST_CRAB).count(3)
+            .mob(M.CLAWDIAN).count(2)
+            .mob(M.DEEPLING_BRUTE).count(2)
+            .mob(M.PEARL_ZOMBIE).count(2)
+            .mob(M.MINER_ELITE).count(7)
+        // --- Round 4 (FINAL): coral colossi + reef guard ---
         .round("Coral Colossi")
             .timeLimit(14400)
-            .mob(M.CORALSSUS).count(3)
-            .mob(M.DEEPLING_BRUTE).count(4)
-            .mob(M.DEEPLING_WARLOCK).count(3)
-            .mob(M.TNT_CREEPER).count(4)
-            .mob(M.MINER_ELITE).count(4)
+            .mob(M.CORALSSUS).count(2)
+            .mob(M.CORAL_GOLEM).count(3)
+            .mob(M.CLAWDIAN).count(3)
+            .mob(M.DEEPLING_WARLOCK).count(2)
+            .mob(M.TNT_CREEPER).count(2)
+            .mob(M.THORNSHELL_CRAB).count(2)
+            .mob(M.MINER_ELITE).count(7)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:trident 1");

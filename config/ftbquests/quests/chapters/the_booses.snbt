@@ -12,6 +12,7 @@
 			click: "1"
 			height: 5.5d
 			image: "cataclysm:textures/entity/flame_strike_sigil.png"
+			order: -29
 			rotation: 0.0d
 			width: 5.5d
 			x: -3.0d
@@ -21,11 +22,245 @@
 			click: "1"
 			height: 12.0d
 			image: "cataclysm:textures/entity/soul_flame_strike_sigil.png"
-			order: -1
+			order: -30
 			rotation: 0.0d
 			width: 12.0d
 			x: -3.0d
 			y: -0.5d
+		}
+		{
+			height: 1.6034985422740524d
+			image: "cataclysm:textures/quests/cataclysm_title.png"
+			order: -5
+			rotation: 0.0d
+			width: 5.0d
+			x: -3.0d
+			y: -9.25d
+		}
+		{
+			height: 4.666666666666667d
+			image: "cataclysm:textures/quests/cataclysm_frame.png"
+			order: -28
+			rotation: 0.0d
+			width: 7.0d
+			x: -3.0d
+			y: -0.5d
+		}
+		{
+			height: 1.6066666666666667d
+			image: "cataclysm:textures/quests/cataclysm_factory.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: -3.0d
+			y: -4.5d
+		}
+		{
+			height: 2.4802631578947367d
+			image: "cataclysm:textures/quests/cataclysm_harbinger.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.6d
+			x: -3.0d
+			y: -6.5d
+		}
+		{
+			height: 0.7457627118644068d
+			image: "cataclysm:textures/quests/cataclysm_title_harbinger.png"
+			order: -10
+			rotation: 0.0d
+			width: 3.2d
+			x: -3.0d
+			y: -7.9d
+		}
+		{
+			height: 1.5933333333333333d
+			image: "cataclysm:textures/quests/cataclysm_prison.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: 0.5d
+			y: -4.0d
+		}
+		{
+			height: 2.0276497695852536d
+			image: "cataclysm:textures/quests/cataclysm_maledictus.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.7d
+			x: 2.5d
+			y: -6.0d
+		}
+		{
+			height: 0.7541436464088398d
+			image: "cataclysm:textures/quests/cataclysm_title_maledictus.png"
+			order: -10
+			rotation: 0.0d
+			width: 3.0d
+			x: 2.5d
+			y: -7.4d
+		}
+		{
+			height: 1.7677083333333334d
+			image: "cataclysm:textures/quests/cataclysm_acropolis.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: 1.0d
+			y: -0.5d
+		}
+		{
+			height: 2.496617050067659d
+			image: "cataclysm:textures/quests/cataclysm_scylla.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.5d
+			x: 3.0d
+			y: -0.5d
+		}
+		{
+			height: 0.9771573604060914d
+			image: "cataclysm:textures/quests/cataclysm_title_scylla.png"
+			order: -10
+			rotation: 0.0d
+			width: 1.75d
+			x: 3.0d
+			y: -2.0d
+		}
+		{
+			height: 1.6532150776053216d
+			image: "cataclysm:textures/quests/cataclysm_city.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: -7.0d
+			y: -0.5d
+		}
+		{
+			height: 2.0992616899097623d
+			image: "cataclysm:textures/quests/cataclysm_leviathan.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.5d
+			x: -9.0d
+			y: -0.5d
+		}
+		{
+			height: 0.5783898305084746d
+			image: "cataclysm:textures/quests/cataclysm_title_leviathan.png"
+			order: -10
+			rotation: 0.0d
+			width: 3.0d
+			x: -9.0d
+			y: -2.0d
+		}
+		{
+			height: 1.6d
+			image: "cataclysm:textures/quests/cataclysm_pyramid.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: -6.5d
+			y: -4.0d
+		}
+		{
+			height: 2.484076433121019d
+			image: "cataclysm:textures/quests/cataclysm_remnant.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.5d
+			x: -8.5d
+			y: -6.0d
+		}
+		{
+			height: 0.4831858407079646d
+			image: "cataclysm:textures/quests/cataclysm_title_remnant.png"
+			order: -10
+			rotation: 0.0d
+			width: 3.0d
+			x: -8.5d
+			y: -7.4d
+		}
+		{
+			height: 1.5933333333333333d
+			image: "cataclysm:textures/quests/cataclysm_blacksmith.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: 0.5d
+			y: 3.0d
+		}
+		{
+			height: 2.5226586102719033d
+			image: "cataclysm:textures/quests/cataclysm_monstrosity.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.5d
+			x: 2.5d
+			y: 5.0d
+		}
+		{
+			height: 0.4291287386215865d
+			image: "cataclysm:textures/quests/cataclysm_title_monstrosity.png"
+			order: -10
+			rotation: 0.0d
+			width: 3.0d
+			x: 2.5d
+			y: 6.5d
+		}
+		{
+			height: 1.5993674222456509d
+			image: "cataclysm:textures/quests/cataclysm_arena.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: -3.0d
+			y: 3.5d
+		}
+		{
+			height: 2.273361227336122d
+			image: "cataclysm:textures/quests/cataclysm_ignis.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.5d
+			x: -3.0d
+			y: 5.5d
+		}
+		{
+			height: 1.0754189944134078d
+			image: "cataclysm:textures/quests/cataclysm_title_ignis.png"
+			order: -10
+			rotation: 0.0d
+			width: 1.75d
+			x: -3.0d
+			y: 7.0d
+		}
+		{
+			height: 1.5933333333333333d
+			image: "cataclysm:textures/quests/cataclysm_citadel.png"
+			order: -20
+			rotation: 0.0d
+			width: 3.2d
+			x: -6.5d
+			y: 3.0d
+		}
+		{
+			height: 2.4914236706689536d
+			image: "cataclysm:textures/quests/cataclysm_guardian.png"
+			order: -15
+			rotation: 0.0d
+			width: 2.5d
+			x: -8.5d
+			y: 5.0d
+		}
+		{
+			height: 0.5363457760314342d
+			image: "cataclysm:textures/quests/cataclysm_title_guardian.png"
+			order: -10
+			rotation: 0.0d
+			width: 3.0d
+			x: -8.5d
+			y: 6.5d
 		}
 	]
 	order_index: 1
