@@ -325,7 +325,6 @@
 			id: "3CB8AFABD435DAFD"
 			rewards: [{
 				auto: "enabled"
-				count: 10
 				id: "1F0DDADE4BAD9597"
 				item: {
 					count: 1
@@ -340,7 +339,7 @@
 					consume_items: true
 					disable_toast: true
 					id: "18C47108C00BBE05"
-					item: { count: 1, id: "kubejs:coin" }
+					item: { count: 1, id: "kubejs:silver_coin" }
 					type: "item"
 				}
 				{
