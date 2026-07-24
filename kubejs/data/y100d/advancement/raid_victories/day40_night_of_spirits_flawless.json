@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/day40_night_of_spirits",
+  "criteria": {
+    "flawless": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Win the Night of Spirits raid without dying from start to finish."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day40"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "gold",
+      "text": "Day 40 - Spirit Unbroken"
+    }
+  },
+  "requirements": [
+    [
+      "flawless"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

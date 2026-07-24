@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/day60_rise_of_the_deep",
+  "criteria": {
+    "flawless": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Win the Rise of the Deep raid without dying from start to finish."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day60"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "gold",
+      "text": "Day 60 - Against the Tide"
+    }
+  },
+  "requirements": [
+    [
+      "flawless"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

@@ -81,6 +81,18 @@
         day90_dark_concord:       "y100d:raid_victories/day90_dark_concord",
         day100_last_dawn:         "y100d:raid_victories/day100_last_dawn"
     };
+    const RAID_FLAWLESS_ADVANCEMENTS = {
+        day10_rotting_dawn:       "y100d:raid_victories/day10_rotting_dawn_flawless",
+        day20_night_of_bones:     "y100d:raid_victories/day20_night_of_bones_flawless",
+        day30_warband:            "y100d:raid_victories/day30_warband_flawless",
+        day40_night_of_spirits:   "y100d:raid_victories/day40_night_of_spirits_flawless",
+        day50_arcane_covenant:    "y100d:raid_victories/day50_arcane_covenant_flawless",
+        day60_rise_of_the_deep:   "y100d:raid_victories/day60_rise_of_the_deep_flawless",
+        day70_rotten_legion:      "y100d:raid_victories/day70_rotten_legion_flawless",
+        day80_burning_siege:      "y100d:raid_victories/day80_burning_siege_flawless",
+        day90_dark_concord:       "y100d:raid_victories/day90_dark_concord_flawless",
+        day100_last_dawn:         "y100d:raid_victories/day100_last_dawn_flawless"
+    };
     // Explicit screen coordinates avoid Minecraft's hash-set child ordering.
     // UI Y grows downward: day 100 is the top entry and day 10 the bottom.
     const RAID_ADVANCEMENT_LAYOUT = [
@@ -117,6 +129,7 @@
             for (var i = 0; i < RAID_ADVANCEMENT_LAYOUT.length; i++) {
                 var entry = RAID_ADVANCEMENT_LAYOUT[i];
                 setAdvancementLocation(manager, RL, entry[0], 1, entry[1]);
+                setAdvancementLocation(manager, RL, entry[0] + "_flawless", 2, entry[1]);
             }
         } catch (e) {
             warn("could not apply raid advancement layout: " + e);
@@ -1629,6 +1642,7 @@
         this._mobState = {};          // uuid -> {x,y,z,idle,tp} anti-stuck tracking
         this._assistTick = 0;         // aggro pass counter (waterAssist throttling)
         this._terminalNotified = false;// terminal lifecycle event fires exactly once
+        this._diedDuringRaid = false; // death does not stop the raid; it only blocks the flawless advancement
     }
     // Freeze the bar on an end state (victory green / defeat red) before it closes.
     RaidInstance.prototype.barEnd = function (name, colorName, progress) {
@@ -1686,6 +1700,18 @@
             server.runCommandSilent("advancement grant " + String(player.username) + " only " + advancement);
         } catch (e) {
             warn("victory advancement " + advancement + ": " + e);
+        }
+    }
+    function grantFlawlessAdvancement(inst, player) {
+        if (!inst || !player || inst._diedDuringRaid) return;
+        var advancement = RAID_FLAWLESS_ADVANCEMENTS[inst.defId];
+        if (!advancement) return;
+        try {
+            var server = player.server;
+            if (!server || typeof server.runCommandSilent !== "function") return;
+            server.runCommandSilent("advancement grant " + String(player.username) + " only " + advancement);
+        } catch (e) {
+            warn("flawless advancement " + advancement + ": " + e);
         }
     }
     RaidInstance.prototype.lose = function (player) {
@@ -1933,6 +1959,7 @@
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
                     fireCb(this.def, "onWin", [this.ctx(player)]);
                     grantVictoryAdvancement(this, player);
+                    grantFlawlessAdvancement(this, player);
                     playSnd(player, this.def.sounds.win);
                     showTitle(player, "VICTORY", this.barBase, "green");
                     victoryBurst(player);
@@ -2155,6 +2182,7 @@
             roundTimeLeft: inst.roundTimeLeft,
             roundTotalHealth: inst.roundTotalHealth,
             roundTotalMobs: inst.roundTotalMobs,
+            diedDuringRaid: !!inst._diedDuringRaid,
             roundMobUuids: roundIds,
             carryoverUuids: carryIds
         };
@@ -2227,6 +2255,7 @@
             inst._mobState = {};
             inst._assistTick = 0;
             inst._terminalNotified = false;
+            inst._diedDuringRaid = !!s.diedDuringRaid;
             inst._restoreRoundUuids = uuidSet(s.roundMobUuids || []);
             inst._restoreCarryUuids = uuidSet(s.carryoverUuids || []);
             inst._restoreExpected = uuidKeys(inst._restoreRoundUuids).length + uuidKeys(inst._restoreCarryUuids).length;
@@ -2702,6 +2731,18 @@
 
     ServerEvents.tick(function (event) {
         Manager._drive(event.server);
+    });
+
+    // Player death never ends a raid. It only permanently disqualifies this
+    // instance from its optional no-death advancement.
+    EntityEvents.death("minecraft:player", function (event) {
+        try {
+            var player = event.entity;
+            var inst = playerInRaid(String(player.uuid));
+            if (!inst || inst._diedDuringRaid) return;
+            inst._diedDuringRaid = true;
+            persistActive(player.server || Manager._server);
+        } catch (e) { warn("record raid player death: " + e); }
     });
 
     // Capture UUIDs before logout invalidates Java entity wrappers. The actual

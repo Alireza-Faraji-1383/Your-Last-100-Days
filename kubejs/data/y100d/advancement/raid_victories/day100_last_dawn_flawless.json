@@ -1,0 +1,32 @@
+{
+  "parent": "y100d:raid_victories/day100_last_dawn",
+  "criteria": {
+    "flawless": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Conquer the final raid and Dark Doppelganger without dying."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day100"
+    },
+    "show_toast": true,
+    "title": {
+      "bold": true,
+      "color": "gold",
+      "text": "Day 100 - Immortal at Last Dawn"
+    }
+  },
+  "requirements": [
+    [
+      "flawless"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/day20_night_of_bones",
+  "criteria": {
+    "flawless": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Win the Night of Bones raid without dying from start to finish."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day20"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "gold",
+      "text": "Day 20 - No Bones Broken"
+    }
+  },
+  "requirements": [
+    [
+      "flawless"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

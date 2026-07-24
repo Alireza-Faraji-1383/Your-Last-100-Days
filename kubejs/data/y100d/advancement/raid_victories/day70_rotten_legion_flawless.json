@@ -1,0 +1,31 @@
+{
+  "parent": "y100d:raid_victories/day70_rotten_legion",
+  "criteria": {
+    "flawless": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "text": "Win The Rotten Legion raid without dying from start to finish."
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "count": 1,
+      "id": "kubejs:raid_icon_day70"
+    },
+    "show_toast": true,
+    "title": {
+      "color": "gold",
+      "text": "Day 70 - Deathless Legionbreaker"
+    }
+  },
+  "requirements": [
+    [
+      "flawless"
+    ]
+  ],
+  "sends_telemetry_event": false
+}
