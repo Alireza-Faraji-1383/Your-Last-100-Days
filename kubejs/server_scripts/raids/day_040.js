@@ -59,7 +59,7 @@
             .mob(M.HOUND_LEADER).count(2)
             .mob(M.NAGA).count(3)
             .mob(M.PEARL_ZOMBIE_ELITE).count(3)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.MINER_SPIRIT_ELITE).count(9)
         .onWin(function (ctx) {
             try {
       ctx.player.give("born_in_chaos_v1:ethereal_spirit 4");

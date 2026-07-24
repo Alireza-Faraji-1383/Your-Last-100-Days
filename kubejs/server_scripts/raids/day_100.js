@@ -32,7 +32,7 @@
             .mob(M.UMVUTHANA).count(4)
             .mob(M.UMVUTHANA_RAPTOR).count(4)
             .mob(M.UMVUTHANA_CRANE).count(1)
-            .mob(M.MINER_MYTHIC).count(10)
+            .mob(M.MINER_PLAGUED).count(10)
         // --- Round 2: the bones (chapter 2 echo) ---
         .round("The Bones")
             .breather(200)
@@ -43,7 +43,7 @@
             .mob(M.SOUL_SKELETON).count(4)
             .mob(M.MYTHIC_SKELETON).count(5)
             .mob(M.DEMOMAN).count(3)
-            .mob(M.MINER_MYTHIC).count(9)
+            .mob(M.MINER_BONE_GUARD).count(9)
         // --- Round 3: the breach — everything that digs, blasts or phases ---
         .round("The Breach")
             .breather(300)
@@ -55,7 +55,7 @@
             .mob(M.DOOR_KNIGHT).count(3)
             .mob(M.TNT_CREEPER).count(5)
             .mob(M.PHANTOM_CREEPER).count(2)
-            .mob(M.MINER_MYTHIC).count(9)
+            .mob(M.MINER_CHAMPION).count(9)
         // --- Round 4: the covenant (chapter 5 echo) ---
         .round("The Covenant")
             .breather(300)
@@ -67,20 +67,20 @@
             .mob(M.ARCHEVOKER).count(3)
             .mob(M.PRIEST).count(1)
             .mob(M.APOTHECARIST).count(1)
-            .mob(M.TOSSER_MYTHIC).count(2)
-            .mob(M.MINER_MYTHIC).count(10)
+            .mob(M.TOSSER_ARCANE).count(2)
+            .mob(M.MINER_ELITE).count(10)
         // --- Round 5: the elite guard ---
         .round("The Elite Guard")
             .breather(400)
             .timeLimit(6000)
             .mob(M.FALLEN_KNIGHT).count(5)
-            .mob(M.APTRGANGR).count(2)
+            .mob(M.APTRGANGR).count(1)
             .mob(M.ROYAL_DRAUGR).count(2)
-            .mob(M.IGNITED_REVENANT).count(2)
+            .mob(M.IGNITED_REVENANT).count(1)
             .mob(M.ENDER_GOLEM).count(1)
             .mob(M.WATCHER).count(2)
             .mob(M.WITHER_KNIGHT).count(2)
-            .mob(M.MINER_MYTHIC).count(9)
+            .mob(M.MINER_MYTHIC).count(11)
         // --- Round 6 (FINAL): DARK DOPPELGANGER, the Last Shadow ---
         .round("Dark Doppelganger, the Last Shadow")
             .timeLimit(20400)
@@ -89,8 +89,8 @@
             .mob(M.FLAMING_SHOOTER).count(3)
             .mob(M.IGNITED_BERSERKER).count(3)
             .mob(M.SEARED_SPIRIT).count(2)
-            .mob(M.PEARL_ZOMBIE_MYTHIC).count(2)
-            .mob(M.MINER_MYTHIC).count(8)
+            .mob(M.PEARL_ZOMBIE_LAST).count(2)
+            .mob(M.MINER_LAST_SHADOW).count(8)
         .onWin(function (ctx) {
             try {
       ctx.player.give("cataclysm:witherite_ingot 4");

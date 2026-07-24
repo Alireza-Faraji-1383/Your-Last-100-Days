@@ -22,6 +22,7 @@
     const DEFAULT_BREATHER = 60;   // ticks after an all-dead round before the next
     const DEFAULT_BAR_HOLD  = 300; // ticks the victory/defeat bar lingers before closing (15s)
     const MIN_ROUND_MOBS = 22;     // every authored wave must meet this floor
+    const MAX_ROUND_MINIBOSSES = 3;// absolute cap; difficulty tiers may lower it
     // Active raid snapshots are tiny JSON records in the world's persistent
     // data. One write every five seconds, plus logout/shutdown, avoids per-tick
     // NBT work while keeping a crash rollback bounded to at most five seconds.
@@ -558,9 +559,17 @@
         if (!d.rounds || d.rounds.length === 0) { err(`raid "${d.id}": no rounds`); return false; }
         var EAI = getEAI();
         var presetMap = (EAI && EAI.presets) ? EAI.presets : {};
+        // Authored raid ids begin with dayNN_. Earlier raids deliberately allow
+        // fewer minibosses; unknown/custom ids retain the absolute safe cap.
+        var dayMatch = /^day(\d+)(?:_|$)/.exec(d.id);
+        var raidDay = dayMatch ? parseInt(dayMatch[1], 10) : null;
+        var roundMinibossLimit = raidDay != null && raidDay <= 40 ? 1 :
+                                 raidDay != null && raidDay <= 60 ? 2 :
+                                 MAX_ROUND_MINIBOSSES;
         for (var i = 0; i < d.rounds.length; i++) {
             var r = d.rounds[i];
             var roundMobCount = 0;
+            var roundMinibossCount = 0;
             var finalHasBoss = false;
             var finalHasMiniboss = false;
             if (!(r.breather >= 0)) { err(`raid "${d.id}" round ${i}: bad breather "${r.breather}"`); return false; }
@@ -579,6 +588,7 @@
                     return false;
                 }
                 roundMobCount += m.count;
+                if (m.miniboss) roundMinibossCount += m.count;
                 if (i === d.rounds.length - 1) {
                     if (m.boss) finalHasBoss = true;
                     if (m.miniboss) finalHasMiniboss = true;
@@ -590,6 +600,10 @@
             }
             if (finalHasBoss && finalHasMiniboss) {
                 err(`raid "${d.id}" final round "${r.name}": a main boss cannot share the wave with a miniboss`);
+                return false;
+            }
+            if (roundMinibossCount > roundMinibossLimit) {
+                err(`raid "${d.id}" round ${i} "${r.name}": ${roundMinibossCount} minibosses, tier maximum is ${roundMinibossLimit}`);
                 return false;
             }
             if (roundMobCount < MIN_ROUND_MOBS) {
@@ -917,24 +931,75 @@
     }
 
     // Some modded undead ignore equipped helmets and still ignite in sunlight.
-    // Extinguish only an already-burning raid mob that is outdoors in dry
-    // daytime. This reuses the aggro pass, adds no event/tick loop, and does not
-    // grant blanket fire resistance.
+    // Use the mob's native ServerLevel for sky/weather checks: the KubeJS level
+    // wrapper does not expose canSeeSky consistently for modded entities. This
+    // runs inside the existing 5-tick aggro pass and grants no fire resistance,
+    // so fire attacks and burning-themed raid balance remain intact.
     function clearDaylightFire(level, raw) {
-        if (!level || !raw) return;
-        try { if (typeof raw.isOnFire === "function" && !raw.isOnFire()) return; }
-        catch (e) { return; }
-        try { if (typeof level.isDay === "function" && !level.isDay()) return; }
-        catch (e1) { return; }
+        if (!raw) return;
+        var burning = false;
+        try { if (typeof raw.isOnFire === "function") burning = !!raw.isOnFire(); }
+        catch (e) {}
+        if (!burning) {
+            try {
+                if (typeof raw.getRemainingFireTicks === "function")
+                    burning = raw.getRemainingFireTicks() > 0;
+            } catch (e1) {}
+        }
+        if (!burning) return;
+
+        var nativeLevel = null;
+        try { if (typeof raw.level === "function") nativeLevel = raw.level(); } catch (e2) {}
+        if (!nativeLevel) {
+            try { if (raw.level && typeof raw.level.canSeeSky === "function") nativeLevel = raw.level; } catch (e3) {}
+        }
+        if (!nativeLevel) nativeLevel = heightLevel(level);
+        if (!nativeLevel) return;
+
+        try { if (typeof nativeLevel.isDay === "function" && !nativeLevel.isDay()) return; }
+        catch (e4) { return; }
         try {
             var pos = raw.blockPosition();
-            if (!level.canSeeSky(pos)) return;
-            if (typeof level.isRainingAt === "function" && level.isRainingAt(pos)) return;
-        } catch (e2) { return; }
+            if (!nativeLevel.canSeeSky(pos)) return;
+            if (typeof nativeLevel.isRainingAt === "function" && nativeLevel.isRainingAt(pos)) return;
+        } catch (e5) { return; }
         try {
             if (typeof raw.clearFire === "function") raw.clearFire();
-            else if (typeof raw.setRemainingFireTicks === "function") raw.setRemainingFireTicks(0);
-        } catch (e3) {}
+            // Negative ticks restore the normal post-fire cooldown. This is more
+            // reliable than zero for mobs whose own sunlight tick immediately
+            // calls setSecondsOnFire again after clearFire().
+            if (typeof raw.setRemainingFireTicks === "function") raw.setRemainingFireTicks(-20);
+        } catch (e6) {}
+    }
+
+    // Born in Chaos runs the same sunlight procedure from baseTick() for these
+    // three mobs and reignites them one tick after the normal 5-tick raid pass.
+    // Give only those exact raid members a tiny per-tick cleanup. The guarded
+    // helper still requires daytime + visible sky + no rain, so ordinary fire
+    // attacks indoors or at night keep their normal behavior.
+    var STRICT_DAYLIGHT_GUARD = {
+        "born_in_chaos_v1:bonescaller": true,
+        "born_in_chaos_v1:decrepit_skeleton": true,
+        "born_in_chaos_v1:baby_skeleton": true
+    };
+    function raidUsesStrictDaylightGuard(def) {
+        var rounds = (def && def.rounds) ? def.rounds : [];
+        for (var ri = 0; ri < rounds.length; ri++) {
+            var mobs = rounds[ri].mobs || [];
+            for (var mi = 0; mi < mobs.length; mi++) {
+                if (STRICT_DAYLIGHT_GUARD[String(mobs[mi].type)]) return true;
+            }
+        }
+        return false;
+    }
+    function strictDaylightGuard(inst) {
+        if (!inst._usesStrictDaylightGuard) return;
+        eachMob(inst, function (mob) {
+            var type = "";
+            try { type = String(mob.type); } catch (e) {}
+            if (!STRICT_DAYLIGHT_GUARD[type]) return;
+            clearDaylightFire(inst.level, rawMobOf(mob));
+        });
     }
 
     // Rotate a freshly spawned mob to face the player (cosmetic, best-effort).
@@ -1641,8 +1706,10 @@
         this.endLeft   = 0;           // ENDING-phase linger countdown (victory/defeat bar)
         this._mobState = {};          // uuid -> {x,y,z,idle,tp} anti-stuck tracking
         this._assistTick = 0;         // aggro pass counter (waterAssist throttling)
+        this._usesStrictDaylightGuard = raidUsesStrictDaylightGuard(def);
         this._terminalNotified = false;// terminal lifecycle event fires exactly once
-        this._diedDuringRaid = false; // death does not stop the raid; it only blocks the flawless advancement
+        this._deathCount = 0;         // shown by the HUD and persisted; never changes raid outcome
+        this._diedDuringRaid = false; // compatibility flag used by flawless advancements
     }
     // Freeze the bar on an end state (victory green / defeat red) before it closes.
     RaidInstance.prototype.barEnd = function (name, colorName, progress) {
@@ -1720,7 +1787,7 @@
         playSnd(player, this.def.sounds.lose);
         showTitle(player, "DEFEAT", this.barBase, "dark_red");
         fireCb(this.def, "onLose", [this.ctx(player)]);
-        this.barEnd("§4§l✖ DEFEATED", "RED", 0.0);
+        this.barEnd("§4§l✖ " + this.barBase + " - DEFEATED" + this.deathBarText(), "RED", 0.0);
         this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
         this.phase = "ENDING";
         notifyTerminal(this, "lose");
@@ -1733,17 +1800,23 @@
         this._barText = txt;
         try { this.bar.setName(Text.of(txt)); } catch (e) {}
     };
-    // Live combat bar: title — wave (i/n) • ⚔ alive • ⌛ m:ss (red in the last minute).
+    RaidInstance.prototype.deathBarText = function () {
+        return " §7• §c☠ §f" + Math.max(0, Number(this._deathCount) || 0);
+    };
+    // Live combat bar carries compact structured fields for both the vanilla
+    // fallback and the custom HUD: title, wave number, mob count and timer.
+    // The authored wave name is shown by the round-start title, not repeated here.
     RaidInstance.prototype.barFight = function (round) {
         var n = this.def.rounds.length;
         var alive = this.roundMobs.length + this.carryover.length;
         var totalMobs = Math.max(alive, this.roundTotalMobs);
-        var txt = "§c" + this.barBase + " §7— " + round.name + " §8(" + (this.roundIdx + 1) + "/" + n + ")" +
+        var txt = "§c" + this.barBase + " §8(" + (this.roundIdx + 1) + "/" + n + ")" +
                   " §7• §f⚔ " + alive + "/" + totalMobs;
         if (this.roundTimeLeft != null) {
             var col = (this.roundTimeLeft <= 1200) ? "§c" : "§e";
             txt += " §7• " + col + "⌛ " + fmtTicks(this.roundTimeLeft);
         }
+        txt += this.deathBarText();
         this.setBarName(txt);
     };
     RaidInstance.prototype.updateBar = function (player) {
@@ -1835,7 +1908,9 @@
         var spawned = spawnRound(this.level, player, this.def, round, this.id);
         if (spawned == null) {
             this.spawnRetryLeft = SPAWN_RETRY_TICKS;
-            this.setBarName("§e" + this.barBase + " §7— waiting for safe spawn ground...");
+            this.setBarName("§e" + this.barBase + " §8(" + (this.roundIdx + 1) + "/" +
+                            this.def.rounds.length + ") §7• waiting for safe spawn ground..." +
+                            this.deathBarText());
             this.barColorSet("YELLOW");
             return false;
         }
@@ -1939,7 +2014,10 @@
             case "BREATHER":
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
-                this.setBarName("§e" + this.barBase + " §7— next wave in §f" + Math.ceil(this.breatherLeft / 20) + "s§7…");
+                this.setBarName("§e" + this.barBase + " §8(" +
+                                Math.min(this.roundIdx + 2, this.def.rounds.length) + "/" + this.def.rounds.length +
+                                ") §7• §e⌛ §f" + Math.ceil(this.breatherLeft / 20) + "s" +
+                                this.deathBarText());
                 this.updateBar(player);
                 this.breatherLeft -= TICK_THROTTLE;
                 if (this.breatherLeft <= 0) {
@@ -1953,8 +2031,10 @@
                 this.carryover = pruneDead(this.carryover);
                 this.aggro(player);
                 var stragglers = this.roundMobs.length + this.carryover.length;
-                this.setBarName("§6" + this.barBase + " §7— §f⚔ " + stragglers + "/" +
-                                Math.max(stragglers, this.roundTotalMobs) + " §7stragglers §e(glowing!)");
+                this.setBarName("§6" + this.barBase + " §8(" + this.def.rounds.length + "/" +
+                                this.def.rounds.length + ") §7• §f⚔ " + stragglers + "/" +
+                                Math.max(stragglers, this.roundTotalMobs) + " §7stragglers §e(glowing!)" +
+                                this.deathBarText());
                 this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
                     fireCb(this.def, "onWin", [this.ctx(player)]);
@@ -1963,7 +2043,7 @@
                     playSnd(player, this.def.sounds.win);
                     showTitle(player, "VICTORY", this.barBase, "green");
                     victoryBurst(player);
-                    this.barEnd("§a§l✔ VICTORY", "GREEN", 1.0);
+                    this.barEnd("§a§l✔ " + this.barBase + " - VICTORY" + this.deathBarText(), "GREEN", 1.0);
                     this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
                     this.phase = "ENDING";
                     notifyTerminal(this, "win");
@@ -2182,6 +2262,7 @@
             roundTimeLeft: inst.roundTimeLeft,
             roundTotalHealth: inst.roundTotalHealth,
             roundTotalMobs: inst.roundTotalMobs,
+            deathCount: Math.max(0, Number(inst._deathCount) || 0),
             diedDuringRaid: !!inst._diedDuringRaid,
             roundMobUuids: roundIds,
             carryoverUuids: carryIds
@@ -2254,8 +2335,13 @@
             inst.endLeft = 0;
             inst._mobState = {};
             inst._assistTick = 0;
+            inst._usesStrictDaylightGuard = raidUsesStrictDaylightGuard(def);
             inst._terminalNotified = false;
-            inst._diedDuringRaid = !!s.diedDuringRaid;
+            // Old saves only contain the boolean, so treat it as one death.
+            inst._deathCount = Math.max(0, Math.floor(
+                Number(s.deathCount) || (s.diedDuringRaid ? 1 : 0)
+            ));
+            inst._diedDuringRaid = inst._deathCount > 0 || !!s.diedDuringRaid;
             inst._restoreRoundUuids = uuidSet(s.roundMobUuids || []);
             inst._restoreCarryUuids = uuidSet(s.carryoverUuids || []);
             inst._restoreExpected = uuidKeys(inst._restoreRoundUuids).length + uuidKeys(inst._restoreCarryUuids).length;
@@ -2713,6 +2799,10 @@
                 _persistAccum = 0;
                 if (anyActive()) persistActive(server);
             }
+            // These three Born in Chaos classes reignite themselves every entity
+            // tick. This targeted pass is intentionally before the shared
+            // throttle; all other raid systems retain their 5-tick cadence.
+            for (var daylightKey in _active) strictDaylightGuard(_active[daylightKey]);
             _tickAccum++;
             if (_tickAccum < TICK_THROTTLE) return;
             _tickAccum = 0;
@@ -2733,13 +2823,14 @@
         Manager._drive(event.server);
     });
 
-    // Player death never ends a raid. It only permanently disqualifies this
-    // instance from its optional no-death advancement.
+    // Player death never ends a raid. Every death is counted for the HUD and
+    // persisted, while the compatibility flag disqualifies the no-death reward.
     EntityEvents.death("minecraft:player", function (event) {
         try {
             var player = event.entity;
             var inst = playerInRaid(String(player.uuid));
-            if (!inst || inst._diedDuringRaid) return;
+            if (!inst) return;
+            inst._deathCount = Math.max(0, Number(inst._deathCount) || 0) + 1;
             inst._diedDuringRaid = true;
             persistActive(player.server || Manager._server);
         } catch (e) { warn("record raid player death: " + e); }

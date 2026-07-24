@@ -17,9 +17,9 @@
 //     the concrete item type before it can shoot or throw.
 //   - SUNSCREEN: every burnable undead (vanilla + modded zombie/skeleton
 //     family) wears a helmet so dawn doesn't torch leftover raid mobs.
-//   - Armor follows the raid arc without a ticking system: leather on day 10,
-//     iron/chain on day 20, iron/diamond on day 30, Iron's Netherite Mage on
-//     days 40-60, Cataclysm Ignis on 70-80 and Abyssal Warlock on 90-100.
+//   - Armor follows both power and story theme: leather/iron/diamond early,
+//     then dedicated spirit, arcane, abyssal, rotten, burning and dark sets.
+//     Day 100 deliberately changes armor with each callback wave.
 //   - Modded mobs otherwise bring their own AI + native weapons; the raid
 //     engine's targeting loop drives them regardless.
 //   - Infiltration layer: MINER_* dig to the player with tiered picks (needs
@@ -41,7 +41,6 @@
     var CAT = "cataclysm:";
     var ISS = "irons_spellbooks:";
     var CSS = "cataclysm_spellbooks:";
-    var ADN = "advancednetherite:";
     var SW  = "spartan_weaponry_unofficial:";
     var MOW = "mowziesmobs:";
     var BFB = "block_factorys_bosses:";
@@ -58,17 +57,37 @@
         head: "minecraft:diamond_helmet", chest: "minecraft:diamond_chestplate",
         legs: "minecraft:iron_leggings", feet: "minecraft:diamond_boots"
     };
-    var ARMOR_ARCANE_NETHERITE = {
+    var ARMOR_SPIRIT = {
+        head: ISS + "shadowwalker_helmet", chest: ISS + "shadowwalker_chestplate",
+        legs: ISS + "shadowwalker_leggings", feet: ISS + "shadowwalker_boots"
+    };
+    var ARMOR_ARCANE = {
         head: ISS + "netherite_mage_helmet", chest: ISS + "netherite_mage_chestplate",
         legs: ISS + "netherite_mage_leggings", feet: ISS + "netherite_mage_boots"
     };
-    var ARMOR_IGNIS_WARLOCK = {
+    var ARMOR_ABYSSAL = {
+        head: CSS + "abyssal_warlock_helmet", chest: CSS + "abyssal_warlock_chestplate",
+        legs: CSS + "abyssal_warlock_leggings", feet: CSS + "abyssal_warlock_boots"
+    };
+    var ARMOR_ROTTEN_LEGION = {
+        head: BIC + "dark_metal_armor_helmet", chest: BIC + "dark_metal_armor_chestplate",
+        legs: BIC + "dark_metal_armor_leggings", feet: BIC + "dark_metal_armor_boots"
+    };
+    var ARMOR_IGNIS = {
         head: CSS + "ignis_helmet", chest: CSS + "ignis_chestplate",
         legs: CSS + "ignis_leggings", feet: CSS + "ignis_boots"
     };
-    var ARMOR_ABYSSAL_WARLOCK = {
-        head: CSS + "abyssal_warlock_helmet", chest: CSS + "abyssal_warlock_chestplate",
-        legs: CSS + "abyssal_warlock_leggings", feet: CSS + "abyssal_warlock_boots"
+    var ARMOR_DARK_CONCORD = {
+        head: CSS + "cursium_mage_circlet", chest: CSS + "cursium_mage_chestplate",
+        legs: CSS + "cursium_mage_skirt", feet: CSS + "cursium_mage_boots"
+    };
+    var ARMOR_PLAGUED = {
+        head: ISS + "plagued_helmet", chest: ISS + "plagued_chestplate",
+        legs: ISS + "plagued_leggings", feet: ISS + "plagued_boots"
+    };
+    var ARMOR_BONE_GUARD = {
+        head: CAT + "bone_reptile_helmet", chest: CAT + "bone_reptile_chestplate",
+        legs: BIC + "dark_metal_armor_leggings", feet: BIC + "dark_metal_armor_boots"
     };
 
     function equipWith(mainhand, armor) {
@@ -114,10 +133,18 @@
         MINER_STRONG:         miner("minecraft:diamond_pickaxe", ARMOR_IRON_CHAIN, 40, 0),
         MINER_DIAMOND:        miner("minecraft:diamond_pickaxe", ARMOR_IRON_DIAMOND, 0, 0),
         MINER_VETERAN:        miner("minecraft:diamond_pickaxe", ARMOR_IRON_DIAMOND, 40, 0),
-        MINER_DARK:           miner(ADN + "netherite_iron_pickaxe", ARMOR_ARCANE_NETHERITE, 40, 0),
-        MINER_ELITE:          miner(ADN + "netherite_iron_pickaxe", ARMOR_ARCANE_NETHERITE, 80, 0.3),
-        MINER_CHAMPION:       miner(ADN + "netherite_iron_pickaxe", ARMOR_IGNIS_WARLOCK, 80, 0.3),
-        MINER_MYTHIC:         miner(ADN + "netherite_diamond_pickaxe", ARMOR_ABYSSAL_WARLOCK, 80, 0.3),
+        MINER_DARK:           miner("minecraft:netherite_pickaxe", ARMOR_SPIRIT, 40, 0),
+        MINER_SPIRIT_ELITE:   miner("minecraft:netherite_pickaxe", ARMOR_SPIRIT, 80, 0.3),
+        MINER_ARCANE:         miner("minecraft:netherite_pickaxe", ARMOR_ARCANE, 40, 0),
+        MINER_ELITE:          miner("minecraft:netherite_pickaxe", ARMOR_ARCANE, 80, 0.3),
+        MINER_ABYSSAL_SCOUT:  miner("minecraft:netherite_pickaxe", ARMOR_ABYSSAL, 40, 0),
+        MINER_ABYSSAL:        miner("minecraft:netherite_pickaxe", ARMOR_ABYSSAL, 80, 0.3),
+        MINER_CHAMPION:       miner("minecraft:netherite_pickaxe", ARMOR_ROTTEN_LEGION, 80, 0.3),
+        MINER_IGNIS:          miner("minecraft:netherite_pickaxe", ARMOR_IGNIS, 80, 0.3),
+        MINER_MYTHIC:         miner("minecraft:netherite_pickaxe", ARMOR_DARK_CONCORD, 80, 0.3),
+        MINER_PLAGUED:        miner("minecraft:netherite_pickaxe", ARMOR_PLAGUED, 80, 0.3),
+        MINER_BONE_GUARD:     miner("minecraft:netherite_pickaxe", ARMOR_BONE_GUARD, 80, 0.3),
+        MINER_LAST_SHADOW:    miner("minecraft:netherite_pickaxe", ARMOR_SPIRIT, 80, 0.3),
         // Teleports onto the player with ender pearls — walls don't matter.
         PEARL_ZOMBIE:   { type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_IRON_CHAIN),
@@ -128,15 +155,27 @@
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=40"] },
         PEARL_ZOMBIE_ELITE:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
-                          equip: equipWith("minecraft:ender_pearl", ARMOR_ARCANE_NETHERITE),
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_SPIRIT),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
+        PEARL_ZOMBIE_ARCANE:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_ARCANE),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
+        PEARL_ZOMBIE_ABYSSAL:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_ABYSSAL),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=40"] },
         PEARL_ZOMBIE_CHAMPION:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
-                          equip: equipWith("minecraft:ender_pearl", ARMOR_IGNIS_WARLOCK),
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_IGNIS),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=40"] },
         PEARL_ZOMBIE_MYTHIC:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
-                          equip: equipWith("minecraft:ender_pearl", ARMOR_ABYSSAL_WARLOCK),
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_DARK_CONCORD),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
+        PEARL_ZOMBIE_LAST:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_SPIRIT),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=40"] },
         // Picks up a fellow raid mob and hurls it at the player — delivers
@@ -146,15 +185,19 @@
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=50"] },
         TOSSER_ELITE:   { type: "minecraft:zombie", presets: ["mobile", "thrower"],
-                          equip: equipWith(SW + "iron_battleaxe", ARMOR_ARCANE_NETHERITE),
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_ARCANE),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=50"] },
         TOSSER_CHAMPION:{ type: "minecraft:zombie", presets: ["mobile", "thrower"],
-                          equip: equipWith(SW + "iron_battleaxe", ARMOR_IGNIS_WARLOCK),
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_ROTTEN_LEGION),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=50"] },
         TOSSER_MYTHIC:  { type: "minecraft:zombie", presets: ["mobile", "thrower"],
-                          equip: equipWith(SW + "iron_battleaxe", ARMOR_ABYSSAL_WARLOCK),
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_DARK_CONCORD),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=50"] },
+        TOSSER_ARCANE:  { type: "minecraft:zombie", presets: ["mobile", "thrower"],
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_ARCANE),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=50"] },
         // Breaching creeper: launches at walls, TNT-like blast.
@@ -168,14 +211,14 @@
         // Heavier bow line (skeletons can't fire crossbows — bow + armor).
         ARMORED_SKELETON:  bowSkeleton(ARMOR_IRON_CHAIN, 40),
         DIAMOND_SKELETON:  bowSkeleton(ARMOR_IRON_DIAMOND, 40),
-        DARK_SKELETON:     bowSkeleton(ARMOR_ARCANE_NETHERITE, 40),
-        CHAMPION_SKELETON: bowSkeleton(ARMOR_IGNIS_WARLOCK, 40),
-        MYTHIC_SKELETON:   bowSkeleton(ARMOR_ABYSSAL_WARLOCK, 0),
+        DARK_SKELETON:     bowSkeleton(ARMOR_SPIRIT, 40),
+        CHAMPION_SKELETON: bowSkeleton(ARMOR_IGNIS, 40),
+        MYTHIC_SKELETON:   bowSkeleton(ARMOR_BONE_GUARD, 0),
         TRIDENT_DROWNED:   { type: "minecraft:drowned", presets: ["mobile", "skirmisher"],
-                             equip: equipWith("minecraft:trident", ARMOR_ARCANE_NETHERITE) },
+                             equip: equipWith("minecraft:trident", ARMOR_ABYSSAL) },
         // Wither skeletons don't sunburn; dark-metal helm is pure menace.
         WITHER_SKELETON:   { type: "minecraft:wither_skeleton", presets: ["mobile"],
-                             equip: equipWith(SW + "iron_greatsword", ARMOR_IGNIS_WARLOCK) },
+                             equip: equipWith(SW + "iron_greatsword", ARMOR_IGNIS) },
 
         // ================= Vanilla — illager warband ====================
         PILLAGER:        { type: "minecraft:pillager", presets: ["mobile"],
@@ -184,8 +227,8 @@
                            equip: { mainhand: SW + "iron_battleaxe",
                                     head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate" } },
         VINDICATOR_ELITE:{ type: "minecraft:vindicator", presets: ["mobile", "sharpTargeting"],
-                           equip: { mainhand: ADN + "netherite_iron_axe",
-                                    head: ADN + "netherite_iron_helmet", chest: ADN + "netherite_iron_chestplate" },
+                           equip: { mainhand: "minecraft:diamond_axe",
+                                    head: "minecraft:diamond_helmet", chest: "minecraft:diamond_chestplate" },
                            extraArgs: ["attributes/max_health=50"] },
         EVOKER:          { type: "minecraft:evoker", presets: ["sharpTargeting"] },
         WARBEAST_RAVAGER:{ type: "minecraft:ravager",
@@ -197,13 +240,13 @@
         ROTTING_ZOMBIE:  { type: BIC + "decaying_zombie",
                            equip: equipWith(SW + "stone_spear", ARMOR_LEATHER) },
         ROTTING_ZOMBIE_DARK:{ type: BIC + "decaying_zombie",
-                           equip: equipWith(SW + "stone_spear", ARMOR_ARCANE_NETHERITE) },
+                           equip: equipWith(SW + "stone_spear", ARMOR_SPIRIT) },
         ZOMBIE_BRUISER:  { type: BIC + "zombie_bruiser",
                            equip: equipWith(SW + "iron_warhammer", ARMOR_LEATHER) },
         ZOMBIE_BRUISER_CHAMPION:{ type: BIC + "zombie_bruiser",
-                           equip: equipWith(SW + "iron_warhammer", ARMOR_IGNIS_WARLOCK) },
+                           equip: equipWith(SW + "iron_warhammer", ARMOR_ROTTEN_LEGION) },
         ZOMBIE_BRUISER_MYTHIC:{ type: BIC + "zombie_bruiser",
-                           equip: equipWith(SW + "iron_warhammer", ARMOR_ABYSSAL_WARLOCK) },
+                           equip: equipWith(SW + "iron_warhammer", ARMOR_PLAGUED) },
         LUMBERJACK:      { type: BIC + "zombie_lumberjack",
                            equip: equipWith(BIC + "wood_splitter_axe", ARMOR_LEATHER) },
         BARREL_ZOMBIE:   { type: BIC + "barrel_zombie" },
@@ -216,10 +259,10 @@
 
         // ================= Born in Chaos — bones ========================
         DECREPIT_SKELETON:{ type: BIC + "decrepit_skeleton",
-                            equip: equipWith(null, ARMOR_IRON_CHAIN) },
-        BABY_SKELETON:   { type: BIC + "baby_skeleton" },
+                             equip: equipWith(null, ARMOR_IRON_CHAIN), nbt: { Fire: -20 } },
+        BABY_SKELETON:   { type: BIC + "baby_skeleton", nbt: { Fire: -20 } },
         BONE_IMP:        { type: BIC + "bone_imp" },
-        BONESCALLER:     { type: BIC + "bonescaller" },        // summons baby skeletons
+        BONESCALLER:     { type: BIC + "bonescaller", nbt: { Fire: -20 } }, // summons baby skeletons
         DEMOMAN:         { type: BIC + "skeleton_demoman" },   // lobs bombs — soft breach
         THRASHER:        { type: BIC + "skeleton_thrasher" },  // heavy bruiser
         SIAMESE_SKELETON:{ type: BIC + "siamese_skeletons" },
@@ -284,11 +327,11 @@
         ENDER_GOLEM:     { type: CAT + "ender_golem", miniboss: true, breacher: true,
                            nbt: { is_Awaken: true } },
         DRAUGR:          { type: CAT + "draugr",
-                           equip: equipWith(SW + "iron_battleaxe", ARMOR_ABYSSAL_WARLOCK) },
+                           equip: equipWith(SW + "iron_battleaxe", ARMOR_DARK_CONCORD) },
         ELITE_DRAUGR:    { type: CAT + "elite_draugr",
-                           equip: equipWith(BIC + "sharpened_dark_metal_sword", ARMOR_ABYSSAL_WARLOCK) },
+                           equip: equipWith(BIC + "sharpened_dark_metal_sword", ARMOR_DARK_CONCORD) },
         ROYAL_DRAUGR:    { type: CAT + "royal_draugr",
-                           equip: equipWith(SW + "diamond_halberd", ARMOR_ABYSSAL_WARLOCK) },
+                           equip: equipWith(SW + "diamond_halberd", ARMOR_DARK_CONCORD) },
         APTRGANGR:       { type: CAT + "aptrgangr", miniboss: true, breacher: true },
         // Burning Arena boss, HP-balanced for an open-field raid.
         MALEDICTUS:      { type: CAT + "maledictus", boss: true, breacher: true,
@@ -306,7 +349,7 @@
         // its skeleton-summoning wizard; raids lean on it as the summoner.
         CULTIST:         { type: ISS + "cultist" },
         CATACOMBS_ZOMBIE:{ type: ISS + "catacombs_zombie",
-                           equip: equipWith(SW + "iron_longsword", ARMOR_ARCANE_NETHERITE) },
+                           equip: equipWith(SW + "iron_longsword", ARMOR_ARCANE) },
         PYROMANCER:      { type: ISS + "pyromancer" },
         CRYOMANCER:      { type: ISS + "cryomancer" },
         NECROMANCER:     { type: ISS + "necromancer" },        // summons undead

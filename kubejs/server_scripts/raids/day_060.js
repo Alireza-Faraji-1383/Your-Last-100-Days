@@ -31,7 +31,7 @@
             .mob(M.TRIDENT_DROWNED).count(5)
             .mob(M.THORNSHELL_CRAB).count(3)
             .mob(M.URCHINKIN).count(4)
-            .mob(M.MINER_DARK).count(7)
+            .mob(M.MINER_ABYSSAL_SCOUT).count(7)
         // --- Round 2: the tide presses in ---
         .round("The Undertow")
             .breather(200)
@@ -41,18 +41,18 @@
             .mob(M.CLAWDIAN).count(5)
             .mob(M.CORAL_GOLEM).count(2)
             .mob(M.TRIDENT_DROWNED).count(2)
-            .mob(M.MINER_ELITE).count(7)
+            .mob(M.MINER_ABYSSAL).count(7)
         // --- Round 3: abyssal clergy ---
         .round("Abyssal Clergy")
             .breather(300)
             .timeLimit(6000)
             .mob(M.DEEPLING_PRIEST).count(3)
             .mob(M.DEEPLING_WARLOCK).count(3)
-            .mob(M.AMETHYST_CRAB).count(4)
-            .mob(M.CLAWDIAN).count(2)
+            .mob(M.AMETHYST_CRAB).count(2)
+            .mob(M.CLAWDIAN).count(4)
             .mob(M.DEEPLING_BRUTE).count(2)
-            .mob(M.PEARL_ZOMBIE_ELITE).count(2)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.PEARL_ZOMBIE_ABYSSAL).count(2)
+            .mob(M.MINER_ABYSSAL).count(8)
         // --- Round 4 (FINAL): coral colossi + reef guard ---
         .round("Coral Colossi")
             .timeLimit(14400)
@@ -62,7 +62,7 @@
             .mob(M.DEEPLING_WARLOCK).count(2)
             .mob(M.TNT_CREEPER).count(2)
             .mob(M.THORNSHELL_CRAB).count(2)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.MINER_ABYSSAL).count(8)
         .onWin(function (ctx) {
             try {
       ctx.player.give("minecraft:heart_of_the_sea 1");

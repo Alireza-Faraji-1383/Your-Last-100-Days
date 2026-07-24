@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="y100d_raid_hud"
+version="1.0.0"
+displayName="Y100D Raid HUD"
+description="Lightweight client-only custom boss bar renderer for the authored Y100D raids."
+
+[[dependencies.y100d_raid_hud]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,21.2)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.y100d_raid_hud]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="CLIENT"

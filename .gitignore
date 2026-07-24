@@ -173,9 +173,11 @@ config/relics
 !/mods/
 /mods/*
 !/mods/y100d-early-loading-1.0.0+mc1.21.1-neoforge.jar
+!/mods/y100d-raid-hud-1.0.0+mc1.21.1-neoforge.jar
 
 # Reproducible loader build scratch
 /tools/y100d-early-loading/build/
+/tools/y100d-raid-hud/build/
 config/jei/world
 config/voicechat
 

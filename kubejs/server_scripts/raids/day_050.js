@@ -31,7 +31,7 @@
             .mob(M.CATACOMBS_ZOMBIE).count(6)
             .mob(M.APOTHECARIST).count(2)
             .mob(M.ICE_SPIDER).count(4)
-            .mob(M.MINER_DARK).count(7)
+            .mob(M.MINER_ARCANE).count(7)
         // --- Round 2: fire and ice ---
         .round("Battle Mages")
             .breather(200)
@@ -42,7 +42,7 @@
             .mob(M.ARCHEVOKER).count(1)
             .mob(M.ICE_SPIDER).count(3)
             .mob(M.TOSSER_ELITE).count(2)
-            .mob(M.MINER_DARK).count(8)
+            .mob(M.MINER_ARCANE).count(8)
         // --- Round 3: the summoners + their healer ---
         .round("Death Coven")
             .breather(300)
@@ -52,7 +52,7 @@
             .mob(M.PRIEST).count(3)
             .mob(M.APOTHECARIST).count(3)
             .mob(M.ARCHEVOKER).count(2)
-            .mob(M.PEARL_ZOMBIE_ELITE).count(2)
+            .mob(M.PEARL_ZOMBIE_ARCANE).count(2)
             .mob(M.MINER_ELITE).count(8)
         // --- Round 4 (FINAL): the Ancient Knight ---
         .round("The Ancient Knight")
