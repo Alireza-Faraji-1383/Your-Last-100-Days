@@ -28,15 +28,15 @@
             .mob(M.DECREPIT_SKELETON).count(9)
             .mob(M.BONE_IMP).count(5)
             .mob(M.BABY_SKELETON).count(4)
-            .mob(M.MINER_ZOMBIE).count(7)
+            .mob(M.MINER_IRON).count(7)
         // --- Round 2: arrows from every direction ---
         .round("Marksmen")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.BOW_SKELETON).count(10)
+            .mob(M.IRON_SKELETON).count(10)
             .mob(M.ARMORED_SKELETON).count(7)
             .mob(M.BABY_SKELETON).count(3)
-            .mob(M.MINER_ZOMBIE).count(6)
+            .mob(M.MINER_IRON).count(6)
         // --- Round 3: summoners + bomb throwers + webs ---
         .round("The Callers")
             .breather(200)
@@ -53,14 +53,14 @@
             .mob(M.THRASHER).count(3)
             .mob(M.SIAMESE_SKELETON).count(2)
             .mob(M.SOUL_SKELETON).count(4)
-            .mob(M.BOW_SKELETON).count(4)
+            .mob(M.IRON_SKELETON).count(4)
             .mob(M.PEARL_ZOMBIE).count(2)
             .mob(M.MINER_STRONG).count(7)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:emerald 12");
-                ctx.player.give("minecraft:experience_bottle 16");
-                ctx.player.give("minecraft:lapis_lazuli 24");
+                ctx.player.give("born_in_chaos_v1:bone_heart 1");
+                ctx.player.give("born_in_chaos_v1:bundle_of_bones 8");
+                ctx.player.give("minecraft:experience_bottle 24");
             } catch (e) {}
         })
         .build();

@@ -27,12 +27,12 @@
             .breather(200)
             .timeLimit(6000)
             .mob(M.LIFESTEALER_BOSS).count(1)
-            .mob(M.ZOMBIE_BRUISER).count(5)
+            .mob(M.ZOMBIE_BRUISER_MYTHIC).count(5)
             .mob(M.NAGA).count(5)
             .mob(M.UMVUTHANA).count(4)
             .mob(M.UMVUTHANA_RAPTOR).count(4)
             .mob(M.UMVUTHANA_CRANE).count(1)
-            .mob(M.MINER_ELITE).count(10)
+            .mob(M.MINER_MYTHIC).count(10)
         // --- Round 2: the bones (chapter 2 echo) ---
         .round("The Bones")
             .breather(200)
@@ -41,9 +41,9 @@
             .mob(M.SIAMESE_SKELETON).count(3)
             .mob(M.BONESCALLER).count(3)
             .mob(M.SOUL_SKELETON).count(4)
-            .mob(M.BOW_SKELETON).count(5)
+            .mob(M.MYTHIC_SKELETON).count(5)
             .mob(M.DEMOMAN).count(3)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.MINER_MYTHIC).count(9)
         // --- Round 3: the breach — everything that digs, blasts or phases ---
         .round("The Breach")
             .breather(300)
@@ -55,7 +55,7 @@
             .mob(M.DOOR_KNIGHT).count(3)
             .mob(M.TNT_CREEPER).count(5)
             .mob(M.PHANTOM_CREEPER).count(2)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.MINER_MYTHIC).count(9)
         // --- Round 4: the covenant (chapter 5 echo) ---
         .round("The Covenant")
             .breather(300)
@@ -67,8 +67,8 @@
             .mob(M.ARCHEVOKER).count(3)
             .mob(M.PRIEST).count(1)
             .mob(M.APOTHECARIST).count(1)
-            .mob(M.TOSSER).count(2)
-            .mob(M.MINER_ELITE).count(10)
+            .mob(M.TOSSER_MYTHIC).count(2)
+            .mob(M.MINER_MYTHIC).count(10)
         // --- Round 5: the elite guard ---
         .round("The Elite Guard")
             .breather(400)
@@ -80,7 +80,7 @@
             .mob(M.ENDER_GOLEM).count(1)
             .mob(M.WATCHER).count(2)
             .mob(M.WITHER_KNIGHT).count(2)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.MINER_MYTHIC).count(9)
         // --- Round 6 (FINAL): DARK DOPPELGANGER, the Last Shadow ---
         .round("Dark Doppelganger, the Last Shadow")
             .timeLimit(20400)
@@ -89,14 +89,13 @@
             .mob(M.FLAMING_SHOOTER).count(3)
             .mob(M.IGNITED_BERSERKER).count(3)
             .mob(M.SEARED_SPIRIT).count(2)
-            .mob(M.PEARL_ZOMBIE).count(2)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.PEARL_ZOMBIE_MYTHIC).count(2)
+            .mob(M.MINER_MYTHIC).count(8)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:netherite_ingot 4");
-                ctx.player.give("minecraft:enchanted_golden_apple 3");
-                ctx.player.give("irons_spellbooks:legendary_ink 1");
-                ctx.player.give("minecraft:nether_star 1");
+      ctx.player.give("cataclysm:witherite_ingot 4");
+      ctx.player.give("cataclysm_spellbooks:abyssal_upgrade_orb 1");
+      ctx.player.give("minecraft:nether_star 1");
             } catch (e) {}
         })
         .build();

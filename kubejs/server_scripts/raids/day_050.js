@@ -31,7 +31,7 @@
             .mob(M.CATACOMBS_ZOMBIE).count(6)
             .mob(M.APOTHECARIST).count(2)
             .mob(M.ICE_SPIDER).count(4)
-            .mob(M.MINER_STRONG).count(7)
+            .mob(M.MINER_DARK).count(7)
         // --- Round 2: fire and ice ---
         .round("Battle Mages")
             .breather(200)
@@ -41,8 +41,8 @@
             .mob(M.CULTIST).count(5)
             .mob(M.ARCHEVOKER).count(1)
             .mob(M.ICE_SPIDER).count(3)
-            .mob(M.TOSSER).count(2)
-            .mob(M.MINER_STRONG).count(8)
+            .mob(M.TOSSER_ELITE).count(2)
+            .mob(M.MINER_DARK).count(8)
         // --- Round 3: the summoners + their healer ---
         .round("Death Coven")
             .breather(300)
@@ -52,7 +52,7 @@
             .mob(M.PRIEST).count(3)
             .mob(M.APOTHECARIST).count(3)
             .mob(M.ARCHEVOKER).count(2)
-            .mob(M.PEARL_ZOMBIE).count(2)
+            .mob(M.PEARL_ZOMBIE_ELITE).count(2)
             .mob(M.MINER_ELITE).count(8)
         // --- Round 4 (FINAL): the Ancient Knight ---
         .round("The Ancient Knight")
@@ -67,9 +67,9 @@
             .mob(M.MINER_ELITE).count(8)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("irons_spellbooks:arcane_essence 8");
-                ctx.player.give("irons_spellbooks:rare_ink 2");
-                ctx.player.give("minecraft:diamond_block 1");
+      ctx.player.give("irons_spellbooks:arcane_essence 16");
+      ctx.player.give("irons_spellbooks:upgrade_orb 1");
+      ctx.player.give("irons_spellbooks:mithril_ingot 4");
             } catch (e) {}
         })
         .build();

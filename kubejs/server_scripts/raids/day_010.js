@@ -49,12 +49,12 @@
             .mob(M.PUMPKINHEAD).count(2)
             .mob(M.BOW_SKELETON).count(5)
             .mob(M.MAGGOT).count(3)
-            .mob(M.MINER_STRONG).count(7)
+            .mob(M.MINER_LEATHER_STRONG).count(7)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:iron_ingot 12");
-                ctx.player.give("minecraft:bread 16");
-                ctx.player.give("minecraft:emerald 8");
+                ctx.player.give("minecraft:iron_ingot 16");
+                ctx.player.give("minecraft:golden_apple 2");
+                ctx.player.give("born_in_chaos_v1:pieceofdarkmetal 4");
             } catch (e) {}
         })
         .build();

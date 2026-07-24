@@ -29,7 +29,7 @@
             .mob(M.VINDICATOR).count(5)
             .mob(M.CROSSBOW_PIRATE).count(4)
             .mob(M.PIRATE_ROOK).count(2)
-            .mob(M.MINER_ZOMBIE).count(7)
+            .mob(M.MINER_DIAMOND).count(7)
         // --- Round 2: sappers hit the walls ---
         .round("Sappers")
             .breather(200)
@@ -39,7 +39,7 @@
             .mob(M.DEMOMAN).count(2)
             .mob(M.BARREL_ZOMBIE).count(4)
             .mob(M.TOSSER).count(2)
-            .mob(M.MINER_STRONG).count(7)
+            .mob(M.MINER_VETERAN).count(7)
         // --- Round 3: the warlocks' escort ---
         .round("The Warlocks")
             .breather(200)
@@ -49,8 +49,8 @@
             .mob(M.MAGEHUNTER).count(3)
             .mob(M.VINDICATOR).count(5)
             .mob(M.PILLAGER).count(4)
-            .mob(M.PEARL_ZOMBIE).count(2)
-            .mob(M.MINER_STRONG).count(7)
+            .mob(M.PEARL_ZOMBIE_VETERAN).count(2)
+            .mob(M.MINER_VETERAN).count(7)
         // --- Round 4 (FINAL): Missionary + pirate captain + warbeasts ---
         .round("The Warbeasts")
             .timeLimit(14400)
@@ -59,12 +59,12 @@
             .mob(M.WARBEAST_RAVAGER).count(3)
             .mob(M.VINDICATOR_ELITE).count(4)
             .mob(M.CROSSBOW_PIRATE).count(4)
-            .mob(M.MINER_STRONG).count(9)
+            .mob(M.MINER_VETERAN).count(9)
         .onWin(function (ctx) {
             try {
                 ctx.player.give("minecraft:diamond 6");
                 ctx.player.give("minecraft:emerald_block 2");
-                ctx.player.give("minecraft:golden_apple 2");
+                ctx.player.give("minecraft:totem_of_undying 1");
             } catch (e) {}
         })
         .build();

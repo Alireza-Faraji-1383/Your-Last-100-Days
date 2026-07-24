@@ -22,6 +22,13 @@
     const DEFAULT_BREATHER = 60;   // ticks after an all-dead round before the next
     const DEFAULT_BAR_HOLD  = 300; // ticks the victory/defeat bar lingers before closing (15s)
     const MIN_ROUND_MOBS = 22;     // every authored wave must meet this floor
+    // Active raid snapshots are tiny JSON records in the world's persistent
+    // data. One write every five seconds, plus logout/shutdown, avoids per-tick
+    // NBT work while keeping a crash rollback bounded to at most five seconds.
+    const ACTIVE_STATE_KEY = "raidfactory_active_v1";
+    const ACTIVE_SAVE_EVERY = 100;
+    const RESTORE_LOGIN_DELAY = 40; // let the returning player's chunks load first
+    const RESTORE_MOB_WAIT = 200;   // wait up to 10s for persistent mobs to load
     const BANNED_RAID_MOB_TYPES = {
         "cataclysm:netherite_ministrosity": true // stationary encounter construct
     };
@@ -896,6 +903,27 @@
         });
     }
 
+    // Some modded undead ignore equipped helmets and still ignite in sunlight.
+    // Extinguish only an already-burning raid mob that is outdoors in dry
+    // daytime. This reuses the aggro pass, adds no event/tick loop, and does not
+    // grant blanket fire resistance.
+    function clearDaylightFire(level, raw) {
+        if (!level || !raw) return;
+        try { if (typeof raw.isOnFire === "function" && !raw.isOnFire()) return; }
+        catch (e) { return; }
+        try { if (typeof level.isDay === "function" && !level.isDay()) return; }
+        catch (e1) { return; }
+        try {
+            var pos = raw.blockPosition();
+            if (!level.canSeeSky(pos)) return;
+            if (typeof level.isRainingAt === "function" && level.isRainingAt(pos)) return;
+        } catch (e2) { return; }
+        try {
+            if (typeof raw.clearFire === "function") raw.clearFire();
+            else if (typeof raw.setRemainingFireTicks === "function") raw.setRemainingFireTicks(0);
+        } catch (e3) {}
+    }
+
     // Rotate a freshly spawned mob to face the player (cosmetic, best-effort).
     function facePlayer(entity, pos, pp) {
         try {
@@ -1380,7 +1408,9 @@
             var slot = null;
             try { slot = ES.valueOf(slotName); } catch (e) { continue; }
             try { raw.setItemSlot(slot, stack); any = true; } catch (e2) { warn("setItemSlot " + k + ": " + e2); continue; }
-            try { if (typeof raw.setDropChance === "function") raw.setDropChance(slot, 0.0); } catch (e3) {}
+            // Negative is Minecraft's hard no-drop sentinel. Unlike 0.0 it
+            // cannot be raised by Looting, so raid-only gear never leaks.
+            try { if (typeof raw.setDropChance === "function") raw.setDropChance(slot, -1.0); } catch (e3) {}
         }
         if (any) invokeNoArg(raw, "reassessWeaponGoal");   // no-op on mobs without it
     }
@@ -1741,7 +1771,9 @@
         var inst = this;
         eachMob(this, function (m) {
             var raw = rawMobOf(m);
-            if (!raw || typeof raw.setTarget !== "function") return;
+            if (!raw) return;
+            clearDaylightFire(inst.level, raw);
+            if (typeof raw.setTarget !== "function") return;
             var t = decideTarget(raw, mainRaw, victims, radiusSqr);
             var cur = null;
             try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (eG) {}
@@ -1801,6 +1833,22 @@
         // No player-death loss: if the main player dies the mobs switch to nearby
         // villagers/players (see aggro) and re-aggro the player on respawn. The
         // only loss is the final round's timer expiring (see FIGHTING below).
+        // Logging out is different from dying: pause the whole combat state so
+        // an offline player cannot lose (or accidentally win through unloaded
+        // entity wrappers). On return, persistent mobs are rebound by UUID/tag.
+        if (!player && this.phase !== "ENDING") return;
+        if (this._restoring) {
+            if (this._restoreDelay > 0) {
+                this._restoreDelay -= TICK_THROTTLE;
+                return;
+            }
+            if (!rebindRestoredMobs(this)) return;
+            this._restoring = false;
+            this._ctxPlayer = player;
+            this.updateBar(player);
+            persistActive(Manager._server);
+            info("resumed raid " + this.id + " for " + player.username);
+        }
 
         switch (this.phase) {
 
@@ -1960,8 +2008,241 @@
     const _pendingLifestealerForms = [];
     var _idSeq    = 0;
     var _tickAccum = 0;
+    var _persistAccum = 0;
+    var _restoreAttempted = false;
 
-    function newInstanceId(defId) { _idSeq++; return defId + "_" + _idSeq; }
+    function newInstanceId(defId) {
+        var id = null;
+        do { _idSeq++; id = defId + "_" + _idSeq; } while (_active[id]);
+        return id;
+    }
+
+    function mobUuid(entity) {
+        try { if (entity && entity.uuid != null) return String(entity.uuid).toLowerCase(); } catch (e) {}
+        try {
+            var raw = rawMobOf(entity);
+            if (raw && typeof raw.getUUID === "function") return String(raw.getUUID()).toLowerCase();
+        } catch (e2) {}
+        return null;
+    }
+
+    function mobUuidList(arr) {
+        var out = [];
+        for (var i = 0; i < arr.length; i++) {
+            var id = mobUuid(arr[i]);
+            if (id) out.push(id);
+        }
+        return out;
+    }
+
+    function levelId(level) {
+        try {
+            if (typeof level.dimension === "function") {
+                var key = level.dimension();
+                if (key && typeof key.location === "function") return String(key.location());
+                return String(key);
+            }
+        } catch (e) {}
+        try {
+            var dim = level.dimension;
+            if (dim && typeof dim.location === "function") return String(dim.location());
+            return String(dim);
+        } catch (e2) {}
+        return "minecraft:overworld";
+    }
+
+    function findLevel(server, id) {
+        if (!server || typeof server.getAllLevels !== "function") return null;
+        var fallback = null;
+        try {
+            var it = server.getAllLevels().iterator();
+            while (it.hasNext()) {
+                var level = it.next();
+                if (!fallback) fallback = level;
+                if (levelId(level) === String(id)) return level;
+            }
+        } catch (e) {}
+        // Scheduled raids currently run in the overworld. Only use the fallback
+        // for that dimension; never silently move a restored manual raid between
+        // dimensions, which could detach it from its persistent mobs.
+        return String(id) === "minecraft:overworld" ? fallback : null;
+    }
+
+    function uuidSet(list) {
+        var out = {};
+        if (!list) return out;
+        for (var i = 0; i < list.length; i++) out[String(list[i]).toLowerCase()] = true;
+        return out;
+    }
+
+    function uuidKeys(set) {
+        var out = [];
+        if (!set) return out;
+        for (var k in set) if (set[k]) out.push(k);
+        return out;
+    }
+
+    function prepareForRebind(inst) {
+        if (!inst || inst._restoring || inst.phase === "DONE" || inst.phase === "ENDING") return;
+        inst._restoreRoundUuids = uuidSet(mobUuidList(inst.roundMobs));
+        inst._restoreCarryUuids = uuidSet(mobUuidList(inst.carryover));
+        inst._restoreExpected = uuidKeys(inst._restoreRoundUuids).length + uuidKeys(inst._restoreCarryUuids).length;
+        inst._restoreWait = RESTORE_MOB_WAIT;
+        inst._restoreDelay = RESTORE_LOGIN_DELAY;
+        inst._restoreScanCooldown = 0;
+        inst._restoring = true;
+        // Do not retain stale Java entity wrappers across a chunk unload/login.
+        inst.roundMobs = [];
+        inst.carryover = [];
+        inst._mobState = {};
+    }
+
+    function rebindRestoredMobs(inst) {
+        if (inst._restoreScanCooldown > 0) {
+            inst._restoreScanCooldown -= TICK_THROTTLE;
+            if (inst._restoreScanCooldown > 0) return false;
+        }
+        var round = [], carry = [], matched = 0;
+        try {
+            var getter = inst.level.getEntities();
+            if (getter && typeof getter.getAll === "function") {
+                var it = getter.getAll().iterator();
+                while (it.hasNext()) {
+                    var entity = it.next();
+                    var tags = null;
+                    try { tags = entity.getTags(); } catch (eT) {}
+                    if (!tags || !tags.contains("raid_" + inst.id)) continue;
+                    var id = mobUuid(entity);
+                    if (!id) continue;
+                    if (inst._restoreCarryUuids[id]) { carry.push(entity); matched++; }
+                    else if (inst._restoreRoundUuids[id]) { round.push(entity); matched++; }
+                    else round.push(entity); // mod-created raid minion saved after the last snapshot
+                }
+            }
+        } catch (e) { warn("restore mob scan " + inst.id + ": " + e); }
+
+        if (matched < inst._restoreExpected && inst._restoreWait > 0) {
+            // Retry only once per second. A resume is rare; throttling the
+            // temporary entity scan keeps even crowded worlds inexpensive.
+            inst._restoreScanCooldown = 20;
+            inst._restoreWait -= 20;
+            return false;
+        }
+        inst.roundMobs = round;
+        inst.carryover = carry;
+        inst._restoreRoundUuids = {};
+        inst._restoreCarryUuids = {};
+        inst._restoreExpected = 0;
+        inst._restoreWait = 0;
+        inst._restoreDelay = 0;
+        inst._restoreScanCooldown = 0;
+        inst._mobState = {};
+        return true;
+    }
+
+    function snapshotInstance(inst) {
+        var roundIds = inst._restoring ? uuidKeys(inst._restoreRoundUuids) : mobUuidList(inst.roundMobs);
+        var carryIds = inst._restoring ? uuidKeys(inst._restoreCarryUuids) : mobUuidList(inst.carryover);
+        return {
+            id: inst.id,
+            defId: inst.defId,
+            playerUuid: inst.playerUuid,
+            dimension: levelId(inst.level),
+            roundIdx: inst.roundIdx,
+            phase: inst.phase,
+            spawnRetryLeft: inst.spawnRetryLeft,
+            breatherLeft: inst.breatherLeft,
+            roundTimeLeft: inst.roundTimeLeft,
+            roundTotalHealth: inst.roundTotalHealth,
+            roundTotalMobs: inst.roundTotalMobs,
+            roundMobUuids: roundIds,
+            carryoverUuids: carryIds
+        };
+    }
+
+    function persistActive(server) {
+        if (!server || !server.persistentData) return false;
+        var snapshots = [];
+        for (var k in _active) {
+            var inst = _active[k];
+            if (inst.phase !== "DONE" && inst.phase !== "ENDING") snapshots.push(snapshotInstance(inst));
+        }
+        try {
+            if (snapshots.length > 0) server.persistentData.putString(ACTIVE_STATE_KEY, JSON.stringify(snapshots));
+            else server.persistentData.remove(ACTIVE_STATE_KEY);
+            return true;
+        } catch (e) {
+            warn("persist active raids: " + e);
+            return false;
+        }
+    }
+
+    function restoreActive(server) {
+        if (_restoreAttempted) return 0;
+        _restoreAttempted = true;
+        var raw = "";
+        try { raw = String(server.persistentData.getString(ACTIVE_STATE_KEY) || ""); }
+        catch (e) { warn("read active raids: " + e); return 0; }
+        if (!raw) return 0;
+
+        var snapshots = null;
+        try { snapshots = JSON.parse(raw); }
+        catch (e2) {
+            warn("invalid active raid snapshot discarded: " + e2);
+            try { server.persistentData.remove(ACTIVE_STATE_KEY); } catch (eRm) {}
+            return 0;
+        }
+        if (!snapshots || typeof snapshots.length !== "number") return 0;
+
+        var restored = 0;
+        for (var i = 0; i < snapshots.length; i++) {
+            var s = snapshots[i];
+            if (!s || !s.id || _active[String(s.id)]) continue;
+            var def = Registry.get(String(s.defId));
+            var level = findLevel(server, s.dimension);
+            if (!def || !level || !def.rounds || def.rounds.length === 0) continue;
+
+            var inst = Object.create(RaidInstance.prototype);
+            inst.id = String(s.id);
+            inst.defId = String(s.defId);
+            inst.def = def;
+            inst.level = level;
+            inst.playerUuid = String(s.playerUuid);
+            inst._ctxPlayer = null;
+            inst.roundIdx = Math.max(0, Math.min(def.rounds.length - 1, Number(s.roundIdx) || 0));
+            inst.phase = String(s.phase || "SPAWNING");
+            if (inst.phase !== "SPAWNING" && inst.phase !== "FIGHTING" &&
+                inst.phase !== "BREATHER" && inst.phase !== "WIN_WAIT") inst.phase = "SPAWNING";
+            inst.spawnRetryLeft = Math.max(0, Number(s.spawnRetryLeft) || 0);
+            inst.breatherLeft = Math.max(0, Number(s.breatherLeft) || 0);
+            inst.roundTimeLeft = (s.roundTimeLeft == null) ? null : Math.max(0, Number(s.roundTimeLeft) || 0);
+            inst.roundMobs = [];
+            inst.carryover = [];
+            inst.bar = (def.bossBar === false) ? null :
+                makeBar(server, inst.id, def.title || prettyId(def.id), def.barColor, def.barOverlay);
+            inst.barBase = def.title || prettyId(def.id);
+            inst.roundTotalHealth = Math.max(1, Number(s.roundTotalHealth) || 1);
+            inst.roundTotalMobs = Math.max(0, Number(s.roundTotalMobs) || 0);
+            inst.endLeft = 0;
+            inst._mobState = {};
+            inst._assistTick = 0;
+            inst._terminalNotified = false;
+            inst._restoreRoundUuids = uuidSet(s.roundMobUuids || []);
+            inst._restoreCarryUuids = uuidSet(s.carryoverUuids || []);
+            inst._restoreExpected = uuidKeys(inst._restoreRoundUuids).length + uuidKeys(inst._restoreCarryUuids).length;
+            inst._restoreWait = RESTORE_MOB_WAIT;
+            inst._restoreDelay = RESTORE_LOGIN_DELAY;
+            inst._restoreScanCooldown = 0;
+            inst._restoring = true;
+            _active[inst.id] = inst;
+
+            var suffix = Number(inst.id.substring(inst.id.lastIndexOf("_") + 1));
+            if (suffix > _idSeq) _idSeq = suffix;
+            restored++;
+        }
+        if (restored > 0) info("restored " + restored + " active raid(s); waiting for owner login");
+        return restored;
+    }
 
     function entityTypeId(entity) {
         try { return String(entity.type); } catch (e) {}
@@ -2172,10 +2453,9 @@
         return true;
     }
 
-    // Very small lifecycle hook used by the day scheduler. Active raid state is
-    // intentionally in-memory, but the scheduler needs to know whether an
-    // auto-launched raid ended normally or was interrupted by a reload/crash.
-    // No polling and no per-tick persistence: listeners run once at win/loss/stop.
+    // Very small lifecycle hook used by the day scheduler. The scheduler owns
+    // fired/in-progress flags while the core owns resumable active-state data.
+    // Listeners still run only once at win/loss/stop.
     function notifyTerminal(inst, outcome) {
         if (!inst || inst._terminalNotified) return;
         inst._terminalNotified = true;
@@ -2189,6 +2469,9 @@
             try { _terminalListeners[i](ev); }
             catch (e) { warn("terminal listener: " + e); }
         }
+        // A terminal raid must disappear from the persisted active set
+        // immediately, so a shutdown during the linger bar cannot resurrect it.
+        persistActive(Manager._server);
     }
 
     // ENDING counts as "raid over" — fight is done, the instance only lets the
@@ -2227,10 +2510,9 @@
         return false;
     }
 
-    // Bug #1: spawned mobs are persistenceRequired + tagged. A crash/restart
-    // mid-raid loses _active, orphaning those mobs forever. Sweep every loaded
-    // level on server load and discard raid_mob-tagged entities not owned by a
-    // live instance (on a fresh boot that's all of them).
+    // Spawned mobs are persistenceRequired + tagged. After restoring saved
+    // instances, sweep loaded levels and discard only raid-tagged entities that
+    // have no matching live/saved owner (for example, a corrupt old snapshot).
     function sweepOrphans(server) {
         if (!server || typeof server.getAllLevels !== "function") return 0;
         var killed = 0;
@@ -2313,6 +2595,7 @@
                 if (inst.bar) { try { inst.bar.addPlayer(player); } catch (eB) {} }
             }
             _active[id] = inst;
+            persistActive(Manager._server);
             broadcastSnd(Manager._server, player, def.sounds.raidStart, RAIDSTART_RADIUS);
             showTitle(player, "RAID INCOMING", inst.barBase, "red");
             try { player.tell(Text.of("§c⚔ " + inst.barBase + " begins...")); } catch (eT) {}
@@ -2324,6 +2607,21 @@
         // True when the player has a raid still fighting (ENDING/DONE excluded).
         isInRaid: function (player) {
             try { return !!playerInRaid(String(player.uuid)); } catch (e) { return false; }
+        },
+
+        // Scheduler recovery uses this to reconnect its in-progress transaction
+        // to instances restored by the core instead of re-firing the raid.
+        activeIdsForDef: function (defId) {
+            var out = [];
+            for (var k in _active) {
+                var inst = _active[k];
+                if (inst.defId === String(defId) && inst.phase !== "DONE" && inst.phase !== "ENDING") out.push(inst.id);
+            }
+            return out;
+        },
+
+        saveActive: function () {
+            return persistActive(Manager._server);
         },
 
         // Register a lightweight terminal listener. Used by raid_schedule.js to
@@ -2342,6 +2640,7 @@
             cleanupMobs(inst);
             notifyTerminal(inst, "stopped");
             delete _active[inst.id];
+            persistActive(Manager._server);
             info(`stopped raid ${inst.id}`);
             return true;
         },
@@ -2355,6 +2654,7 @@
                 n++;
             }
             sweepBars(Manager._server);   // also clears bars orphaned by a prior reload/crash
+            persistActive(Manager._server);
             return n;
         },
 
@@ -2378,6 +2678,12 @@
 
         _drive: function (server) {
             Manager._server = server;
+            if (!_restoreAttempted) restoreActive(server);
+            _persistAccum++;
+            if (_persistAccum >= ACTIVE_SAVE_EVERY) {
+                _persistAccum = 0;
+                if (anyActive()) persistActive(server);
+            }
             _tickAccum++;
             if (_tickAccum < TICK_THROTTLE) return;
             _tickAccum = 0;
@@ -2396,6 +2702,23 @@
 
     ServerEvents.tick(function (event) {
         Manager._drive(event.server);
+    });
+
+    // Capture UUIDs before logout invalidates Java entity wrappers. The actual
+    // raid tick is paused while the owner is offline and resumes after rebinding.
+    PlayerEvents.loggedOut(function (event) {
+        try {
+            var puid = String(event.player.uuid);
+            for (var k in _active) {
+                if (_active[k].playerUuid === puid) prepareForRebind(_active[k]);
+            }
+            persistActive(event.server || Manager._server);
+        } catch (e) { warn("logout raid save: " + e); }
+    });
+
+    ServerEvents.unloaded(function (event) {
+        try { persistActive(event.server || Manager._server); }
+        catch (e) { warn("shutdown raid save: " + e); }
     });
 
     // Rare mod-created combat entities are adopted at their spawn event, so the
@@ -2448,6 +2771,7 @@
     ServerEvents.loaded(function (event) {
         Manager._server = event.server;
         layoutRaidAdvancements(event.server);
+        restoreActive(event.server);
         Manager.sweepOrphans();
     });
 

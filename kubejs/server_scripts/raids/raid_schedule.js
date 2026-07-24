@@ -20,9 +20,10 @@
 // Fired flags persist in server.persistentData ("raidsched_day<N>_<raidId>"). A
 // second tiny "_in_progress" flag makes that write transactional: normal
 // win/loss/stop clears in_progress and keeps fired; a reload/restart/crash leaves
-// in_progress behind, so the next script load clears both flags and re-arms the
-// interrupted raid. No raid/entity state is serialized and there are no per-tick
-// writes. A night with nobody online (or everyone already raiding) stays armed.
+// in_progress behind, so the next script load reconnects it to the core's saved
+// active raid, or clears both flags and re-arms only if no snapshot survived.
+// Active state is saved by raid_core.js in small throttled records; the scheduler
+// only owns its fired/in-progress flags. An empty night stays armed.
 //
 // Depends on RaidManager (raid_core.js, priority 90 -> loads first). Rhino: var-only.
 
@@ -71,9 +72,9 @@
         catch (e) { warn("persist complete " + pendingKey(s) + ": " + e); }
     }
 
-    // A leftover in_progress marker means the in-memory RaidInstance vanished
-    // before a terminal event (shutdown, crash, /reload). Re-arm once. The
-    // orphan sweep runs only in this exceptional path, never during normal ticks.
+    // A leftover in_progress marker first reconnects to any RaidInstance restored
+    // by the core. Only a genuinely missing snapshot is re-armed. This keeps the
+    // fired flag and active state transactional across logout/restart.
     function recoverInterrupted(server) {
         var recovered = 0;
         for (var i = 0; i < _schedule.length; i++) {
@@ -82,6 +83,18 @@
             try { interrupted = server.persistentData.getBoolean(pendingKey(s)); }
             catch (e) { warn("recover read " + pendingKey(s) + ": " + e); }
             if (!interrupted) continue;
+            var restoredIds = [];
+            try {
+                var M0 = (typeof RaidManager !== "undefined") ? RaidManager : null;
+                if (M0 && M0.activeIdsForDef) restoredIds = M0.activeIdsForDef(s.raidId);
+            } catch (eFind) { warn("recover active lookup " + s.raidId + ": " + eFind); }
+            if (restoredIds && restoredIds.length > 0) {
+                s.fired = true;
+                s.pending = true;
+                s.pendingIds = restoredIds;
+                console.info("[RaidSched] resumed interrupted '" + s.raidId + "' with " + restoredIds.length + " restored instance(s)");
+                continue;
+            }
             s.fired = false;
             s.pending = false;
             s.pendingIds = [];

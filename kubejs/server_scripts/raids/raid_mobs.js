@@ -17,8 +17,9 @@
 //     the concrete item type before it can shoot or throw.
 //   - SUNSCREEN: every burnable undead (vanilla + modded zombie/skeleton
 //     family) wears a helmet so dawn doesn't torch leftover raid mobs.
-//   - Armor scales with the day arc: iron/chainmail early, Born in Chaos
-//     dark_metal on mid/late elites, Advanced Netherite on champion tiers.
+//   - Armor follows the raid arc without a ticking system: leather on day 10,
+//     iron/chain on day 20, iron/diamond on day 30, Iron's Netherite Mage on
+//     days 40-60, Cataclysm Ignis on 70-80 and Abyssal Warlock on 90-100.
 //   - Modded mobs otherwise bring their own AI + native weapons; the raid
 //     engine's targeting loop drives them regardless.
 //   - Infiltration layer: MINER_* dig to the player with tiered picks (needs
@@ -39,45 +40,121 @@
     var BIC = "born_in_chaos_v1:";
     var CAT = "cataclysm:";
     var ISS = "irons_spellbooks:";
+    var CSS = "cataclysm_spellbooks:";
     var ADN = "advancednetherite:";
     var SW  = "spartan_weaponry_unofficial:";
     var MOW = "mowziesmobs:";
     var BFB = "block_factorys_bosses:";
     var DDG = "darkdoppelganger:";
-    var DM_HELM  = BIC + "dark_metal_armor_helmet";
-    var DM_CHEST = BIC + "dark_metal_armor_chestplate";
-    var DM_LEGS  = BIC + "dark_metal_armor_leggings";
-    var DM_BOOTS = BIC + "dark_metal_armor_boots";
+    var ARMOR_LEATHER = {
+        head: "minecraft:leather_helmet", chest: "minecraft:leather_chestplate",
+        legs: "minecraft:leather_leggings", feet: "minecraft:leather_boots"
+    };
+    var ARMOR_IRON_CHAIN = {
+        head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate",
+        legs: "minecraft:chainmail_leggings", feet: "minecraft:iron_boots"
+    };
+    var ARMOR_IRON_DIAMOND = {
+        head: "minecraft:diamond_helmet", chest: "minecraft:diamond_chestplate",
+        legs: "minecraft:iron_leggings", feet: "minecraft:diamond_boots"
+    };
+    var ARMOR_ARCANE_NETHERITE = {
+        head: ISS + "netherite_mage_helmet", chest: ISS + "netherite_mage_chestplate",
+        legs: ISS + "netherite_mage_leggings", feet: ISS + "netherite_mage_boots"
+    };
+    var ARMOR_IGNIS_WARLOCK = {
+        head: CSS + "ignis_helmet", chest: CSS + "ignis_chestplate",
+        legs: CSS + "ignis_leggings", feet: CSS + "ignis_boots"
+    };
+    var ARMOR_ABYSSAL_WARLOCK = {
+        head: CSS + "abyssal_warlock_helmet", chest: CSS + "abyssal_warlock_chestplate",
+        legs: CSS + "abyssal_warlock_leggings", feet: CSS + "abyssal_warlock_boots"
+    };
+
+    function equipWith(mainhand, armor) {
+        var out = {
+            head: armor.head, chest: armor.chest, legs: armor.legs, feet: armor.feet
+        };
+        if (mainhand) out.mainhand = mainhand;
+        return out;
+    }
+
+    function miner(mainhand, armor, maxHealth, speed) {
+        var out = {
+            type: "minecraft:zombie",
+            presets: ["mobile", "superMiner"],
+            equip: equipWith(mainhand, armor),
+            nbt: { IsBaby: false, Fire: -1 }
+        };
+        var args = [];
+        if (maxHealth) args.push("attributes/max_health=" + maxHealth);
+        if (speed) args.push("attributes/movement_speed=" + speed);
+        if (args.length) out.extraArgs = args;
+        return out;
+    }
+
+    function bowSkeleton(armor, maxHealth) {
+        var out = {
+            type: "minecraft:skeleton",
+            presets: ["mobile", "skirmisher"],
+            equip: equipWith("minecraft:bow", armor),
+            nbt: { Fire: -1 }
+        };
+        if (maxHealth) out.extraArgs = ["attributes/max_health=" + maxHealth];
+        return out;
+    }
 
     var Mobs = {
         // ================= Vanilla — infiltration layer =================
         // Miner: digs straight toward the player. Visible pick is cosmetic
         // (tool_requirement=NONE). Helmet doubles as sunscreen.
-        MINER_ZOMBIE:   { type: "minecraft:zombie", presets: ["mobile", "superMiner"],
-                          equip: { mainhand: "minecraft:iron_pickaxe",
-                                   head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate" },
-                          nbt: { IsBaby: false, Fire: -1 } },
-        // Mid-game miner: double health, dark-metal plate.
-        MINER_STRONG:   { type: "minecraft:zombie", presets: ["mobile", "superMiner"],
-                          equip: { mainhand: "minecraft:diamond_pickaxe", head: DM_HELM, chest: DM_CHEST },
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
-        // Late-game miner: 80 HP, faster, full dark-metal.
-        MINER_ELITE:    { type: "minecraft:zombie", presets: ["mobile", "superMiner"],
-                          equip: { mainhand: ADN + "netherite_iron_pickaxe",
-                                   head: DM_HELM, chest: DM_CHEST, legs: DM_LEGS, feet: DM_BOOTS },
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=80", "attributes/movement_speed=0.3"] },
+        MINER_ZOMBIE:         miner("minecraft:iron_pickaxe", ARMOR_LEATHER, 0, 0),
+        MINER_LEATHER_STRONG: miner("minecraft:diamond_pickaxe", ARMOR_LEATHER, 40, 0),
+        MINER_IRON:           miner("minecraft:iron_pickaxe", ARMOR_IRON_CHAIN, 0, 0),
+        MINER_STRONG:         miner("minecraft:diamond_pickaxe", ARMOR_IRON_CHAIN, 40, 0),
+        MINER_DIAMOND:        miner("minecraft:diamond_pickaxe", ARMOR_IRON_DIAMOND, 0, 0),
+        MINER_VETERAN:        miner("minecraft:diamond_pickaxe", ARMOR_IRON_DIAMOND, 40, 0),
+        MINER_DARK:           miner(ADN + "netherite_iron_pickaxe", ARMOR_ARCANE_NETHERITE, 40, 0),
+        MINER_ELITE:          miner(ADN + "netherite_iron_pickaxe", ARMOR_ARCANE_NETHERITE, 80, 0.3),
+        MINER_CHAMPION:       miner(ADN + "netherite_iron_pickaxe", ARMOR_IGNIS_WARLOCK, 80, 0.3),
+        MINER_MYTHIC:         miner(ADN + "netherite_diamond_pickaxe", ARMOR_ABYSSAL_WARLOCK, 80, 0.3),
         // Teleports onto the player with ender pearls — walls don't matter.
         PEARL_ZOMBIE:   { type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
-                          equip: { mainhand: "minecraft:ender_pearl",
-                                   head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate" },
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_IRON_CHAIN),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
+        PEARL_ZOMBIE_VETERAN:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_IRON_DIAMOND),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
+        PEARL_ZOMBIE_ELITE:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_ARCANE_NETHERITE),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
+        PEARL_ZOMBIE_CHAMPION:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_IGNIS_WARLOCK),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=40"] },
+        PEARL_ZOMBIE_MYTHIC:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
+                          equip: equipWith("minecraft:ender_pearl", ARMOR_ABYSSAL_WARLOCK),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=40"] },
         // Picks up a fellow raid mob and hurls it at the player — delivers
         // melee over walls (EAI thrower; players themselves can't be grabbed).
         TOSSER:         { type: "minecraft:zombie", presets: ["mobile", "thrower"],
-                          equip: { mainhand: SW + "iron_battleaxe", head: DM_HELM, chest: DM_CHEST },
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_IRON_DIAMOND),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=50"] },
+        TOSSER_ELITE:   { type: "minecraft:zombie", presets: ["mobile", "thrower"],
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_ARCANE_NETHERITE),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=50"] },
+        TOSSER_CHAMPION:{ type: "minecraft:zombie", presets: ["mobile", "thrower"],
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_IGNIS_WARLOCK),
+                          nbt: { IsBaby: false, Fire: -1 },
+                          extraArgs: ["attributes/max_health=50"] },
+        TOSSER_MYTHIC:  { type: "minecraft:zombie", presets: ["mobile", "thrower"],
+                          equip: equipWith(SW + "iron_battleaxe", ARMOR_ABYSSAL_WARLOCK),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=50"] },
         // Breaching creeper: launches at walls, TNT-like blast.
@@ -86,21 +163,19 @@
         WEB_SPIDER:     { type: "minecraft:cave_spider", presets: ["mobile", "webShooter"] },
 
         // ================= Vanilla — ranged / melee line ================
-        BOW_SKELETON:      { type: "minecraft:skeleton", presets: ["mobile", "skirmisher"],
-                             equip: { mainhand: "minecraft:bow",
-                                      head: "minecraft:iron_helmet", chest: "minecraft:chainmail_chestplate" },
-                             nbt: { Fire: -1 } },
+        BOW_SKELETON:      bowSkeleton(ARMOR_LEATHER, 0),
+        IRON_SKELETON:     bowSkeleton(ARMOR_IRON_CHAIN, 0),
         // Heavier bow line (skeletons can't fire crossbows — bow + armor).
-        ARMORED_SKELETON:  { type: "minecraft:skeleton", presets: ["mobile", "skirmisher"],
-                             equip: { mainhand: "minecraft:bow",
-                                      head: "minecraft:iron_helmet", chest: "minecraft:iron_chestplate", legs: "minecraft:iron_leggings" },
-                             nbt: { Fire: -1 },
-                             extraArgs: ["attributes/max_health=40"] },
+        ARMORED_SKELETON:  bowSkeleton(ARMOR_IRON_CHAIN, 40),
+        DIAMOND_SKELETON:  bowSkeleton(ARMOR_IRON_DIAMOND, 40),
+        DARK_SKELETON:     bowSkeleton(ARMOR_ARCANE_NETHERITE, 40),
+        CHAMPION_SKELETON: bowSkeleton(ARMOR_IGNIS_WARLOCK, 40),
+        MYTHIC_SKELETON:   bowSkeleton(ARMOR_ABYSSAL_WARLOCK, 0),
         TRIDENT_DROWNED:   { type: "minecraft:drowned", presets: ["mobile", "skirmisher"],
-                             equip: { mainhand: "minecraft:trident", head: "minecraft:iron_helmet" } },
+                             equip: equipWith("minecraft:trident", ARMOR_ARCANE_NETHERITE) },
         // Wither skeletons don't sunburn; dark-metal helm is pure menace.
         WITHER_SKELETON:   { type: "minecraft:wither_skeleton", presets: ["mobile"],
-                             equip: { mainhand: SW + "iron_greatsword", head: DM_HELM } },
+                             equip: equipWith(SW + "iron_greatsword", ARMOR_IGNIS_WARLOCK) },
 
         // ================= Vanilla — illager warband ====================
         PILLAGER:        { type: "minecraft:pillager", presets: ["mobile"],
@@ -118,13 +193,19 @@
         BLAZE:           { type: "minecraft:blaze" },
 
         // ================= Born in Chaos — undead rabble ================
-        // Iron helmets = sunscreen for the burnable zombie/skeleton family.
+        // Early undead wear leather; later variants are selected by day files.
         ROTTING_ZOMBIE:  { type: BIC + "decaying_zombie",
-                           equip: { mainhand: SW + "stone_spear", head: "minecraft:iron_helmet" } },
+                           equip: equipWith(SW + "stone_spear", ARMOR_LEATHER) },
+        ROTTING_ZOMBIE_DARK:{ type: BIC + "decaying_zombie",
+                           equip: equipWith(SW + "stone_spear", ARMOR_ARCANE_NETHERITE) },
         ZOMBIE_BRUISER:  { type: BIC + "zombie_bruiser",
-                           equip: { mainhand: SW + "iron_warhammer", head: "minecraft:iron_helmet" } },
+                           equip: equipWith(SW + "iron_warhammer", ARMOR_LEATHER) },
+        ZOMBIE_BRUISER_CHAMPION:{ type: BIC + "zombie_bruiser",
+                           equip: equipWith(SW + "iron_warhammer", ARMOR_IGNIS_WARLOCK) },
+        ZOMBIE_BRUISER_MYTHIC:{ type: BIC + "zombie_bruiser",
+                           equip: equipWith(SW + "iron_warhammer", ARMOR_ABYSSAL_WARLOCK) },
         LUMBERJACK:      { type: BIC + "zombie_lumberjack",
-                           equip: { mainhand: BIC + "wood_splitter_axe", head: "minecraft:iron_helmet" } },
+                           equip: equipWith(BIC + "wood_splitter_axe", ARMOR_LEATHER) },
         BARREL_ZOMBIE:   { type: BIC + "barrel_zombie" },
         ZOMBIE_CLOWN:    { type: BIC + "zombie_clown" },
         MAGGOT:          { type: BIC + "maggot" },
@@ -135,7 +216,7 @@
 
         // ================= Born in Chaos — bones ========================
         DECREPIT_SKELETON:{ type: BIC + "decrepit_skeleton",
-                            equip: { head: "minecraft:iron_helmet" } },
+                            equip: equipWith(null, ARMOR_IRON_CHAIN) },
         BABY_SKELETON:   { type: BIC + "baby_skeleton" },
         BONE_IMP:        { type: BIC + "bone_imp" },
         BONESCALLER:     { type: BIC + "bonescaller" },        // summons baby skeletons
@@ -203,11 +284,11 @@
         ENDER_GOLEM:     { type: CAT + "ender_golem", miniboss: true, breacher: true,
                            nbt: { is_Awaken: true } },
         DRAUGR:          { type: CAT + "draugr",
-                           equip: { mainhand: SW + "iron_battleaxe", head: "minecraft:iron_helmet" } },
+                           equip: equipWith(SW + "iron_battleaxe", ARMOR_ABYSSAL_WARLOCK) },
         ELITE_DRAUGR:    { type: CAT + "elite_draugr",
-                           equip: { mainhand: BIC + "sharpened_dark_metal_sword", head: DM_HELM } },
+                           equip: equipWith(BIC + "sharpened_dark_metal_sword", ARMOR_ABYSSAL_WARLOCK) },
         ROYAL_DRAUGR:    { type: CAT + "royal_draugr",
-                           equip: { mainhand: SW + "diamond_halberd", head: DM_HELM } },
+                           equip: equipWith(SW + "diamond_halberd", ARMOR_ABYSSAL_WARLOCK) },
         APTRGANGR:       { type: CAT + "aptrgangr", miniboss: true, breacher: true },
         // Burning Arena boss, HP-balanced for an open-field raid.
         MALEDICTUS:      { type: CAT + "maledictus", boss: true, breacher: true,
@@ -225,7 +306,7 @@
         // its skeleton-summoning wizard; raids lean on it as the summoner.
         CULTIST:         { type: ISS + "cultist" },
         CATACOMBS_ZOMBIE:{ type: ISS + "catacombs_zombie",
-                           equip: { mainhand: SW + "iron_longsword", head: "minecraft:iron_helmet" } },
+                           equip: equipWith(SW + "iron_longsword", ARMOR_ARCANE_NETHERITE) },
         PYROMANCER:      { type: ISS + "pyromancer" },
         CRYOMANCER:      { type: ISS + "cryomancer" },
         NECROMANCER:     { type: ISS + "necromancer" },        // summons undead

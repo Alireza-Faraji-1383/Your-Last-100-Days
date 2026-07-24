@@ -28,7 +28,7 @@
             .mob(M.DRAUGR).count(10)
             .mob(M.ELITE_DRAUGR).count(6)
             .mob(M.SOUL_SKELETON).count(4)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.MINER_MYTHIC).count(9)
         // --- Round 2: knights of chaos ---
         .round("Chaos Knights")
             .breather(200)
@@ -37,9 +37,9 @@
             .mob(M.ROYAL_DRAUGR).count(2)
             .mob(M.DOOR_KNIGHT).count(4)
             .mob(M.WITHER_KNIGHT).count(2)
-            .mob(M.TOSSER).count(2)
+            .mob(M.TOSSER_MYTHIC).count(2)
             .mob(M.ENDERMAPTERA).count(5)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.MINER_MYTHIC).count(8)
         // --- Round 3: the covenant reborn ---
         .round("Covenant Reborn")
             .breather(300)
@@ -50,8 +50,8 @@
             .mob(M.CRYOMANCER).count(1)
             .mob(M.PRIEST).count(1)
             .mob(M.APOTHECARIST).count(3)
-            .mob(M.PEARL_ZOMBIE).count(2)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.PEARL_ZOMBIE_MYTHIC).count(2)
+            .mob(M.MINER_MYTHIC).count(9)
         // --- Round 4: the summoner (miniboss) ---
         .round("The Summoner")
             .breather(300)
@@ -62,7 +62,7 @@
             .mob(M.WATCHER).count(3)
             .mob(M.ENDERMAPTERA).count(4)
             .mob(M.TNT_CREEPER).count(3)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.MINER_MYTHIC).count(9)
         // --- Round 5 (FINAL): IGNIS with regular troops, no minibosses ---
         .round("Ignis, the Dark Flame")
             .timeLimit(16800)
@@ -73,13 +73,12 @@
             .mob(M.ELITE_DRAUGR).count(2)
             .mob(M.IGNITED_BERSERKER).count(2)
             .mob(M.NAGA).count(2)
-            .mob(M.MINER_ELITE).count(9)
+            .mob(M.MINER_MYTHIC).count(9)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:netherite_ingot 2");
-                ctx.player.give("minecraft:enchanted_golden_apple 2");
-                ctx.player.give("irons_spellbooks:arcane_essence 12");
-                ctx.player.give("irons_spellbooks:epic_ink 2");
+      ctx.player.give("cataclysm:ignitium_ingot 2");
+      ctx.player.give("cataclysm_spellbooks:burning_knowledge_fragment 1");
+      ctx.player.give("irons_spellbooks:epic_ink 3");
             } catch (e) {}
         })
         .build();

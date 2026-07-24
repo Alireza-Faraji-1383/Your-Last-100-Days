@@ -31,7 +31,7 @@
             .mob(M.TRIDENT_DROWNED).count(5)
             .mob(M.THORNSHELL_CRAB).count(3)
             .mob(M.URCHINKIN).count(4)
-            .mob(M.MINER_STRONG).count(7)
+            .mob(M.MINER_DARK).count(7)
         // --- Round 2: the tide presses in ---
         .round("The Undertow")
             .breather(200)
@@ -51,7 +51,7 @@
             .mob(M.AMETHYST_CRAB).count(4)
             .mob(M.CLAWDIAN).count(2)
             .mob(M.DEEPLING_BRUTE).count(2)
-            .mob(M.PEARL_ZOMBIE).count(2)
+            .mob(M.PEARL_ZOMBIE_ELITE).count(2)
             .mob(M.MINER_ELITE).count(8)
         // --- Round 4 (FINAL): coral colossi + reef guard ---
         .round("Coral Colossi")
@@ -65,9 +65,9 @@
             .mob(M.MINER_ELITE).count(8)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:trident 1");
-                ctx.player.give("minecraft:diamond 10");
-                ctx.player.give("minecraft:golden_apple 3");
+      ctx.player.give("minecraft:heart_of_the_sea 1");
+      ctx.player.give("minecraft:trident 1");
+      ctx.player.give("cataclysm:crystallized_coral_fragments 8");
             } catch (e) {}
         })
         .build();

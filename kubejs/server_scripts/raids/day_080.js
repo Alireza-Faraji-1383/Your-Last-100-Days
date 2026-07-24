@@ -31,7 +31,7 @@
             .mob(M.BLAZE).count(4)
             .mob(M.KOBOLETON).count(3)
             .mob(M.FLAMING_SHOOTER).count(4)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.MINER_CHAMPION).count(8)
         // --- Round 2: the ignited warband ---
         .round("Ignited Warband")
             .breather(200)
@@ -41,7 +41,7 @@
             .mob(M.ASH_GUARD).count(4)
             .mob(M.FLAMING_GUARD).count(3)
             .mob(M.KOBOLEDIATOR).count(2)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.MINER_CHAMPION).count(8)
         // --- Round 3: revenants breach the line ---
         .round("The Revenants")
             .breather(300)
@@ -50,8 +50,8 @@
             .mob(M.KOBOLEDIATOR).count(4)
             .mob(M.FLAMING_SHOOTER).count(3)
             .mob(M.TNT_CREEPER).count(4)
-            .mob(M.PEARL_ZOMBIE).count(2)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.PEARL_ZOMBIE_CHAMPION).count(2)
+            .mob(M.MINER_CHAMPION).count(8)
         // --- Round 4 (FINAL): MALEDICTUS ---
         .round("Maledictus")
             .timeLimit(16800)
@@ -61,12 +61,12 @@
             .mob(M.FLAMING_GUARD).count(3)
             .mob(M.IGNITED_BERSERKER).count(2)
             .mob(M.SEARED_SPIRIT).count(2)
-            .mob(M.MINER_ELITE).count(8)
+            .mob(M.MINER_CHAMPION).count(8)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:netherite_ingot 1");
-                ctx.player.give("minecraft:netherite_scrap 4");
-                ctx.player.give("minecraft:enchanted_golden_apple 1");
+      ctx.player.give("cataclysm:cursium_ingot 4");
+      ctx.player.give("irons_spellbooks:fire_upgrade_orb 1");
+      ctx.player.give("minecraft:enchanted_golden_apple 1");
             } catch (e) {}
         })
         .build();
