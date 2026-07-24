@@ -36,6 +36,7 @@
             .mob(M.IRON_SKELETON).count(10)
             .mob(M.ARMORED_SKELETON).count(7)
             .mob(M.BABY_SKELETON).count(3)
+            .mob(M.DARK_VORTEX).count(1)
             .mob(M.MINER_IRON).count(6)
         // --- Round 3: summoners + bomb throwers + webs ---
         .round("The Callers")
@@ -43,6 +44,7 @@
             .timeLimit(6000)
             .mob(M.BONESCALLER).count(4)
             .mob(M.SIAMESE_SKELETON).count(3)
+            .mob(M.DARK_VORTEX).count(1)
             .mob(M.DEMOMAN).count(3)
             .mob(M.WEB_SPIDER).count(5)
             .mob(M.SOUL_SKELETON).count(2)

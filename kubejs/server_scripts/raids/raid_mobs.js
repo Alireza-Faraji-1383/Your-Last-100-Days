@@ -264,6 +264,7 @@
         BABY_SKELETON:   { type: BIC + "baby_skeleton", nbt: { Fire: -20 } },
         BONE_IMP:        { type: BIC + "bone_imp" },
         BONESCALLER:     { type: BIC + "bonescaller", nbt: { Fire: -20 } }, // summons baby skeletons
+        DARK_VORTEX:     { type: BIC + "dark_vortex" },        // mobile ranged bone support
         DEMOMAN:         { type: BIC + "skeleton_demoman" },   // lobs bombs — soft breach
         THRASHER:        { type: BIC + "skeleton_thrasher" },  // heavy bruiser
         SIAMESE_SKELETON:{ type: BIC + "siamese_skeletons" },

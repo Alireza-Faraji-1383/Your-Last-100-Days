@@ -1,0 +1,7 @@
+{
+  "parent": "kubejs:block/raid_standard_base",
+  "textures": {
+    "front": "kubejs:block/raid_standard_day80_front",
+    "back": "kubejs:block/raid_standard_day80_back"
+  }
+}

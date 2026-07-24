@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "kubejs:item/raid_icon_day30"
+    "layer0": "kubejs:item/raid_standard_day20"
   }
 }
