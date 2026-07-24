@@ -34,6 +34,7 @@
         .round("Grave Lights")
             .breather(200)
             .timeLimit(6000)
+            .mob(M.WITCH).count(1)
             .mob(M.FIRELIGHT).count(7)
             .mob(M.PUMPKIN_SPIRIT).count(4)
             .mob(M.SEARED_SPIRIT).count(2)

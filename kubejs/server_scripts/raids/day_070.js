@@ -45,6 +45,7 @@
         .round("The Henchmen")
             .breather(300)
             .timeLimit(6000)
+            .mob(M.WITCH).count(1)
             .mob(M.LIFESTEALER_BOSS).count(1)
             .mob(M.KRAMPUS_HENCHMAN).count(5)
             .mob(M.THRASHER).count(3)

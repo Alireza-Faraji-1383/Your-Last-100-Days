@@ -36,6 +36,7 @@
         .round("Grave Rot")
             .breather(200)
             .timeLimit(6000)
+            .mob(M.WITCH).count(1)
             .mob(M.LUMBERJACK).count(5)
             .mob(M.ZOMBIE_CLOWN).count(4)
             .mob(M.DREAD_HOUND).count(6)

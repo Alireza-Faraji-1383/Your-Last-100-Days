@@ -125,6 +125,7 @@
 
     var Mobs = {
         // ================= Vanilla — infiltration layer =================
+        WITCH:                { type: "minecraft:witch" },
         // Miner: digs straight toward the player. Visible pick is cosmetic
         // (tool_requirement=NONE). Helmet doubles as sunscreen.
         MINER_ZOMBIE:         miner("minecraft:iron_pickaxe", ARMOR_LEATHER, 0, 0),

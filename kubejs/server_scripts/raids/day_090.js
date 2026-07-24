@@ -47,6 +47,7 @@
             .mob(M.MISSIONARY_BOSS).count(1)
             .mob(M.NECROMANCER).count(4)
             .mob(M.ARCHEVOKER).count(4)
+            .mob(M.PYROMANCER).count(1)
             .mob(M.CRYOMANCER).count(1)
             .mob(M.PRIEST).count(1)
             .mob(M.APOTHECARIST).count(3)

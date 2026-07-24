@@ -44,6 +44,7 @@
         .round("The Warlocks")
             .breather(200)
             .timeLimit(6000)
+            .mob(M.WITCH).count(1)
             .mob(M.EVOKER).count(2)
             .mob(M.APOTHECARIST).count(1)
             .mob(M.MAGEHUNTER).count(3)
