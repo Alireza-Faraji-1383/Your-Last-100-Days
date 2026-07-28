@@ -526,15 +526,6 @@
 			id: "016FC2B5041148D6"
 			rewards: [
 				{
-					count: 8
-					id: "142FF17EFBE9809C"
-					item: {
-						count: 1
-						id: "minecraft:lapis_lazuli"
-					}
-					type: "item"
-				}
-				{
 					id: "083FA918A1ACD8D2"
 					type: "xp"
 					xp: 200
@@ -548,7 +539,21 @@
 					}
 					type: "item"
 				}
+				{
+					id: "32F2D30D9A9AEFC6"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
 			]
+			tasks: [{
+				advancement: "minecraft:story/cure_zombie_villager"
+				criterion: ""
+				id: "213BF94FE5D44746"
+				type: "advancement"
+			}]
 			x: -4.5d
 			y: 9.0d
 		}
