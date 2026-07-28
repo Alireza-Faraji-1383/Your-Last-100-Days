@@ -4,14 +4,14 @@ StartupEvents.registry("block", function (event) {
     var standards = [
         [10,  "The Rotting Dawn"],
         [20,  "Night of Bones"],
-        [30,  "The Warband"],
-        [40,  "Night of Spirits"],
+        [30,  "The Bannerless Host"],
+        [40,  "Wrath of the Ancient Land"],
         [50,  "The Arcane Covenant"],
-        [60,  "Rise of the Deep"],
-        [70,  "The Rotten Legion"],
+        [60,  "The Court of the Deep"],
+        [70,  "The Cursed Legion"],
         [80,  "The Burning Siege"],
         [90,  "The Dark Concord"],
-        [100, "The Last Dawn"]
+        [100, "The Last Claimant"]
     ];
 
     for (var i = 0; i < standards.length; i++) {

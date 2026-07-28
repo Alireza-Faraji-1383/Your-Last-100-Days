@@ -1,7 +1,7 @@
 // priority: 60
 // kubejs/server_scripts/raids/day_040.js
 //
-// NIGHT 40 — "Night of Spirits" (chapter 4: the veil tears)
+// NIGHT 40 — "Wrath of the Ancient Land" (chapter 4: the veil tears)
 // A surrounding horror hunt: Born in Chaos spirits/hounds meet Mowzie's
 // aerial predators. Phantom creepers and pearls make walls unreliable.
 
@@ -14,7 +14,7 @@
     var M = RaidMobs;
 
     Raid("day40_night_of_spirits")
-        .title("Night of Spirits")
+        .title("Wrath of the Ancient Land")
         .spawn(80, 100)
         .spawnPattern("ring")
         .aggroRadius(40)

@@ -8,7 +8,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "text": "Day 40: Defeat the Night of Spirits raid."
+      "text": "Day 40: Defeat the Wrath of the Ancient Land raid."
     },
     "frame": "challenge",
     "hidden": false,
@@ -19,7 +19,7 @@
     "show_toast": true,
     "title": {
       "color": "aqua",
-      "text": "Day 40 — Spirits Banished"
+      "text": "Day 40 — Wrath of the Ancient Land"
     }
   },
   "requirements": [

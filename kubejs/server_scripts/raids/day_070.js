@@ -1,7 +1,7 @@
 // priority: 60
 // kubejs/server_scripts/raids/day_070.js
 //
-// NIGHT 70 — "The Rotten Legion" (chapter 7: an army with a general)
+// NIGHT 70 — "The Cursed Legion" (chapter 7: an army with a general)
 // Born in Chaos elite army marching as one horde. Dedicated frontline,
 // demolition and command waves culminate in Krampus and a wither guard.
 
@@ -14,7 +14,7 @@
     var M = RaidMobs;
 
     Raid("day70_rotten_legion")
-        .title("The Rotten Legion")
+        .title("The Cursed Legion")
         .spawn(80, 100)
         .spawnPattern("horde")
         .aggroRadius(40)

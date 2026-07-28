@@ -25,14 +25,14 @@ public final class RaidHudMod {
     private static final Set<String> RAID_TITLES = Set.of(
         "The Rotting Dawn",
         "Night of Bones",
-        "The Warband",
-        "Night of Spirits",
+        "The Bannerless Host",
+        "Wrath of the Ancient Land",
         "The Arcane Covenant",
-        "Rise of the Deep",
-        "The Rotten Legion",
+        "The Court of the Deep",
+        "The Cursed Legion",
         "The Burning Siege",
         "The Dark Concord",
-        "The Last Dawn"
+        "The Last Claimant"
     );
 
     private static final int FRAME_WIDTH = 346;

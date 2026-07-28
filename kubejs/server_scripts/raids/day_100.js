@@ -1,7 +1,7 @@
 // priority: 60
 // kubejs/server_scripts/raids/day_100.js
 //
-// NIGHT 100 — "The Last Dawn" (finale: everything comes at once)
+// NIGHT 100 — "The Last Claimant" (finale: everything comes at once)
 // Six combined-arms rounds recapping every faction in the pack — wild hunt,
 // bones, pirate breach, magic and elites — then Dark Doppelganger alone as boss.
 // Survive this and the hundred days are over.
@@ -15,7 +15,7 @@
     var M = RaidMobs;
 
     Raid("day100_last_dawn")
-        .title("The Last Dawn")
+        .title("The Last Claimant")
         .spawn(80, 100)
         .spawnPattern("horde")
         .aggroRadius(40)

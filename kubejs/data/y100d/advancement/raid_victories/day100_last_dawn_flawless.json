@@ -8,7 +8,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "text": "Conquer the final raid and Dark Doppelganger without dying."
+      "text": "Defeat the Dark Doppelganger, the Last Claimant, without dying."
     },
     "frame": "challenge",
     "hidden": false,
@@ -20,7 +20,7 @@
     "title": {
       "bold": true,
       "color": "gold",
-      "text": "Day 100 - Immortal at Last Dawn"
+      "text": "Day 100 - The Unchallenged Claimant"
     }
   },
   "requirements": [

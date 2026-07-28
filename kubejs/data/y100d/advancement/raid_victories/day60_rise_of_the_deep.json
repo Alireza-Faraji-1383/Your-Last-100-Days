@@ -8,7 +8,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "text": "Day 60: Defeat the Rise of the Deep raid."
+      "text": "Day 60: Defeat The Court of the Deep raid."
     },
     "frame": "challenge",
     "hidden": false,
@@ -19,7 +19,7 @@
     "show_toast": true,
     "title": {
       "color": "blue",
-      "text": "Day 60 — The Deep Recedes"
+      "text": "Day 60 — The Court of the Deep"
     }
   },
   "requirements": [

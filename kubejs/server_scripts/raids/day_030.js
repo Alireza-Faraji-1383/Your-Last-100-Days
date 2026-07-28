@@ -1,7 +1,7 @@
 // priority: 60
 // kubejs/server_scripts/raids/day_030.js
 //
-// NIGHT 30 — "The Warband" (chapter 3: men are worse than monsters)
+// NIGHT 30 — "The Bannerless Host" (chapter 3: men are worse than monsters)
 // Illagers, pirate mercenaries and spell-hunters march as one army. Real
 // siege roles: crossfire, TNT creepers, door knights, throwers and miners.
 
@@ -14,7 +14,7 @@
     var M = RaidMobs;
 
     Raid("day30_warband")
-        .title("The Warband")
+        .title("The Bannerless Host")
         .spawn(80, 100)
         .spawnPattern("horde")
         .aggroRadius(40)

@@ -8,7 +8,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "text": "Day 30: Defeat The Warband raid."
+      "text": "Day 30: Defeat The Bannerless Host raid."
     },
     "frame": "challenge",
     "hidden": false,
@@ -19,7 +19,7 @@
     "show_toast": true,
     "title": {
       "color": "gold",
-      "text": "Day 30 — Warband Crushed"
+      "text": "Day 30 — The Bannerless Host"
     }
   },
   "requirements": [

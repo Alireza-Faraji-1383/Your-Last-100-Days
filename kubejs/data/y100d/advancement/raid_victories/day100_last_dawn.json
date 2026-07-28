@@ -8,7 +8,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "text": "Day 100: Defeat the Dark Doppelganger and conquer the final raid."
+      "text": "Day 100: Defeat the Dark Doppelganger, the Last Claimant."
     },
     "frame": "challenge",
     "hidden": false,
@@ -20,7 +20,7 @@
     "title": {
       "bold": true,
       "color": "gold",
-      "text": "Day 100 — The Last Dawn"
+      "text": "Day 100 — The Last Claimant"
     }
   },
   "requirements": [

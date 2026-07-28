@@ -8,7 +8,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "text": "Day 70: Defeat The Rotten Legion raid."
+      "text": "Day 70: Defeat The Cursed Legion raid."
     },
     "frame": "challenge",
     "hidden": false,
@@ -19,7 +19,7 @@
     "show_toast": true,
     "title": {
       "color": "dark_gray",
-      "text": "Day 70 — Legion Put to Rest"
+      "text": "Day 70 — The Cursed Legion"
     }
   },
   "requirements": [

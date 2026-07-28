@@ -1,7 +1,7 @@
 // priority: 60
 // kubejs/server_scripts/raids/day_060.js
 //
-// NIGHT 60 — "Rise of the Deep" (chapter 6: the sea marches inland)
+// NIGHT 60 — "The Court of the Deep" (chapter 6: the sea marches inland)
 // Cataclysm deepling invasion reinforced by reef beasts and armored crabs;
 // finale is a coralssus pair with a mixed breach escort.
 // No anglers — fishing-hook mobs are banned from raids.
@@ -16,7 +16,7 @@
     var M = RaidMobs;
 
     Raid("day60_rise_of_the_deep")
-        .title("Rise of the Deep")
+        .title("The Court of the Deep")
         .spawn(80, 100)
         .spawnPattern("ring")
         .aggroRadius(40)
