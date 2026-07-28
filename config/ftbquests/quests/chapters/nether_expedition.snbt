@@ -1,0 +1,1028 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "nether_expedition"
+	group: ""
+	icon: {
+		id: "minecraft:respawn_anchor"
+	}
+	id: "4E7A000000000000"
+	images: [{
+		height: 38.0d
+		image: "minecraft:textures/gui/advancements/backgrounds/nether.png"
+		order: -100
+		rotation: 0.0d
+		width: 38.0d
+		x: 0.0d
+		y: -1.0d
+	}]
+	order_index: 6
+	quest_links: [ ]
+	quests: [
+		{
+			dependencies: ["2B42A1CB36B3751A"]
+			id: "4E7A000000000101"
+			rewards: [
+				{
+					id: "4E7A000000000103"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:long_fire_resistance"
+							}
+						}
+						count: 1
+						id: "minecraft:potion"
+					}
+					type: "item"
+				}
+				{
+					count: 6
+					id: "4E7A000000000104"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000105"
+					type: "xp"
+					xp: 75
+				}
+			]
+			shape: "rsquare"
+			size: 2.0d
+			tasks: [{
+				advancement: "minecraft:nether/root"
+				criterion: ""
+				id: "4E7A000000000102"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["4E7A000000000101"]
+			id: "4E7A000000000201"
+			rewards: [
+				{
+					count: 16
+					id: "4E7A000000000203"
+					item: {
+						count: 1
+						id: "minecraft:arrow"
+					}
+					type: "item"
+				}
+				{
+					count: 8
+					id: "4E7A000000000204"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000205"
+					type: "xp"
+					xp: 100
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/return_to_sender"
+				criterion: ""
+				id: "4E7A000000000202"
+				type: "advancement"
+			}]
+			x: -6.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["4E7A000000000201"]
+			id: "4E7A000000000301"
+			optional: true
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000000303"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000304"
+					type: "xp"
+					xp: 300
+				}
+				{
+					exclude_from_claim_all: true
+					id: "4E7A000000000305"
+					table_id: 5654832282117140481L
+					type: "random"
+				}
+			]
+			shape: "hexagon"
+			tasks: [{
+				advancement: "minecraft:nether/uneasy_alliance"
+				criterion: ""
+				id: "4E7A000000000302"
+				type: "advancement"
+			}]
+			x: -8.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["4E7A000000000101"]
+			id: "4E7A000000000401"
+			rewards: [
+				{
+					count: 4
+					id: "4E7A000000000403"
+					item: {
+						count: 1
+						id: "minecraft:gold_ingot"
+					}
+					type: "item"
+				}
+				{
+					count: 8
+					id: "4E7A000000000404"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000405"
+					type: "xp"
+					xp: 75
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/distract_piglin"
+				criterion: ""
+				id: "4E7A000000000402"
+				type: "advancement"
+			}]
+			x: 5.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["4E7A000000000401"]
+			id: "4E7A000000000501"
+			rewards: [
+				{
+					id: "4E7A000000000503"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					count: 12
+					id: "4E7A000000000504"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000505"
+					type: "xp"
+					xp: 125
+				}
+			]
+			shape: "hexagon"
+			tasks: [{
+				advancement: "minecraft:nether/find_bastion"
+				criterion: ""
+				id: "4E7A000000000502"
+				type: "advancement"
+			}]
+			x: 6.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["4E7A000000000501"]
+			id: "4E7A000000000601"
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000000603"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000604"
+					type: "xp"
+					xp: 250
+				}
+				{
+					exclude_from_claim_all: true
+					id: "4E7A000000000605"
+					table_id: 5654832282117140481L
+					type: "random"
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/loot_bastion"
+				criterion: ""
+				id: "4E7A000000000602"
+				type: "advancement"
+			}]
+			x: 6.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["4E7A000000000501"]
+			id: "4E7A000000000701"
+			optional: true
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000000703"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000704"
+					type: "xp"
+					xp: 250
+				}
+				{
+					exclude_from_claim_all: true
+					id: "4E7A000000000705"
+					table_id: 5654832282117140481L
+					type: "random"
+				}
+			]
+			tasks: [{
+				advancement: "repurposed_structures:bastion_underground"
+				criterion: ""
+				id: "4E7A000000000702"
+				type: "advancement"
+			}]
+			x: 8.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["4E7A000000000501"]
+			id: "4E7A000000000801"
+			optional: true
+			rewards: [
+				{
+					count: 3
+					id: "4E7A000000000803"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000804"
+					type: "xp"
+					xp: 300
+				}
+				{
+					exclude_from_claim_all: true
+					id: "4E7A000000000805"
+					table_id: 5654832282117140481L
+					type: "random"
+				}
+			]
+			tasks: [{
+				advancement: "repurposed_structures:city_nether"
+				criterion: ""
+				id: "4E7A000000000802"
+				type: "advancement"
+			}]
+			x: 8.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["4E7A000000000101"]
+			id: "4E7A000000000901"
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000000903"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:fire_resistance"
+							}
+						}
+						count: 1
+						id: "minecraft:potion"
+					}
+					type: "item"
+				}
+				{
+					count: 12
+					id: "4E7A000000000904"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000905"
+					type: "xp"
+					xp: 100
+				}
+			]
+			shape: "hexagon"
+			tasks: [{
+				advancement: "minecraft:nether/find_fortress"
+				criterion: ""
+				id: "4E7A000000000902"
+				type: "advancement"
+			}]
+			x: -2.0d
+			y: -3.0d
+		}
+		{
+			dependencies: ["4E7A000000000901"]
+			id: "4E7A000000000A01"
+			rewards: [
+				{
+					count: 8
+					id: "4E7A000000000A03"
+					item: {
+						count: 1
+						id: "minecraft:nether_wart"
+					}
+					type: "item"
+				}
+				{
+					count: 16
+					id: "4E7A000000000A04"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000A05"
+					type: "xp"
+					xp: 125
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/obtain_blaze_rod"
+				criterion: ""
+				id: "4E7A000000000A02"
+				type: "advancement"
+			}]
+			x: -2.0d
+			y: -5.0d
+		}
+		{
+			dependencies: ["4E7A000000000A01"]
+			id: "4E7A000000000B01"
+			rewards: [
+				{
+					count: 8
+					id: "4E7A000000000B03"
+					item: {
+						count: 1
+						id: "minecraft:redstone"
+					}
+					type: "item"
+				}
+				{
+					count: 8
+					id: "4E7A000000000B04"
+					item: {
+						count: 1
+						id: "minecraft:glowstone_dust"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000B05"
+					type: "xp"
+					xp: 125
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/brew_potion"
+				criterion: ""
+				id: "4E7A000000000B02"
+				type: "advancement"
+			}]
+			x: -2.0d
+			y: -7.0d
+		}
+		{
+			dependencies: ["4E7A000000000B01"]
+			id: "4E7A000000000C01"
+			optional: true
+			rewards: [
+				{
+					count: 4
+					id: "4E7A000000000C03"
+					item: {
+						count: 1
+						id: "minecraft:honey_bottle"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000C04"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000C05"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				advancement: "supplementaries:nether/goblet"
+				criterion: ""
+				id: "4E7A000000000C02"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: -8.0d
+		}
+		{
+			dependencies: ["4E7A000000000B01"]
+			id: "4E7A000000000D01"
+			optional: true
+			rewards: [
+				{
+					count: 5
+					id: "4E7A000000000D03"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000D04"
+					type: "xp"
+					xp: 600
+				}
+				{
+					exclude_from_claim_all: true
+					id: "4E7A000000000D05"
+					table_id: 5654832282117140481L
+					type: "random"
+				}
+			]
+			shape: "hexagon"
+			tasks: [{
+				advancement: "minecraft:nether/all_potions"
+				criterion: ""
+				id: "4E7A000000000D02"
+				type: "advancement"
+			}]
+			x: -4.0d
+			y: -9.0d
+		}
+		{
+			dependencies: ["4E7A000000000101"]
+			id: "4E7A000000000E01"
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000000E03"
+					item: {
+						count: 1
+						id: "waystones:warp_dust"
+					}
+					type: "item"
+				}
+				{
+					count: 12
+					id: "4E7A000000000E04"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000E05"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/fast_travel"
+				criterion: ""
+				id: "4E7A000000000E02"
+				type: "advancement"
+			}]
+			x: -6.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["4E7A000000000101"]
+			id: "4E7A000000000F01"
+			rewards: [
+				{
+					id: "4E7A000000000F03"
+					item: {
+						count: 1
+						id: "minecraft:saddle"
+					}
+					type: "item"
+				}
+				{
+					count: 10
+					id: "4E7A000000000F04"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000000F05"
+					type: "xp"
+					xp: 100
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/ride_strider"
+				criterion: ""
+				id: "4E7A000000000F02"
+				type: "advancement"
+			}]
+			x: -4.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["4E7A000000000F01"]
+			id: "4E7A000000001001"
+			optional: true
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000001003"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001004"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001005"
+					type: "xp"
+					xp: 300
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/ride_strider_in_overworld_lava"
+				criterion: ""
+				id: "4E7A000000001002"
+				type: "advancement"
+			}]
+			x: -4.0d
+			y: 4.0d
+		}
+		{
+			dependencies: [
+				"4E7A000000000E01"
+				"4E7A000000000F01"
+			]
+			id: "4E7A000000001101"
+			rewards: [
+				{
+					count: 5
+					id: "4E7A000000001103"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001104"
+					type: "xp"
+					xp: 500
+				}
+				{
+					exclude_from_claim_all: true
+					id: "4E7A000000001105"
+					table_id: 5654832282117140481L
+					type: "random"
+				}
+			]
+			shape: "hexagon"
+			tasks: [{
+				advancement: "minecraft:nether/explore_nether"
+				criterion: ""
+				id: "4E7A000000001102"
+				type: "advancement"
+			}]
+			x: -6.0d
+			y: 5.0d
+		}
+		{
+			dependencies: ["4E7A000000000401"]
+			id: "4E7A000000001201"
+			rewards: [
+				{
+					count: 4
+					id: "4E7A000000001203"
+					item: {
+						count: 1
+						id: "minecraft:crying_obsidian"
+					}
+					type: "item"
+				}
+				{
+					count: 12
+					id: "4E7A000000001204"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001205"
+					type: "xp"
+					xp: 100
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/obtain_crying_obsidian"
+				criterion: ""
+				id: "4E7A000000001202"
+				type: "advancement"
+			}]
+			x: 4.0d
+			y: 1.5d
+		}
+		{
+			dependencies: ["4E7A000000001201"]
+			id: "4E7A000000001301"
+			rewards: [
+				{
+					count: 8
+					id: "4E7A000000001303"
+					item: {
+						count: 1
+						id: "minecraft:glowstone"
+					}
+					type: "item"
+				}
+				{
+					count: 2
+					id: "4E7A000000001304"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001305"
+					type: "xp"
+					xp: 200
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/charge_respawn_anchor"
+				criterion: ""
+				id: "4E7A000000001302"
+				type: "advancement"
+			}]
+			x: 5.0d
+			y: 3.5d
+		}
+		{
+			dependencies: ["4E7A000000000101"]
+			id: "4E7A000000001401"
+			rewards: [
+				{
+					count: 4
+					id: "4E7A000000001403"
+					item: {
+						count: 1
+						id: "minecraft:tnt"
+					}
+					type: "item"
+				}
+				{
+					count: 16
+					id: "4E7A000000001404"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001405"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/obtain_ancient_debris"
+				criterion: ""
+				id: "4E7A000000001402"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: 3.0d
+		}
+		{
+			dependencies: ["4E7A000000001401"]
+			id: "4E7A000000001501"
+			rewards: [
+				{
+					count: 6
+					id: "4E7A000000001503"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001504"
+					type: "xp"
+					xp: 600
+				}
+				{
+					exclude_from_claim_all: true
+					id: "4E7A000000001505"
+					table_id: 5654832282117140481L
+					type: "random"
+				}
+			]
+			shape: "diamond"
+			tasks: [{
+				advancement: "minecraft:nether/netherite_armor"
+				criterion: ""
+				id: "4E7A000000001502"
+				type: "advancement"
+			}]
+			x: 0.0d
+			y: 5.0d
+		}
+		{
+			dependencies: ["4E7A000000001401"]
+			id: "4E7A000000001601"
+			optional: true
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000001603"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001604"
+					type: "xp"
+					xp: 250
+				}
+			]
+			tasks: [{
+				advancement: "spartan_weaponry_unofficial:upgrade_netherite_weapon"
+				criterion: ""
+				id: "4E7A000000001602"
+				type: "advancement"
+			}]
+			x: -2.0d
+			y: 5.0d
+		}
+		{
+			dependencies: ["4E7A000000000A01"]
+			id: "4E7A000000001C01"
+			rewards: [
+				{
+					count: 4
+					id: "4E7A000000001C03"
+					item: {
+						count: 1
+						id: "minecraft:soul_sand"
+					}
+					type: "item"
+				}
+				{
+					count: 2
+					id: "4E7A000000001C04"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001C05"
+					type: "xp"
+					xp: 200
+				}
+			]
+			tasks: [{
+				advancement: "minecraft:nether/get_wither_skull"
+				criterion: ""
+				id: "4E7A000000001C02"
+				type: "advancement"
+			}]
+			x: -1.0d
+			y: -10.0d
+		}
+		{
+			dependencies: ["4E7A000000001C01"]
+			id: "4E7A000000001D01"
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000001D03"
+					item: {
+						count: 1
+						id: "minecraft:golden_apple"
+					}
+					type: "item"
+				}
+				{
+					count: 4
+					id: "4E7A000000001D04"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001D05"
+					type: "xp"
+					xp: 400
+				}
+			]
+			shape: "gear"
+			tasks: [{
+				advancement: "minecraft:nether/summon_wither"
+				criterion: ""
+				id: "4E7A000000001D02"
+				type: "advancement"
+			}]
+			x: -1.0d
+			y: -12.0d
+		}
+		{
+			dependencies: ["4E7A000000001D01"]
+			id: "4E7A000000001E01"
+			rewards: [
+				{
+					count: 2
+					id: "4E7A000000001E03"
+					item: {
+						count: 1
+						id: "minecraft:emerald_block"
+					}
+					type: "item"
+				}
+				{
+					count: 8
+					id: "4E7A000000001E04"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001E05"
+					type: "xp"
+					xp: 1000
+				}
+			]
+			shape: "gear"
+			size: 1.5d
+			tasks: [{
+				advancement: "minecraft:nether/create_beacon"
+				criterion: ""
+				id: "4E7A000000001E02"
+				type: "advancement"
+			}]
+			x: -1.0d
+			y: -14.5d
+		}
+		{
+			dependencies: ["4E7A000000001E01"]
+			id: "4E7A000000001F01"
+			optional: true
+			rewards: [
+				{
+					id: "4E7A000000001F03"
+					item: {
+						count: 1
+						id: "minecraft:diamond_block"
+					}
+					type: "item"
+				}
+				{
+					count: 16
+					id: "4E7A000000001F04"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000001F05"
+					type: "xp_levels"
+					xp_levels: 10
+				}
+			]
+			shape: "gear"
+			tasks: [{
+				advancement: "minecraft:nether/create_full_beacon"
+				criterion: ""
+				id: "4E7A000000001F02"
+				type: "advancement"
+			}]
+			x: -1.0d
+			y: -17.0d
+		}
+		{
+			dependencies: [
+				"4E7A000000000301"
+				"4E7A000000000601"
+				"4E7A000000000D01"
+				"4E7A000000001101"
+				"4E7A000000001501"
+				"4E7A000000001E01"
+			]
+			id: "4E7A000000002001"
+			optional: true
+			rewards: [
+				{
+					id: "4E7A000000002003"
+					item: {
+						count: 1
+						id: "minecraft:totem_of_undying"
+					}
+					type: "item"
+				}
+				{
+					count: 24
+					id: "4E7A000000002004"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "4E7A000000002005"
+					type: "xp_levels"
+					xp_levels: 20
+				}
+			]
+			shape: "gear"
+			size: 2.0d
+			tasks: [{
+				advancement: "minecraft:nether/all_effects"
+				criterion: ""
+				id: "4E7A000000002002"
+				type: "advancement"
+			}]
+			x: -5.0d
+			y: -14.5d
+		}
+	]
+}
