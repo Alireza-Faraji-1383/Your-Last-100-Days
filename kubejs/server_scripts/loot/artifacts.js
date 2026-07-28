@@ -13,20 +13,31 @@ LootJS.modifiers((event) => {
       return item
     })
 
-  // Enigmatic Legacy Plus spellstones: 99% chance to void from any loot table
+  // Enigmatic Legacy Plus spellstones: 99.9% chance to void from any loot table
   const elSpellstones = [
     'enigmaticlegacyplus:angel_blessing',
     'enigmaticlegacyplus:blazing_core',
+    'enigmaticlegacyplus:creation_heart',
+    'enigmaticlegacyplus:etherium_core',
     'enigmaticlegacyplus:eye_of_nebula',
     'enigmaticlegacyplus:forgotten_ice',
     'enigmaticlegacyplus:golem_heart',
+    'enigmaticlegacyplus:illusion_lantern',
     'enigmaticlegacyplus:lost_engine',
     'enigmaticlegacyplus:ocean_stone',
     'enigmaticlegacyplus:revival_leaf',
+    'enigmaticlegacyplus:the_cube',
     'enigmaticlegacyplus:void_pearl',
   ]
   event.addTableModifier(/.*/)
     .modifyLoot(elSpellstones, (item) => {
+      if (Math.random() > 0.001) return Item.empty
+      return item
+    })
+
+  // Enigmatic Legacy Plus spellcore: keep 1% of its current loot spawns
+  event.addTableModifier(/.*/)
+    .modifyLoot('enigmaticlegacyplus:spellcore', (item) => {
       if (Math.random() > 0.01) return Item.empty
       return item
     })

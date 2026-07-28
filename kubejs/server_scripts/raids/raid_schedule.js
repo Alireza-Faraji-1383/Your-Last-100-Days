@@ -8,8 +8,8 @@
 //   RaidSchedule.onDay(20, "pillager_siege")
 //
 // On the first nightfall on or after the overworld day count reaches `day`, the
-// raid fires for every online player — each gets their own instance; players
-// already in a raid are skipped (RaidManager.start self-guards). One-shot: each
+// raid fires once for every online FTB Team — teammates share one instance;
+// players whose team is already in a raid are skipped. One-shot: each
 // entry fires once per server run.
 //
 // Day counting matches ftbquests_day_spine.js: floor(overworld dayTime / 24000).
@@ -202,8 +202,9 @@
         return null;
     }
 
-    // Start raidId for every online player. Returns launched instance ids so the
-    // persistent transaction can be committed exactly when that launch group ends.
+    // Walk online players and start raidId once per FTB Team. RaidManager's
+    // team-aware guard makes subsequent members reuse/skip the shared instance.
+    // Returns launched ids so the transaction commits when every team raid ends.
     function fireForAll(server, raidId) {
         var M = (typeof RaidManager !== "undefined") ? RaidManager : null;
         var result = { count: 0, ids: [] };
@@ -311,7 +312,7 @@
             var launched = fireForAll(server, s.raidId);
             if (launched.count > 0) {
                 beginPending(server, s, launched.ids);
-                console.info("[RaidSched] day " + day + " night: fired '" + s.raidId + "' for " + launched.count + " player(s)");
+                console.info("[RaidSched] day " + day + " night: fired '" + s.raidId + "' for " + launched.count + " team(s)");
             }
             // launched.count === 0 (empty server / everyone mid-raid): stay armed, retry
             // next check / next eligible night.

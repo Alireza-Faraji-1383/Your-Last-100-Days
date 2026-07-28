@@ -55,6 +55,30 @@
 			x: 1.0d
 			y: -5.0d
 		}
+		{
+			height: 3.0d
+			image: "irons_spellbooks:textures/quests/spells_title.png"
+			rotation: 0.0d
+			width: 8.0d
+			x: 19.0d
+			y: -9.5d
+		}
+		{
+			height: 1.0d
+			image: "minecraft:block/campfire_fire"
+			rotation: 0.0d
+			width: 1.0d
+			x: 20.0d
+			y: -6.5d
+		}
+		{
+			height: 1.0d
+			image: "minecraft:block/soul_campfire_fire"
+			rotation: 0.0d
+			width: 1.0d
+			x: 17.0d
+			y: -6.5d
+		}
 	]
 	order_index: 2
 	quest_links: [ ]
@@ -62,7 +86,7 @@
 		{
 			id: "46A64FE462A309A2"
 			rewards: [{
-				count: 20
+				count: 24
 				id: "77C974230DCAD855"
 				item: {
 					count: 1
@@ -91,7 +115,7 @@
 			id: "7F9A15CD13D2D7CE"
 			rewards: [
 				{
-					count: 30
+					count: 32
 					id: "1B3A633EF73D8362"
 					item: {
 						count: 1
@@ -326,7 +350,7 @@
 		{
 			id: "1B416F55DB53C59C"
 			rewards: [{
-				count: 32
+				count: 42
 				id: "4186154938021498"
 				item: {
 					count: 1
@@ -722,7 +746,7 @@
 		{
 			id: "4D8B8AE038552C78"
 			rewards: [{
-				count: 15
+				count: 24
 				id: "63FF9CB8A381A88F"
 				item: {
 					count: 1
@@ -747,42 +771,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["4D8B8AE038552C78"]
-			id: "4E916034663E1DA7"
-			rewards: [
-				{
-					count: 40
-					id: "6254FF37861F498B"
-					item: {
-						count: 1
-						id: "kubejs:copper_coin"
-					}
-					type: "item"
-				}
-				{
-					id: "16A4A4C976268535"
-					type: "xp"
-					xp: 150
-				}
-			]
-			tasks: [{
-				entity: "minecraft:pillager"
-				icon: {
-					components: {
-						"!ftbquests:icon": { }
-						"ftbquests:entity_face": "minecraft:pillager"
-					}
-					id: "ftbquests:custom_icon"
-				}
-				id: "585937CE8596AE2B"
-				type: "kill"
-				value: 64L
-			}]
-			x: 11.0d
-			y: -1.5d
-		}
-		{
-			dependencies: ["4E916034663E1DA7"]
+			dependencies: ["340F0444044D60BA"]
 			id: "62DA05A109DCFA92"
 			rewards: [
 				{
@@ -854,7 +843,7 @@
 		{
 			id: "75CB70D6340B9E4B"
 			rewards: [{
-				count: 20
+				count: 32
 				id: "2A971C2FE48078D5"
 				item: {
 					count: 1
@@ -883,7 +872,7 @@
 			id: "155C9B6E1BE2255D"
 			rewards: [
 				{
-					count: 50
+					count: 64
 					id: "4948FB166D246153"
 					item: {
 						count: 1
@@ -1849,6 +1838,509 @@
 			}]
 			x: 2.0d
 			y: 11.5d
+		}
+		{
+			id: "3FE9B15A4C6B8D21"
+			rewards: [{
+				count: 24
+				id: "5AF2E12494E1441C"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:citadel_keeper"
+				id: "5C333DCEF80FFF13"
+				type: "kill"
+				value: 10L
+			}]
+			x: 21.5d
+			y: -7.0d
+		}
+		{
+			dependencies: ["4D8B8AE038552C78"]
+			id: "340F0444044D60BA"
+			rewards: [
+				{
+					count: 40
+					id: "5932FC4C62884A8C"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "119AB96F1601FEB2"
+					type: "xp"
+					xp: 150
+				}
+			]
+			tasks: [{
+				entity: "minecraft:pillager"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:pillager"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "24897FFEB286D983"
+				type: "kill"
+				value: 64L
+			}]
+			x: 11.0d
+			y: -1.5d
+		}
+		{
+			dependencies: ["3FE9B15A4C6B8D21"]
+			id: "375A5B42DB4A31C3"
+			rewards: [{
+				count: 64
+				id: "1F060AEE1D05B73D"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:citadel_keeper"
+				id: "5C0B423699727FAB"
+				type: "kill"
+				value: 32L
+			}]
+			x: 21.5d
+			y: -5.0d
+		}
+		{
+			dependencies: [
+				"375A5B42DB4A31C3"
+				"3FE9B15A4C6B8D21"
+			]
+			id: "19E60C14ABB32C38"
+			rewards: [{
+				count: 2
+				id: "5B65209DB95A0914"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:citadel_keeper"
+				id: "559CBCC85911597A"
+				type: "kill"
+				value: 64L
+			}]
+			x: 21.5d
+			y: -3.0d
+		}
+		{
+			dependencies: [
+				"375A5B42DB4A31C3"
+				"3FE9B15A4C6B8D21"
+				"19E60C14ABB32C38"
+			]
+			id: "49E97A0BA6E7DB63"
+			rewards: [{
+				count: 10
+				id: "6ADE1BAB17502C7B"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:citadel_keeper"
+				id: "67E1EA8404E892D5"
+				type: "kill"
+				value: 128L
+			}]
+			x: 21.5d
+			y: -1.0d
+		}
+		{
+			id: "342DA5C07F1EB066"
+			rewards: [{
+				count: 32
+				id: "2D8812ED7D200B55"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:archevoker"
+				id: "20FB9CFD83987DC9"
+				type: "kill"
+				value: 1L
+			}]
+			x: 18.5d
+			y: -7.0d
+		}
+		{
+			dependencies: ["342DA5C07F1EB066"]
+			id: "6C815AC1A7CD46D6"
+			rewards: [{
+				count: 64
+				id: "6C6AC40E148C5680"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:archevoker"
+				id: "1D4F7DE26442749A"
+				type: "kill"
+				value: 5L
+			}]
+			x: 18.5d
+			y: -5.0d
+		}
+		{
+			dependencies: ["6C815AC1A7CD46D6"]
+			id: "28813D2D14D9906D"
+			rewards: [{
+				count: 8
+				id: "5D99E18D8FCF0A09"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:archevoker"
+				id: "78704893CD5372F5"
+				type: "kill"
+				value: 12L
+			}]
+			x: 18.5d
+			y: -3.0d
+		}
+		{
+			dependencies: ["28813D2D14D9906D"]
+			id: "634DF9EF9679D939"
+			rewards: [{
+				count: 16
+				id: "2CEEB1FA250647D7"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:archevoker"
+				id: "77FB63C147E60E81"
+				type: "kill"
+				value: 32L
+			}]
+			x: 18.5d
+			y: -1.0d
+		}
+		{
+			id: "1608F430BCD06748"
+			rewards: [{
+				count: 32
+				id: "2E09C51ED4641116"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:necromancer"
+				id: "7E17D613A0F0DB0F"
+				type: "kill"
+				value: 12L
+			}]
+			x: 15.5d
+			y: -7.0d
+		}
+		{
+			dependencies: ["1608F430BCD06748"]
+			id: "1BC0E1CA38969EE3"
+			rewards: [{
+				count: 64
+				id: "624BAE13A50DDF81"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:necromancer"
+				id: "715936F6199E68EE"
+				type: "kill"
+				value: 32L
+			}]
+			x: 15.5d
+			y: -5.0d
+		}
+		{
+			dependencies: ["1BC0E1CA38969EE3"]
+			id: "12C75FDC1E557B6D"
+			rewards: [{
+				count: 2
+				id: "66240C93C341FF25"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:necromancer"
+				id: "038520D129558676"
+				type: "kill"
+				value: 64L
+			}]
+			x: 15.5d
+			y: -3.0d
+		}
+		{
+			dependencies: ["12C75FDC1E557B6D"]
+			id: "1A17FE8F3A048524"
+			rewards: [{
+				count: 10
+				id: "4482D7ACAE128C78"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:necromancer"
+				id: "4353E415ADEC2FD6"
+				type: "kill"
+				value: 128L
+			}]
+			x: 15.5d
+			y: -1.0d
+		}
+		{
+			id: "43C7606D98B9E2A9"
+			rewards: [
+				{
+					count: 32
+					id: "385D59C2001F759F"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "5B97703AA69B2A99"
+					item: {
+						components: {
+							"irons_spellbooks:spell_container": {
+								data: [{
+									id: "irons_spellbooks:fire_breath"
+									index: 0
+									level: 5
+									locked: 1b
+								}]
+								maxSpells: 1
+								mustEquip: 0b
+								spellWheel: 0b
+							}
+						}
+						count: 1
+						id: "irons_spellbooks:scroll"
+					}
+					type: "item"
+				}
+			]
+			tasks: [{
+				entity: "irons_spellbooks:pyromancer"
+				id: "2021C7E031E53FF5"
+				type: "kill"
+				value: 1L
+			}]
+			x: 20.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["43C7606D98B9E2A9"]
+			id: "4623AB63F23933F3"
+			rewards: [{
+				count: 64
+				id: "79C507AF4B38220F"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:pyromancer"
+				id: "095E5CF1EF80E687"
+				type: "kill"
+				value: 5L
+			}]
+			x: 20.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["4623AB63F23933F3"]
+			id: "0A7963E1A3E40DD3"
+			rewards: [{
+				count: 8
+				id: "311E25E14CBC1284"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:pyromancer"
+				id: "2637396FCBC310C1"
+				type: "kill"
+				value: 12L
+			}]
+			x: 20.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["0A7963E1A3E40DD3"]
+			id: "4D4A72B430B269A8"
+			rewards: [{
+				count: 16
+				id: "75A1123E896F785A"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:pyromancer"
+				id: "16A12B4A8838B901"
+				type: "kill"
+				value: 32L
+			}]
+			x: 20.0d
+			y: 0.0d
+		}
+		{
+			id: "5CA8E651F6AA0693"
+			rewards: [
+				{
+					count: 32
+					id: "324D140101B62816"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+				{
+					id: "21C3B6FF411CD3BE"
+					item: {
+						components: {
+							"irons_spellbooks:spell_container": {
+								data: [{
+									id: "irons_spellbooks:frostwave"
+									index: 0
+									level: 6
+									locked: 1b
+								}]
+								maxSpells: 1
+								mustEquip: 0b
+								spellWheel: 0b
+							}
+						}
+						count: 1
+						id: "irons_spellbooks:scroll"
+					}
+					type: "item"
+				}
+			]
+			tasks: [{
+				entity: "irons_spellbooks:cryomancer"
+				id: "7100ED418C369A96"
+				type: "kill"
+				value: 1L
+			}]
+			x: 17.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["5CA8E651F6AA0693"]
+			id: "4BBED18E95CC7F36"
+			rewards: [{
+				count: 64
+				id: "5327BE5F505C6E3E"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:cryomancer"
+				id: "4516E159247F951F"
+				type: "kill"
+				value: 5L
+			}]
+			x: 17.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["4BBED18E95CC7F36"]
+			id: "0F90A64B18FC9072"
+			rewards: [{
+				count: 8
+				id: "001CD89C60A2FF7D"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:cryomancer"
+				id: "05A2537FD8C30837"
+				type: "kill"
+				value: 12L
+			}]
+			x: 17.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["0F90A64B18FC9072"]
+			id: "0CFBEC334AB5AE28"
+			rewards: [{
+				count: 16
+				id: "41FBA295B2D6C1B8"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "irons_spellbooks:cryomancer"
+				id: "51C6AFFE3B46E3C9"
+				type: "kill"
+				value: 32L
+			}]
+			x: 17.0d
+			y: 0.0d
 		}
 	]
 }

@@ -27,7 +27,9 @@
     // data. One write every five seconds, plus logout/shutdown, avoids per-tick
     // NBT work while keeping a crash rollback bounded to at most five seconds.
     const ACTIVE_STATE_KEY = "raidfactory_active_v1";
+    const PENDING_TEAM_WINS_KEY = "raidfactory_pending_team_wins_v1";
     const ACTIVE_SAVE_EVERY = 100;
+    const TEAM_SYNC_EVERY = 20;       // refresh FTB roster/HUD once per second
     const RESTORE_LOGIN_DELAY = 40; // let the returning player's chunks load first
     const RESTORE_MOB_WAIT = 200;   // wait up to 10s for persistent mobs to load
     const BANNED_RAID_MOB_TYPES = {
@@ -112,6 +114,91 @@
     function warn(m) { console.warn(`[Raid] ${m}`); }
     function err(m)  { console.error(`[Raid] ${m}`); }
     function info(m) { if (DEBUG) console.info(`[Raid] ${m}`); }
+
+    // ---------- FTB Teams bridge -------------------------------------------
+    // Loaded lazily so the raid core still has a safe solo fallback if the API
+    // is temporarily unavailable during script startup.
+    var _ftbTeamsApiClass = null;
+    var _javaUuidClass = null;
+    var _ftbTeamsUnavailable = false;
+
+    function normUuid(value) {
+        return String(value == null ? "" : value).toLowerCase();
+    }
+
+    function ftbTeamsManager() {
+        if (_ftbTeamsUnavailable) return null;
+        try {
+            if (!_ftbTeamsApiClass)
+                _ftbTeamsApiClass = Java.loadClass("dev.ftb.mods.ftbteams.api.FTBTeamsAPI");
+            var api = _ftbTeamsApiClass.api();
+            if (!api || (typeof api.isManagerLoaded === "function" && !api.isManagerLoaded())) return null;
+            return api.getManager();
+        } catch (e) {
+            _ftbTeamsUnavailable = true;
+            warn("FTB Teams API unavailable; using solo raid ownership: " + e);
+            return null;
+        }
+    }
+
+    function javaUuid(value) {
+        try {
+            if (!_javaUuidClass) _javaUuidClass = Java.loadClass("java.util.UUID");
+            return _javaUuidClass.fromString(String(value));
+        } catch (e) { return null; }
+    }
+
+    function optionalValue(optional) {
+        try {
+            if (optional && optional.isPresent()) return optional.get();
+        } catch (e) {}
+        return null;
+    }
+
+    function ftbTeamForPlayer(player) {
+        var manager = ftbTeamsManager();
+        if (!manager || !player) return null;
+        var id = javaUuid(player.uuid);
+        try {
+            if (id) {
+                var byId = optionalValue(manager.getTeamForPlayerID(id));
+                if (byId) return byId;
+            }
+        } catch (eId) {}
+        try { return optionalValue(manager.getTeamForPlayer(unwrapPlayer(player))); }
+        catch (e) { return null; }
+    }
+
+    function ftbTeamById(teamId) {
+        var manager = ftbTeamsManager();
+        var id = javaUuid(teamId);
+        if (!manager || !id) return null;
+        try { return optionalValue(manager.getTeamByID(id)); }
+        catch (e) { return null; }
+    }
+
+    function teamRoster(team, fallbackUuid) {
+        var roster = {};
+        if (team) {
+            try {
+                var it = team.getMembers().iterator();
+                while (it.hasNext()) roster[normUuid(it.next())] = true;
+            } catch (e) { warn("read FTB team roster: " + e); }
+        }
+        if (fallbackUuid) roster[normUuid(fallbackUuid)] = true;
+        return roster;
+    }
+
+    function playerTeamIdentity(player) {
+        var team = ftbTeamForPlayer(player);
+        var puid = normUuid(player && player.uuid);
+        if (!team) return { teamId: null, members: teamRoster(null, puid) };
+        var teamId = null;
+        try { teamId = normUuid(team.getTeamId()); } catch (e) {
+            try { teamId = normUuid(team.getId()); } catch (e2) {}
+        }
+        return { teamId: teamId || null, members: teamRoster(team, puid) };
+    }
 
     function setAdvancementLocation(manager, RL, id, x, y) {
         var holder = manager.get(RL.parse(id));
@@ -1195,16 +1282,24 @@
         }
         return best;
     }
-    function decideTarget(raw, mainRaw, victims, radiusSqr) {
+    function entityInList(entity, list) {
+        if (!entity || !list) return false;
+        for (var i = 0; i < list.length; i++)
+            if (sameEnt(entity, list[i])) return true;
+        return false;
+    }
+    function decideTarget(raw, teamRaws, victims, radiusSqr) {
         var atk = null;
         try { atk = (typeof raw.getLastHurtByMob === "function") ? raw.getLastHurtByMob() : null; } catch (x) {}
-        if (mainRaw && mainPlayerEligible(mainRaw)) {
+        var teamTarget = nearestFrom(raw, teamRaws || [], Infinity);
+        if (teamTarget && mainPlayerEligible(teamTarget)) {
             // Prevent HurtByTargetGoal from stealing aggro between our 5-tick
-            // passes. Main-player attacks may remain in memory; all others go.
-            if (atk && !sameEnt(atk, mainRaw)) {
+            // passes. Attacks from participating teammates may remain; all
+            // unrelated retaliation memory is discarded.
+            if (atk && !entityInList(atk, teamRaws)) {
                 try { raw.setLastHurtByMob(null); } catch (xM) {}
             }
-            return mainRaw;
+            return teamTarget;
         }
         // Ally friendly-fire scrub: a raid mob accidentally hurt by another raid
         // mob must never retaliate — wipe the memory so vanilla HurtByTargetGoal
@@ -1686,11 +1781,17 @@
     // Phases: SPAWNING -> FIGHTING -> BREATHER -> ... -> WIN_WAIT -> DONE.
 
     function RaidInstance(id, def, level, player) {
+        var identity = playerTeamIdentity(player);
         this.id        = id;
         this.defId     = def.id;
         this.def       = def;
         this.level     = level;
-        this.playerUuid = String(player.uuid);
+        this.playerUuid = normUuid(player.uuid);
+        this.teamId = identity.teamId;
+        this.participantUuids = identity.members;
+        this._onlineParticipants = [];
+        this._teamSyncLeft = 0;
+        this._offlinePrepared = false;
         this._ctxPlayer = player;     // fallback if live lookup fails
         this.roundIdx     = 0;
         this.phase        = "SPAWNING";
@@ -1781,12 +1882,112 @@
             warn("flawless advancement " + advancement + ": " + e);
         }
     }
+
+    function readPendingTeamWins(server) {
+        if (!server || !server.persistentData) return [];
+        try {
+            var raw = String(server.persistentData.getString(PENDING_TEAM_WINS_KEY) || "");
+            if (!raw) return [];
+            var parsed = JSON.parse(raw);
+            return parsed && typeof parsed.length === "number" ? parsed : [];
+        } catch (e) {
+            warn("read pending team wins: " + e);
+            return [];
+        }
+    }
+
+    function writePendingTeamWins(server, records) {
+        if (!server || !server.persistentData) return;
+        try {
+            if (records && records.length > 0)
+                server.persistentData.putString(PENDING_TEAM_WINS_KEY, JSON.stringify(records));
+            else server.persistentData.remove(PENDING_TEAM_WINS_KEY);
+        } catch (e) { warn("write pending team wins: " + e); }
+    }
+
+    function deliverVictory(inst, player, delayed) {
+        if (!inst || !player) return;
+        fireCb(inst.def, "onWin", [inst.ctx ? inst.ctx(player) :
+            { player: player, level: playerLevel(player), raid: inst.def, instance: inst }]);
+        grantVictoryAdvancement(inst, player);
+        grantFlawlessAdvancement(inst, player);
+        if (delayed) {
+            try { player.tell(Text.of("§aYour team's saved raid victory rewards have been delivered.")); }
+            catch (eTell) {}
+            return;
+        }
+        playSnd(player, inst.def.sounds.win);
+        showTitle(player, "VICTORY", inst.barBase, "green");
+        victoryBurst(player);
+    }
+
+    function deliverVictoryToTeam(inst) {
+        var server = Manager._server;
+        var online = onlineParticipants(inst, true);
+        var onlineById = {};
+        for (var i = 0; i < online.length; i++) onlineById[normUuid(online[i].uuid)] = online[i];
+
+        var pending = readPendingTeamWins(server);
+        var flawless = !inst._diedDuringRaid;
+        var deliverNow = [];
+        for (var uuid in inst.participantUuids) {
+            if (!inst.participantUuids[uuid]) continue;
+            var player = onlineById[normUuid(uuid)];
+            if (player) deliverNow.push(player);
+            else pending.push({ uuid: normUuid(uuid), defId: inst.defId, flawless: flawless });
+        }
+        // Persist offline entitlements before running item callbacks for online
+        // members, so a callback failure can never erase somebody else's share.
+        writePendingTeamWins(server, pending);
+        for (var d = 0; d < deliverNow.length; d++)
+            deliverVictory(inst, deliverNow[d], false);
+    }
+
+    function deliverPendingTeamWins(player) {
+        if (!player) return 0;
+        var server = player.server || Manager._server;
+        var puid = normUuid(player.uuid);
+        var pending = readPendingTeamWins(server);
+        if (pending.length === 0) return 0;
+
+        var keep = [], delivered = 0;
+        for (var i = 0; i < pending.length; i++) {
+            var record = pending[i];
+            if (!record || normUuid(record.uuid) !== puid) {
+                keep.push(record);
+                continue;
+            }
+            var def = Registry.get(String(record.defId));
+            if (!def) {
+                warn("pending team win references missing raid " + record.defId);
+                continue;
+            }
+            var saved = {
+                defId: String(record.defId),
+                def: def,
+                level: playerLevel(player),
+                barBase: def.title || prettyId(def.id),
+                _diedDuringRaid: !record.flawless,
+                ctx: function (p) {
+                    return { player: p, level: playerLevel(p), raid: def, instance: this };
+                }
+            };
+            deliverVictory(saved, player, true);
+            delivered++;
+        }
+        writePendingTeamWins(server, keep);
+        return delivered;
+    }
+
     RaidInstance.prototype.lose = function (player) {
         killMobs(this);
-        applyDefeatPenalty(player);
-        playSnd(player, this.def.sounds.lose);
-        showTitle(player, "DEFEAT", this.barBase, "dark_red");
-        fireCb(this.def, "onLose", [this.ctx(player)]);
+        var inst = this;
+        eachOnlineParticipant(this, function (member) {
+            applyDefeatPenalty(member);
+            playSnd(member, inst.def.sounds.lose);
+            showTitle(member, "DEFEAT", inst.barBase, "dark_red");
+            fireCb(inst.def, "onLose", [inst.ctx(member)]);
+        }, true);
         this.barEnd("§4§l✖ " + this.barBase + " - DEFEATED" + this.deathBarText(), "RED", 0.0);
         this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
         this.phase = "ENDING";
@@ -1821,7 +2022,7 @@
     };
     RaidInstance.prototype.updateBar = function (player) {
         if (!this.bar) return;
-        if (player) { try { if (!this.bar.getPlayers().contains(player)) this.bar.addPlayer(player); } catch (e) {} }
+        onlineParticipants(this, false);
         var alive = sumHealth(this.roundMobs) + sumHealth(this.carryover);
         var total = this.roundTotalHealth > 0 ? this.roundTotalHealth : 1;
         var aliveMobs = this.roundMobs.length + this.carryover.length;
@@ -1845,13 +2046,20 @@
         return { player: player || resolvePlayer(this) || this._ctxPlayer, level: this.level, raid: this.def, instance: this };
     };
     RaidInstance.prototype.aggro = function (player) {
-        // mainRaw = the live, *alive* main player (null while dead/offline so mobs
-        // fall through to attacking nearby villagers/players until they respawn).
+        // Every living teammate in the raid dimension is a hard-priority target.
+        // This keeps the encounter shared instead of making every mob chase only
+        // the player who originally started it.
         var mainRaw = null;
         if (player) {
             var pAlive = true;
             try { pAlive = (typeof player.isAlive === "function") ? player.isAlive() : player.isAlive; } catch (e) {}
             if (pAlive) mainRaw = unwrapPlayer(player);
+        }
+        var teamRaws = [];
+        var teamPlayers = combatParticipants(this, false);
+        for (var pi = 0; pi < teamPlayers.length; pi++) {
+            var rawPlayer = unwrapPlayer(teamPlayers[pi]);
+            if (rawPlayer && mainPlayerEligible(rawPlayer)) teamRaws.push(rawPlayer);
         }
         // Water upkeep every 4th pass (~1s): mergeNbt is a full entity NBT
         // save/load — too heavy per water mob at the 5-tick cadence. Drowned
@@ -1861,11 +2069,10 @@
         this.glowStragglers();
         var radius = (this.def.aggroRadius != null) ? this.def.aggroRadius : 20;
         if (this.def.spawnPattern === "horde") radius += 8;   // cluster sits in one spot — widen detection
-        var center = mainRaw || firstRaw(this);
-        // While the owner is alive every raid mob is hard-locked to them, so an
-        // entity scan cannot affect the result. Keep the shared fallback scan
-        // only for the dead/offline interval; this is the common-path fast path.
-        var victims = mainRaw ? [] : collectVictims(this, center, radius);
+        var center = mainRaw || (teamRaws.length > 0 ? teamRaws[0] : firstRaw(this));
+        // The shared team targets need no world scan. The existing one-query
+        // fallback remains only for intervals where every teammate is dead.
+        var victims = teamRaws.length > 0 ? [] : collectVictims(this, center, radius);
         var radiusSqr = radius * radius;
         var inst = this;
         eachMob(this, function (m) {
@@ -1873,7 +2080,7 @@
             if (!raw) return;
             clearDaylightFire(inst.level, raw);
             if (typeof raw.setTarget !== "function") return;
-            var t = decideTarget(raw, mainRaw, victims, radiusSqr);
+            var t = decideTarget(raw, teamRaws, victims, radiusSqr);
             var cur = null;
             try { cur = (typeof raw.getTarget === "function") ? raw.getTarget() : null; } catch (eG) {}
             if (!t) {
@@ -1922,12 +2129,18 @@
         this.barFight(round);
         this.barColorSet(this.def.barColor);   // back from BREATHER yellow
         this.updateBar(player);
-        if (idx > 0) playSnd(player, this.def.sounds.roundStart);   // wave 1 covered by raidStart
+        if (idx > 0) {
+            var inst = this;
+            eachOnlineParticipant(this, function (member) {
+                playSnd(member, inst.def.sounds.roundStart);
+            }, false);
+        }
         fireCb(this.def, "onRoundStart", [this.ctx(player), round, idx]);
         this.phase = "FIGHTING";
         return true;
     };
     RaidInstance.prototype.tick = function () {
+        this._teamSyncLeft = Math.max(0, (Number(this._teamSyncLeft) || 0) - TICK_THROTTLE);
         var player = resolvePlayer(this);   // live player wrapper, or null if offline
         var round  = this.def.rounds[this.roundIdx];
 
@@ -1937,7 +2150,15 @@
         // Logging out is different from dying: pause the whole combat state so
         // an offline player cannot lose (or accidentally win through unloaded
         // entity wrappers). On return, persistent mobs are rebound by UUID/tag.
-        if (!player && this.phase !== "ENDING") return;
+        if (!player && this.phase !== "ENDING") {
+            if (!this._restoring && !this._offlinePrepared) {
+                prepareForRebind(this);
+                this._offlinePrepared = true;
+                persistActive(Manager._server);
+            }
+            return;
+        }
+        if (player) this._offlinePrepared = false;
         if (this._restoring) {
             if (this._restoreDelay > 0) {
                 this._restoreDelay -= TICK_THROTTLE;
@@ -1985,7 +2206,10 @@
                 if (roundCleared && (!finalRound || finalCleared)) {
                     fireCb(this.def, "onRoundEnd", [this.ctx(player), round, this.roundIdx]);
                     if (!finalRound) {
-                        playSnd(player, this.def.sounds.roundEnd);   // wave-clear stinger (final wave -> win sound instead)
+                        var instRoundEnd = this;
+                        eachOnlineParticipant(this, function (member) {
+                            playSnd(member, instRoundEnd.def.sounds.roundEnd);
+                        }, false);
                         this.breatherLeft = round.breather;
                         this.barColorSet("YELLOW");                  // breather lull; startRound restores
                         this.phase = "BREATHER";
@@ -2037,12 +2261,7 @@
                                 this.deathBarText());
                 this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
-                    fireCb(this.def, "onWin", [this.ctx(player)]);
-                    grantVictoryAdvancement(this, player);
-                    grantFlawlessAdvancement(this, player);
-                    playSnd(player, this.def.sounds.win);
-                    showTitle(player, "VICTORY", this.barBase, "green");
-                    victoryBurst(player);
+                    deliverVictoryToTeam(this);
                     this.barEnd("§a§l✔ " + this.barBase + " - VICTORY" + this.deathBarText(), "GREEN", 1.0);
                     this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
                     this.phase = "ENDING";
@@ -2100,12 +2319,130 @@
         return null;
     }
 
-    // Live player by UUID from the current server player list; null if offline.
+    function sameRaidLevel(inst, player) {
+        if (!inst || !player) return false;
+        try { return levelId(playerLevel(player)) === levelId(inst.level); }
+        catch (e) { return false; }
+    }
+
+    function refreshTeamRoster(inst) {
+        if (!inst) return;
+        // Upgrade snapshots created by the older solo-owner format as soon as
+        // their owner is online and FTB Teams can identify the current party.
+        if (!inst.teamId) {
+            var owner = findOnlinePlayer(Manager._server, function (p) {
+                return normUuid(p.uuid) === inst.playerUuid;
+            });
+            if (owner) {
+                var identity = playerTeamIdentity(owner);
+                if (identity.teamId) {
+                    inst.teamId = identity.teamId;
+                    inst.participantUuids = identity.members;
+                }
+            }
+        }
+        var team = inst.teamId ? ftbTeamById(inst.teamId) : null;
+        if (team) {
+            inst.participantUuids = teamRoster(team, inst.playerUuid);
+            return;
+        }
+        if (!inst.participantUuids) inst.participantUuids = {};
+        inst.participantUuids[normUuid(inst.playerUuid)] = true;
+    }
+
+    function syncBarParticipants(inst, players) {
+        if (!inst || !inst.bar) return;
+        var wanted = {};
+        for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+            wanted[normUuid(player.uuid)] = true;
+            try {
+                var raw = unwrapPlayer(player);
+                if (raw && !inst.bar.getPlayers().contains(raw)) inst.bar.addPlayer(raw);
+            } catch (eAdd) {}
+        }
+        try {
+            var remove = [];
+            var it = inst.bar.getPlayers().iterator();
+            while (it.hasNext()) {
+                var current = it.next();
+                var currentId = "";
+                try { currentId = normUuid(current.getUUID()); } catch (eId) {}
+                if (!wanted[currentId]) remove.push(current);
+            }
+            for (var r = 0; r < remove.length; r++) inst.bar.removePlayer(remove[r]);
+        } catch (eRemove) {}
+    }
+
+    // Refresh FTB membership once per second: quick team changes propagate to
+    // the shared HUD without doing team API work on every raid tick.
+    function onlineParticipants(inst, force) {
+        if (!inst) return [];
+        inst._teamSyncLeft = Math.max(0, Number(inst._teamSyncLeft) || 0);
+        if (!force && inst._teamSyncLeft > 0 && inst._onlineParticipants)
+            return inst._onlineParticipants;
+
+        refreshTeamRoster(inst);
+        var out = [];
+        if (Manager._server && Manager._server.players) {
+            try {
+                var it = Manager._server.players.iterator();
+                while (it.hasNext()) {
+                    var p = it.next();
+                    if (p && inst.participantUuids[normUuid(p.uuid)]) out.push(p);
+                }
+            } catch (e) {}
+        }
+        inst._onlineParticipants = out;
+        inst._teamSyncLeft = TEAM_SYNC_EVERY;
+        syncBarParticipants(inst, out);
+        return out;
+    }
+
+    function combatParticipants(inst, force) {
+        var online = onlineParticipants(inst, force);
+        var out = [];
+        for (var i = 0; i < online.length; i++)
+            if (sameRaidLevel(inst, online[i])) out.push(online[i]);
+        return out;
+    }
+
+    function eachOnlineParticipant(inst, fn, force) {
+        var players = onlineParticipants(inst, !!force);
+        for (var i = 0; i < players.length; i++) {
+            try { fn(players[i]); } catch (e) { warn("team participant action: " + e); }
+        }
+    }
+
+    // Prefer the starter as the spawn anchor. If they disconnect, another
+    // teammate in the raid dimension seamlessly keeps the same instance active.
     function resolvePlayer(inst) {
-        // offline / not found returns null — callers handle it (SPAWNING waits, aggro no-ops).
-        return findOnlinePlayer(Manager._server, function (p) {
-            return String(p.uuid) === inst.playerUuid;
-        });
+        var players = combatParticipants(inst, false);
+        var fallback = null;
+        for (var i = 0; i < players.length; i++) {
+            if (!fallback) fallback = players[i];
+            if (normUuid(players[i].uuid) === inst.playerUuid) return players[i];
+        }
+        return fallback;
+    }
+
+    function raidForPlayer(player) {
+        if (!player) return null;
+        var direct = playerInRaid(normUuid(player.uuid));
+        if (direct) return direct;
+
+        var identity = playerTeamIdentity(player);
+        if (!identity.teamId) return null;
+        for (var k in _active) {
+            var inst = _active[k];
+            if (inst.phase === "DONE" || inst.phase === "ENDING") continue;
+            if (inst.teamId && inst.teamId === identity.teamId) {
+                inst.participantUuids = identity.members;
+                inst._teamSyncLeft = 0;
+                return inst;
+            }
+        }
+        return null;
     }
 
     // ---------- Manager -----------------------------------------------------
@@ -2254,6 +2591,8 @@
             id: inst.id,
             defId: inst.defId,
             playerUuid: inst.playerUuid,
+            teamId: inst.teamId,
+            participantUuids: uuidKeys(inst.participantUuids),
             dimension: levelId(inst.level),
             roundIdx: inst.roundIdx,
             phase: inst.phase,
@@ -2316,7 +2655,13 @@
             inst.defId = String(s.defId);
             inst.def = def;
             inst.level = level;
-            inst.playerUuid = String(s.playerUuid);
+            inst.playerUuid = normUuid(s.playerUuid);
+            inst.teamId = s.teamId ? normUuid(s.teamId) : null;
+            inst.participantUuids = uuidSet(s.participantUuids || [inst.playerUuid]);
+            inst.participantUuids[inst.playerUuid] = true;
+            inst._onlineParticipants = [];
+            inst._teamSyncLeft = 0;
+            inst._offlinePrepared = false;
             inst._ctxPlayer = null;
             inst.roundIdx = Math.max(0, Math.min(def.rounds.length - 1, Number(s.roundIdx) || 0));
             inst.phase = String(s.phase || "SPAWNING");
@@ -2593,9 +2938,13 @@
     // victory/defeat bar linger. Not blocking here lets a new raid start
     // immediately after a win/loss instead of waiting out barHold.
     function playerInRaid(playerUuid) {
+        var wanted = normUuid(playerUuid);
         for (var k in _active) {
-            var ph = _active[k].phase;
-            if (_active[k].playerUuid === playerUuid && ph !== "DONE" && ph !== "ENDING") return _active[k];
+            var inst = _active[k];
+            var ph = inst.phase;
+            if (ph === "DONE" || ph === "ENDING") continue;
+            if (inst.playerUuid === wanted ||
+                (inst.participantUuids && inst.participantUuids[wanted])) return inst;
         }
         return null;
     }
@@ -2700,28 +3049,29 @@
             var def = Registry.get(defId);
             if (!def) { err(`start: unknown raid "${defId}"`); return null; }
             if (!player) { err("start: no player"); return null; }
-            var puid = String(player.uuid);
-            if (playerInRaid(puid)) { warn(`start: ${player.username} already in a raid`); return null; }
+            if (raidForPlayer(player)) { warn(`start: ${player.username}'s team is already in a raid`); return null; }
             var id = newInstanceId(defId);
             var inst = new RaidInstance(id, def, level || playerLevel(player), player);
             if (!Manager._server) { try { Manager._server = player.server; } catch (eSv) {} }
             if (def.bossBar !== false) {
                 inst.bar = makeBar(Manager._server, inst.id, inst.barBase, def.barColor, def.barOverlay);
-                if (inst.bar) { try { inst.bar.addPlayer(player); } catch (eB) {} }
             }
             _active[id] = inst;
+            onlineParticipants(inst, true);
             persistActive(Manager._server);
-            broadcastSnd(Manager._server, player, def.sounds.raidStart, RAIDSTART_RADIUS);
-            showTitle(player, "RAID INCOMING", inst.barBase, "red");
-            try { player.tell(Text.of("§c⚔ " + inst.barBase + " begins...")); } catch (eT) {}
+            eachOnlineParticipant(inst, function (member) {
+                playSnd(member, def.sounds.raidStart);
+                showTitle(member, "RAID INCOMING", inst.barBase, "red");
+                try { member.tell(Text.of("§c⚔ " + inst.barBase + " begins for your team...")); } catch (eT) {}
+            }, false);
             fireCb(def, "onStart", [inst.ctx(player)]);
-            info(`started "${defId}" as ${id} for ${player.username}`);
+            info(`started shared "${defId}" as ${id} for team ${inst.teamId || inst.playerUuid}`);
             return id;
         },
 
         // True when the player has a raid still fighting (ENDING/DONE excluded).
         isInRaid: function (player) {
-            try { return !!playerInRaid(String(player.uuid)); } catch (e) { return false; }
+            try { return !!raidForPlayer(player); } catch (e) { return false; }
         },
 
         // Scheduler recovery uses this to reconnect its in-progress transaction
@@ -2750,7 +3100,7 @@
         stop: function (idOrPlayer) {
             var inst = null;
             if (typeof idOrPlayer === "string") inst = _active[idOrPlayer];
-            else if (idOrPlayer && idOrPlayer.uuid) inst = playerInRaid(String(idOrPlayer.uuid));
+            else if (idOrPlayer && idOrPlayer.uuid) inst = raidForPlayer(idOrPlayer);
             if (!inst) return false;
             cleanupMobs(inst);
             notifyTerminal(inst, "stopped");
@@ -2828,7 +3178,7 @@
     EntityEvents.death("minecraft:player", function (event) {
         try {
             var player = event.entity;
-            var inst = playerInRaid(String(player.uuid));
+            var inst = raidForPlayer(player);
             if (!inst) return;
             inst._deathCount = Math.max(0, Number(inst._deathCount) || 0) + 1;
             inst._diedDuringRaid = true;
@@ -2836,13 +3186,35 @@
         } catch (e) { warn("record raid player death: " + e); }
     });
 
-    // Capture UUIDs before logout invalidates Java entity wrappers. The actual
-    // raid tick is paused while the owner is offline and resumes after rebinding.
+    PlayerEvents.loggedIn(function (event) {
+        try {
+            deliverPendingTeamWins(event.player);
+            var inst = raidForPlayer(event.player);
+            if (inst) {
+                inst._teamSyncLeft = 0;
+                onlineParticipants(inst, true);
+            }
+        } catch (e) { warn("team raid login sync: " + e); }
+    });
+
+    // Rebind only when the last teammate in the raid dimension logs out. One
+    // member leaving no longer pauses a battle that the rest of the team is
+    // still actively fighting.
     PlayerEvents.loggedOut(function (event) {
         try {
-            var puid = String(event.player.uuid);
-            for (var k in _active) {
-                if (_active[k].playerUuid === puid) prepareForRebind(_active[k]);
+            var leaving = normUuid(event.player.uuid);
+            var inst = raidForPlayer(event.player);
+            if (inst) {
+                var players = combatParticipants(inst, true);
+                var hasOther = false;
+                for (var i = 0; i < players.length; i++) {
+                    if (normUuid(players[i].uuid) !== leaving) { hasOther = true; break; }
+                }
+                if (!hasOther) {
+                    prepareForRebind(inst);
+                    inst._offlinePrepared = true;
+                }
+                inst._teamSyncLeft = 0;
             }
             persistActive(event.server || Manager._server);
         } catch (e) { warn("logout raid save: " + e); }

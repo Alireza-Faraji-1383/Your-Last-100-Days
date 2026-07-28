@@ -188,3 +188,5 @@ config/voicechat
 !/config/xaero/minimap/
 /config/xaero/minimap/*
 !/config/xaero/minimap/default_radar_categories_client.json
+servers.dat_old
+servers.dat

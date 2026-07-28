@@ -183,24 +183,6 @@
 			id: "5707E1C306DE7F69"
 			rewards: [
 				{
-					count: 3
-					id: "302AD2FA5AC5A35E"
-					item: {
-						count: 1
-						id: "minecraft:golden_apple"
-					}
-					type: "item"
-				}
-				{
-					count: 64
-					id: "7D5BCC072A9FD97D"
-					item: {
-						count: 1
-						id: "minecraft:oak_log"
-					}
-					type: "item"
-				}
-				{
 					id: "24D184E5047DFF86"
 					type: "xp"
 					xp: 50
@@ -210,6 +192,15 @@
 					item: {
 						count: 1
 						id: "minecraft:trial_key"
+					}
+					type: "item"
+				}
+				{
+					count: 4
+					id: "2F1F7628166B8D45"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
 					}
 					type: "item"
 				}
@@ -241,15 +232,6 @@
 					type: "item"
 				}
 				{
-					count: 2
-					id: "6C5F90506729CB0E"
-					item: {
-						count: 1
-						id: "minecraft:golden_apple"
-					}
-					type: "item"
-				}
-				{
 					id: "19554321EA506D72"
 					type: "xp"
 					xp: 50
@@ -264,6 +246,15 @@
 						}
 						count: 1
 						id: "minecraft:splash_potion"
+					}
+					type: "item"
+				}
+				{
+					count: 4
+					id: "4BF46428A6687C39"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
 					}
 					type: "item"
 				}
@@ -301,24 +292,20 @@
 					xp: 50
 				}
 				{
-					id: "4DE12DD5240B923B"
-					item: {
-						components: {
-							"minecraft:potion_contents": {
-								potion: "minecraft:long_invisibility"
-							}
-						}
-						count: 1
-						id: "minecraft:splash_potion"
-					}
-					type: "item"
-				}
-				{
 					count: 64
 					id: "40BA1FC87E140DB9"
 					item: {
 						count: 1
 						id: "minecraft:stone"
+					}
+					type: "item"
+				}
+				{
+					count: 4
+					id: "65F686145BFFB510"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
 					}
 					type: "item"
 				}
@@ -373,6 +360,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 4
+					id: "38744BF58FA32AF7"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "hexagon"
 			tasks: [{
@@ -393,15 +389,6 @@
 			}
 			id: "7D7BFA807275B79B"
 			rewards: [
-				{
-					count: 2
-					id: "48FD38BB0769E223"
-					item: {
-						count: 1
-						id: "minecraft:golden_apple"
-					}
-					type: "item"
-				}
 				{
 					id: "4BB349265A0C0ABE"
 					type: "xp"
@@ -426,6 +413,15 @@
 						}
 						count: 1
 						id: "minecraft:potion"
+					}
+					type: "item"
+				}
+				{
+					count: 4
+					id: "56F7145617B5DADB"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
 					}
 					type: "item"
 				}
@@ -846,6 +842,15 @@
 					id: "1808DEE0BFE5DB65"
 					type: "xp"
 					xp: 200
+				}
+				{
+					count: 8
+					id: "4B820434E9C16501"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
 				}
 			]
 			tasks: [{

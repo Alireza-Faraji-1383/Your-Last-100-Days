@@ -143,7 +143,7 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 5L
+				count: 3L
 				disable_toast: true
 				id: "5539C51064745E13"
 				item: { count: 1, id: "kubejs:silver_coin" }
@@ -556,9 +556,10 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
+				count: 32L
 				disable_toast: true
 				id: "7B1F1F3ABA0058C9"
-				item: { count: 1, id: "kubejs:silver_coin" }
+				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
 			x: -3.5d
@@ -607,7 +608,7 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 32L
+				count: 16L
 				disable_toast: true
 				id: "0136491460B47C1E"
 				item: { count: 1, id: "kubejs:copper_coin" }
@@ -632,9 +633,10 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
+				count: 32L
 				disable_toast: true
 				id: "0887CC9E206C3370"
-				item: { count: 1, id: "kubejs:silver_coin" }
+				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
 			x: -1.0d
