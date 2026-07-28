@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate FTB Quests master SNBT without launching Minecraft.
 
-Checks, across kubejs/data/ftbquests_master/quests/:
+Checks, across config/ftbquests/quests/:
   - braces/brackets balance in every .snbt
   - every id: "..." is exactly 16 hex chars and globally unique
   - every task `type:` is a known FTB Quests task type
@@ -46,18 +46,20 @@ def main():
             t = m.group(1)
             # task types live inside a tasks:[ ] block; reward types are a separate set.
             # accept known task types and the known reward types here.
-            if t not in TASK_TYPES and t not in {"item","xp","random","command","loot","advancement","choice"}:
+            if t not in TASK_TYPES and t not in {"item","xp","xp_levels","random","command","loot","advancement","choice"}:
                 errors.append(f"{f}: unknown type '{t}'")
-        for m in re.finditer(r'table_id:\s*"([^"]*)"', text):
-            ref_tables.append((f.name, m.group(1)))
+        for m in re.finditer(r'table_id:\s*(?:"([^"]*)"|([0-9]+)L?)', text):
+            ref_tables.append((f.name, m.group(1) or m.group(2)))
         if "reward_tables" in str(f):
             for m in re.finditer(r'(?<!\w)id:\s*"([0-9A-Fa-f]{16})"', text):
-                table_ids.add(m.group(1))
+                table_id = m.group(1).upper()
+                table_ids.add(table_id)
+                table_ids.add(str(int(table_id, 16)))
         for m in re.finditer(r'dependencies:\s*\[([^\]]*)\]', text):
             for d in re.findall(r'"([^"]*)"', m.group(1)):
                 dep_refs.append((f.name, d))
     for fn, t in ref_tables:
-        if t not in table_ids:
+        if t.upper() not in table_ids and t not in table_ids:
             errors.append(f"{fn}: table_id '{t}' has no matching reward table")
     for fn, d in dep_refs:
         if d not in ids:

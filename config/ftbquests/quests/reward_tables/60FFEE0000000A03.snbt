@@ -1,7 +1,7 @@
 {
 	id: "60FFEE0000000A03"
 	loot_size: 1
-	order_index: 7
+	order_index: 8
 	rewards: [
 		{
 			count: 64

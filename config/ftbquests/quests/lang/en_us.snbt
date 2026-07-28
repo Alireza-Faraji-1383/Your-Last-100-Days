@@ -942,9 +942,71 @@
 	quest.EFAE976AF7EE9BB5.quest_desc: ["Continue the Pillager bounty with a larger target. Complete it to unlock the next tier."]
 	quest.F0EBC458C9636398.quest_desc: ["Continue the Vindicator bounty with a larger target. Complete it to unlock the next tier."]
 	quest.FA4875BC0617EF25.quest_desc: ["Finish the final Vindicator bounty for the largest reward in this chain."]
+	chapter.4E7A000000000000.chapter_subtitle: ["Explore the Nether, master its structures and travel, then push into Netherite and beacon challenges."]
+	chapter.4E7A000000000000.title: "Nether Expedition"
+	quest.4E7A000000000101.quest_desc: ["Cross a Nether portal after securing obsidian. A Fire Resistance potion is waiting on the other side of this milestone."]
+	quest.4E7A000000000101.title: "Through the Red Veil"
+	quest.4E7A000000000201.quest_desc: ["Deflect a Ghast fireball back into its owner. Timing and a clear line of sight matter more than raw damage."]
+	quest.4E7A000000000201.title: "Return to Sender"
+	quest.4E7A000000000301.quest_desc: ["Bring a Ghast into the Overworld and finish it there. This is an optional logistics and portal-control challenge."]
+	quest.4E7A000000000301.title: "Uneasy Alliance"
+	quest.4E7A000000000401.quest_desc: ["Wear at least one piece of gold armor and barter a Gold Ingot with a Piglin. Violence is not the only way to profit here."]
+	quest.4E7A000000000401.title: "Gold Standard"
+	quest.4E7A000000000501.quest_desc: ["Find a Bastion Remnant. Bring gold armor, blocks, food, and an escape route before challenging its Piglins."]
+	quest.4E7A000000000501.title: "Bastion Bound"
+	quest.4E7A000000000601.quest_desc: ["Open a naturally generated Bastion chest and survive long enough to leave with the spoils."]
+	quest.4E7A000000000601.title: "War Pigs"
+	quest.4E7A000000000701.quest_desc: ["Discover the Underground Bastion added by Repurposed Structures. Its buried halls reward careful navigation."]
+	quest.4E7A000000000701.quest_subtitle: "Repurposed Structures"
+	quest.4E7A000000000701.title: "Bastions, Evil, and Bones"
+	quest.4E7A000000000801.quest_desc: ["Enter a Nether City added by Repurposed Structures. Treat it as a full expedition, not a quick loot stop."]
+	quest.4E7A000000000801.quest_subtitle: "Repurposed Structures"
+	quest.4E7A000000000801.title: "Blazing Cities"
+	quest.4E7A000000000901.quest_desc: ["Locate the redesigned Nether Fortress. YUNG's overhaul keeps the vanilla advancement but makes the structure a far larger encounter."]
+	quest.4E7A000000000901.quest_subtitle: "YUNG's Better Nether Fortresses"
+	quest.4E7A000000000901.title: "A Fortress Reforged"
+	quest.4E7A000000000A01.quest_desc: ["Defeat a Blaze and obtain a Blaze Rod. This opens brewing and the Wither branch."]
+	quest.4E7A000000000A01.title: "Into Fire"
+	quest.4E7A000000000B01.quest_desc: ["Brew any potion. Blaze Powder fuels the stand, Nether Wart starts most useful recipes, and modifiers extend or strengthen the result."]
+	quest.4E7A000000000B01.title: "Local Brewery"
+	quest.4E7A000000000C01.quest_desc: ["Drink a potion from a Supplementaries Goblet. The Goblet can serve drinks as well as decorate a base."]
+	quest.4E7A000000000C01.quest_subtitle: "Supplementaries"
+	quest.4E7A000000000C01.title: "Raise a Goblet"
+	quest.4E7A000000000D01.quest_desc: ["Have every vanilla potion effect active at the same time. Plan ingredients and duration before drinking the first bottle."]
+	quest.4E7A000000000D01.title: "A Furious Cocktail"
+	quest.4E7A000000000E01.quest_desc: ["Use the Nether's 8:1 coordinate ratio to travel at least seven Overworld kilometres through the Nether."]
+	quest.4E7A000000000E01.title: "Subspace Bubble"
+	quest.4E7A000000000F01.quest_desc: ["Ride a Strider across lava while guiding it with Warped Fungus on a Stick."]
+	quest.4E7A000000000F01.title: "This Boat Has Legs"
+	quest.4E7A000000001001.quest_desc: ["Bring a Strider into the Overworld and ride it for fifty blocks across lava. Keeping it warm is part of the challenge."]
+	quest.4E7A000000001001.title: "Feels Like Home"
+	quest.4E7A000000001101.quest_desc: ["Visit all five vanilla Nether biomes: Wastes, Soul Sand Valley, Basalt Deltas, Crimson Forest, and Warped Forest."]
+	quest.4E7A000000001101.title: "Hot Tourist Destinations"
+	quest.4E7A000000001201.quest_desc: ["Obtain Crying Obsidian from a Piglin barter, a Ruined Portal, or Nether loot. It is the core of a Respawn Anchor."]
+	quest.4E7A000000001201.title: "Who Is Cutting Onions?"
+	quest.4E7A000000001301.quest_desc: ["Charge a Respawn Anchor with Glowstone. It sets a safe respawn point in the Nether but explodes if used in another dimension."]
+	quest.4E7A000000001301.title: "Not Quite Nine Lives"
+	quest.4E7A000000001401.quest_desc: ["Mine Ancient Debris from the Nether's lower layers. Fire Resistance and controlled explosions make the search safer."]
+	quest.4E7A000000001401.title: "Hidden in the Depths"
+	quest.4E7A000000001501.quest_desc: ["Wear a complete set of vanilla Netherite armor. This is the chapter's main armor milestone."]
+	quest.4E7A000000001501.title: "Cover Me in Debris"
+	quest.4E7A000000001601.quest_desc: ["Upgrade any Spartan Weaponry weapon to Netherite. Choose a weapon that complements your build instead of crafting one only for the quest."]
+	quest.4E7A000000001601.quest_subtitle: "Spartan Weaponry"
+	quest.4E7A000000001601.title: "Netherite Arsenal"
+	quest.4E7A000000001C01.quest_desc: ["Obtain a Wither Skeleton Skull. Looting improves the odds; three skulls are needed for the ritual."]
+	quest.4E7A000000001C01.title: "Spooky Scary Skeleton"
+	quest.4E7A000000001D01.quest_desc: ["Summon the Wither only after preparing a controlled arena, emergency food, and a reliable way to finish the fight."]
+	quest.4E7A000000001D01.title: "Withering Heights"
+	quest.4E7A000000001E01.quest_desc: ["Construct and activate a Beacon. The Nether Star proves the Wither fight is over; a small pyramid is enough for this milestone."]
+	quest.4E7A000000001E01.title: "Bring Home the Beacon"
+	quest.4E7A000000001F01.quest_desc: ["Build a four-layer Beacon pyramid and activate its secondary power. This optional project takes 164 mineral blocks."]
+	quest.4E7A000000001F01.title: "Beaconator"
+	quest.4E7A000000002001.quest_desc: ["Have every vanilla status effect active at once. This optional capstone ties together brewing, travel, combat, and preparation across the whole world."]
+	quest.4E7A000000002001.title: "How Did We Get Here?"
 	reward_table.074C461988BC8A64.title: "Perks Tire 1"
 	reward_table.21291284C4DCB97E.title: "Eagic Material"
 	reward_table.4BC174D743CFA536.title: "Perks Tire 2"
+	reward_table.4E7A00000000F001.title: "Nether Supply Cache"
 	reward_table.5E6B5CA8723C9B45.title: "Perks Tire 3"
 	reward_table.60FFEE0000000A01.title: "Woods"
 	reward_table.60FFEE0000000A02.title: "Ore"

@@ -1,0 +1,138 @@
+{
+	icon: {
+		id: "minecraft:respawn_anchor"
+	}
+	id: "4E7A00000000F001"
+	loot_size: 1
+	order_index: 7
+	rewards: [
+		{
+			count: 16
+			id: "4E7A00000000F101"
+			item: {
+				count: 1
+				id: "minecraft:blackstone"
+			}
+			weight: 12.0f
+		}
+		{
+			count: 16
+			id: "4E7A00000000F102"
+			item: {
+				count: 1
+				id: "minecraft:quartz"
+			}
+			weight: 12.0f
+		}
+		{
+			count: 16
+			id: "4E7A00000000F103"
+			item: {
+				count: 1
+				id: "minecraft:glowstone_dust"
+			}
+			weight: 10.0f
+		}
+		{
+			count: 16
+			id: "4E7A00000000F104"
+			item: {
+				count: 1
+				id: "minecraft:soul_sand"
+			}
+			weight: 8.0f
+		}
+		{
+			count: 16
+			id: "4E7A00000000F105"
+			item: {
+				count: 1
+				id: "minecraft:crimson_stem"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 16
+			id: "4E7A00000000F106"
+			item: {
+				count: 1
+				id: "minecraft:warped_stem"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 8
+			id: "4E7A00000000F107"
+			item: {
+				count: 1
+				id: "minecraft:obsidian"
+			}
+			weight: 7.0f
+		}
+		{
+			count: 4
+			id: "4E7A00000000F108"
+			item: {
+				count: 1
+				id: "minecraft:magma_cream"
+			}
+			weight: 6.0f
+		}
+		{
+			count: 4
+			id: "4E7A00000000F109"
+			item: {
+				count: 1
+				id: "minecraft:gold_ingot"
+			}
+			weight: 6.0f
+		}
+		{
+			count: 8
+			id: "4E7A00000000F10A"
+			item: {
+				count: 1
+				id: "minecraft:experience_bottle"
+			}
+			weight: 5.0f
+		}
+		{
+			id: "4E7A00000000F10B"
+			item: {
+				components: {
+					"minecraft:potion_contents": {
+						potion: "minecraft:long_fire_resistance"
+					}
+				}
+				count: 1
+				id: "minecraft:potion"
+			}
+			weight: 5.0f
+		}
+		{
+			count: 2
+			id: "4E7A00000000F10C"
+			item: {
+				count: 1
+				id: "minecraft:ghast_tear"
+			}
+			weight: 3.0f
+		}
+		{
+			id: "4E7A00000000F10D"
+			item: {
+				count: 1
+				id: "minecraft:golden_apple"
+			}
+			weight: 2.0f
+		}
+		{
+			count: 2
+			id: "4E7A00000000F10E"
+			item: {
+				count: 1
+				id: "kubejs:silver_coin"
+			}
+		}
+	]
+}
