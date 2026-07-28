@@ -37,6 +37,12 @@
 	quest_links: [ ]
 	quests: [
 		{
+			icon: {
+				components: {
+					"ftbquests:icon": "supplementaries:item/globes/globe_the_world"
+				}
+				id: "ftbquests:custom_icon"
+			}
 			id: "5AFFF6D2AB06C8E5"
 			rewards: [
 				{
@@ -64,13 +70,23 @@
 					}
 					type: "item"
 				}
+				{
+					count: 3
+					id: "15A3236AC5852AB0"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "rsquare"
 			size: 3.0d
 			tasks: [{
-				advancement: "minecraft:story/root"
+				advancement: "y100d:raid_victories/root"
 				criterion: ""
-				id: "0DD60D43B4FF16B1"
+				disable_toast: true
+				id: "2930293D3F8BE627"
 				type: "advancement"
 			}]
 			x: -3.5d
@@ -105,6 +121,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 3
+					id: "7FAE7F3F59CF39E8"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "minecraft:story/smelt_iron"
@@ -120,11 +145,22 @@
 				id: "artifacts:rooted_boots"
 			}
 			id: "2C9F7712321854BE"
-			rewards: [{
-				id: "558B14564E27A212"
-				type: "xp"
-				xp: 50
-			}]
+			rewards: [
+				{
+					id: "558B14564E27A212"
+					type: "xp"
+					xp: 50
+				}
+				{
+					count: 3
+					id: "01AD0F78350D8AB1"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "gear"
 			size: 1.8d
 			tasks: [{
@@ -191,7 +227,7 @@
 		{
 			dependencies: ["2C9F7712321854BE"]
 			icon: {
-				id: "mctradepost:marine_lapis"
+				id: "apothic_enchanting:warden_tendril"
 			}
 			id: "60CB4B59DF9639E5"
 			rewards: [
@@ -429,6 +465,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 5
+					id: "01DBF221C31FB177"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "minecraft:story/mine_diamond"
@@ -442,20 +487,31 @@
 		{
 			dependencies: ["5A6266BFD238B9B9"]
 			id: "2B42A1CB36B3751A"
-			rewards: [{
-				count: 10
-				id: "753F61B124A4C758"
-				item: {
-					components: {
-						"minecraft:potion_contents": {
-							potion: "minecraft:weakness"
+			rewards: [
+				{
+					count: 10
+					id: "753F61B124A4C758"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:weakness"
+							}
 						}
+						count: 1
+						id: "supplementaries:bamboo_spikes_tipped"
 					}
-					count: 1
-					id: "supplementaries:bamboo_spikes_tipped"
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 10
+					id: "054D2DBB4DC9D553"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				advancement: "minecraft:story/form_obsidian"
 				criterion: ""
@@ -483,13 +539,16 @@
 					type: "xp"
 					xp: 200
 				}
+				{
+					count: 32
+					id: "24E5A2BA3783FF90"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
 			]
-			tasks: [{
-				advancement: "apothic_enchanting:enchanter"
-				criterion: ""
-				id: "60E506B8143C011A"
-				type: "advancement"
-			}]
 			x: -4.5d
 			y: 9.0d
 		}
@@ -565,7 +624,7 @@
 					type: "item"
 				}
 				{
-					count: 48
+					count: 32
 					id: "6AD18677A7E21165"
 					item: {
 						count: 1
@@ -716,15 +775,26 @@
 		{
 			dependencies: ["2B42A1CB36B3751A"]
 			id: "0451F8A8783102BB"
-			rewards: [{
-				count: 2
-				id: "2C5DD721FA017762"
-				item: {
-					count: 1
-					id: "waystones:warp_dust"
+			rewards: [
+				{
+					count: 2
+					id: "2C5DD721FA017762"
+					item: {
+						count: 1
+						id: "waystones:warp_dust"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 32
+					id: "21BD8D91211B04E6"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				id: "1A39B0F4B2D13D76"
 				item: { count: 1, id: "waystones:warp_stone" }

@@ -56,6 +56,15 @@
 			x: 0.0d
 			y: -1.5d
 		}
+		{
+			color: 16712482
+			height: 7.0d
+			image: "relics:item/aqua_walker_bubble"
+			rotation: 0.0d
+			width: 7.0d
+			x: -1.0d
+			y: 9.5d
+		}
 	]
 	order_index: 0
 	quest_links: [ ]
@@ -332,7 +341,7 @@
 				}
 				type: "item"
 			}]
-			shape: "rsquare"
+			shape: "circle"
 			size: 3.0d
 			tasks: [
 				{
@@ -349,8 +358,8 @@
 					type: "advancement"
 				}
 			]
-			x: 15.0d
-			y: -3.0d
+			x: -1.0d
+			y: 10.0d
 		}
 		{
 			can_repeat: true
@@ -374,7 +383,7 @@
 			tasks: [
 				{
 					consume_items: true
-					count: 2L
+					count: 3L
 					disable_toast: true
 					id: "1392A016441A4006"
 					item: { count: 1, id: "kubejs:silver_coin" }
@@ -389,8 +398,8 @@
 					type: "advancement"
 				}
 			]
-			x: 13.0d
-			y: -1.0d
+			x: -3.0d
+			y: 12.0d
 		}
 		{
 			can_repeat: true
@@ -477,8 +486,8 @@
 					type: "advancement"
 				}
 			]
-			x: 13.0d
-			y: -5.0d
+			x: 2.0d
+			y: 10.0d
 		}
 		{
 			can_repeat: true
@@ -572,7 +581,7 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 16L
+				count: 8L
 				disable_toast: true
 				id: "3221DE51DEB90C9B"
 				item: { count: 1, id: "kubejs:copper_coin" }
@@ -666,8 +675,8 @@
 					type: "advancement"
 				}
 			]
-			x: 12.0d
-			y: -3.0d
+			x: -4.0d
+			y: 10.0d
 		}
 		{
 			can_repeat: true
@@ -690,7 +699,7 @@
 			tasks: [
 				{
 					consume_items: true
-					count: 45L
+					count: 64L
 					disable_toast: true
 					id: "366F0C634C507948"
 					item: { count: 1, id: "kubejs:silver_coin" }
@@ -705,8 +714,180 @@
 					type: "advancement"
 				}
 			]
-			x: 15.0d
-			y: -6.0d
+			x: -1.0d
+			y: 7.0d
+		}
+		{
+			can_repeat: true
+			dependencies: ["3CB8AFABD435DAFD"]
+			disable_toast: true
+			icon: {
+				id: "irons_spellbooks:fireward_ring"
+			}
+			id: "65D31C65AC32B67F"
+			min_required_dependencies: 1
+			rewards: [{
+				id: "4CE14F1BF622183C"
+				item: {
+					count: 1
+					id: "irons_spellbooks:fireward_ring"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [
+				{
+					consume_items: true
+					count: 32L
+					disable_toast: true
+					id: "4A26E3B250059BE9"
+					item: { count: 1, id: "kubejs:silver_coin" }
+					only_from_crafting: false
+					type: "item"
+				}
+				{
+					advancement: "enigmaticlegacyplus:main/cursed_ring"
+					criterion: ""
+					disable_toast: true
+					id: "103569BC1E57D6E7"
+					type: "advancement"
+				}
+			]
+			x: 1.5d
+			y: 8.0d
+		}
+		{
+			can_repeat: true
+			dependencies: ["3CB8AFABD435DAFD"]
+			disable_toast: true
+			icon: {
+				id: "irons_spellbooks:poisonward_ring"
+			}
+			id: "3B5CD1E8CC348059"
+			min_required_dependencies: 1
+			rewards: [{
+				id: "25E9FE6C65BB66EF"
+				item: {
+					count: 1
+					id: "irons_spellbooks:poisonward_ring"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [
+				{
+					consume_items: true
+					count: 32L
+					disable_toast: true
+					id: "62E9DF32501CF86B"
+					item: { count: 1, id: "kubejs:silver_coin" }
+					only_from_crafting: false
+					type: "item"
+				}
+				{
+					advancement: "enigmaticlegacyplus:main/cursed_ring"
+					criterion: ""
+					disable_toast: true
+					id: "0890D13AB2247F43"
+					type: "advancement"
+				}
+			]
+			x: -3.0d
+			y: 8.0d
+		}
+		{
+			can_repeat: true
+			dependencies: ["3CB8AFABD435DAFD"]
+			disable_toast: true
+			icon: {
+				components: {
+					"irons_spellbooks:spell_container": {
+						data: [ ]
+						maxSpells: 8
+						mustEquip: 1b
+						spellWheel: 1b
+					}
+				}
+				id: "irons_spellbooks:rotten_spell_book"
+			}
+			id: "33F1A2A536FC9A45"
+			min_required_dependencies: 1
+			rewards: [{
+				id: "62F5F634F5BCD2D4"
+				item: {
+					components: {
+						"irons_spellbooks:spell_container": {
+							data: [ ]
+							maxSpells: 8
+							mustEquip: 1b
+							spellWheel: 1b
+						}
+					}
+					count: 1
+					id: "irons_spellbooks:rotten_spell_book"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [
+				{
+					consume_items: true
+					count: 16L
+					disable_toast: true
+					id: "0BF907F8F45A3E22"
+					item: { count: 1, id: "kubejs:silver_coin" }
+					only_from_crafting: false
+					type: "item"
+				}
+				{
+					advancement: "enigmaticlegacyplus:main/cursed_ring"
+					criterion: ""
+					disable_toast: true
+					id: "22964231C164FB94"
+					type: "advancement"
+				}
+			]
+			x: 1.0d
+			y: 12.0d
+		}
+		{
+			can_repeat: true
+			dependencies: ["3CB8AFABD435DAFD"]
+			disable_toast: true
+			icon: {
+				id: "enigmaticlegacyplus:bless_stone"
+			}
+			id: "65C476C9FC6DDBCD"
+			min_required_dependencies: 1
+			rewards: [{
+				id: "08D8714AAA8FDB9F"
+				item: {
+					count: 1
+					id: "enigmaticlegacyplus:bless_stone"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [
+				{
+					consume_items: true
+					count: 3L
+					disable_toast: true
+					id: "3F8868CBBBDB66C8"
+					item: { count: 1, id: "kubejs:coin" }
+					only_from_crafting: false
+					type: "item"
+				}
+				{
+					advancement: "enigmaticlegacyplus:main/cursed_ring"
+					criterion: ""
+					disable_toast: true
+					id: "072874DB5FFE83D5"
+					type: "advancement"
+				}
+			]
+			x: -1.0d
+			y: 13.0d
 		}
 	]
 }

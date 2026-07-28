@@ -30,6 +30,15 @@
 	quests: [
 		{
 			id: "2D3422284A9EFF23"
+			rewards: [{
+				count: 16
+				id: "0FEDAAF689F2439F"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
 			shape: "diamond"
 			size: 3.0d
 			tasks: [{
@@ -117,8 +126,8 @@
 				id: "1D8F3445E4A6D9DB"
 				type: "advancement"
 			}]
-			x: -3.0d
-			y: -7.5d
+			x: 0.0d
+			y: -10.0d
 		}
 		{
 			icon: {
@@ -356,8 +365,8 @@
 				id: "4FB9CE4460B4CD42"
 				type: "advancement"
 			}]
-			x: 3.5d
-			y: -7.5d
+			x: 2.0d
+			y: -2.5d
 		}
 		{
 			icon: {
@@ -581,11 +590,21 @@
 				id: "enigmaticlegacyplus:the_infinitum"
 			}
 			id: "6FC427158E014F38"
-			rewards: [{
-				id: "3382F19D9CCF7DF6"
-				type: "xp"
-				xp: 1000
-			}]
+			rewards: [
+				{
+					id: "3382F19D9CCF7DF6"
+					type: "xp"
+					xp: 1000
+				}
+				{
+					id: "109FF496B8D00A04"
+					item: {
+						count: 1
+						id: "kubejs:coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "rsquare"
 			size: 2.5d
 			tasks: [{

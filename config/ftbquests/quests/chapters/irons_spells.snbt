@@ -468,15 +468,46 @@
 		}
 		{
 			id: "2A787B99A8B0C767"
-			rewards: [{
-				count: 3
-				id: "70AB901751BE0F43"
-				item: {
-					count: 1
-					id: "minecraft:paper"
+			rewards: [
+				{
+					count: 3
+					id: "70AB901751BE0F43"
+					item: {
+						count: 1
+						id: "minecraft:paper"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "3C2AF06E7DA76466"
+					item: {
+						components: {
+							"irons_spellbooks:spell_container": {
+								data: [{
+									id: "irons_spellbooks:shield"
+									index: 0
+									level: 3
+									locked: 1b
+								}]
+								maxSpells: 1
+								mustEquip: 0b
+								spellWheel: 0b
+							}
+						}
+						count: 1
+						id: "irons_spellbooks:scroll"
+					}
+					type: "item"
+				}
+				{
+					id: "14FAC3DA2C746C63"
+					item: {
+						count: 1
+						id: "irons_spellbooks:common_ink"
+					}
+					type: "item"
+				}
+			]
 			shape: "diamond"
 			size: 1.5d
 			tasks: [{
@@ -1648,15 +1679,25 @@
 				id: "irons_spellbooks:scroll"
 			}
 			id: "300F2E45D185A9A1"
-			rewards: [{
-				count: 10
-				id: "5BEC54791A7352FB"
-				item: {
-					count: 1
-					id: "irons_spellbooks:arcane_essence"
+			rewards: [
+				{
+					count: 10
+					id: "5BEC54791A7352FB"
+					item: {
+						count: 1
+						id: "irons_spellbooks:arcane_essence"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "04BE217E71DFEE1B"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "gear"
 			size: 3.0d
 			tasks: [{
@@ -1724,14 +1765,37 @@
 				id: "minecraft:grass_block"
 			}
 			id: "3009018DEC1EC952"
-			rewards: [{
-				id: "2D116FDCEA070CBA"
-				item: {
-					count: 1
-					id: "minecraft:map"
+			rewards: [
+				{
+					id: "2D116FDCEA070CBA"
+					item: {
+						count: 1
+						id: "minecraft:map"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "00E8509C5CEC7ED0"
+					item: {
+						components: {
+							"irons_spellbooks:spell_container": {
+								data: [{
+									id: "irons_spellbooks:fang_ward"
+									index: 0
+									level: 1
+									locked: 1b
+								}]
+								maxSpells: 1
+								mustEquip: 0b
+								spellWheel: 0b
+							}
+						}
+						count: 1
+						id: "irons_spellbooks:scroll"
+					}
+					type: "item"
+				}
+			]
 			shape: "octagon"
 			size: 2.0d
 			tasks: [{

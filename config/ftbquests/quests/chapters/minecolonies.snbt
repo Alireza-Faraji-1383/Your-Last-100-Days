@@ -150,12 +150,6 @@
 					type: "item"
 				}
 				{
-					exclude_from_claim_all: true
-					id: "2257E29AB79A4B37"
-					table_id: 2567105459748842191L
-					type: "loot"
-				}
-				{
 					count: 10
 					id: "2BEBD3F0979F3CB2"
 					item: {
@@ -200,6 +194,14 @@
 						}
 						count: 1
 						id: "minecraft:enchanted_book"
+					}
+					type: "item"
+				}
+				{
+					id: "590FDF65434D1E81"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -2735,6 +2737,7 @@
 					type: "item"
 				}
 				{
+					count: 2
 					id: "668BDF4A69907D35"
 					item: {
 						count: 1
