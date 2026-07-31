@@ -46,6 +46,13 @@
         "mowziesmobs:umvuthana_crane": "active",
         "mowziesmobs:umvuthana_raptor": "active"
     };
+    // A tiny set of animation-driven bosses use their own direct MoveToTarget
+    // goal rather than the raid's staged navigation. A larger search range is
+    // safe for one boss and prevents its native goal from stalling at the
+    // 80-100 block raid spawn perimeter.
+    const NATIVE_LONG_PATH_RAID_MOB_RANGES = {
+        "cataclysm:ignis": 128
+    };
     const BOSSES_RISE_NS = "block_factorys_bosses:";
     // Bosses' Rise also registers props, projectiles, arena pieces and summons
     // as entity types. Only these independently mobile soldiers may enter raids.
@@ -643,8 +650,46 @@
     RaidBuilder.prototype.onRoundEnd   = function (fn) { this.def.callbacks.onRoundEnd = fn; return this; };
     RaidBuilder.prototype.onWin        = function (fn) { this.def.callbacks.onWin = fn; return this; };
     RaidBuilder.prototype.onLose       = function (fn) { this.def.callbacks.onLose = fn; return this; };
+
+    // Every wave gets EnhancedAI breaching creepers. The first two waves form
+    // the raid's opening demolition squads; later waves use a smaller escort.
+    // High-tier raids (day 70+) gain one extra. Existing authored tntCreeper
+    // groups count toward the minimum, so waves with 4-6 already are not doubled.
+    function ensureEnhancedRaidCreepers(d) {
+        if (!d || !d.rounds) return;
+        var dayMatch = /^day(\d+)(?:_|$)/.exec(String(d.id || ""));
+        var raidDay = dayMatch ? parseInt(dayMatch[1], 10) : 0;
+        var tierBonus = raidDay >= 70 ? 1 : 0;
+        for (var i = 0; i < d.rounds.length; i++) {
+            var round = d.rounds[i];
+            if (!round || !round.mobs) continue;
+            var wanted = (i < 2 ? 3 : 2) + tierBonus;
+            var existing = 0;
+            var firstGroup = null;
+            for (var j = 0; j < round.mobs.length; j++) {
+                var mob = round.mobs[j];
+                if (!mob || mob.type !== "minecraft:creeper" ||
+                    !Array.isArray(mob.presets) || mob.presets.indexOf("tntCreeper") === -1) continue;
+                existing += positiveIntOr(mob.count, 1);
+                if (!firstGroup) firstGroup = mob;
+            }
+            if (existing >= wanted) continue;
+            var missing = wanted - existing;
+            if (firstGroup) {
+                firstGroup.count += missing;
+            } else {
+                round.mobs.push(normalizeMobSpec({
+                    type: "minecraft:creeper",
+                    count: missing,
+                    presets: ["mobile", "tntCreeper"]
+                }));
+            }
+        }
+    }
+
     RaidBuilder.prototype.build = function () {
         var d = this.def;
+        ensureEnhancedRaidCreepers(d);
         if (!validateDef(d)) { err(`raid "${d.id}" failed validation — not registered`); return null; }
         Registry.register(d);
         return d;
@@ -2095,9 +2140,11 @@
             // Per-raid followRange overrides any preset follow_range (last write wins
             // in applyAttributes), clamped to FOLLOW_RANGE_CAP (see const above).
             var xtra = mob.extraArgs;
-            var fr = def.followRange;
+            var nativeLongRange = NATIVE_LONG_PATH_RAID_MOB_RANGES[mob.type];
+            var fr = nativeLongRange != null ? nativeLongRange : def.followRange;
             if (fr == null) fr = FOLLOW_RANGE_CAP;            // also caps preset values (farSight=100)
-            if (fr > FOLLOW_RANGE_CAP) fr = FOLLOW_RANGE_CAP;
+            var frCap = nativeLongRange != null ? nativeLongRange : FOLLOW_RANGE_CAP;
+            if (fr > frCap) fr = frCap;
             xtra = xtra.concat(["attributes/follow_range=" + fr]);
             // Zombie-family reinforcements: every hit rolls a chance to spawn an
             // extra zombie — with 40+ raid zombies that snowballs mob count (and
@@ -2331,13 +2378,20 @@
         var pending = readPendingTeamWins(server);
         if (pending.length === 0) return 0;
 
-        var keep = [], delivered = 0;
+        var keep = [], toDeliver = [], delivered = 0;
         for (var i = 0; i < pending.length; i++) {
             var record = pending[i];
             if (!record || normUuid(record.uuid) !== puid) {
                 keep.push(record);
                 continue;
             }
+            toDeliver.push(record);
+        }
+        // Consume this player's entitlements before external reward callbacks.
+        // A broken mod item must never replay earlier rewards on every login.
+        writePendingTeamWins(server, keep);
+        for (var i = 0; i < toDeliver.length; i++) {
+            var record = toDeliver[i];
             var def = Registry.get(String(record.defId));
             if (!def) {
                 warn("pending team win references missing raid " + record.defId);
@@ -2356,7 +2410,6 @@
             deliverVictory(saved, player, true);
             delivered++;
         }
-        writePendingTeamWins(server, keep);
         return delivered;
     }
 
@@ -2642,11 +2695,13 @@
                                 this.deathBarText());
                 this.updateBar(player);
                 if (this.roundMobs.length === 0 && this.carryover.length === 0) {
-                    deliverVictoryToTeam(this);
+                    // Commit + persist the terminal state before external reward
+                    // callbacks, so one invalid mod item cannot replay rewards.
                     this.barEnd("§a§l✔ " + this.barBase + " - VICTORY" + this.deathBarText(), "GREEN", 1.0);
                     this.endLeft = this.def.barHold || DEFAULT_BAR_HOLD;
                     this.phase = "ENDING";
                     notifyTerminal(this, "win");
+                    deliverVictoryToTeam(this);
                 }
                 break;
         }

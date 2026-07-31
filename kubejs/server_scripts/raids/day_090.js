@@ -28,6 +28,7 @@
             .mob(M.DRAUGR).count(10)
             .mob(M.ELITE_DRAUGR).count(6)
             .mob(M.SOUL_SKELETON).count(4)
+            .mob(M.NECROMANCER).count(1)
             .mob(M.MINER_MYTHIC).count(9)
         // --- Round 2: knights of chaos ---
         .round("Chaos Knights")
@@ -39,6 +40,7 @@
             .mob(M.WITHER_KNIGHT).count(2)
             .mob(M.TOSSER_MYTHIC).count(2)
             .mob(M.ENDERMAPTERA).count(5)
+            .mob(M.CRYOMANCER).count(1)
             .mob(M.MINER_MYTHIC).count(8)
         // --- Round 3: the covenant reborn ---
         .round("Covenant Reborn")
@@ -63,6 +65,7 @@
             .mob(M.WATCHER).count(3)
             .mob(M.ENDERMAPTERA).count(4)
             .mob(M.TNT_CREEPER).count(3)
+            .mob(M.ARCHEVOKER).count(1)
             .mob(M.MINER_MYTHIC).count(9)
         // --- Round 5 (FINAL): IGNIS with regular troops, no minibosses ---
         .round("Ignis, the Dark Flame")
@@ -78,7 +81,6 @@
         .onWin(function (ctx) {
             try {
       ctx.player.give("cataclysm:ignitium_ingot 2");
-      ctx.player.give("cataclysm_spellbooks:burning_knowledge_fragment 1");
       ctx.player.give("irons_spellbooks:epic_ink 3");
             } catch (e) {}
         })

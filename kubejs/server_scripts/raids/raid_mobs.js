@@ -201,8 +201,9 @@
                           equip: equipWith(SW + "iron_battleaxe", ARMOR_ARCANE),
                           nbt: { IsBaby: false, Fire: -1 },
                           extraArgs: ["attributes/max_health=50"] },
-        // Breaching creeper: launches at walls, TNT-like blast.
-        TNT_CREEPER:    { type: "minecraft:creeper", presets: ["tntCreeper"] },
+        // EnhancedAI breaching creeper: sprints/parkours/climbs toward the raid,
+        // launches at walls and uses a TNT-like blast.
+        TNT_CREEPER:    { type: "minecraft:creeper", presets: ["mobile", "tntCreeper"] },
         // Poison-web artillery spider.
         WEB_SPIDER:     { type: "minecraft:cave_spider", presets: ["mobile", "webShooter"] },
 
@@ -341,9 +342,11 @@
         // Burning Arena boss, HP-balanced for an open-field raid.
         MALEDICTUS:      { type: CAT + "maledictus", boss: true, breacher: true,
                            extraArgs: ["attributes/max_health=200"] },
-        // Final boss of night 90, HP-balanced (vanilla 400 -> 250).
-        IGNIS:           { type: CAT + "ignis", boss: true, breacher: true,
-                           extraArgs: ["attributes/max_health=250"] },
+        // Final boss of night 90. Keep its native animation/path AI isolated
+        // from EnhancedAI's explosion-avoidance goal; its wave now contains
+        // breaching creepers. The core supplies its one-boss 128 path range.
+        IGNIS:           { type: CAT + "ignis", boss: true, breacher: true, noDefaults: true,
+                           extraArgs: ["attributes/max_health=250", "attributes/movement_speed=0.38"] },
 
         // Night 100 final boss. The core binds it to the raid player before
         // spawn so its native gear-copy, spells and phase logic initialize.

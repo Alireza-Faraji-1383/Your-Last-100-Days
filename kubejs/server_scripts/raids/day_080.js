@@ -31,6 +31,7 @@
             .mob(M.BLAZE).count(4)
             .mob(M.KOBOLETON).count(3)
             .mob(M.FLAMING_SHOOTER).count(4)
+            .mob(M.PYROMANCER).count(1)
             .mob(M.MINER_IGNIS).count(8)
         // --- Round 2: the ignited warband ---
         .round("Ignited Warband")
@@ -41,6 +42,7 @@
             .mob(M.ASH_GUARD).count(4)
             .mob(M.FLAMING_GUARD).count(3)
             .mob(M.KOBOLEDIATOR).count(2)
+            .mob(M.PRIEST).count(1)
             .mob(M.MINER_IGNIS).count(8)
         // --- Round 3: revenants breach the line ---
         .round("The Revenants")
@@ -51,6 +53,7 @@
             .mob(M.FLAMING_SHOOTER).count(3)
             .mob(M.TNT_CREEPER).count(4)
             .mob(M.PEARL_ZOMBIE_CHAMPION).count(2)
+            .mob(M.NECROMANCER).count(1)
             .mob(M.MINER_IGNIS).count(8)
         // --- Round 4 (FINAL): MALEDICTUS ---
         .round("Maledictus")
