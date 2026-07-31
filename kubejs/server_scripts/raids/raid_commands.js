@@ -1,32 +1,48 @@
 // priority: 80
 // kubejs/server_scripts/raids/raid_commands.js
 //
-// /raid command tree. Depends on RaidManager + RaidRegistry globals (raid_core.js).
-//
-//   /raid start <id>            start a raid at the executing player
-//   /raid start <id> <player>   start a raid targeting a named player
-//   /raid stop                  stop the executing player's raid + clean its mobs
-//   /raid stopall               stop every active raid
-//   /raid list                  list registered raid ids
-//   /raid status                list active raids (round/phase/alive)
+// Admin command tree for the custom raid system:
+//   /raid help
+//   /raid start <id> [player]
+//   /raid status
+//   /raid killmobs
+//   /raid stop
+//   /raid list
+//   /raid cleanup
+//   /raid stopall
 
 (function () {
     "use strict";
 
     function mgr() {
-        if (typeof RaidManager === "undefined") { console.error("[Raid-cmd] RaidManager missing"); return null; }
+        if (typeof RaidManager === "undefined") {
+            console.error("[Raid-cmd] RaidManager missing");
+            return null;
+        }
         return RaidManager;
     }
-    function reg() { return (typeof RaidRegistry !== "undefined") ? RaidRegistry : null; }
+
+    function reg() {
+        return (typeof RaidRegistry !== "undefined") ? RaidRegistry : null;
+    }
 
     ServerEvents.commandRegistry(function (event) {
-        var Commands  = event.commands;
+        var Commands = event.commands;
         var StringArg = Java.loadClass("com.mojang.brigadier.arguments.StringArgumentType");
 
         function getPlayer(src) {
             try { return src.getPlayer(); }
-            catch (e) { try { return src.getPlayerOrException(); } catch (e2) { return null; } }
+            catch (e) {
+                try { return src.getPlayerOrException(); }
+                catch (e2) { return null; }
+            }
         }
+
+        function getServer(src) {
+            try { if (src.server) return src.server; } catch (e) {}
+            try { return src.getServer(); } catch (e2) { return null; }
+        }
+
         function safeExec(src, fn) {
             try { return fn(); }
             catch (e) {
@@ -35,109 +51,279 @@
                 return 0;
             }
         }
-        // KubeJS player wrapper by name, via the executing player's server handle.
-        // NB: server.getPlayer(String) parses the arg as a UUID in KubeJS 2101
-        // ("UUID string must be 32 or 36 characters long"), so match on username
-        // over the live player list instead — same API resolvePlayer() uses.
+
+        // KubeJS 1.21 treats server.getPlayer(String) as a UUID lookup. Matching
+        // the live wrapper list by username also keeps this compatible with the
+        // team-aware RaidManager.
         function findKjsPlayer(src, name) {
-            if (typeof RaidManager === "undefined" || !RaidManager.findOnlinePlayer) return null;
+            var M = mgr();
+            if (!M || !M.findOnlinePlayer) return null;
             var self = getPlayer(src);
-            var server = self ? self.server : null;
-            var want = String(name).toLowerCase();
-            return RaidManager.findOnlinePlayer(server, function (p) {
-                return String(p.username).toLowerCase() === want;
+            var server = self ? self.server : getServer(src);
+            var wanted = String(name).toLowerCase();
+            return M.findOnlinePlayer(server, function (player) {
+                return String(player.username).toLowerCase() === wanted;
             });
         }
 
-        // Tab completion for <id>: every registered raid id, prefix-filtered.
-        // Plain JS function auto-converts to the SuggestionProvider SAM in Rhino.
+        function raidDay(id) {
+            var match = /^day(\d+)/i.exec(String(id));
+            return match ? Number(match[1]) : 999999;
+        }
+
+        // Keep raid ID suggestions stable and ordered from day 10 to day 100.
         function suggestRaidIds(ctx, builder) {
             var R = reg();
             var ids = R ? R.list() : [];
-            var rem = "";
-            try { rem = String(builder.getRemaining()).toLowerCase(); } catch (e) {}
+            ids.sort(function (a, b) {
+                var byDay = raidDay(a) - raidDay(b);
+                return byDay || String(a).localeCompare(String(b));
+            });
+            var remaining = "";
+            try { remaining = String(builder.getRemaining()).toLowerCase(); } catch (e) {}
             for (var i = 0; i < ids.length; i++) {
                 var id = String(ids[i]);
-                if (!rem || id.toLowerCase().indexOf(rem) === 0) builder.suggest(id);
+                if (!remaining || id.toLowerCase().indexOf(remaining) === 0) {
+                    builder.suggest(id);
+                }
             }
             return builder.buildFuture();
         }
 
+        function suggestPlayers(ctx, builder) {
+            var server = getServer(ctx.source);
+            var remaining = "";
+            try { remaining = String(builder.getRemaining()).toLowerCase(); } catch (e) {}
+            try {
+                var players = null;
+                if (server && server.players) players = server.players;
+                else if (server && server.getPlayerList) players = server.getPlayerList().getPlayers();
+                if (players) {
+                    var it = players.iterator();
+                    while (it.hasNext()) {
+                        var player = it.next();
+                        var name = "";
+                        try { name = String(player.username); } catch (eName) {}
+                        if (!name || name === "undefined") {
+                            try { name = String(player.getGameProfile().getName()); } catch (eProfile) {}
+                        }
+                        if (!name || name === "undefined") {
+                            try { name = String(player.getScoreboardName()); } catch (eScore) {}
+                        }
+                        if (!remaining || name.toLowerCase().indexOf(remaining) === 0) {
+                            builder.suggest(name);
+                        }
+                    }
+                }
+            } catch (e2) {}
+            return builder.buildFuture();
+        }
+
+        // Minecraft registers its own debug /raid branch before KubeJS. Brigadier
+        // merges equal root literals, which otherwise leaks vanilla subcommands
+        // (check, sound, spawnleader, setomen...) into our autocomplete and also
+        // creates ambiguous start/stop branches. Remove only that one root before
+        // registering the custom tree; all unrelated commands stay untouched.
+        function removeExistingRaidRoot(dispatcher) {
+            try {
+                if (!dispatcher || !dispatcher.getRoot) return false;
+                var root = dispatcher.getRoot();
+                if (!root || !root.getChild("raid")) return true;
+                var commandNodeClass = root.getClass().getSuperclass();
+                var fields = ["children", "literals", "arguments"];
+                for (var i = 0; i < fields.length; i++) {
+                    var field = commandNodeClass.getDeclaredField(fields[i]);
+                    field.setAccessible(true);
+                    field.get(root).remove("raid");
+                }
+                return !root.getChild("raid");
+            } catch (e) {
+                console.error("[Raid-cmd] could not replace vanilla /raid tree: " + e);
+                return false;
+            }
+        }
+
+        function showHelp(src) {
+            src.sendSystemMessage(Text.of("[Raid] Commands:"));
+            src.sendSystemMessage(Text.of("  /raid start <id> [player] - start a custom raid"));
+            src.sendSystemMessage(Text.of("  /raid status - show active raids"));
+            src.sendSystemMessage(Text.of("  /raid killmobs - kill your team's current raid mobs"));
+            src.sendSystemMessage(Text.of("  /raid stop - stop your team's raid"));
+            src.sendSystemMessage(Text.of("  /raid list - show registered raid ids"));
+            src.sendSystemMessage(Text.of("  /raid cleanup - remove orphaned raid mobs and bars"));
+            src.sendSystemMessage(Text.of("  /raid stopall - stop every active raid"));
+            return 1;
+        }
+
+        var helpNode = Commands.literal("help")
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    return showHelp(ctx.source);
+                });
+            });
+
         var startNode = Commands.literal("start")
             .then(Commands.argument("id", StringArg.word())
                 .suggests(suggestRaidIds)
-                .executes(function (ctx) { return safeExec(ctx.source, function () {
-                    var M = mgr(); if (!M) return 0;
-                    var player = getPlayer(ctx.source);
-                    if (!player) { ctx.source.sendFailure(Text.of("must be run by/at a player")); return 0; }
-                    var id = StringArg.getString(ctx, "id");
-                    var iid = M.start(M.playerLevel(player), player, id);
-                    if (iid) player.tell(Text.of("[Raid] started '" + id + "' (" + iid + ")"));
-                    else ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id, or player already in a raid)"));
-                    return iid ? 1 : 0;
-                }); })
-                .then(Commands.argument("player", StringArg.word())
-                    .executes(function (ctx) { return safeExec(ctx.source, function () {
-                        var M = mgr(); if (!M) return 0;
+                .executes(function (ctx) {
+                    return safeExec(ctx.source, function () {
+                        var M = mgr();
+                        if (!M) return 0;
+                        var player = getPlayer(ctx.source);
+                        if (!player) {
+                            ctx.source.sendFailure(Text.of("[Raid] use /raid start <id> <player> from the console."));
+                            return 0;
+                        }
                         var id = StringArg.getString(ctx, "id");
-                        var pname = StringArg.getString(ctx, "player");
-                        var target = findKjsPlayer(ctx.source, pname);
-                        if (!target) { ctx.source.sendFailure(Text.of("[Raid] player not found: " + pname)); return 0; }
-                        var iid = M.start(M.playerLevel(target), target, id);
-                        if (iid) { try { target.tell(Text.of("[Raid] '" + id + "' started on you!")); } catch (e) {} }
-                        else ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id, or target already in a raid)"));
-                        return iid ? 1 : 0;
-                    }); })));
-
-        var stopNode = Commands.literal("stop")
-            .executes(function (ctx) { return safeExec(ctx.source, function () {
-                var M = mgr(); if (!M) return 0;
-                var player = getPlayer(ctx.source);
-                if (!player) { ctx.source.sendFailure(Text.of("must be run by a player")); return 0; }
-                var ok = M.stop(player);
-                player.tell(Text.of(ok ? "[Raid] stopped your raid." : "[Raid] you have no active raid."));
-                return ok ? 1 : 0;
-            }); });
-
-        var stopAllNode = Commands.literal("stopall")
-            .executes(function (ctx) { return safeExec(ctx.source, function () {
-                var M = mgr(); if (!M) return 0;
-                var n = M.stopAll();
-                ctx.source.sendSystemMessage(Text.of("[Raid] stopped " + n + " raid(s)."));
-                return 1;
-            }); });
-
-        var listNode = Commands.literal("list")
-            .executes(function (ctx) { return safeExec(ctx.source, function () {
-                var R = reg();
-                var ids = R ? R.list() : [];
-                ctx.source.sendSystemMessage(Text.of("[Raid] registered (" + ids.length + "): " + (ids.join(", ") || "<none>")));
-                return 1;
-            }); });
+                        var instanceId = M.start(M.playerLevel(player), player, id);
+                        if (instanceId) {
+                            player.tell(Text.of("[Raid] started '" + id + "' (" + instanceId + ")"));
+                        } else {
+                            ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id or team already in a raid)."));
+                        }
+                        return instanceId ? 1 : 0;
+                    });
+                })
+                .then(Commands.argument("player", StringArg.word())
+                    .suggests(suggestPlayers)
+                    .executes(function (ctx) {
+                        return safeExec(ctx.source, function () {
+                            var M = mgr();
+                            if (!M) return 0;
+                            var id = StringArg.getString(ctx, "id");
+                            var playerName = StringArg.getString(ctx, "player");
+                            var target = findKjsPlayer(ctx.source, playerName);
+                            if (!target) {
+                                ctx.source.sendFailure(Text.of("[Raid] player not found: " + playerName));
+                                return 0;
+                            }
+                            var instanceId = M.start(M.playerLevel(target), target, id);
+                            if (instanceId) {
+                                target.tell(Text.of("[Raid] '" + id + "' was started for your team."));
+                            } else {
+                                ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id or target team already in a raid)."));
+                            }
+                            return instanceId ? 1 : 0;
+                        });
+                    })));
 
         var statusNode = Commands.literal("status")
-            .executes(function (ctx) { return safeExec(ctx.source, function () {
-                var M = mgr(); if (!M) return 0;
-                var act = M.getActive();
-                if (act.length === 0) { ctx.source.sendSystemMessage(Text.of("[Raid] no active raids.")); return 1; }
-                ctx.source.sendSystemMessage(Text.of("[Raid] active (" + act.length + "):"));
-                for (var i = 0; i < act.length; i++) {
-                    var a = act[i];
-                    ctx.source.sendSystemMessage(Text.of("  " + a.id + " — round " + a.round + " — " + a.phase + " — alive " + a.alive));
-                }
-                return 1;
-            }); });
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    var M = mgr();
+                    if (!M) return 0;
+                    var active = M.getActive();
+                    if (active.length === 0) {
+                        ctx.source.sendSystemMessage(Text.of("[Raid] no active raids."));
+                        return 1;
+                    }
+                    ctx.source.sendSystemMessage(Text.of("[Raid] active (" + active.length + "):"));
+                    for (var i = 0; i < active.length; i++) {
+                        var raid = active[i];
+                        ctx.source.sendSystemMessage(Text.of(
+                            "  " + raid.id + " | wave " + raid.round +
+                            " | " + raid.phase + " | alive " + raid.alive
+                        ));
+                    }
+                    return 1;
+                });
+            });
+
+        var killMobsNode = Commands.literal("killmobs")
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    var M = mgr();
+                    if (!M) return 0;
+                    var player = getPlayer(ctx.source);
+                    if (!player) {
+                        ctx.source.sendFailure(Text.of("[Raid] this command must be run by a player."));
+                        return 0;
+                    }
+                    var killed = M.killMobs(player);
+                    if (killed < 0) {
+                        ctx.source.sendFailure(Text.of("[Raid] your team has no active raid."));
+                        return 0;
+                    }
+                    player.tell(Text.of("[Raid] killed " + killed + " mob(s) from your team's active raid."));
+                    return 1;
+                });
+            });
+
+        var stopNode = Commands.literal("stop")
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    var M = mgr();
+                    if (!M) return 0;
+                    var player = getPlayer(ctx.source);
+                    if (!player) {
+                        ctx.source.sendFailure(Text.of("[Raid] this command must be run by a player."));
+                        return 0;
+                    }
+                    var stopped = M.stop(player);
+                    player.tell(Text.of(stopped ? "[Raid] stopped your team's raid." : "[Raid] your team has no active raid."));
+                    return stopped ? 1 : 0;
+                });
+            });
+
+        var listNode = Commands.literal("list")
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    var R = reg();
+                    var ids = R ? R.list() : [];
+                    ids.sort(function (a, b) {
+                        var byDay = raidDay(a) - raidDay(b);
+                        return byDay || String(a).localeCompare(String(b));
+                    });
+                    ctx.source.sendSystemMessage(Text.of(
+                        "[Raid] registered (" + ids.length + "): " + (ids.join(", ") || "<none>")
+                    ));
+                    return 1;
+                });
+            });
+
+        var cleanupNode = Commands.literal("cleanup")
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    var M = mgr();
+                    if (!M) return 0;
+                    var removed = M.sweepOrphans();
+                    ctx.source.sendSystemMessage(Text.of(
+                        "[Raid] removed " + removed + " orphaned mob(s); stale bars were also checked."
+                    ));
+                    return 1;
+                });
+            });
+
+        var stopAllNode = Commands.literal("stopall")
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    var M = mgr();
+                    if (!M) return 0;
+                    var count = M.stopAll();
+                    ctx.source.sendSystemMessage(Text.of("[Raid] stopped " + count + " raid(s)."));
+                    return 1;
+                });
+            });
 
         var root = Commands.literal("raid")
             .requires(function (src) { return src.hasPermission(2); })
+            .executes(function (ctx) {
+                return safeExec(ctx.source, function () {
+                    return showHelp(ctx.source);
+                });
+            })
+            .then(helpNode)
             .then(startNode)
+            .then(statusNode)
+            .then(killMobsNode)
             .then(stopNode)
-            .then(stopAllNode)
             .then(listNode)
-            .then(statusNode);
+            .then(cleanupNode)
+            .then(stopAllNode);
 
+        removeExistingRaidRoot(event.dispatcher);
         event.register(root);
     });
 
-    console.info("[Raid-cmd] commands registered: /raid start|stop|stopall|list|status");
+    console.info("[Raid-cmd] commands registered: /raid help|start|status|killmobs|stop|list|cleanup|stopall");
 })();

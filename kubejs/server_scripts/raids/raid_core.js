@@ -126,6 +126,22 @@
         return String(value == null ? "" : value).toLowerCase();
     }
 
+    // KubeJS events and server player lists can expose either an enhanced
+    // ServerPlayer or a wrapper depending on the call site. Keep identity
+    // checks stable for both representations.
+    function playerUuidOf(player) {
+        if (!player) return "";
+        try { if (player.uuid != null) return normUuid(player.uuid); } catch (e) {}
+        try {
+            if (typeof player.getUUID === "function") return normUuid(player.getUUID());
+        } catch (e2) {}
+        try {
+            var raw = unwrapPlayer(player);
+            if (raw && typeof raw.getUUID === "function") return normUuid(raw.getUUID());
+        } catch (e3) {}
+        return "";
+    }
+
     function ftbTeamsManager() {
         if (_ftbTeamsUnavailable) return null;
         try {
@@ -158,7 +174,7 @@
     function ftbTeamForPlayer(player) {
         var manager = ftbTeamsManager();
         if (!manager || !player) return null;
-        var id = javaUuid(player.uuid);
+        var id = javaUuid(playerUuidOf(player));
         try {
             if (id) {
                 var byId = optionalValue(manager.getTeamForPlayerID(id));
@@ -191,7 +207,7 @@
 
     function playerTeamIdentity(player) {
         var team = ftbTeamForPlayer(player);
-        var puid = normUuid(player && player.uuid);
+        var puid = playerUuidOf(player);
         if (!team) return { teamId: null, members: teamRoster(null, puid) };
         var teamId = null;
         try { teamId = normUuid(team.getTeamId()); } catch (e) {
@@ -290,6 +306,7 @@
             try { bar.setColor(enumVal(C.Color, colorName || "RED", "RED")); } catch (e1) {}
             try { if (typeof bar.setOverlay === "function") bar.setOverlay(enumVal(C.Overlay, overlayName || "NOTCHED_10", "PROGRESS")); } catch (e2) {}
             try { bar.setProgress(1.0); } catch (e3) {}
+            try { bar.setVisible(true); } catch (e4) {}
             return bar;
         } catch (e) { warn("makeBar: " + e); return null; }
     }
@@ -353,7 +370,7 @@
         var r2 = radius * radius;
         findOnlinePlayer(server, function (p) {
             try {
-                if (String(p.uuid) === String(center.uuid)) return false;
+                if (playerUuidOf(p) === playerUuidOf(center)) return false;
                 var pdim = "";
                 try { pdim = String(playerLevel(p).dimension); } catch (eD) {}
                 if (cdim && pdim && pdim !== cdim) return false;
@@ -474,7 +491,7 @@
             barColor: "RED",        // BossBarColor enum name
             barOverlay: "NOTCHED_10",// BossBarOverlay enum name
             barHold: DEFAULT_BAR_HOLD,// ticks victory/defeat bar lingers
-            waterproof: true,        // raid mobs swim fast + never drown (attributes/water_movement_efficiency + oxygen_bonus)
+            waterproof: true,        // traversal only: swim fast + never drown; every spawn is still dry-only
             aggroRadius: 20,         // blocks: mobs proactively attack players/villagers/golems within this
             followRange: null,       // blocks: player detection + chase range (sets attributes/follow_range on every mob)
             sounds: {                // played to the target player (id null/"" = silent)
@@ -604,7 +621,8 @@
     RaidBuilder.prototype.barOverlay = function (o) { this.def.barOverlay = String(o); return this; };
     RaidBuilder.prototype.barHold    = function (t) { this.def.barHold = nonNegativeOr(t, DEFAULT_BAR_HOLD); return this; };
     // Water handling (default ON): full-speed water movement + no drowning for
-    // every mob of the raid. .waterproof(false) restores vanilla water behavior.
+    // every mob of the raid. This never permits spawning in/on water.
+    // .waterproof(false) restores vanilla water behavior after the dry spawn.
     RaidBuilder.prototype.waterproof = function (on) { this.def.waterproof = (on !== false); return this; };
     RaidBuilder.prototype.aggroRadius = function (n) { this.def.aggroRadius = nonNegativeOr(n, 20); return this; };
     RaidBuilder.prototype.followRange = function (n) { this.def.followRange = optionalNonNegative(n); return this; };
@@ -712,18 +730,222 @@
     const SPAWN_EMERGENCY_TRIES  = 16;  // paid only once when a whole plan needs rescue
     const SPAWN_EMERGENCY_Y_SCAN = 64;  // bounded fallback in ceiling dimensions
     const SPAWN_RETRY_TICKS      = 200; // no-safe-ground retry interval (10 seconds)
+    const COLONY_BUILDING_CLEARANCE = 50; // horizontal blocks from actual structure bounds
+    const COLONY_PLAYER_MIN_DISTANCE = 32;
+    const COLONY_BORDER_STEP = 16;
+    const COLONY_BORDER_SEARCH_MAX = 1024;
+    const COLONY_BORDER_INNER_LIMIT = 32;
+    const COLONY_BORDER_OFFSETS = [8, 0, -8, -16, -24, -32, 16, 32, 48, 64, 96, 128];
+
+    // MineColonies is consulted only while planning a wave. There is no colony
+    // work in the raid tick/aggro path.
+    var _mineColoniesManager = null;
+    var _mineColoniesTried = false;
+    var _mineColoniesWarned = false;
+    var _blockPosClass = null;
+
+    function mineColoniesManager() {
+        if (_mineColoniesTried) return _mineColoniesManager;
+        _mineColoniesTried = true;
+        try {
+            var IColonyManager = Java.loadClass("com.minecolonies.api.colony.IColonyManager");
+            _mineColoniesManager = IColonyManager.getInstance();
+        } catch (e) {
+            _mineColoniesManager = null;
+            warn("MineColonies API unavailable; using normal raid spawning: " + e);
+        }
+        return _mineColoniesManager;
+    }
+
+    function blockPosAt(x, y, z) {
+        try {
+            if (!_blockPosClass) _blockPosClass = Java.loadClass("net.minecraft.core.BlockPos");
+            return _blockPosClass.containing(Number(x), Number(y), Number(z));
+        } catch (e) { return null; }
+    }
+
+    function posAxis(pos, axis) {
+        if (!pos) return 0;
+        var getter = axis === "x" ? "getX" : (axis === "y" ? "getY" : "getZ");
+        try { return Number(pos[getter]()); } catch (e) {}
+        try { return Number(pos[axis]); } catch (e2) {}
+        return 0;
+    }
+
+    function addBuildingBounds(out, building) {
+        if (!building) return;
+        var buildingPos = null;
+        try { buildingPos = building.getPosition(); } catch (eBuildingPos) {}
+        try {
+            var corners = building.getCorners();
+            var a = corners ? corners.getA() : null;
+            var b = corners ? corners.getB() : null;
+            if (a && b) {
+                var minX = Math.min(posAxis(a, "x"), posAxis(b, "x"));
+                var maxX = Math.max(posAxis(a, "x"), posAxis(b, "x"));
+                var minZ = Math.min(posAxis(a, "z"), posAxis(b, "z"));
+                var maxZ = Math.max(posAxis(a, "z"), posAxis(b, "z"));
+                var px = posAxis(buildingPos, "x"), pz = posAxis(buildingPos, "z");
+                var pdx = px < minX ? minX - px : (px > maxX ? px - maxX : 0);
+                var pdz = pz < minZ ? minZ - pz : (pz > maxZ ? pz - maxZ : 0);
+                // Reject uninitialized/corrupt corner data rather than treating
+                // world origin or a giant rectangle as a real structure.
+                if (maxX - minX <= 256 && maxZ - minZ <= 256 &&
+                    (!buildingPos || pdx * pdx + pdz * pdz <= 4096)) {
+                    out.push({ minX: minX, maxX: maxX, minZ: minZ, maxZ: maxZ });
+                    return;
+                }
+            }
+        } catch (eCorners) {}
+        // Unbuilt/new huts can temporarily lack schematic corners. Their hut
+        // position still receives the full 50-block protection radius.
+        try {
+            var p = buildingPos || building.getPosition();
+            var x = posAxis(p, "x"), z = posAxis(p, "z");
+            out.push({ minX: x, maxX: x, minZ: z, maxZ: z });
+        } catch (ePos) {}
+    }
+
+    function collectMineColoniesBuildings(manager, rawLevel) {
+        var out = [];
+        if (!manager || !rawLevel) return out;
+        try {
+            var colonies = manager.getColonies(rawLevel);
+            var cit = colonies.iterator();
+            while (cit.hasNext()) {
+                var colony = cit.next();
+                var buildings = colony.getServerBuildingManager().getBuildings().values();
+                var bit = buildings.iterator();
+                while (bit.hasNext()) addBuildingBounds(out, bit.next());
+            }
+        } catch (e) {
+            if (!_mineColoniesWarned) {
+                _mineColoniesWarned = true;
+                warn("MineColonies building bounds unavailable: " + e);
+            }
+        }
+        return out;
+    }
+
+    function colonySpawnContext(level, player) {
+        var manager = mineColoniesManager();
+        if (!manager || !level || !player) return null;
+        try {
+            var rawLevel = heightLevel(level) || level;
+            var rawPlayer = unwrapPlayer(player);
+            if (!rawPlayer) return null;
+            var playerPos = (typeof rawPlayer.blockPosition === "function")
+                ? rawPlayer.blockPosition()
+                : blockPosAt(player.x, player.y, player.z);
+            if (!playerPos) return null;
+
+            var colony = manager.getColonyByPosFromWorld(rawLevel, playerPos);
+            if (!colony || !colony.isCoordInColony(rawLevel, playerPos)) return null;
+            var permissions = colony.getPermissions();
+            if (!permissions || !permissions.isColonyMember(rawPlayer)) return null;
+
+            var center = colony.getCenter();
+            return {
+                colony: colony,
+                rawLevel: rawLevel,
+                centerX: posAxis(center, "x") + 0.5,
+                centerY: posAxis(center, "y"),
+                centerZ: posAxis(center, "z") + 0.5,
+                buildings: collectMineColoniesBuildings(manager, rawLevel),
+                boundaryCache: {}
+            };
+        } catch (e) {
+            if (!_mineColoniesWarned) {
+                _mineColoniesWarned = true;
+                warn("MineColonies spawn context failed; using normal raid spawning: " + e);
+            }
+            return null;
+        }
+    }
+
+    function colonyContains(ctx, x, z) {
+        if (!ctx) return false;
+        try {
+            var pos = blockPosAt(x, ctx.centerY, z);
+            return !!(pos && ctx.colony.isCoordInColony(ctx.rawLevel, pos));
+        } catch (e) { return false; }
+    }
+
+    // Horizontal Euclidean distance from a point to each building footprint.
+    // A point inside a footprint has distance zero.
+    function colonyPointClear(ctx, x, z, clearance) {
+        if (!ctx) return true;
+        var limit = Math.max(COLONY_BUILDING_CLEARANCE, Number(clearance) || 0);
+        var limitSq = limit * limit;
+        for (var i = 0; i < ctx.buildings.length; i++) {
+            var b = ctx.buildings[i];
+            var dx = x < b.minX ? b.minX - x : (x > b.maxX ? x - b.maxX : 0);
+            var dz = z < b.minZ ? b.minZ - z : (z > b.maxZ ? z - b.maxZ : 0);
+            if (dx * dx + dz * dz < limitSq) return false;
+        }
+        return true;
+    }
+
+    // Find the real claimed border along one direction from the Town Hall.
+    // Six binary refinements put the answer within a quarter block.
+    function colonyBoundaryRadius(ctx, angle) {
+        if (!ctx) return null;
+        var key = Math.round(((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) * 10000);
+        if (ctx.boundaryCache[key] != null) return ctx.boundaryCache[key];
+        var low = 0, high = COLONY_BORDER_STEP;
+        while (high <= COLONY_BORDER_SEARCH_MAX &&
+               colonyContains(ctx, ctx.centerX + Math.cos(angle) * high,
+                                   ctx.centerZ + Math.sin(angle) * high)) {
+            low = high;
+            high += COLONY_BORDER_STEP;
+        }
+        if (high > COLONY_BORDER_SEARCH_MAX) return null;
+        for (var i = 0; i < 6; i++) {
+            var mid = (low + high) / 2;
+            if (colonyContains(ctx, ctx.centerX + Math.cos(angle) * mid,
+                                   ctx.centerZ + Math.sin(angle) * mid)) low = mid;
+            else high = mid;
+        }
+        ctx.boundaryCache[key] = high;
+        return high;
+    }
+
+    function colonyCandidate(level, pp, def, ctx, angle, clearance, hordeZone, emergency) {
+        var boundary = colonyBoundaryRadius(ctx, angle);
+        if (boundary == null) return null;
+        for (var i = 0; i < COLONY_BORDER_OFFSETS.length; i++) {
+            var offset = COLONY_BORDER_OFFSETS[i];
+            if (offset < -COLONY_BORDER_INNER_LIMIT) continue;
+            var radius = Math.max(8, boundary + offset);
+            var x = ctx.centerX + Math.cos(angle) * radius;
+            var z = ctx.centerZ + Math.sin(angle) * radius;
+            var pdx = x - pp.x, pdz = z - pp.z;
+            if (pdx * pdx + pdz * pdz <
+                COLONY_PLAYER_MIN_DISTANCE * COLONY_PLAYER_MIN_DISTANCE) continue;
+            if (!colonyPointClear(ctx, x, z, clearance)) continue;
+            var y = hordeZone
+                ? hordeZoneY(level, pp, def, x, z)
+                : (emergency
+                    ? emergencyGroundY(level, x, pp.y, z)
+                    : groundY(level, x, pp.y, z));
+            if (y != null) return { x: x, y: y, z: z, colonyProtected: true };
+        }
+        return null;
+    }
 
     // Hard cap on the follow_range actually applied to raid mobs. Vanilla path
     // search cost scales with follow_range (it bounds the A* search region per
     // repath), so followRange(300) made EVERY repath of EVERY mob scan a huge
     // region — the dominant lag with 40+ mobs. Detection/chase does NOT need it:
     // aggro() setTarget has no range limit and re-pulls mobs every 5 ticks, and
-    // a partial path still walks the mob toward a target beyond this cap.
+    // driveChaseNavigation() uses short staged waypoints that stay safely
+    // inside this search budget, even when the player is much farther away.
     const FOLLOW_RANGE_CAP = 48;
 
     // Blocks a mob must not stand ON (instant damage / sink / suffocate-adjacent).
     var _dangerBelow = {
         "minecraft:lava": 1, "minecraft:water": 1, "minecraft:magma_block": 1,
+        "minecraft:bubble_column": 1, "minecraft:lily_pad": 1, "minecraft:frogspawn": 1,
         "minecraft:cactus": 1, "minecraft:fire": 1, "minecraft:soul_fire": 1,
         "minecraft:campfire": 1, "minecraft:soul_campfire": 1,
         "minecraft:powder_snow": 1, "minecraft:sweet_berry_bush": 1
@@ -735,18 +957,23 @@
         "minecraft:dead_bush": 1, "minecraft:dandelion": 1, "minecraft:poppy": 1
     };
     function blockId(b) { try { return String(b.id); } catch (e) { return ""; } }
-    function isWaterBlock(b) { return blockId(b) === "minecraft:water"; }
     function isPassable(b)  { return isAirBlock(b) || !!_passable[blockId(b)]; }
     function isSafeFloor(b) { return b && !isAirBlock(b) && !_passable[blockId(b)] && !_dangerBelow[blockId(b)]; }
 
-    function safeSpawnY(level, bx, y, bz, allowWater) {
+    // Spawn validation is deliberately dry-only. "waterproof" still controls
+    // how raid mobs move and breathe after spawning, but can never make water a
+    // valid feet/head/floor block during placement.
+    function safeSpawnY(level, bx, y, bz) {
         var below = level.getBlock(bx, y - 1, bz);
         if (!isSafeFloor(below)) return null;
         var feet = level.getBlock(bx, y, bz);
         var head = level.getBlock(bx, y + 1, bz);
-        var feetClear = isPassable(feet) || (allowWater && isWaterBlock(feet));
-        var headClear = isPassable(head) || (allowWater && isWaterBlock(head));
-        return (feetClear && headClear) ? y : null;
+        return (isPassable(feet) && isPassable(head)) ? y : null;
+    }
+    function isDrySpawnPosition(level, pos) {
+        if (!pos) return false;
+        var bx = Math.floor(pos.x), by = Math.floor(pos.y), bz = Math.floor(pos.z);
+        return safeSpawnY(level, bx, by, bz) != null;
     }
 
     var _heightTypes = null;
@@ -781,8 +1008,8 @@
 
     // Returns {supported, y}. In normal dimensions this reads the world's
     // heightmap, so an underground player still gets an above-ground raid.
-    // OCEAN_FLOOR is allowed only for waterproof raids.
-    function surfaceGroundY(level, x, z, allowWater) {
+    // Ocean columns return null; the seabed is never used as a fallback.
+    function surfaceGroundY(level, x, z) {
         if (_heightRuntimeBroken) return { supported: false, y: null };
         var Types = heightTypes();
         var raw = heightLevel(level);
@@ -792,15 +1019,8 @@
         try {
             var top = Number(raw.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, bx, bz));
             for (var i = 0; i < offsets.length; i++) {
-                var sy = safeSpawnY(level, bx, top + offsets[i], bz, false);
+                var sy = safeSpawnY(level, bx, top + offsets[i], bz);
                 if (sy != null) return { supported: true, y: sy };
-            }
-            if (allowWater) {
-                var ocean = Number(raw.getHeight(Types.OCEAN_FLOOR, bx, bz));
-                for (var j = 0; j < offsets.length; j++) {
-                    var oy = safeSpawnY(level, bx, ocean + offsets[j], bz, true);
-                    if (oy != null) return { supported: true, y: oy };
-                }
             }
             return { supported: true, y: null };
         } catch (e) {
@@ -813,33 +1033,46 @@
     // Local Y fallback for ceiling dimensions (Nether-like) or an unavailable
     // heightmap API. Normal dimensions use surfaceGroundY and never choose a
     // cave merely because it is close to the player's current Y.
-    function groundYRange(level, x, baseY, z, scan, allowWater) {
+    function groundYRange(level, x, baseY, z, scan) {
         try {
             var bx = Math.floor(x), bz = Math.floor(z), py = Math.floor(baseY);
             for (var off = 0; off <= scan; off++) {
                 for (var s = 0; s < (off === 0 ? 1 : 2); s++) {
                     var y = py + (s === 0 ? off : -off);
-                    if (safeSpawnY(level, bx, y, bz, allowWater) != null) return y;
+                    if (safeSpawnY(level, bx, y, bz) != null) return y;
                 }
             }
         } catch (e) { warn(`groundY: ${e}`); }
         return null;
     }
-    function groundY(level, x, baseY, z, allowWater) {
-        var surface = surfaceGroundY(level, x, z, allowWater);
+    function groundY(level, x, baseY, z) {
+        var surface = surfaceGroundY(level, x, z);
         if (surface.supported) return surface.y;
-        return groundYRange(level, x, baseY, z, SPAWN_Y_SCAN, allowWater);
+        return groundYRange(level, x, baseY, z, SPAWN_Y_SCAN);
     }
-    function emergencyGroundY(level, x, baseY, z, allowWater) {
-        var surface = surfaceGroundY(level, x, z, allowWater);
+    function emergencyGroundY(level, x, baseY, z) {
+        var surface = surfaceGroundY(level, x, z);
         if (surface.supported) return surface.y;
-        return groundYRange(level, x, baseY, z, SPAWN_EMERGENCY_Y_SCAN, allowWater);
+        return groundYRange(level, x, baseY, z, SPAWN_EMERGENCY_Y_SCAN);
     }
 
     // Rare rescue path shared by every failed position in a wave. It expands
     // horizontal candidates; only ceiling/API fallbacks pay the wider Y scan.
     // It runs at most once per plan and returns only fully validated positions.
-    function findEmergencyAnchor(level, pp, def, seed) {
+    function findEmergencyAnchor(level, pp, def, seed, colonyCtx, spreadPadding, requireHordeZone) {
+        if (colonyCtx) {
+            var colonyBaseAng = ((seed || 0) % 360) * Math.PI / 180;
+            for (var ct = 0; ct < SPAWN_EMERGENCY_TRIES; ct++) {
+                var colonyAng = colonyBaseAng + ct * GOLDEN_ANG;
+                var colonyAnchor = colonyCandidate(
+                    level, pp, def, colonyCtx, colonyAng,
+                    COLONY_BUILDING_CLEARANCE + Math.max(0, Number(spreadPadding) || 0),
+                    !!requireHordeZone, true
+                );
+                if (colonyAnchor) return colonyAnchor;
+            }
+            return null;
+        }
         var minR = Math.max(6, def.spawn.minRadius);
         var maxR = Math.max(minR, def.spawn.maxRadius + 16);
         var span = Math.max(1, maxR - minR + 1);
@@ -849,7 +1082,7 @@
             var rad = minR + ((t * 11 + (seed || 0)) % span);
             var x = pp.x + Math.cos(ang) * rad;
             var z = pp.z + Math.sin(ang) * rad;
-            var y = emergencyGroundY(level, x, pp.y, z, def.waterproof !== false);
+            var y = emergencyGroundY(level, x, pp.y, z);
             if (y != null) return { x: x, y: y, z: z };
         }
         return null;
@@ -900,14 +1133,13 @@
 
     // Deterministic per-wave rotation keeps attack directions varied without
     // Math.random. Unsafe sectors are skipped rather than forcing a bad column.
-    function findRingGroupAnchors(level, pp, def, total, instanceId, roundIdx) {
+    function findRingGroupAnchors(level, pp, def, total, instanceId, roundIdx, colonyCtx) {
         var wanted = wantedRingGroups(total);
         var anchors = [];
         var minR = def.spawn.minRadius, maxR = def.spawn.maxRadius;
         var span = Math.max(1, maxR - minR + 1);
         var seed = hashStr(String(instanceId) + "#" + roundIdx + "#groups");
         var rotation = (seed % 360) * Math.PI / 180;
-        var allowWater = def.waterproof !== false;
 
         for (var g = 0; g < wanted; g++) {
             var baseAng = rotation + (g / wanted) * Math.PI * 2;
@@ -915,10 +1147,19 @@
             for (var t = 0; t < RING_GROUP_ANCHOR_TRIES; t++) {
                 var step = Math.ceil(t / 2) * RING_GROUP_ANGLE_STEP;
                 var ang = baseAng + (t === 0 ? 0 : (t % 2 === 1 ? step : -step));
+                if (colonyCtx) {
+                    found = colonyCandidate(
+                        level, pp, def, colonyCtx, ang,
+                        COLONY_BUILDING_CLEARANCE + RING_GROUP_SPREAD_MAX,
+                        false, false
+                    );
+                    if (found) break;
+                    continue;
+                }
                 var rad = minR + ((seed + g * 17 + t * 11) % span);
                 var x = pp.x + Math.cos(ang) * rad;
                 var z = pp.z + Math.sin(ang) * rad;
-                var y = groundY(level, x, pp.y, z, allowWater);
+                var y = groundY(level, x, pp.y, z);
                 if (y != null) { found = { x: x, y: y, z: z }; break; }
             }
             if (found) anchors.push(found);
@@ -928,7 +1169,7 @@
 
     // Global mob indices are distributed round-robin, so each squad receives a
     // mixture of the wave's roles. Golden-angle offsets prevent collision piles.
-    function ringGroupMobPos(level, anchors, idx, total, allowWater) {
+    function ringGroupMobPos(level, anchors, idx, total, colonyCtx) {
         if (!anchors || anchors.length === 0) return null;
         var group = idx % anchors.length;
         var localIdx = Math.floor(idx / anchors.length);
@@ -941,7 +1182,8 @@
         var rad = 1 + ((localIdx * 3 + group * 2) % spread);
         var x = anchor.x + Math.cos(ang) * rad;
         var z = anchor.z + Math.sin(ang) * rad;
-        var y = groundY(level, x, anchor.y, z, allowWater);
+        if (!colonyPointClear(colonyCtx, x, z, COLONY_BUILDING_CLEARANCE)) return anchor;
+        var y = groundY(level, x, anchor.y, z);
         if (y != null) return { x: x, y: y, z: z };
         return anchor;
     }
@@ -950,12 +1192,11 @@
     // at HORDE_ZONE_R must all have safe floor (same rules as groundY) at a
     // similar elevation. Returns the anchor Y, or null if the zone is unusable.
     function hordeZoneY(level, pp, def, ax, az) {
-        var allowWater = def.waterproof !== false;
-        var ay = groundY(level, ax, pp.y, az, allowWater);
+        var ay = groundY(level, ax, pp.y, az);
         if (ay == null) return null;
         var samples = [[HORDE_ZONE_R, 0], [-HORDE_ZONE_R, 0], [0, HORDE_ZONE_R], [0, -HORDE_ZONE_R]];
         for (var i = 0; i < samples.length; i++) {
-            var sy = groundY(level, ax + samples[i][0], ay, az + samples[i][1], allowWater);
+            var sy = groundY(level, ax + samples[i][0], ay, az + samples[i][1]);
             if (sy == null || Math.abs(sy - ay) > 3) return null;
         }
         return ay;
@@ -963,11 +1204,21 @@
 
     // Find the horde anchor: try the base angle, then rotate 45° per retry
     // through the other 7 directions. No unvalidated fallback is returned.
-    function findHordeAnchor(level, pp, def, instanceId, roundIdx) {
+    function findHordeAnchor(level, pp, def, instanceId, roundIdx, colonyCtx, total) {
         var rad = (def.spawn.minRadius + def.spawn.maxRadius) / 2;
         var baseAng = hordeWaveBaseAngle(def, instanceId, roundIdx);
+        var spread = Math.max(HORDE_SPREAD_MAX, Math.ceil(Math.sqrt(total || 1) * 1.5));
         for (var d = 0; d < 8; d++) {
             var ang = baseAng + d * (Math.PI / 4);
+            if (colonyCtx) {
+                var colonyAnchor = colonyCandidate(
+                    level, pp, def, colonyCtx, ang,
+                    COLONY_BUILDING_CLEARANCE + spread,
+                    true, false
+                );
+                if (colonyAnchor) return colonyAnchor;
+                continue;
+            }
             var ax = pp.x + Math.cos(ang) * rad;
             var az = pp.z + Math.sin(ang) * rad;
             var ay = hordeZoneY(level, pp, def, ax, az);
@@ -982,13 +1233,15 @@
     // freezes pathing). ~sqrt(total) keeps density roughly constant. Per-column
     // ground lookup; an unsafe offset collapses to the already validated anchor
     // column instead of mixing unsafe X/Z with anchor Y.
-    function hordeMobPos(level, anchor, idx, total, allowWater) {
+    function hordeMobPos(level, anchor, idx, total, colonyCtx) {
         var spread = Math.max(HORDE_SPREAD_MAX, Math.ceil(Math.sqrt(total || 1) * 1.5));
         var ang = idx * GOLDEN_ANG;
         var rad = 1 + ((idx * 5) % spread);
         var x = anchor.x + Math.cos(ang) * rad;
         var z = anchor.z + Math.sin(ang) * rad;
-        var y = groundY(level, x, anchor.y, z, allowWater);
+        if (!colonyPointClear(colonyCtx, x, z, COLONY_BUILDING_CLEARANCE))
+            return { x: anchor.x, y: anchor.y, z: anchor.z };
+        var y = groundY(level, x, anchor.y, z);
         if (y != null) return { x: x, y: y, z: z };
         return { x: anchor.x, y: anchor.y, z: anchor.z };
     }
@@ -1271,14 +1524,20 @@
         } catch (e3) {}
         return out;
     }
-    function nearestFrom(raw, victims, radiusSqr) {
+    function nearestFrom(raw, victims, radiusSqr, forcePlayerTarget) {
         var best = null, bestD = radiusSqr;
         for (var i = 0; i < victims.length; i++) {
             var e = victims[i];
             if (sameEnt(raw, e)) continue;
             var d;
             try { d = raw.distanceToSqr(e); } catch (x) { continue; }
-            if (d <= bestD && canHit(raw, e)) { bestD = d; best = e; }
+            // Team players are authored raid targets. Some modded mobs return
+            // false from canAttack while dormant or outside their native range;
+            // that must not disable their raid aggro.
+            if (d <= bestD && (forcePlayerTarget || canHit(raw, e))) {
+                bestD = d;
+                best = e;
+            }
         }
         return best;
     }
@@ -1291,7 +1550,7 @@
     function decideTarget(raw, teamRaws, victims, radiusSqr) {
         var atk = null;
         try { atk = (typeof raw.getLastHurtByMob === "function") ? raw.getLastHurtByMob() : null; } catch (x) {}
-        var teamTarget = nearestFrom(raw, teamRaws || [], Infinity);
+        var teamTarget = nearestFrom(raw, teamRaws || [], Infinity, true);
         if (teamTarget && mainPlayerEligible(teamTarget)) {
             // Prevent HurtByTargetGoal from stealing aggro between our 5-tick
             // passes. Attacks from participating teammates may remain; all
@@ -1321,15 +1580,20 @@
 
     // ---- Anti-stuck ---------------------------------------------------------
     // A mob that has a target but hasn't moved between aggro passes first gets a
-    // navigation recompute; if it stays frozen ~8s without a useful approach it
+    // short staged path; if it stays frozen ~5s without a useful approach it
     // teleports onto safe ground near the target. A close standstill is exempt
     // only with line of sight (legit melee crowd or ranged hold); a nearby mob
     // separated by a wall still counts as stuck.
     const STUCK_MOVE_SQ = 0.25; // blocks² moved per pass below this = "not moving"
     const STUCK_NEAR_SQ = 576;  // 24² blocks — inside this idling is allowed
     const STUCK_KICK    = 4;    // idle passes before a nav recompute (repeats every 4)
-    const STUCK_TP      = 32;   // idle passes (~8s at 5-tick cadence) before hard teleport
-    const STUCK_TP_R    = 12;   // teleport ring radius around the target
+    const STUCK_TP      = 20;   // idle passes (~5s at 5-tick cadence) before hard teleport
+    const STUCK_TP_R    = 10;   // teleport ring radius around the target
+    const STUCK_TP_TRIES = 6;   // bounded dry-ground directions per hard recovery
+    const CHASE_DIRECT_DISTANCE_SQ = 1600; // direct path only inside 40 blocks
+    const CHASE_WAYPOINT_DISTANCE = 28;    // stays inside the 48-block path budget
+    const CHASE_PATH_SPEED = 1.15;
+    const CHASE_LATERAL_OFFSETS = [0, 7, -7, 13, -13];
     const BOSS_BREACH_START = 2;       // first breach after ~0.5s stuck
     const BOSS_BREACH_RETRY = 4;       // retry every ~1s when no breakable wall was found
     const BOSS_BREACH_MAX_BLOCKS = 8;  // hard cap per attempt across every ray
@@ -1354,6 +1618,50 @@
         "minecraft:lodestone": true,
         "minecraft:respawn_anchor": true
     };
+
+    // follow_range stays capped for performance, so long-distance chasing is
+    // split into cheap nearby paths. Only a new target or a genuinely idle mob
+    // creates a path; moving mobs add no pathfinding work.
+    function driveChaseNavigation(raw, target, nav, attempt) {
+        if (!raw || !target || !nav) return false;
+        var x, y, z, tx, ty, tz;
+        try {
+            x = Number(raw.getX()); y = Number(raw.getY()); z = Number(raw.getZ());
+            tx = Number(target.getX()); ty = Number(target.getY()); tz = Number(target.getZ());
+        } catch (e) { return false; }
+        var dx = tx - x, dz = tz - z;
+        var horizontalSq = dx * dx + dz * dz;
+        try {
+            if (horizontalSq <= CHASE_DIRECT_DISTANCE_SQ) {
+                return !!nav.moveTo(target, CHASE_PATH_SPEED);
+            }
+
+            var horizontal = Math.sqrt(horizontalSq);
+            var ux = dx / horizontal, uz = dz / horizontal;
+            var lateral = CHASE_LATERAL_OFFSETS[
+                Math.abs(Number(attempt) || 0) % CHASE_LATERAL_OFFSETS.length
+            ];
+            var wx = x + ux * CHASE_WAYPOINT_DISTANCE - uz * lateral;
+            var wz = z + uz * CHASE_WAYPOINT_DISTANCE + ux * lateral;
+            var ratio = CHASE_WAYPOINT_DISTANCE / horizontal;
+            var wy = y + (ty - y) * Math.min(1, ratio);
+
+            // Ground navigators get a real surface waypoint. Flying/water
+            // navigators keep the interpolated Y and handle their own medium.
+            var navName = "";
+            try { navName = String(nav.getClass().getName()).toLowerCase(); } catch (eName) {}
+            var needsGround = navName.indexOf("flying") === -1 &&
+                              navName.indexOf("waterbound") === -1 &&
+                              navName.indexOf("amphibious") === -1;
+            if (needsGround) {
+                var level = null;
+                try { level = (typeof raw.level === "function") ? raw.level() : raw.level; } catch (eLevel) {}
+                var ground = level ? groundY(level, wx, y, wz) : null;
+                if (ground != null) wy = ground;
+            }
+            return !!nav.moveTo(wx, wy, wz, CHASE_PATH_SPEED);
+        } catch (ePath) { return false; }
+    }
 
     function isRaidBreacher(raw) {
         try {
@@ -1482,7 +1790,7 @@
         // block-scanning code and stuck bosses do not repeatedly scan tags.
         if (!st) {
             inst._mobState[key] = {
-                x: x, y: y, z: z, idle: 0, tp: 0,
+                x: x, y: y, z: z, idle: 0, tp: 0, pathTry: 0,
                 breacher: isRaidBreacher(raw)
             };
             return;
@@ -1494,7 +1802,11 @@
         try { distSq = raw.distanceToSqr(target); } catch (e4) { return; }
         var seesTarget = false;
         try { seesTarget = (typeof raw.hasLineOfSight === "function") && raw.hasLineOfSight(target); } catch (eLos) {}
-        if (movedSq > STUCK_MOVE_SQ || (distSq < STUCK_NEAR_SQ && seesTarget)) { st.idle = 0; return; }
+        if (movedSq > STUCK_MOVE_SQ || (distSq < STUCK_NEAR_SQ && seesTarget)) {
+            st.idle = 0;
+            st.pathTry = 0;
+            return;
+        }
         st.idle++;
         var breachDue = (st.idle === BOSS_BREACH_START) ||
                         (st.idle > BOSS_BREACH_START && st.idle % BOSS_BREACH_RETRY === 0);
@@ -1502,34 +1814,50 @@
             var breached = breachBossObstruction(raw, target);
             if (breached > 0) {
                 st.idle = 0;
+                st.pathTry = 0;
                 try {
                     var breachNav = (typeof raw.getNavigation === "function") ? raw.getNavigation() : null;
-                    if (breachNav) breachNav.moveTo(target, 1.0);
+                    if (breachNav) driveChaseNavigation(raw, target, breachNav, 0);
                 } catch (eBreachNav) {}
                 return;
             }
         }
         if (st.idle >= STUCK_TP) {
-            st.idle = 0; st.tp++;
-            var ang = ((hashStr(key) % 360) * Math.PI / 180) + st.tp * GOLDEN_ANG;
+            st.idle = 0;
+            st.pathTry = 0;
+            st.tp++;
+            var baseAng = ((hashStr(key) % 360) * Math.PI / 180) + st.tp * GOLDEN_ANG;
             try {
                 var lvl = (typeof raw.level === "function") ? raw.level() : raw.level;
-                var tx = target.getX() + Math.cos(ang) * STUCK_TP_R;
-                var tz = target.getZ() + Math.sin(ang) * STUCK_TP_R;
-                var ty = groundY(lvl, tx, target.getY(), tz, inst.def.waterproof !== false);
-                if (ty != null) {
-                    if (typeof raw.teleportTo === "function") raw.teleportTo(Math.floor(tx) + 0.5, ty, Math.floor(tz) + 0.5);
-                    else raw.setPos(Math.floor(tx) + 0.5, ty, Math.floor(tz) + 0.5);
+                for (var tpTry = 0; tpTry < STUCK_TP_TRIES; tpTry++) {
+                    var ang = baseAng + tpTry * GOLDEN_ANG;
+                    var radius = STUCK_TP_R + (tpTry % 2) * 4;
+                    var nearX = target.getX() + Math.cos(ang) * radius;
+                    var nearZ = target.getZ() + Math.sin(ang) * radius;
+                    var nearY = groundY(lvl, nearX, target.getY(), nearZ);
+                    if (nearY != null) {
+                        if (typeof raw.teleportTo === "function")
+                            raw.teleportTo(Math.floor(nearX) + 0.5, nearY, Math.floor(nearZ) + 0.5);
+                        else raw.setPos(Math.floor(nearX) + 0.5, nearY, Math.floor(nearZ) + 0.5);
+                        break;
+                    }
                 }
             } catch (e5) {}
             return;
         }
-        // Gentle kick: recompute a path only when navigation is idle, so active
+        // Gentle kick: recompute only after verified lack of movement, so normal
         // paths and custom EAI goals (miner digging, fisher casting) keep control.
         if (st.idle % STUCK_KICK === 0) {
             try {
                 var nav = (typeof raw.getNavigation === "function") ? raw.getNavigation() : null;
-                if (nav && (typeof nav.isDone !== "function" || nav.isDone())) nav.moveTo(target, 1.0);
+                if (nav) {
+                    // A navigation may claim it is active while wedged against
+                    // terrain. Stop that stale path before choosing the next
+                    // short waypoint, with alternating sides around obstacles.
+                    try { if (typeof nav.stop === "function") nav.stop(); } catch (eStop) {}
+                    st.pathTry = Math.max(0, Number(st.pathTry) || 0) + 1;
+                    driveChaseNavigation(raw, target, nav, st.pathTry);
+                }
             } catch (e6) {}
         }
     }
@@ -1541,6 +1869,40 @@
         head: "HEAD", helmet: "HEAD", chest: "CHEST", chestplate: "CHEST",
         legs: "LEGS", leggings: "LEGS", feet: "FEET", boots: "FEET"
     };
+    var _frostWalkerHolder = null;
+    var _frostWalkerLookupFailed = false;
+    function frostWalkerHolder(raw) {
+        if (_frostWalkerHolder) return _frostWalkerHolder;
+        if (_frostWalkerLookupFailed || !raw) return null;
+        try {
+            var Registries = Java.loadClass("net.minecraft.core.registries.Registries");
+            var ResourceKey = Java.loadClass("net.minecraft.resources.ResourceKey");
+            var ResourceLocation = Java.loadClass("net.minecraft.resources.ResourceLocation");
+            var level = (typeof raw.level === "function") ? raw.level() : raw.level;
+            var lookup = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            var key = ResourceKey.create(
+                Registries.ENCHANTMENT,
+                ResourceLocation.parse("minecraft:frost_walker")
+            );
+            _frostWalkerHolder = lookup.getOrThrow(key);
+            return _frostWalkerHolder;
+        } catch (e) {
+            _frostWalkerLookupFailed = true;
+            warn("Frost Walker lookup failed; raid boots left unchanged: " + e);
+            return null;
+        }
+    }
+    function addRaidBootEnchant(raw, stack) {
+        if (!raw || !stack) return;
+        var holder = frostWalkerHolder(raw);
+        if (!holder) return;
+        try {
+            // Level II is Frost Walker's vanilla maximum. ItemStack.enchant
+            // writes the 1.21 enchantment data component directly and works for
+            // both vanilla and modded boots.
+            stack.enchant(holder, 2);
+        } catch (e) { warn("enchant raid boots with Frost Walker II: " + e); }
+    }
     function makeStack(spec) {
         if (spec == null) return null;
         try {
@@ -1580,6 +1942,7 @@
             if (stack == null) continue;
             var slot = null;
             try { slot = ES.valueOf(slotName); } catch (e) { continue; }
+            if (slotName === "FEET") addRaidBootEnchant(raw, stack);
             try { raw.setItemSlot(slot, stack); any = true; } catch (e2) { warn("setItemSlot " + k + ": " + e2); continue; }
             // Negative is Minecraft's hard no-drop sentinel. Unlike 0.0 it
             // cannot be raised by Looting, so raid-only gear never leaks.
@@ -1641,14 +2004,16 @@
         for (var ti = 0; ti < round.mobs.length; ti++) total += round.mobs[ti].count;
         if (total < 1) total = 1;
         var roundIdx = def.rounds.indexOf(round);
+        var colonyCtx = colonySpawnContext(level, player);
+        var hordeSpread = Math.max(HORDE_SPREAD_MAX, Math.ceil(Math.sqrt(total) * 1.5));
 
         // Resolve shared horde anchor or multiple ring squad anchors once.
         var anchor = null;
         var ringAnchors = null;
         if (def.spawnPattern === "horde") {
-            anchor = findHordeAnchor(level, pp, def, instanceId, roundIdx);
+            anchor = findHordeAnchor(level, pp, def, instanceId, roundIdx, colonyCtx, total);
         } else {
-            ringAnchors = findRingGroupAnchors(level, pp, def, total, instanceId, roundIdx);
+            ringAnchors = findRingGroupAnchors(level, pp, def, total, instanceId, roundIdx, colonyCtx);
         }
 
         // Plan every position before creating the first entity. This makes a
@@ -1660,7 +2025,9 @@
         var emergencySeed = hashStr(String(instanceId) + "#" + roundIdx + "#emergency");
         if (def.spawnPattern === "horde" && !anchor) {
             emergencyTried = true;
-            emergencyAnchor = findEmergencyAnchor(level, pp, def, emergencySeed);
+            emergencyAnchor = findEmergencyAnchor(
+                level, pp, def, emergencySeed, colonyCtx, hordeSpread, true
+            );
             anchor = emergencyAnchor;
         }
         if (def.spawnPattern === "horde" && !anchor) {
@@ -1672,7 +2039,9 @@
         // multi-direction attack is retained whenever any second safe area exists.
         if (def.spawnPattern === "ring" && (!ringAnchors || ringAnchors.length < 2)) {
             emergencyTried = true;
-            emergencyAnchor = findEmergencyAnchor(level, pp, def, emergencySeed + 97);
+            emergencyAnchor = findEmergencyAnchor(
+                level, pp, def, emergencySeed + 97, colonyCtx, RING_GROUP_SPREAD_MAX, false
+            );
             if (!ringAnchors) ringAnchors = [];
             if (emergencyAnchor) {
                 var farEnough = true;
@@ -1691,20 +2060,29 @@
         if (ringAnchors) info("wave " + (roundIdx + 1) + " planned as " + ringAnchors.length + " assault groups");
 
         for (var pi = 0; pi < total; pi++) {
-            var planned = anchor ? hordeMobPos(level, anchor, pi, total, def.waterproof !== false)
-                                 : ringGroupMobPos(level, ringAnchors, pi, total, def.waterproof !== false);
+            var planned = anchor
+                ? hordeMobPos(level, anchor, pi, total, colonyCtx)
+                : ringGroupMobPos(level, ringAnchors, pi, total, colonyCtx);
+            if (planned && !isDrySpawnPosition(level, planned)) planned = null;
             if (!planned) {
                 if (!emergencyTried) {
                     emergencyTried = true;
-                    emergencyAnchor = findEmergencyAnchor(level, pp, def, emergencySeed);
+                    emergencyAnchor = findEmergencyAnchor(
+                        level, pp, def, emergencySeed, colonyCtx,
+                        anchor ? hordeSpread : RING_GROUP_SPREAD_MAX, !!anchor
+                    );
                 }
                 if (!emergencyAnchor) {
                     warn("spawnRound: no safe spawn ground; delaying wave " + (roundIdx + 1));
                     return null;
                 }
                 planned = anchor
-                    ? hordeMobPos(level, emergencyAnchor, pi, total, def.waterproof !== false)
-                    : ringGroupMobPos(level, [emergencyAnchor], pi, total, def.waterproof !== false);
+                    ? hordeMobPos(level, emergencyAnchor, pi, total, colonyCtx)
+                    : ringGroupMobPos(level, [emergencyAnchor], pi, total, colonyCtx);
+            }
+            if (!isDrySpawnPosition(level, planned)) {
+                warn("spawnRound: emergency position was not dry; delaying wave " + (roundIdx + 1));
+                return null;
             }
             positions.push(planned);
         }
@@ -1768,7 +2146,8 @@
                 try {
                     var rawNew = rawMobOf(entity);
                     var nav = (rawNew && typeof rawNew.getNavigation === "function") ? rawNew.getNavigation() : null;
-                    if (nav) nav.moveTo(unwrapPlayer(player), 1.0);
+                    var rawTarget = unwrapPlayer(player);
+                    if (nav && rawTarget) driveChaseNavigation(rawNew, rawTarget, nav, 0);
                 } catch (eNav) {}
                 spawnPoof(player, pos);
                 out.push(entity);
@@ -1786,7 +2165,7 @@
         this.defId     = def.id;
         this.def       = def;
         this.level     = level;
-        this.playerUuid = normUuid(player.uuid);
+        this.playerUuid = playerUuidOf(player);
         this.teamId = identity.teamId;
         this.participantUuids = identity.members;
         this._onlineParticipants = [];
@@ -1801,6 +2180,8 @@
         this.roundMobs = [];          // live mobs of the current round
         this.carryover = [];          // live survivors carried from timed-out rounds
         this.bar       = null;        // ServerBossEvent (or null if disabled/unavailable)
+        this._barParticipantKey = null;// sorted viewer UUIDs; avoids redundant team sync work
+        this._barSyncWarned = false;  // log a conversion/API failure once, then self-retry
         this.barBase   = def.title || prettyId(def.id);
         this.roundTotalHealth = 1;    // sum of max-health for the current wave (bar denominator)
         this.roundTotalMobs = 0;      // actual current + carryover count displayed in the bar
@@ -1925,7 +2306,7 @@
         var server = Manager._server;
         var online = onlineParticipants(inst, true);
         var onlineById = {};
-        for (var i = 0; i < online.length; i++) onlineById[normUuid(online[i].uuid)] = online[i];
+        for (var i = 0; i < online.length; i++) onlineById[playerUuidOf(online[i])] = online[i];
 
         var pending = readPendingTeamWins(server);
         var flawless = !inst._diedDuringRaid;
@@ -1946,7 +2327,7 @@
     function deliverPendingTeamWins(player) {
         if (!player) return 0;
         var server = player.server || Manager._server;
-        var puid = normUuid(player.uuid);
+        var puid = playerUuidOf(player);
         var pending = readPendingTeamWins(server);
         if (pending.length === 0) return 0;
 
@@ -1980,7 +2361,7 @@
     }
 
     RaidInstance.prototype.lose = function (player) {
-        killMobs(this);
+        removeMobsNoDrops(this);
         var inst = this;
         eachOnlineParticipant(this, function (member) {
             applyDefeatPenalty(member);
@@ -2099,7 +2480,7 @@
                 // the regular unstick pass takes over without restarting paths.
                 try {
                     var navLock = (typeof raw.getNavigation === "function") ? raw.getNavigation() : null;
-                    if (navLock) navLock.moveTo(t, 1.0);
+                    if (navLock) driveChaseNavigation(raw, t, navLock, 0);
                 } catch (eNav) {}
             }
             unstick(inst, raw, t);
@@ -2309,11 +2690,22 @@
         catch (e) { err(`callback ${name} threw: ${e}`); }
     }
 
+    function onlinePlayerList(server) {
+        if (!server) return null;
+        try { if (server.players) return server.players; } catch (e) {}
+        try {
+            if (typeof server.getPlayerList === "function")
+                return server.getPlayerList().getPlayers();
+        } catch (e2) {}
+        return null;
+    }
+
     // Iterate the live server player list; return the first match for pred, or null.
     function findOnlinePlayer(server, pred) {
-        if (!server || !server.players) return null;
+        var players = onlinePlayerList(server);
+        if (!players) return null;
         try {
-            var it = server.players.iterator();
+            var it = players.iterator();
             while (it.hasNext()) { var p = it.next(); if (p && pred(p)) return p; }
         } catch (e) {}
         return null;
@@ -2331,7 +2723,7 @@
         // their owner is online and FTB Teams can identify the current party.
         if (!inst.teamId) {
             var owner = findOnlinePlayer(Manager._server, function (p) {
-                return normUuid(p.uuid) === inst.playerUuid;
+                return playerUuidOf(p) === inst.playerUuid;
             });
             if (owner) {
                 var identity = playerTeamIdentity(owner);
@@ -2350,28 +2742,98 @@
         inst.participantUuids[normUuid(inst.playerUuid)] = true;
     }
 
+    var _javaArrayListClass = null;
+    function newJavaArrayList() {
+        try {
+            if (!_javaArrayListClass) _javaArrayListClass = Java.loadClass("java.util.ArrayList");
+            return new _javaArrayListClass();
+        } catch (e) { return null; }
+    }
+
+    // Resolve through PlayerList instead of passing a KubeJS wrapper to
+    // CustomBossEvent.addPlayer(ServerPlayer). The wrapper mismatch used to be
+    // swallowed and left both solo and FTB-team raids with zero HUD viewers.
+    function rawOnlineServerPlayer(server, player) {
+        var id = javaUuid(playerUuidOf(player));
+        if (server && id) {
+            try {
+                if (typeof server.getPlayerList === "function") {
+                    var authoritative = server.getPlayerList().getPlayer(id);
+                    if (authoritative) return authoritative;
+                }
+            } catch (e) {}
+        }
+        return unwrapPlayer(player);
+    }
+
+    // Recreate a missing/externally removed custom bar on the next existing
+    // one-second team sync. This is an O(1) registry lookup, not an entity scan.
+    function ensureRaidBar(inst) {
+        if (!inst || inst.def.bossBar === false || inst.phase === "DONE") return null;
+        var server = Manager._server;
+        var ce = customBars(server);
+        var rl = barRL(inst.id);
+        var registered = null;
+        try { if (ce && rl) registered = ce.get(rl); } catch (e) {}
+        if (registered) {
+            inst.bar = registered;
+            return registered;
+        }
+        inst.bar = makeBar(server, inst.id, inst._barText || inst.barBase,
+                           inst.def.barColor, inst.def.barOverlay);
+        inst._barParticipantKey = null;
+        return inst.bar;
+    }
+
     function syncBarParticipants(inst, players) {
-        if (!inst || !inst.bar) return;
-        var wanted = {};
+        if (!inst) return;
+        var bar = ensureRaidBar(inst);
+        if (!bar) return;
+
+        var rawPlayers = newJavaArrayList();
+        if (!rawPlayers) return;
+        var ids = [];
         for (var i = 0; i < players.length; i++) {
             var player = players[i];
-            wanted[normUuid(player.uuid)] = true;
-            try {
-                var raw = unwrapPlayer(player);
-                if (raw && !inst.bar.getPlayers().contains(raw)) inst.bar.addPlayer(raw);
-            } catch (eAdd) {}
-        }
-        try {
-            var remove = [];
-            var it = inst.bar.getPlayers().iterator();
-            while (it.hasNext()) {
-                var current = it.next();
-                var currentId = "";
-                try { currentId = normUuid(current.getUUID()); } catch (eId) {}
-                if (!wanted[currentId]) remove.push(current);
+            var playerId = playerUuidOf(player);
+            var raw = rawOnlineServerPlayer(Manager._server, player);
+            if (!playerId || !raw) continue;
+            ids.push(playerId);
+            try { rawPlayers.add(raw); }
+            catch (eList) {
+                if (!inst._barSyncWarned) {
+                    inst._barSyncWarned = true;
+                    warn("boss bar player conversion failed for " + inst.id + ": " + eList);
+                }
             }
-            for (var r = 0; r < remove.length; r++) inst.bar.removePlayer(remove[r]);
-        } catch (eRemove) {}
+        }
+        ids.sort();
+        var participantKey = ids.join(",");
+        if (participantKey === inst._barParticipantKey) {
+            try { if (!bar.isVisible()) bar.setVisible(true); } catch (eVisibleCached) {}
+            return;
+        }
+
+        try {
+            // CustomBossEvent#setPlayers applies additions and removals
+            // atomically and only sends packets for the actual differences.
+            if (typeof bar.setPlayers === "function") {
+                bar.setPlayers(rawPlayers);
+            } else {
+                bar.removeAllPlayers();
+                var it = rawPlayers.iterator();
+                while (it.hasNext()) bar.addPlayer(it.next());
+            }
+            bar.setVisible(true);
+            inst._barParticipantKey = participantKey;
+            inst._barSyncWarned = false;
+        } catch (eSync) {
+            inst._barParticipantKey = null;
+            if (!inst._barSyncWarned) {
+                inst._barSyncWarned = true;
+                warn("boss bar participant sync failed for " + inst.id + ": " + eSync);
+            }
+        }
     }
 
     // Refresh FTB membership once per second: quick team changes propagate to
@@ -2384,12 +2846,13 @@
 
         refreshTeamRoster(inst);
         var out = [];
-        if (Manager._server && Manager._server.players) {
+        var livePlayers = onlinePlayerList(Manager._server);
+        if (livePlayers) {
             try {
-                var it = Manager._server.players.iterator();
+                var it = livePlayers.iterator();
                 while (it.hasNext()) {
                     var p = it.next();
-                    if (p && inst.participantUuids[normUuid(p.uuid)]) out.push(p);
+                    if (p && inst.participantUuids[playerUuidOf(p)]) out.push(p);
                 }
             } catch (e) {}
         }
@@ -2421,14 +2884,14 @@
         var fallback = null;
         for (var i = 0; i < players.length; i++) {
             if (!fallback) fallback = players[i];
-            if (normUuid(players[i].uuid) === inst.playerUuid) return players[i];
+            if (playerUuidOf(players[i]) === inst.playerUuid) return players[i];
         }
         return fallback;
     }
 
     function raidForPlayer(player) {
         if (!player) return null;
-        var direct = playerInRaid(normUuid(player.uuid));
+        var direct = playerInRaid(playerUuidOf(player));
         if (direct) return direct;
 
         var identity = playerTeamIdentity(player);
@@ -2674,6 +3137,8 @@
             inst.carryover = [];
             inst.bar = (def.bossBar === false) ? null :
                 makeBar(server, inst.id, def.title || prettyId(def.id), def.barColor, def.barOverlay);
+            inst._barParticipantKey = null;
+            inst._barSyncWarned = false;
             inst.barBase = def.title || prettyId(def.id);
             inst.roundTotalHealth = Math.max(1, Number(s.roundTotalHealth) || 1);
             inst.roundTotalMobs = Math.max(0, Number(s.roundTotalMobs) || 0);
@@ -2950,14 +3415,61 @@
     }
 
     function killMobs(inst) {
+        var killed = 0;
         eachMob(inst, function (e) {
-            try { if (e && e.isAlive && e.isAlive()) e.kill(); } catch (x) {}
+            try {
+                if (e && e.isAlive && e.isAlive()) {
+                    e.kill();
+                    killed++;
+                }
+            } catch (x) {}
         });
         inst.roundMobs = []; inst.carryover = [];
+        return killed;
+    }
+
+    // Loss/stop is administrative cleanup, not a combat kill. discard() avoids
+    // vanilla loot, equipped-item drops, XP and modded on-death transformations.
+    // The tag covers the rare modded entity wrapper that cannot be discarded and
+    // has to fall back to kill(); the living-drops hook below then clears its loot.
+    const NO_CLEANUP_DROPS_TAG = "raid_cleanup_no_drops";
+    function removeMobsNoDrops(inst) {
+        var removed = 0;
+        eachMob(inst, function (e) {
+            if (!e) return;
+            var raw = rawMobOf(e) || e;
+            var alive = true;
+            try { alive = (typeof raw.isAlive === "function") ? raw.isAlive() : !!raw.isAlive; } catch (eAlive) {}
+            if (!alive) return;
+            try { raw.addTag(NO_CLEANUP_DROPS_TAG); } catch (eTag) {}
+            try {
+                if (typeof raw.discard === "function") {
+                    raw.discard();
+                    removed++;
+                    return;
+                }
+            } catch (eDiscard) {}
+            try {
+                if (typeof e.discard === "function") {
+                    e.discard();
+                    removed++;
+                    return;
+                }
+            } catch (eWrapperDiscard) {}
+            try {
+                // Compatibility fallback only; NO_CLEANUP_DROPS_TAG suppresses
+                // the living drops generated by this forced death.
+                if (typeof raw.kill === "function") raw.kill();
+                else e.kill();
+                removed++;
+            } catch (eKill) {}
+        });
+        inst.roundMobs = []; inst.carryover = [];
+        return removed;
     }
 
     function cleanupMobs(inst) {
-        killMobs(inst);
+        removeMobsNoDrops(inst);
         inst.closeBar();
     }
 
@@ -3100,7 +3612,7 @@
         stop: function (idOrPlayer) {
             var inst = null;
             if (typeof idOrPlayer === "string") inst = _active[idOrPlayer];
-            else if (idOrPlayer && idOrPlayer.uuid) inst = raidForPlayer(idOrPlayer);
+            else if (playerUuidOf(idOrPlayer)) inst = raidForPlayer(idOrPlayer);
             if (!inst) return false;
             cleanupMobs(inst);
             notifyTerminal(inst, "stopped");
@@ -3121,6 +3633,19 @@
             sweepBars(Manager._server);   // also clears bars orphaned by a prior reload/crash
             persistActive(Manager._server);
             return n;
+        },
+
+        // Kill only the mobs owned by the executing player's shared team raid.
+        // The instance stays active, so its normal tick advances the wave and
+        // keeps rewards, HUD state and scheduling on the regular code path.
+        killMobs: function (idOrPlayer) {
+            var inst = null;
+            if (typeof idOrPlayer === "string") inst = _active[idOrPlayer];
+            else if (playerUuidOf(idOrPlayer)) inst = raidForPlayer(idOrPlayer);
+            if (!inst) return -1;
+            var killed = killMobs(inst);
+            persistActive(Manager._server);
+            return killed;
         },
 
         sweepOrphans: function () {
@@ -3192,6 +3717,7 @@
             var inst = raidForPlayer(event.player);
             if (inst) {
                 inst._teamSyncLeft = 0;
+                inst._barParticipantKey = null;
                 onlineParticipants(inst, true);
             }
         } catch (e) { warn("team raid login sync: " + e); }
@@ -3202,13 +3728,13 @@
     // still actively fighting.
     PlayerEvents.loggedOut(function (event) {
         try {
-            var leaving = normUuid(event.player.uuid);
+            var leaving = playerUuidOf(event.player);
             var inst = raidForPlayer(event.player);
             if (inst) {
                 var players = combatParticipants(inst, true);
                 var hasOther = false;
                 for (var i = 0; i < players.length; i++) {
-                    if (normUuid(players[i].uuid) !== leaving) { hasOther = true; break; }
+                    if (playerUuidOf(players[i]) !== leaving) { hasOther = true; break; }
                 }
                 if (!hasOther) {
                     prepareForRebind(inst);
@@ -3244,6 +3770,28 @@
                 ticks: LIFESTEALER_TRANSFORM_RETRY_TICKS
             });
         }
+    });
+
+    // Compatibility guard for removeMobsNoDrops(): normal cleanup uses discard()
+    // and never reaches this event. If a modded entity only supports kill(), wipe
+    // the complete living-drop list while leaving ordinary combat deaths intact.
+    EntityEvents.drops(function (event) {
+        try {
+            var entity = event.entity;
+            if (!entity) return;
+            var tags = entity.getTags();
+            if (!tags || !tags.contains(NO_CLEANUP_DROPS_TAG)) return;
+            var drops = event.getDrops();
+            try {
+                drops.clear();
+            } catch (eClear) {
+                var it = drops.iterator();
+                while (it.hasNext()) {
+                    it.next();
+                    it.remove();
+                }
+            }
+        } catch (e) { /* cleanup drop protection must never break death handling */ }
     });
 
     // ---------- Friendly fire off -------------------------------------------
