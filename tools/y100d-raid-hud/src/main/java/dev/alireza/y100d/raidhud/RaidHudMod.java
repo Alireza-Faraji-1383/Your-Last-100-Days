@@ -59,6 +59,7 @@ public final class RaidHudMod {
     private static String cachedSourceText = "";
     private static HudLabels cachedLabels = HudLabels.EMPTY;
     private static int personalDeaths;
+    private static boolean multiplayerRaid;
 
     public RaidHudMod() {
         NeoForge.EVENT_BUS.addListener(RaidHudMod::onBossBar);
@@ -71,11 +72,14 @@ public final class RaidHudMod {
         // even if the decorative renderer has fallen back after an error.
         String plainName = event.getBossEvent().getName().getString();
         if (plainName.startsWith(PERSONAL_DEATH_DATA)) {
-            int parsed = parseNonNegativeInt(
-                plainName.substring(PERSONAL_DEATH_DATA.length()).trim()
-            );
-            if (parsed != personalDeaths) {
-                personalDeaths = parsed;
+            String payload = plainName.substring(PERSONAL_DEATH_DATA.length()).trim();
+            String[] values = payload.isEmpty() ? new String[0] : payload.split("\\s+");
+            int parsedDeaths = values.length > 0 ? parseNonNegativeInt(values[0]) : 0;
+            boolean parsedMultiplayer = values.length > 1
+                && parseNonNegativeInt(values[1]) > 1;
+            if (parsedDeaths != personalDeaths || parsedMultiplayer != multiplayerRaid) {
+                personalDeaths = parsedDeaths;
+                multiplayerRaid = parsedMultiplayer;
                 cachedSourceText = "";
             }
             event.setIncrement(0);
@@ -218,8 +222,11 @@ public final class RaidHudMod {
         if (!time.isEmpty()) {
             right.append(Component.literal("⌛ " + time + "  ").withStyle(ChatFormatting.GOLD));
         }
-        // Green skull = aggregate deaths of the whole FTB team.
-        right.append(Component.literal("☠ " + teamDeaths + "  ").withStyle(ChatFormatting.GREEN));
+        // The aggregate counter adds value only when this spatial raid cohort
+        // actually has multiple participants. Solo raids keep one clear counter.
+        if (multiplayerRaid) {
+            right.append(Component.literal("☠ " + teamDeaths + "  ").withStyle(ChatFormatting.GREEN));
+        }
         // Yellow skull = deaths of this client/player only.
         right.append(Component.literal("☠ " + personalDeaths).withStyle(ChatFormatting.YELLOW));
 

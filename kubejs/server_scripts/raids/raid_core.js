@@ -35,6 +35,7 @@
     const TEAM_RAID_ESCAPE_SECONDS = 10;
     const MAX_CONCURRENT_RAIDS = 5;    // global combat cap; additional raids wait in a persisted queue
     const RAID_QUEUE_CHECK_EVERY = 20; // one tiny queue pass per second while no terminal event fires
+    const RAID_DRIVER_WATCHDOG_EVERY = 20; // one no-op readiness check per second while raids exist
     const RESTORE_LOGIN_DELAY = 40; // let the returning player's chunks load first
     const RESTORE_MOB_WAIT = 200;   // first allow 10s of natural chunk loading
     const RESTORE_CHUNKS_PER_SCAN = 2; // bounded synchronous loads per second
@@ -1304,13 +1305,16 @@
     }
 
     var _heightTypes = null;
-    var _heightTypesTried = false;
-    var _heightRuntimeBroken = false;
+    var _heightTypesRetryAfter = 0;
+    var _heightRuntimeRetryAfter = 0;
     function heightTypes() {
-        if (_heightTypesTried) return _heightTypes;
-        _heightTypesTried = true;
+        if (_heightTypes) return _heightTypes;
+        if (_serverTickClock < _heightTypesRetryAfter) return null;
         try { _heightTypes = Java.loadClass("net.minecraft.world.level.levelgen.Heightmap$Types"); }
-        catch (e) { _heightTypes = null; }
+        catch (e) {
+            _heightTypes = null;
+            _heightTypesRetryAfter = _serverTickClock + SPAWN_RETRY_TICKS;
+        }
         return _heightTypes;
     }
 
@@ -1337,7 +1341,8 @@
     // heightmap, so an underground player still gets an above-ground raid.
     // Ocean columns return null; the seabed is never used as a fallback.
     function surfaceGroundY(level, x, z) {
-        if (_heightRuntimeBroken) return { supported: false, y: null };
+        if (_serverTickClock < _heightRuntimeRetryAfter)
+            return { supported: false, y: null };
         var Types = heightTypes();
         var raw = heightLevel(level);
         if (!Types || !raw || levelHasCeiling(raw)) return { supported: false, y: null };
@@ -1351,7 +1356,10 @@
             }
             return { supported: true, y: null };
         } catch (e) {
-            _heightRuntimeBroken = true;
+            // A brand-new world can expose the level before its heightmap is
+            // ready. Treat that as transient: use the bounded local fallback
+            // for this attempt and retry the real surface API after 10 seconds.
+            _heightRuntimeRetryAfter = _serverTickClock + SPAWN_RETRY_TICKS;
             warn("surfaceGroundY: " + e);
             return { supported: false, y: null };
         }
@@ -3606,6 +3614,10 @@
         if (!inst._personalDeathBars) inst._personalDeathBars = {};
         if (!inst._personalDeathBarValues) inst._personalDeathBarValues = {};
         var live = {};
+        // Send the size of this spatial raid cohort with the existing personal
+        // death counter. The client uses it only to decide whether the aggregate
+        // green skull is useful; no extra boss bar or packet stream is needed.
+        var raidMemberCount = participantCount(inst);
 
         for (var i = 0; i < players.length; i++) {
             var player = players[i];
@@ -3615,23 +3627,24 @@
             live[uuid] = true;
 
             var count = personalDeathCount(inst, uuid);
+            var dataValue = count + " " + raidMemberCount;
             var bar = inst._personalDeathBars[uuid];
             if (!bar) {
                 bar = makeBar(
                     Manager._server,
                     personalDeathBarPath(inst, uuid),
-                    PERSONAL_DEATH_BAR_MARKER + " " + count,
+                    PERSONAL_DEATH_BAR_MARKER + " " + dataValue,
                     "YELLOW",
                     "PROGRESS"
                 );
                 if (!bar) continue;
                 inst._personalDeathBars[uuid] = bar;
-                inst._personalDeathBarValues[uuid] = count;
+                inst._personalDeathBarValues[uuid] = dataValue;
                 try { bar.setProgress(0.0); } catch (eProgress) {}
-            } else if (inst._personalDeathBarValues[uuid] !== count) {
-                try { bar.setName(Text.of(PERSONAL_DEATH_BAR_MARKER + " " + count)); }
+            } else if (inst._personalDeathBarValues[uuid] !== dataValue) {
+                try { bar.setName(Text.of(PERSONAL_DEATH_BAR_MARKER + " " + dataValue)); }
                 catch (eName) {}
-                inst._personalDeathBarValues[uuid] = count;
+                inst._personalDeathBarValues[uuid] = dataValue;
             }
 
             // setPlayers performs a set diff internally, so unchanged viewers
@@ -3906,6 +3919,135 @@
     var _queueCheckAccum = 0;
     var _queueDrainRequested = false;
     var _restoreAttempted = false;
+    var _serverGeneration = 0;
+    var _driverWatchdogServer = null;
+    var _driverWatchdogScheduled = false;
+    var _driverWatchdogClock = 0;
+    var _driverWatchdogWarned = false;
+
+    function hasManagedRaidInstances() {
+        for (var key in _active) {
+            if (_active[key] && _active[key].phase !== "DONE") return true;
+        }
+        return false;
+    }
+
+    function sameRaidServer(a, b) {
+        if (!a || !b) return false;
+        if (a === b) return true;
+        try {
+            if (typeof a.getPlayerList === "function" &&
+                typeof b.getPlayerList === "function" &&
+                a.getPlayerList() === b.getPlayerList()) return true;
+        } catch (ePlayers) {}
+        try {
+            if (typeof a.getWorldData === "function" &&
+                typeof b.getWorldData === "function" &&
+                a.getWorldData() === b.getWorldData()) return true;
+        } catch (eData) {}
+        try {
+            if (typeof a.overworld === "function" &&
+                typeof b.overworld === "function" &&
+                a.overworld() === b.overworld()) return true;
+        } catch (eLevel) {}
+        return false;
+    }
+
+    // Server-script globals can survive a singleplayer world transition on
+    // some KubeJS/IntegratedServer startup paths. Never let the previous
+    // world's restore flag, cached APIs or instance references poison a newly
+    // created world.
+    function bindRaidServer(server) {
+        if (!server || sameRaidServer(Manager._server, server)) return false;
+
+        for (var key in _active) delete _active[key];
+        _pendingLifestealerForms.length = 0;
+        _idSeq = 0;
+        _queueSeq = 0;
+        _serverTickClock = 0;
+        _tickAccum = 0;
+        _persistAccum = 0;
+        _queueCheckAccum = 0;
+        _queueDrainRequested = false;
+        _restoreAttempted = false;
+
+        // Retry APIs/classes that may have been queried while a brand-new
+        // IntegratedServer was still bringing its managers and dimensions up.
+        _ftbTeamsUnavailable = false;
+        _mineColoniesManager = null;
+        _mineColoniesTried = false;
+        _mineColoniesWarned = false;
+        _heightTypes = null;
+        _heightTypesRetryAfter = 0;
+        _heightRuntimeRetryAfter = 0;
+
+        _serverGeneration++;
+        _driverWatchdogServer = server;
+        _driverWatchdogScheduled = false;
+        _driverWatchdogClock = 0;
+        _driverWatchdogWarned = false;
+        Manager._server = server;
+        Manager._loadedSweepDone = false;
+        return true;
+    }
+
+    function releaseRaidServer(server) {
+        if (server && Manager._server && !sameRaidServer(Manager._server, server)) return;
+        for (var key in _active) delete _active[key];
+        _pendingLifestealerForms.length = 0;
+        _serverGeneration++;
+        _driverWatchdogServer = null;
+        _driverWatchdogScheduled = false;
+        _restoreAttempted = false;
+        Manager._server = null;
+    }
+
+    function scheduleRaidDriverWatchdog(server) {
+        if (!server || !hasManagedRaidInstances()) return false;
+        if (_driverWatchdogScheduled &&
+            sameRaidServer(_driverWatchdogServer, server)) return true;
+        if (typeof server.scheduleInTicks !== "function") {
+            if (!_driverWatchdogWarned) {
+                _driverWatchdogWarned = true;
+                warn("raid driver watchdog unavailable; server scheduler missing");
+            }
+            return false;
+        }
+
+        _driverWatchdogServer = server;
+        _driverWatchdogScheduled = true;
+        _driverWatchdogClock = _serverTickClock;
+        var generation = _serverGeneration;
+        try {
+            server.scheduleInTicks(RAID_DRIVER_WATCHDOG_EVERY, function () {
+                // Ignore callbacks retained by an IntegratedServer that already
+                // stopped; a new world's watchdog owns the current generation.
+                if (generation !== _serverGeneration ||
+                    !sameRaidServer(server, Manager._server)) return;
+
+                _driverWatchdogScheduled = false;
+                if (!hasManagedRaidInstances()) return;
+
+                // Normal path: ServerEvents.tick advanced the clock, so this
+                // callback performs no raid work. First-world fallback: if the
+                // event registration was missed, advance exactly the ticks
+                // represented by this watchdog interval.
+                if (_serverTickClock === _driverWatchdogClock) {
+                    for (var i = 0; i < RAID_DRIVER_WATCHDOG_EVERY; i++)
+                        Manager._drive(server);
+                }
+                scheduleRaidDriverWatchdog(server);
+            });
+            return true;
+        } catch (e) {
+            _driverWatchdogScheduled = false;
+            if (!_driverWatchdogWarned) {
+                _driverWatchdogWarned = true;
+                warn("raid driver watchdog schedule failed: " + e);
+            }
+            return false;
+        }
+    }
 
     function newInstanceId(defId) {
         var id = null;
@@ -5073,7 +5215,14 @@
             var def = Registry.get(defId);
             if (!def) { err(`start: unknown raid "${defId}"`); return null; }
             if (!player) { err("start: no player"); return null; }
-            if (!Manager._server) { try { Manager._server = player.server; } catch (eSv) {} }
+            var startServer = null;
+            try { startServer = player.server; } catch (eSv) {}
+            if (startServer) {
+                bindRaidServer(startServer);
+                // Handles the rare first-world path where ServerEvents.loaded
+                // was not delivered to this freshly registered script context.
+                restoreActive(startServer);
+            }
             // Respect existing FIFO reservations before admitting a brand-new
             // request into a free slot.
             drainQueuedRaids(Manager._server);
@@ -5082,6 +5231,7 @@
                 warn(`start: ${player.username}'s team is already in a raid`);
                 return null;
             }
+            scheduleRaidDriverWatchdog(Manager._server);
             return created[0].instance.id;
         },
 
@@ -5206,7 +5356,7 @@
         },
 
         _drive: function (server) {
-            Manager._server = server;
+            bindRaidServer(server);
             _serverTickClock++;
             _queueCheckAccum++;
             if (!_restoreAttempted) restoreActive(server);
@@ -5339,8 +5489,14 @@
     });
 
     ServerEvents.unloaded(function (event) {
-        try { persistActive(event.server || Manager._server); }
+        var unloadingServer = event.server || Manager._server;
+        try { persistActive(unloadingServer); }
         catch (e) { warn("shutdown raid save: " + e); }
+        // Releasing the in-memory world binding must not depend on the save
+        // succeeding; otherwise one failed shutdown write can poison the next
+        // IntegratedServer session and recreate the first-world stall.
+        try { releaseRaidServer(unloadingServer); }
+        catch (eRelease) { warn("shutdown raid release: " + eRelease); }
     });
 
     // Rare mod-created combat entities are adopted at their spawn event, so the
@@ -5417,10 +5573,11 @@
 
     // Clean up mobs + boss bars orphaned by a crash/restart/reload (bug #1).
     ServerEvents.loaded(function (event) {
-        Manager._server = event.server;
+        bindRaidServer(event.server);
         layoutRaidAdvancements(event.server);
         restoreActive(event.server);
         Manager.sweepOrphans();
+        scheduleRaidDriverWatchdog(event.server);
     });
 
     // ---------- Export ------------------------------------------------------
