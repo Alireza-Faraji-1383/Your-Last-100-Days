@@ -89,6 +89,20 @@
             return match ? Number(match[1]) : 999999;
         }
 
+        function startedInstanceMessage(M, instanceId, raidId) {
+            var status = M && M.getActive ? M.getActive() : [];
+            for (var i = 0; i < status.length; i++) {
+                if (status[i].id !== instanceId) continue;
+                if (status[i].phase === "QUEUED") {
+                    // The core already sent the full queue/position notice to
+                    // every participant; avoid a duplicate command reply.
+                    return null;
+                }
+                break;
+            }
+            return "[Raid] started '" + raidId + "' (" + instanceId + ")";
+        }
+
         // Keep raid ID suggestions stable and ordered from day 10 to day 100.
         function suggestRaidIds(ctx, builder) {
             var R = reg();
@@ -198,7 +212,8 @@
                         var id = StringArg.getString(ctx, "id");
                         var instanceId = M.start(M.playerLevel(player), player, id);
                         if (instanceId) {
-                            player.tell(Text.of("[Raid] started '" + id + "' (" + instanceId + ")"));
+                            var startMessage = startedInstanceMessage(M, instanceId, id);
+                            if (startMessage) player.tell(Text.of(startMessage));
                         } else {
                             ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id or team already in a raid)."));
                         }
@@ -221,7 +236,8 @@
                             }
                             var instanceId = M.start(M.playerLevel(target), target, id);
                             if (instanceId) {
-                                target.tell(Text.of("[Raid] '" + id + "' was started for your team."));
+                                var targetStartMessage = startedInstanceMessage(M, instanceId, id);
+                                if (targetStartMessage) target.tell(Text.of(targetStartMessage));
                             } else {
                                 ctx.source.sendFailure(Text.of("[Raid] cannot start '" + id + "' (unknown id or target team already in a raid)."));
                             }
@@ -240,12 +256,14 @@
                         ctx.source.sendSystemMessage(Text.of("[Raid] no active raids."));
                         return 1;
                     }
-                    ctx.source.sendSystemMessage(Text.of("[Raid] active (" + active.length + "):"));
+                    ctx.source.sendSystemMessage(Text.of("[Raid] running/queued (" + active.length + "):"));
                     for (var i = 0; i < active.length; i++) {
                         var raid = active[i];
                         ctx.source.sendSystemMessage(Text.of(
                             "  " + raid.id + " | wave " + raid.round +
-                            " | " + raid.phase + " | alive " + raid.alive
+                            " | " + raid.phase +
+                            (raid.queuePosition > 0 ? " #" + raid.queuePosition : "") +
+                            " | alive " + raid.alive
                         ));
                     }
                     return 1;

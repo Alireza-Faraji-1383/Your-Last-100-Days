@@ -33,6 +33,8 @@
     const TEAM_RAID_DISTANCE = 500;
     const TEAM_RAID_DISTANCE_SQ = TEAM_RAID_DISTANCE * TEAM_RAID_DISTANCE;
     const TEAM_RAID_ESCAPE_SECONDS = 10;
+    const MAX_CONCURRENT_RAIDS = 5;    // global combat cap; additional raids wait in a persisted queue
+    const RAID_QUEUE_CHECK_EVERY = 20; // one tiny queue pass per second while no terminal event fires
     const RESTORE_LOGIN_DELAY = 40; // let the returning player's chunks load first
     const RESTORE_MOB_WAIT = 200;   // first allow 10s of natural chunk loading
     const RESTORE_CHUNKS_PER_SCAN = 2; // bounded synchronous loads per second
@@ -2547,7 +2549,7 @@
     }
 
     // ---------- Instance (state machine) ------------------------------------
-    // Phases: SPAWNING -> FIGHTING -> BREATHER -> ... -> WIN_WAIT -> DONE.
+    // Phases: QUEUED -> SPAWNING -> FIGHTING -> BREATHER -> ... -> WIN_WAIT -> DONE.
 
     function RaidInstance(id, def, level, player, options) {
         options = options || {};
@@ -2571,6 +2573,7 @@
         this._ctxPlayer = player;     // fallback if live lookup fails
         this.roundIdx     = 0;
         this.phase        = "SPAWNING";
+        this._queueOrder  = 0;
         this.spawnRetryLeft = 0;       // backoff when terrain has no safe spawn plan
         this.breatherLeft = 0;
         this.roundTimeLeft = null;
@@ -2979,6 +2982,9 @@
         return true;
     };
     RaidInstance.prototype.tick = function () {
+        // A queued instance is only a small persisted reservation. It owns no
+        // bar, mobs or combat tick until the global manager assigns a slot.
+        if (this.phase === "QUEUED") return;
         this._teamSyncLeft = Math.max(0, (Number(this._teamSyncLeft) || 0) - TICK_THROTTLE);
         var player = resolvePlayer(this);   // live player wrapper, or null if offline
         var round  = this.def.rounds[this.roundIdx];
@@ -3244,7 +3250,8 @@
     function canAcceptEarlyTeamMember(inst) {
         if (!inst || inst.phase === "DONE" || inst.phase === "ENDING") return false;
         return inst.roundIdx === 0 &&
-               (inst.phase === "SPAWNING" || inst.phase === "FIGHTING");
+               (inst.phase === "QUEUED" || inst.phase === "SPAWNING" ||
+                inst.phase === "FIGHTING");
     }
 
     function cohortInstances(inst) {
@@ -3654,7 +3661,8 @@
     // Recreate a missing/externally removed custom bar on the next existing
     // one-second team sync. This is an O(1) registry lookup, not an entity scan.
     function ensureRaidBar(inst) {
-        if (!inst || inst.def.bossBar === false || inst.phase === "DONE") return null;
+        if (!inst || inst.def.bossBar === false ||
+            inst.phase === "QUEUED" || inst.phase === "DONE") return null;
         var server = Manager._server;
         var ce = customBars(server);
         var rl = barRL(inst.id);
@@ -3768,7 +3776,10 @@
 
         var changed = removeFormerTeamMembers(inst, roster) > 0;
         var onlineRoster = onlinePlayersInRoster(roster);
-        if (enforceSpatialCohesion(inst, onlineRoster) > 0) changed = true;
+        // Queue time is not combat time: do not punish people for moving while
+        // they wait. The normal 500-block countdown begins on activation.
+        if (inst.phase !== "QUEUED" &&
+            enforceSpatialCohesion(inst, onlineRoster) > 0) changed = true;
         if (inst._spatialCountdownDirty) {
             inst._spatialCountdownDirty = false;
             changed = true;
@@ -3804,12 +3815,15 @@
             // of this raid instead of attaching a remote HUD/reward entitlement.
             var participantSet = {};
             participantSet[uuid] = true;
+            var queueSplit = runningRaidCount() >= MAX_CONCURRENT_RAIDS;
             var split = createRaidInstance(
                 playerLevel(player), player, inst.def,
-                String(inst.cohortId || inst.id), participantSet, inst.teamId, false
+                String(inst.cohortId || inst.id), participantSet, inst.teamId,
+                false, queueSplit
             );
             if (split) {
-                activateRaidInstance(split, player);
+                if (queueSplit) notifyQueuedRaid(split);
+                else activateRaidInstance(split, player);
                 changed = true;
             }
         }
@@ -3885,9 +3899,12 @@
     const _terminalListeners = [];
     const _pendingLifestealerForms = [];
     var _idSeq    = 0;
+    var _queueSeq = 0;
     var _serverTickClock = 0;
     var _tickAccum = 0;
     var _persistAccum = 0;
+    var _queueCheckAccum = 0;
+    var _queueDrainRequested = false;
     var _restoreAttempted = false;
 
     function newInstanceId(defId) {
@@ -3942,7 +3959,57 @@
         return false;
     }
 
-    function createRaidInstance(level, player, def, cohortId, participants, teamId, initializing) {
+    function runningRaidCount() {
+        var count = 0;
+        for (var key in _active) {
+            var phase = _active[key] ? _active[key].phase : "DONE";
+            if (phase !== "QUEUED" && phase !== "ENDING" && phase !== "DONE") count++;
+        }
+        return count;
+    }
+
+    function queuedRaidInstances() {
+        var out = [];
+        for (var key in _active) {
+            var inst = _active[key];
+            if (inst && inst.phase === "QUEUED") out.push(inst);
+        }
+        out.sort(function (a, b) {
+            var byOrder = (Number(a._queueOrder) || 0) - (Number(b._queueOrder) || 0);
+            return byOrder || String(a.id).localeCompare(String(b.id));
+        });
+        return out;
+    }
+
+    function queuePosition(inst) {
+        var queued = queuedRaidInstances();
+        for (var i = 0; i < queued.length; i++)
+            if (queued[i].id === inst.id) return i + 1;
+        return 0;
+    }
+
+    function explicitOnlineParticipants(inst) {
+        return onlinePlayersInRoster(inst && inst.participantUuids);
+    }
+
+    function notifyQueuedRaid(inst) {
+        if (!inst || inst.phase !== "QUEUED") return;
+        var position = queuePosition(inst);
+        var members = explicitOnlineParticipants(inst);
+        for (var i = 0; i < members.length; i++) {
+            try {
+                members[i].tell(Text.of(
+                    "[Raid] " + inst.barBase + " is queued" +
+                    (position > 0 ? " (#" + position + ")" : "") +
+                    ". It will start when one of the " +
+                    MAX_CONCURRENT_RAIDS + " raid slots is free."
+                ));
+            } catch (e) {}
+        }
+        info(`queued "${inst.defId}" as ${inst.id} at position ${position}`);
+    }
+
+    function createRaidInstance(level, player, def, cohortId, participants, teamId, initializing, queued) {
         if (!level || !player || !def) return null;
         var id = newInstanceId(def.id);
         var inst = new RaidInstance(id, def, level, player, {
@@ -3952,7 +4019,10 @@
             lostParticipantUuids: {},
             cohortInitializing: !!initializing
         });
-        if (def.bossBar !== false) {
+        if (queued) {
+            inst.phase = "QUEUED";
+            inst._queueOrder = ++_queueSeq;
+        } else if (def.bossBar !== false) {
             inst.bar = makeBar(Manager._server, inst.id, inst.barBase, def.barColor, def.barOverlay);
         }
         _active[id] = inst;
@@ -3961,6 +4031,18 @@
 
     function activateRaidInstance(inst, representative) {
         if (!inst || !representative) return false;
+        if (inst.phase === "QUEUED") {
+            inst.phase = "SPAWNING";
+            inst._queueOrder = 0;
+            inst.level = playerLevel(representative) || inst.level;
+            inst._ctxPlayer = representative;
+            if (inst.def.bossBar !== false) {
+                inst.bar = makeBar(
+                    Manager._server, inst.id, inst.barBase,
+                    inst.def.barColor, inst.def.barOverlay
+                );
+            }
+        }
         inst._cohortInitializing = false;
         onlineParticipants(inst, true);
         eachOnlineParticipant(inst, function (member) {
@@ -3996,6 +4078,7 @@
         for (var i = 0; i < groups.length; i++) {
             var representative = groups[i][0];
             if (groupContainsUuid(groups[i], starterId)) representative = player;
+            var queueThis = runningRaidCount() >= MAX_CONCURRENT_RAIDS;
             var inst = createRaidInstance(
                 playerLevel(representative) || level,
                 representative,
@@ -4003,7 +4086,8 @@
                 cohortId,
                 participantSetForPlayers(groups[i]),
                 identity.teamId,
-                true
+                true,
+                queueThis
             );
             if (!inst) continue;
             if (!cohortId) cohortId = inst.id;
@@ -4011,10 +4095,65 @@
             created.push({ instance: inst, representative: representative });
         }
 
-        for (var a = 0; a < created.length; a++)
-            activateRaidInstance(created[a].instance, created[a].representative);
+        for (var a = 0; a < created.length; a++) {
+            created[a].instance._cohortInitializing = false;
+            if (created[a].instance.phase === "QUEUED")
+                notifyQueuedRaid(created[a].instance);
+            else
+                activateRaidInstance(created[a].instance, created[a].representative);
+        }
         persistActive(Manager._server);
         return created;
+    }
+
+    function queuedRepresentative(inst) {
+        if (!inst || inst.phase !== "QUEUED") return null;
+        refreshTeamRoster(inst);
+        if (inst._currentTeamRoster)
+            removeFormerTeamMembers(inst, inst._currentTeamRoster);
+
+        var members = explicitOnlineParticipants(inst);
+        var fallback = null;
+        for (var i = 0; i < members.length; i++) {
+            if (!fallback) fallback = members[i];
+            if (playerUuidOf(members[i]) === inst.playerUuid) return members[i];
+        }
+        return fallback;
+    }
+
+    // Fill free combat slots in FIFO order. An offline queue head is preserved
+    // but does not block later online groups. This runs only once per second or
+    // immediately after a terminal transition, never once per mob/tick.
+    function drainQueuedRaids(server) {
+        if (!server) return 0;
+        var free = Math.max(0, MAX_CONCURRENT_RAIDS - runningRaidCount());
+        if (free <= 0) return 0;
+
+        var queued = queuedRaidInstances();
+        var started = 0;
+        var changed = false;
+        for (var i = 0; i < queued.length && free > 0; i++) {
+            var inst = queued[i];
+            if (!inst || inst.phase !== "QUEUED") continue;
+            var representative = queuedRepresentative(inst);
+
+            if (participantCount(inst) === 0) {
+                inst.phase = "DONE";
+                notifyTerminal(inst, "cancelled");
+                delete _active[inst.id];
+                changed = true;
+                continue;
+            }
+            if (!representative) continue;
+
+            if (activateRaidInstance(inst, representative)) {
+                free--;
+                started++;
+                changed = true;
+            }
+        }
+        if (changed) persistActive(server);
+        return started;
     }
 
     function mobUuid(entity) {
@@ -4369,6 +4508,7 @@
             dimension: levelId(inst.level),
             roundIdx: inst.roundIdx,
             phase: inst.phase,
+            queueOrder: Math.max(0, Number(inst._queueOrder) || 0),
             spawnRetryLeft: inst.spawnRetryLeft,
             breatherLeft: inst.breatherLeft,
             roundTimeLeft: inst.roundTimeLeft,
@@ -4450,14 +4590,18 @@
             inst._ctxPlayer = null;
             inst.roundIdx = Math.max(0, Math.min(def.rounds.length - 1, Number(s.roundIdx) || 0));
             inst.phase = String(s.phase || "SPAWNING");
-            if (inst.phase !== "SPAWNING" && inst.phase !== "FIGHTING" &&
+            if (inst.phase !== "QUEUED" && inst.phase !== "SPAWNING" && inst.phase !== "FIGHTING" &&
                 inst.phase !== "BREATHER" && inst.phase !== "WIN_WAIT") inst.phase = "SPAWNING";
+            inst._queueOrder = (inst.phase === "QUEUED")
+                ? Math.max(1, Number(s.queueOrder) || (++_queueSeq))
+                : 0;
+            if (inst._queueOrder > _queueSeq) _queueSeq = inst._queueOrder;
             inst.spawnRetryLeft = Math.max(0, Number(s.spawnRetryLeft) || 0);
             inst.breatherLeft = Math.max(0, Number(s.breatherLeft) || 0);
             inst.roundTimeLeft = (s.roundTimeLeft == null) ? null : Math.max(0, Number(s.roundTimeLeft) || 0);
             inst.roundMobs = [];
             inst.carryover = [];
-            inst.bar = (def.bossBar === false) ? null :
+            inst.bar = (def.bossBar === false || inst.phase === "QUEUED") ? null :
                 makeBar(server, inst.id, def.title || prettyId(def.id), def.barColor, def.barOverlay);
             inst._barParticipantKey = null;
             inst._barSyncWarned = false;
@@ -4494,7 +4638,9 @@
             inst._restoreChunkIndex = 0;
             inst._restoreChunkSettle = 0;
             inst._restoreLegacyWarned = false;
-            inst._restoring = true;
+            // Queued records never owned mobs, so they need neither chunk loads
+            // nor the resume delay. Combat snapshots keep the existing rebind.
+            inst._restoring = inst.phase !== "QUEUED";
             _active[inst.id] = inst;
 
             var suffix = Number(inst.id.substring(inst.id.lastIndexOf("_") + 1));
@@ -4720,6 +4866,20 @@
     function notifyTerminal(inst, outcome) {
         if (!inst || inst._terminalNotified) return;
         inst._terminalNotified = true;
+        _queueDrainRequested = true;
+        // A spatial subgroup that already finished/stopped must not be pulled
+        // into another subgroup of the same cohort by the wave-one early-join
+        // reconciler. Reuse the persisted cohort exclusion set; it is scoped to
+        // this one cohort and does not affect a later scheduled raid.
+        var finishedParticipants = uuidKeys(inst.participantUuids);
+        var cohort = cohortInstances(inst);
+        for (var ci = 0; ci < cohort.length; ci++) {
+            var other = cohort[ci];
+            if (!other || other.id === inst.id) continue;
+            if (!other._lostParticipantUuids) other._lostParticipantUuids = {};
+            for (var pi = 0; pi < finishedParticipants.length; pi++)
+                other._lostParticipantUuids[finishedParticipants[pi]] = true;
+        }
         var ev = {
             id: inst.id,
             defId: inst.defId,
@@ -4745,7 +4905,19 @@
         for (var k in _active) {
             var inst = _active[k];
             var ph = inst.phase;
-            if (ph === "DONE" || ph === "ENDING") continue;
+            if (ph === "QUEUED" || ph === "DONE" || ph === "ENDING") continue;
+            if (inst.participantUuids && inst.participantUuids[wanted]) return inst;
+        }
+        return null;
+    }
+
+    function playerRaidIncludingQueue(playerUuid) {
+        var active = playerInRaid(playerUuid);
+        if (active) return active;
+        var wanted = normUuid(playerUuid);
+        for (var k in _active) {
+            var inst = _active[k];
+            if (!inst || inst.phase !== "QUEUED") continue;
             if (inst.participantUuids && inst.participantUuids[wanted]) return inst;
         }
         return null;
@@ -4858,7 +5030,7 @@
         try {
             var path = String(rl.getPath());
             for (var k in _active) {
-                if (_active[k].phase === "DONE") continue;
+                if (_active[k].phase === "DONE" || _active[k].phase === "QUEUED") continue;
                 var id = String(_active[k].id);
                 if (path === id || path.indexOf(id + PERSONAL_DEATH_BAR_PATH) === 0) return true;
             }
@@ -4902,6 +5074,9 @@
             if (!def) { err(`start: unknown raid "${defId}"`); return null; }
             if (!player) { err("start: no player"); return null; }
             if (!Manager._server) { try { Manager._server = player.server; } catch (eSv) {} }
+            // Respect existing FIFO reservations before admitting a brand-new
+            // request into a free slot.
+            drainQueuedRaids(Manager._server);
             var created = startSpatialTeamRaid(level || playerLevel(player), player, def);
             if (created.length === 0) {
                 warn(`start: ${player.username}'s team is already in a raid`);
@@ -4910,9 +5085,11 @@
             return created[0].instance.id;
         },
 
-        // True when the player has a raid still fighting (ENDING/DONE excluded).
+        // Queued reservations count here too, preventing commands/schedulers
+        // from adding a duplicate raid while the team waits for a global slot.
         isInRaid: function (player) {
-            try { return !!raidForPlayer(player); } catch (e) { return false; }
+            try { return !!playerRaidIncludingQueue(playerUuidOf(player)); }
+            catch (e) { return false; }
         },
 
         // Scheduler guard: one spatial subgroup finishing must not start the
@@ -4972,7 +5149,8 @@
         stop: function (idOrPlayer) {
             var inst = null;
             if (typeof idOrPlayer === "string") inst = _active[idOrPlayer];
-            else if (playerUuidOf(idOrPlayer)) inst = raidForPlayer(idOrPlayer);
+            else if (playerUuidOf(idOrPlayer))
+                inst = playerRaidIncludingQueue(playerUuidOf(idOrPlayer));
             if (!inst) return false;
             cleanupMobs(inst);
             notifyTerminal(inst, "stopped");
@@ -5002,7 +5180,7 @@
             var inst = null;
             if (typeof idOrPlayer === "string") inst = _active[idOrPlayer];
             else if (playerUuidOf(idOrPlayer)) inst = raidForPlayer(idOrPlayer);
-            if (!inst) return -1;
+            if (!inst || inst.phase === "QUEUED") return -1;
             var killed = killMobs(inst);
             persistActive(Manager._server);
             return killed;
@@ -5021,7 +5199,8 @@
                 var i = _active[k];
                 out.push({ id: i.id, defId: i.defId,
                            round: (i.roundIdx + 1) + "/" + i.def.rounds.length,
-                           phase: i.phase, alive: i.aliveCount() });
+                           phase: i.phase, alive: i.aliveCount(),
+                           queuePosition: i.phase === "QUEUED" ? queuePosition(i) : 0 });
             }
             return out;
         },
@@ -5029,6 +5208,7 @@
         _drive: function (server) {
             Manager._server = server;
             _serverTickClock++;
+            _queueCheckAccum++;
             if (!_restoreAttempted) restoreActive(server);
             _persistAccum++;
             if (_persistAccum >= ACTIVE_SAVE_EVERY) {
@@ -5038,7 +5218,10 @@
             // These three Born in Chaos classes reignite themselves every entity
             // tick. This targeted pass is intentionally before the shared
             // throttle; all other raid systems retain their 5-tick cadence.
-            for (var daylightKey in _active) strictDaylightGuard(_active[daylightKey]);
+            for (var daylightKey in _active) {
+                if (_active[daylightKey].phase !== "QUEUED")
+                    strictDaylightGuard(_active[daylightKey]);
+            }
             _tickAccum++;
             if (_tickAccum < TICK_THROTTLE) return;
             _tickAccum = 0;
@@ -5046,10 +5229,16 @@
             var done = [];
             for (var k in _active) {
                 var inst = _active[k];
+                if (inst.phase === "QUEUED") continue;
                 try { inst.tick(); } catch (e) { err(`instance ${k} tick: ${e}`); }
                 if (inst.phase === "DONE") done.push(k);
             }
             for (var d = 0; d < done.length; d++) delete _active[done[d]];
+            if (_queueDrainRequested || _queueCheckAccum >= RAID_QUEUE_CHECK_EVERY) {
+                _queueDrainRequested = false;
+                _queueCheckAccum = 0;
+                drainQueuedRaids(server);
+            }
         }
     };
 
@@ -5102,6 +5291,9 @@
                 inst._barParticipantKey = null;
                 onlineParticipants(inst, true);
             }
+            // A queued raid whose first participant just came online can use an
+            // already-free slot immediately instead of waiting for the next pass.
+            drainQueuedRaids(event.server || Manager._server);
         } catch (e) { warn("team raid login sync: " + e); }
     });
 
@@ -5202,7 +5394,11 @@
     // sticks). Handler early-exits on the no-active-raid flag + victim tag, so
     // ambient combat costs two cheap checks.
     function anyActive() {
-        for (var k in _active) { if (_active[k].phase !== "DONE") return true; }
+        for (var k in _active) {
+            var phase = _active[k].phase;
+            if (phase !== "QUEUED" && phase !== "ENDING" && phase !== "DONE")
+                return true;
+        }
         return false;
     }
     EntityEvents.beforeHurt(function (event) {
