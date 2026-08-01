@@ -706,6 +706,7 @@
 	quest.5A11A2FC20E5CE2A.title: "Barracks"
 	quest.5A6266BFD238B9B9.quest_desc: ["Mine diamonds to open the next equipment and enchanting path."]
 	quest.5A6266BFD238B9B9.title: "Diamonds Below"
+	quest.5AAD08944CDC97B0.title: "Lucky Egg"
 	quest.5AFFF6D2AB06C8E5.quest_desc: ["Enter the world and claim the first supplies for the road ahead."]
 	quest.5AFFF6D2AB06C8E5.title: "Awakening"
 	quest.5B013A3A37D6902B.quest_desc: ["You can find the fragments of Ancient Knowledge spread out in the Chests of the &9Ancient City&r. \n\nYou'll also need &9Echo Shards&r to 1. Combine the Fragments to learn of the &9Spells&r and 2. Actually make the &9Spells&r."]
@@ -1046,6 +1047,7 @@
 	reward_table.21291284C4DCB97E.title: "Eagic Material"
 	reward_table.4BC174D743CFA536.title: "Perks Tire 2"
 	reward_table.4E7A00000000F001.title: "Nether Supply Cache"
+	reward_table.4FFE996926CC293C.title: "Spawn Eggs"
 	reward_table.5E6B5CA8723C9B45.title: "Perks Tire 3"
 	reward_table.60FFEE0000000A01.title: "Woods"
 	reward_table.60FFEE0000000A02.title: "Ore"

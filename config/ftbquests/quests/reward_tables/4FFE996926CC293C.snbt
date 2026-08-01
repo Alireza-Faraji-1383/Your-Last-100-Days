@@ -1,0 +1,149 @@
+{
+	id: "4FFE996926CC293C"
+	loot_size: 1
+	order_index: 10
+	rewards: [
+		{
+			count: 2
+			id: "523AAE54D664FB46"
+			item: {
+				count: 1
+				id: "minecraft:villager_spawn_egg"
+			}
+			weight: 0.007f
+		}
+		{
+			id: "1315E4169EDE5A95"
+			item: {
+				count: 1
+				id: "minecraft:villager_spawn_egg"
+			}
+			weight: 0.3f
+		}
+		{
+			id: "49A8C20E9A777B4A"
+			item: {
+				count: 1
+				id: "minecraft:zombie_villager_spawn_egg"
+			}
+			weight: 0.4f
+		}
+		{
+			id: "1A0F7EB6ACC62F2F"
+			item: {
+				count: 1
+				id: "guardvillagers:guard_spawn_egg"
+			}
+			weight: 0.6f
+		}
+		{
+			count: 2
+			id: "07AE59A2F4FCD77B"
+			item: {
+				count: 1
+				id: "minecraft:pig_spawn_egg"
+			}
+		}
+		{
+			count: 2
+			id: "2FFB427C6C26C63F"
+			item: {
+				count: 1
+				id: "minecraft:cow_spawn_egg"
+			}
+		}
+		{
+			count: 2
+			id: "222B4A667E50183D"
+			item: {
+				count: 1
+				id: "minecraft:chicken_spawn_egg"
+			}
+		}
+		{
+			id: "4CE6CEE3DDA3B35C"
+			item: {
+				count: 1
+				id: "minecraft:skeleton_horse_spawn_egg"
+			}
+			weight: 0.5f
+		}
+		{
+			count: 2
+			id: "45887F35FF38BFEA"
+			item: {
+				count: 1
+				id: "minecraft:horse_spawn_egg"
+			}
+		}
+		{ id: "0E4DC9EEEACC419A", item: { count: 1, id: "minecraft:zombie_spawn_egg" } }
+		{
+			id: "4BDC1445962151D2"
+			item: {
+				count: 1
+				id: "modern_companions:knight_spawn_egg"
+			}
+			weight: 0.01f
+		}
+		{
+			id: "11B45ECDAA4E93E9"
+			item: {
+				count: 1
+				id: "modern_companions:archer_spawn_egg"
+			}
+			weight: 0.01f
+		}
+		{ id: "5616989B4D7CA712", item: { count: 1, id: "minecraft:creeper_spawn_egg" } }
+		{
+			id: "5ACB0250F69B8AE0"
+			item: {
+				count: 1
+				id: "minecraft:iron_golem_spawn_egg"
+			}
+			weight: 0.8f
+		}
+		{
+			id: "396CEE97F113FB3B"
+			item: {
+				count: 1
+				id: "goblintraders:goblin_trader_spawn_egg"
+			}
+			weight: 0.02f
+		}
+		{ id: "71EE4627C9AC89AA", item: { count: 1, id: "minecraft:hoglin_spawn_egg" } }
+		{
+			id: "5249A8D8D16F1716"
+			item: {
+				count: 1
+				id: "born_in_chaos_v1:phantom_creeper_spawn_egg"
+			}
+			weight: 0.5f
+		}
+		{ id: "4794A963EC07837A", item: { count: 1, id: "minecraft:wandering_trader_spawn_egg" } }
+		{
+			count: 2
+			id: "28E1A87AF3173A14"
+			item: {
+				count: 1
+				id: "minecraft:goat_spawn_egg"
+			}
+		}
+		{
+			count: 2
+			id: "2C0B53EEE32B7F2F"
+			item: {
+				count: 1
+				id: "minecraft:fox_spawn_egg"
+			}
+		}
+		{
+			count: 2
+			id: "36DE0EC78BA345D4"
+			item: {
+				count: 1
+				id: "minecraft:wolf_spawn_egg"
+			}
+			weight: 0.7f
+		}
+	]
+}

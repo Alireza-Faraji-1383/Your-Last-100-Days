@@ -63,7 +63,15 @@
 			rotation: 0.0d
 			width: 7.0d
 			x: -1.0d
-			y: 9.5d
+			y: 8.0d
+		}
+		{
+			height: 2.4d
+			image: "relics:textures/gui/description/research/tip_background.png"
+			rotation: 0.0d
+			width: 2.0d
+			x: -10.0d
+			y: -7.5d
 		}
 	]
 	order_index: 0
@@ -149,8 +157,8 @@
 				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
-			x: -8.0d
-			y: -1.0d
+			x: -12.0d
+			y: -5.0d
 		}
 		{
 			can_repeat: true
@@ -205,14 +213,14 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 25L
+				count: 20L
 				disable_toast: true
 				id: "6167E671DE449137"
 				item: { count: 1, id: "kubejs:silver_coin" }
 				type: "item"
 			}]
-			x: -8.0d
-			y: -3.0d
+			x: -10.0d
+			y: -5.0d
 		}
 		{
 			can_repeat: true
@@ -359,7 +367,7 @@
 				}
 			]
 			x: -1.0d
-			y: 10.0d
+			y: 9.0d
 		}
 		{
 			can_repeat: true
@@ -399,7 +407,7 @@
 				}
 			]
 			x: -3.0d
-			y: 12.0d
+			y: 11.0d
 		}
 		{
 			can_repeat: true
@@ -487,7 +495,7 @@
 				}
 			]
 			x: 2.0d
-			y: 10.0d
+			y: 9.0d
 		}
 		{
 			can_repeat: true
@@ -562,8 +570,8 @@
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: -3.5d
-			y: 1.5d
+			x: -8.0d
+			y: -3.0d
 		}
 		{
 			can_repeat: true
@@ -588,8 +596,8 @@
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: -1.0d
-			y: 4.0d
+			x: -8.0d
+			y: -1.0d
 		}
 		{
 			can_repeat: true
@@ -608,14 +616,14 @@
 			size: 2.0d
 			tasks: [{
 				consume_items: true
-				count: 16L
+				count: 4L
 				disable_toast: true
 				id: "0136491460B47C1E"
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: 1.5d
-			y: 1.5d
+			x: -12.0d
+			y: -3.0d
 		}
 		{
 			can_repeat: true
@@ -639,8 +647,8 @@
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: -1.0d
-			y: 1.5d
+			x: -10.0d
+			y: -3.0d
 		}
 		{
 			can_repeat: true
@@ -678,7 +686,7 @@
 				}
 			]
 			x: -4.0d
-			y: 10.0d
+			y: 9.0d
 		}
 		{
 			can_repeat: true
@@ -717,7 +725,7 @@
 				}
 			]
 			x: -1.0d
-			y: 7.0d
+			y: 6.0d
 		}
 		{
 			can_repeat: true
@@ -756,7 +764,7 @@
 				}
 			]
 			x: 1.5d
-			y: 8.0d
+			y: 7.0d
 		}
 		{
 			can_repeat: true
@@ -795,7 +803,7 @@
 				}
 			]
 			x: -3.0d
-			y: 8.0d
+			y: 7.0d
 		}
 		{
 			can_repeat: true
@@ -850,7 +858,7 @@
 				}
 			]
 			x: 1.0d
-			y: 12.0d
+			y: 11.0d
 		}
 		{
 			can_repeat: true
@@ -889,7 +897,32 @@
 				}
 			]
 			x: -1.0d
-			y: 13.0d
+			y: 12.0d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:fox_spawn_egg"
+			}
+			id: "5AAD08944CDC97B0"
+			rewards: [{
+				exclude_from_claim_all: true
+				id: "394412743A117BE2"
+				table_id: 5764213249982343484L
+				type: "random"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 8L
+				disable_toast: true
+				id: "7C23F08FA499B9E6"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -10.0d
+			y: -1.0d
 		}
 	]
 }
