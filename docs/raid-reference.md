@@ -201,4 +201,4 @@ presets: ["mobile", "superMiner", "farSight"]  // ماینر سریع با دی�
 /raid list                — لیست ریدهای ثبت شده
 /raid status              — وضعیت ریدهای فعال
 ```
-نیاز به permission level 2+
+تمام شاخه‌های `/raid` فقط با بالاترین سطح دسترسی Minecraft، یعنی permission level 4، قابل استفاده‌اند.

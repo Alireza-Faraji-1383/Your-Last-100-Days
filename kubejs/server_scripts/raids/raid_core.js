@@ -31,7 +31,10 @@
     const ACTIVE_SAVE_EVERY = 100;
     const TEAM_SYNC_EVERY = 20;       // refresh FTB roster/HUD once per second
     const RESTORE_LOGIN_DELAY = 40; // let the returning player's chunks load first
-    const RESTORE_MOB_WAIT = 200;   // wait up to 10s for persistent mobs to load
+    const RESTORE_MOB_WAIT = 200;   // first allow 10s of natural chunk loading
+    const RESTORE_CHUNKS_PER_SCAN = 2; // bounded synchronous loads per second
+    const RESTORE_CHUNK_RADIUS = 2; // covers fast movement since the last 5s crash snapshot
+    const RESTORE_CHUNK_SETTLE = 40;// let persistent entities join after chunk requests
     const BANNED_RAID_MOB_TYPES = {
         "cataclysm:netherite_ministrosity": true // stationary encounter construct
     };
@@ -223,6 +226,21 @@
         return { teamId: teamId || null, members: teamRoster(team, puid) };
     }
 
+    // Stable scheduler ownership key. FTB Team UUIDs make one scheduled raid
+    // shared by the whole team; solo players retain an independent UUID key.
+    function raidOwnerKeyForPlayer(player) {
+        var identity = playerTeamIdentity(player);
+        if (identity.teamId) return "team:" + normUuid(identity.teamId);
+        var playerId = playerUuidOf(player);
+        return playerId ? "player:" + playerId : "";
+    }
+
+    function raidOwnerKeyForInstance(inst) {
+        if (!inst) return "";
+        if (inst.teamId) return "team:" + normUuid(inst.teamId);
+        return inst.playerUuid ? "player:" + normUuid(inst.playerUuid) : "";
+    }
+
     function setAdvancementLocation(manager, RL, id, x, y) {
         var holder = manager.get(RL.parse(id));
         if (!holder) { warn("advancement layout missing " + id); return; }
@@ -272,6 +290,8 @@
     // lost on reload and can never be removed -> bar sticks on the client).
 
     const BAR_NS = "raidfactory";
+    const PERSONAL_DEATH_BAR_MARKER = "[Y100D_PERSONAL_DEATHS]";
+    const PERSONAL_DEATH_BAR_PATH = "/personal_";
     var _barCls = null;
     function barClasses() {
         if (_barCls) return _barCls;
@@ -775,10 +795,18 @@
     const SPAWN_EMERGENCY_TRIES  = 16;  // paid only once when a whole plan needs rescue
     const SPAWN_EMERGENCY_Y_SCAN = 64;  // bounded fallback in ceiling dimensions
     const SPAWN_RETRY_TICKS      = 200; // no-safe-ground retry interval (10 seconds)
+    const ENTITY_FIT_LOCAL_TRIES = 16;  // paid only when the authored point is too small
+    const ENTITY_FIT_GLOBAL_TRIES = 24; // bounded second-stage search around the raid
+    const ENTITY_FIT_MAX_WIDTH   = 12;  // reject pathological/display entity dimensions
+    const ENTITY_FIT_MAX_HEIGHT  = 24;
+    const ENTITY_SPAWN_GAP       = 0.2; // prevents planned bounding boxes overlapping
     const COLONY_BUILDING_CLEARANCE = 50; // horizontal blocks from actual structure bounds
     const COLONY_PLAYER_MIN_DISTANCE = 32;
-    const COLONY_BORDER_STEP = 16;
-    const COLONY_BORDER_SEARCH_MAX = 1024;
+    const COLONY_BORDER_BINARY_STEPS = 8; // fixed-cost refinement, independent of colony size
+    const COLONY_BORDER_OUTSIDE_PADDING = 32;
+    const COLONY_BORDER_FALLBACK_RADIUS = 256;
+    const COLONY_BORDER_MAX_RADIUS = 2048;
+    const COLONY_BORDER_EXPAND_STEPS = 4;
     const COLONY_BORDER_INNER_LIMIT = 32;
     const COLONY_BORDER_OFFSETS = [8, 0, -8, -16, -24, -32, 16, 32, 48, 64, 96, 128];
 
@@ -788,6 +816,7 @@
     var _mineColoniesTried = false;
     var _mineColoniesWarned = false;
     var _blockPosClass = null;
+    var _chunkPosClass = null;
 
     function mineColoniesManager() {
         if (_mineColoniesTried) return _mineColoniesManager;
@@ -851,25 +880,65 @@
         } catch (ePos) {}
     }
 
-    function collectMineColoniesBuildings(manager, rawLevel) {
+    function collectMineColoniesBuildings(colony) {
         var out = [];
-        if (!manager || !rawLevel) return out;
+        if (!colony) return out;
         try {
-            var colonies = manager.getColonies(rawLevel);
-            var cit = colonies.iterator();
-            while (cit.hasNext()) {
-                var colony = cit.next();
-                var buildings = colony.getServerBuildingManager().getBuildings().values();
-                var bit = buildings.iterator();
-                while (bit.hasNext()) addBuildingBounds(out, bit.next());
-            }
+            // Only the player's own colony is relevant. The previous dimension-
+            // wide scan visited every building of every colony for every wave.
+            var buildings = colony.getServerBuildingManager().getBuildings().values();
+            var bit = buildings.iterator();
+            while (bit.hasNext()) addBuildingBounds(out, bit.next());
         } catch (e) {
             if (!_mineColoniesWarned) {
                 _mineColoniesWarned = true;
-                warn("MineColonies building bounds unavailable: " + e);
+                warn("player colony building bounds unavailable: " + e);
             }
         }
         return out;
+    }
+
+    // MineColonies' concrete server colony exposes its own claim map. Reading
+    // those keys is proportional only to this colony's claimed chunks and gives
+    // an exact finite search bound without scanning blocks or other colonies.
+    function colonyClaimBounds(colony) {
+        if (!colony || typeof colony.getClaimData !== "function") return null;
+        try {
+            if (!_chunkPosClass)
+                _chunkPosClass = Java.loadClass("net.minecraft.world.level.ChunkPos");
+            var claims = colony.getClaimData();
+            if (!claims || claims.isEmpty()) return null;
+            var it = claims.keySet().iterator();
+            var minChunkX = Infinity, maxChunkX = -Infinity;
+            var minChunkZ = Infinity, maxChunkZ = -Infinity;
+            var claimedChunks = {};
+            while (it.hasNext()) {
+                var rawKey = it.next();
+                var key = (rawKey && typeof rawKey.longValue === "function")
+                    ? rawKey.longValue() : rawKey;
+                var cx = Number(_chunkPosClass.getX(key));
+                var cz = Number(_chunkPosClass.getZ(key));
+                claimedChunks[cx + "," + cz] = true;
+                if (cx < minChunkX) minChunkX = cx;
+                if (cx > maxChunkX) maxChunkX = cx;
+                if (cz < minChunkZ) minChunkZ = cz;
+                if (cz > maxChunkZ) maxChunkZ = cz;
+            }
+            if (!isFinite(minChunkX) || !isFinite(minChunkZ)) return null;
+            return {
+                minX: minChunkX * 16,
+                maxX: (maxChunkX + 1) * 16,
+                minZ: minChunkZ * 16,
+                maxZ: (maxChunkZ + 1) * 16,
+                chunks: claimedChunks
+            };
+        } catch (e) {
+            if (!_mineColoniesWarned) {
+                _mineColoniesWarned = true;
+                warn("player colony claim bounds unavailable; using bounded fallback: " + e);
+            }
+            return null;
+        }
     }
 
     function colonySpawnContext(level, player) {
@@ -890,13 +959,15 @@
             if (!permissions || !permissions.isColonyMember(rawPlayer)) return null;
 
             var center = colony.getCenter();
+            var buildings = collectMineColoniesBuildings(colony);
             return {
                 colony: colony,
                 rawLevel: rawLevel,
                 centerX: posAxis(center, "x") + 0.5,
                 centerY: posAxis(center, "y"),
                 centerZ: posAxis(center, "z") + 0.5,
-                buildings: collectMineColoniesBuildings(manager, rawLevel),
+                buildings: buildings,
+                claimBounds: colonyClaimBounds(colony),
                 boundaryCache: {}
             };
         } catch (e) {
@@ -910,6 +981,14 @@
 
     function colonyContains(ctx, x, z) {
         if (!ctx) return false;
+        // Fast path for the installed MineColonies server API: direct lookup in
+        // this colony's claim keys avoids Level#getChunkAt and never loads a
+        // distant chunk merely to test a possible raid border.
+        if (ctx.claimBounds && ctx.claimBounds.chunks) {
+            var cx = Math.floor(Number(x) / 16);
+            var cz = Math.floor(Number(z) / 16);
+            return !!ctx.claimBounds.chunks[cx + "," + cz];
+        }
         try {
             var pos = blockPosAt(x, ctx.centerY, z);
             return !!(pos && ctx.colony.isCoordInColony(ctx.rawLevel, pos));
@@ -931,24 +1010,53 @@
         return true;
     }
 
-    // Find the real claimed border along one direction from the Town Hall.
-    // Six binary refinements put the answer within a quarter block.
+    function colonyClaimExitRadius(ctx, angle) {
+        var bounds = ctx ? ctx.claimBounds : null;
+        if (!bounds) return null;
+        var dx = Math.cos(angle), dz = Math.sin(angle);
+        var tx = Infinity, tz = Infinity;
+        if (dx > 0.000001) tx = (bounds.maxX - ctx.centerX) / dx;
+        else if (dx < -0.000001) tx = (bounds.minX - ctx.centerX) / dx;
+        if (dz > 0.000001) tz = (bounds.maxZ - ctx.centerZ) / dz;
+        else if (dz < -0.000001) tz = (bounds.minZ - ctx.centerZ) / dz;
+        var exit = Math.min(tx, tz);
+        return isFinite(exit) && exit > 0 ? exit : null;
+    }
+
+    // Find the claimed border with a fixed number of O(1) membership checks.
+    // Claim bounds supply an outside point immediately; the bounded expansion
+    // exists only for API/version fallbacks where claim keys are unavailable.
     function colonyBoundaryRadius(ctx, angle) {
         if (!ctx) return null;
         var key = Math.round(((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) * 10000);
         if (ctx.boundaryCache[key] != null) return ctx.boundaryCache[key];
-        var low = 0, high = COLONY_BORDER_STEP;
-        while (high <= COLONY_BORDER_SEARCH_MAX &&
-               colonyContains(ctx, ctx.centerX + Math.cos(angle) * high,
-                                   ctx.centerZ + Math.sin(angle) * high)) {
+
+        var dx = Math.cos(angle), dz = Math.sin(angle);
+        var claimExit = colonyClaimExitRadius(ctx, angle);
+        var low = 0;
+        var high = claimExit != null
+            ? Math.min(COLONY_BORDER_MAX_RADIUS,
+                       Math.max(16, claimExit + COLONY_BORDER_OUTSIDE_PADDING))
+            : COLONY_BORDER_FALLBACK_RADIUS;
+
+        var highInside = colonyContains(
+            ctx, ctx.centerX + dx * high, ctx.centerZ + dz * high
+        );
+        for (var expand = 0;
+             highInside && expand < COLONY_BORDER_EXPAND_STEPS && high < COLONY_BORDER_MAX_RADIUS;
+             expand++) {
             low = high;
-            high += COLONY_BORDER_STEP;
+            high = Math.min(COLONY_BORDER_MAX_RADIUS, high * 2);
+            highInside = colonyContains(
+                ctx, ctx.centerX + dx * high, ctx.centerZ + dz * high
+            );
         }
-        if (high > COLONY_BORDER_SEARCH_MAX) return null;
-        for (var i = 0; i < 6; i++) {
+        if (highInside) return null;
+
+        for (var i = 0; i < COLONY_BORDER_BINARY_STEPS; i++) {
             var mid = (low + high) / 2;
-            if (colonyContains(ctx, ctx.centerX + Math.cos(angle) * mid,
-                                   ctx.centerZ + Math.sin(angle) * mid)) low = mid;
+            if (colonyContains(ctx, ctx.centerX + dx * mid,
+                                   ctx.centerZ + dz * mid)) low = mid;
             else high = mid;
         }
         ctx.boundaryCache[key] = high;
@@ -1019,6 +1127,175 @@
         if (!pos) return false;
         var bx = Math.floor(pos.x), by = Math.floor(pos.y), bz = Math.floor(pos.z);
         return safeSpawnY(level, bx, by, bz) != null;
+    }
+
+    function raidEntityDimensions(entity) {
+        var raw = null;
+        try { raw = rawMobOf(entity) || entity; } catch (eRaw) { raw = entity; }
+        var width = NaN, height = NaN;
+        // mergeNbt can change baby/variant/pose dimensions. Force the vanilla
+        // cache to refresh before reading the standing bounding box.
+        try {
+            if (raw && typeof raw.refreshDimensions === "function") raw.refreshDimensions();
+        } catch (eRefresh) {}
+        try {
+            if (raw && typeof raw.getBbWidth === "function")
+                width = Number(raw.getBbWidth());
+            if (raw && typeof raw.getBbHeight === "function")
+                height = Number(raw.getBbHeight());
+        } catch (e) {}
+        if (!isFinite(width) || !isFinite(height)) {
+            try {
+                var dimensions = raw.getDimensions(raw.getPose());
+                if (!isFinite(width))
+                    width = Number(typeof dimensions.width === "function"
+                        ? dimensions.width() : dimensions.width);
+                if (!isFinite(height))
+                    height = Number(typeof dimensions.height === "function"
+                        ? dimensions.height() : dimensions.height);
+            } catch (e2) {}
+        }
+        if (!isFinite(width) || width <= 0) width = 0.6;
+        if (!isFinite(height) || height <= 0) height = 1.8;
+        return { width: width, height: height };
+    }
+
+    function normalizedSpawnPosition(pos) {
+        return {
+            x: Math.floor(Number(pos.x)) + 0.5,
+            y: Math.floor(Number(pos.y)),
+            z: Math.floor(Number(pos.z)) + 0.5
+        };
+    }
+
+    function entityBoundsAt(pos, dimensions) {
+        var half = dimensions.width / 2;
+        return {
+            minX: pos.x - half,
+            maxX: pos.x + half,
+            minY: pos.y,
+            maxY: pos.y + dimensions.height,
+            minZ: pos.z - half,
+            maxZ: pos.z + half
+        };
+    }
+
+    function boundsOverlap(a, b, gap) {
+        var g = Math.max(0, Number(gap) || 0);
+        return a.minX < b.maxX + g && a.maxX > b.minX - g &&
+               a.minY < b.maxY     && a.maxY > b.minY &&
+               a.minZ < b.maxZ + g && a.maxZ > b.minZ - g;
+    }
+
+    function reservedSpawnClear(bounds, reserved) {
+        for (var i = 0; i < reserved.length; i++) {
+            if (boundsOverlap(bounds, reserved[i], ENTITY_SPAWN_GAP)) return false;
+        }
+        return true;
+    }
+
+    // Checks every block intersected by the entity's real standing bounding box
+    // and every floor block under its footprint. This catches wide/tall bosses
+    // inside trees, walls, overhangs and cliff edges while remaining a one-time
+    // wave-planning cost.
+    function entityFootprintClear(level, pos, dimensions, reserved) {
+        if (!pos || !dimensions ||
+            dimensions.width > ENTITY_FIT_MAX_WIDTH ||
+            dimensions.height > ENTITY_FIT_MAX_HEIGHT) return false;
+        var exact = normalizedSpawnPosition(pos);
+        if (!isDrySpawnPosition(level, exact)) return false;
+        var bounds = entityBoundsAt(exact, dimensions);
+        if (!reservedSpawnClear(bounds, reserved)) return false;
+
+        var epsilon = 0.0001;
+        var minX = Math.floor(bounds.minX + epsilon);
+        var maxX = Math.floor(bounds.maxX - epsilon);
+        var minY = Math.floor(bounds.minY + epsilon);
+        var maxY = Math.floor(bounds.maxY - epsilon);
+        var minZ = Math.floor(bounds.minZ + epsilon);
+        var maxZ = Math.floor(bounds.maxZ - epsilon);
+        try {
+            for (var x = minX; x <= maxX; x++) {
+                for (var z = minZ; z <= maxZ; z++) {
+                    if (!isSafeFloor(level.getBlock(x, minY - 1, z))) return false;
+                    for (var y = minY; y <= maxY; y++) {
+                        if (!isPassable(level.getBlock(x, y, z))) return false;
+                    }
+                }
+            }
+        } catch (e) {
+            warn("entity footprint check: " + e);
+            return false;
+        }
+        return true;
+    }
+
+    function sizedCandidate(level, x, baseY, z, dimensions, colonyCtx, reserved, emergency) {
+        var clearance = COLONY_BUILDING_CLEARANCE + Math.ceil(dimensions.width / 2);
+        if (!colonyPointClear(colonyCtx, x, z, clearance)) return null;
+        var y = emergency
+            ? emergencyGroundY(level, x, baseY, z)
+            : groundY(level, x, baseY, z);
+        if (y == null) return null;
+        var pos = normalizedSpawnPosition({ x: x, y: y, z: z });
+        if (!entityFootprintClear(level, pos, dimensions, reserved)) return null;
+        return pos;
+    }
+
+    function findSizedSpawnPosition(level, base, entity, pp, def, colonyCtx, reserved, seed) {
+        var dimensions = raidEntityDimensions(entity);
+        if (dimensions.width > ENTITY_FIT_MAX_WIDTH ||
+            dimensions.height > ENTITY_FIT_MAX_HEIGHT) {
+            warn("spawnRound: rejected unsafe entity dimensions " +
+                 dimensions.width.toFixed(2) + "x" + dimensions.height.toFixed(2));
+            return null;
+        }
+
+        // The authored position already has a validated surface Y. Reuse it
+        // directly in the common case instead of paying for another height scan.
+        var direct = normalizedSpawnPosition(base);
+        var directClearance = COLONY_BUILDING_CLEARANCE + Math.ceil(dimensions.width / 2);
+        if (colonyPointClear(colonyCtx, direct.x, direct.z, directClearance) &&
+            entityFootprintClear(level, direct, dimensions, reserved)) {
+            return { pos: direct, bounds: entityBoundsAt(direct, dimensions) };
+        }
+
+        // First search close to the assigned squad position, preserving the
+        // multi-direction formation whenever nearby terrain has enough room.
+        var rotation = ((seed || 0) % 360) * Math.PI / 180;
+        for (var i = 0; i < ENTITY_FIT_LOCAL_TRIES; i++) {
+            var angle = rotation + i * GOLDEN_ANG;
+            var radius = 2 + (i % 6) * 2;
+            var local = sizedCandidate(
+                level,
+                base.x + Math.cos(angle) * radius,
+                base.y,
+                base.z + Math.sin(angle) * radius,
+                dimensions, colonyCtx, reserved, false
+            );
+            if (local) return { pos: local, bounds: entityBoundsAt(local, dimensions) };
+        }
+
+        // A large boss may need a clearing outside its original squad. Search a
+        // deterministic, bounded set around the raid perimeter; never fall back
+        // to an unvalidated point.
+        var minR = Math.max(6, def.spawn.minRadius);
+        var maxR = Math.max(minR, def.spawn.maxRadius + 24);
+        var span = Math.max(1, maxR - minR + 1);
+        for (var j = 0; j < ENTITY_FIT_GLOBAL_TRIES; j++) {
+            var globalAngle = rotation + (j + 3) * GOLDEN_ANG;
+            var globalRadius = minR + ((j * 13 + (seed || 0)) % span);
+            var globalPos = sizedCandidate(
+                level,
+                pp.x + Math.cos(globalAngle) * globalRadius,
+                pp.y,
+                pp.z + Math.sin(globalAngle) * globalRadius,
+                dimensions, colonyCtx, reserved, true
+            );
+            if (globalPos)
+                return { pos: globalPos, bounds: entityBoundsAt(globalPos, dimensions) };
+        }
+        return null;
     }
 
     var _heightTypes = null;
@@ -2035,6 +2312,22 @@
         }
     }
 
+    // A failed spawn must never leave half a wave behind. Discarding is used
+    // instead of kill(), so rollback cannot create loot or death side effects.
+    function discardFailedSpawnAttempt(entities) {
+        for (var i = 0; i < entities.length; i++) {
+            var entity = entities[i];
+            if (!entity) continue;
+            try {
+                var raw = rawMobOf(entity) || entity;
+                if (raw && typeof raw.discard === "function") raw.discard();
+                else if (typeof entity.discard === "function") entity.discard();
+            } catch (e) {
+                warn("spawn rollback discard: " + e);
+            }
+        }
+    }
+
     // Plan and spawn every mob in a round. Returns entity refs.
     function spawnRound(level, player, def, round, instanceId) {
         var EAI = getEAI();
@@ -2132,6 +2425,11 @@
             positions.push(planned);
         }
 
+        // Real dimensions are available only after creating the unspawned
+        // entity and applying its variant/baby NBT. Validate every member's
+        // footprint before spawning the first one, keeping the wave atomic.
+        var spawnPlan = [];
+        var reservedBounds = [];
         var idx = 0;
 
         for (var gi = 0; gi < round.mobs.length; gi++) {
@@ -2163,12 +2461,50 @@
                 ]);
             }
             for (var c = 0; c < mob.count; c++) {
-                var pos = positions[idx];
+                var basePos = positions[idx];
                 idx++;
 
                 var entity = EAI.fromPresets(level, mob.type, names, xtra);
-                if (!entity) { err(`spawnRound: fromPresets returned null for ${mob.type}`); continue; }
-                try { entity.setPos(Math.floor(pos.x) + 0.5, pos.y, Math.floor(pos.z) + 0.5); } catch (eP) { warn(`setPos: ${eP}`); }
+                if (!entity) {
+                    err(`spawnRound: fromPresets returned null for ${mob.type}; delaying complete wave`);
+                    return null;
+                }
+                applyEntityNbt(entity, mob.nbt);
+                preparePlayerBoundRaidMob(entity, mob.type, player);
+
+                var fitted = findSizedSpawnPosition(
+                    level, basePos, entity, pp, def, colonyCtx, reservedBounds,
+                    emergencySeed + idx * 131 + gi * 17
+                );
+                if (!fitted) {
+                    warn(`spawnRound: no full-size safe space for ${mob.type}; delaying complete wave ${roundIdx + 1}`);
+                    return null;
+                }
+                try {
+                    entity.setPos(fitted.pos.x, fitted.pos.y, fitted.pos.z);
+                } catch (eP) {
+                    warn(`setPos ${mob.type}: ${eP}; delaying complete wave`);
+                    return null;
+                }
+                reservedBounds.push(fitted.bounds);
+                spawnPlan.push({
+                    entity: entity,
+                    mob: mob,
+                    names: names,
+                    extraArgs: xtra,
+                    pos: fitted.pos
+                });
+            }
+        }
+
+        for (var si = 0; si < spawnPlan.length; si++) {
+                var plannedMob = spawnPlan[si];
+                var entity = plannedMob.entity;
+                var mob = plannedMob.mob;
+                var names = plannedMob.names;
+                var xtra = plannedMob.extraArgs;
+                var pos = plannedMob.pos;
+
                 facePlayer(entity, pos, pp);
                 try { entity.addTag("raid_mob"); } catch (e1) {}
                 try { entity.addTag("raid_" + instanceId); } catch (e2) {}
@@ -2178,10 +2514,16 @@
                 // The boss bar already carries the wave name, while keeping
                 // this exact makes the client-side filter future-proof.
                 try { entity.setCustomName(Text.of("[RAID]")); } catch (e4) {}
-                applyEntityNbt(entity, mob.nbt);   // variants/skins/baby/mod data — pre-spawn
-                preparePlayerBoundRaidMob(entity, mob.type, player);
-                try { entity.spawn(); }
-                catch (eSp) { err(`spawn failed ${mob.type}: ${eSp}`); continue; }
+                try {
+                    var spawnResult = entity.spawn();
+                    if (spawnResult === false) throw new Error("entity.spawn() returned false");
+                } catch (eSp) {
+                    err(`spawn failed ${mob.type}: ${eSp}; rolling back complete wave`);
+                    discardFailedSpawnAttempt(out.concat([entity]));
+                    return null;
+                }
+                // Track immediately so any later failure rolls this entity back.
+                out.push(entity);
                 forceAwakeRaidMob(entity, mob.type);
                 try { EAI.applyDeferred(level, entity, EAI.resolveArgs(names, xtra)); }
                 catch (eD) { warn(`applyDeferred: ${eD}`); }
@@ -2197,8 +2539,6 @@
                     if (nav && rawTarget) driveChaseNavigation(rawNew, rawTarget, nav, 0);
                 } catch (eNav) {}
                 spawnPoof(player, pos);
-                out.push(entity);
-            }
         }
         return out;
     }
@@ -2229,6 +2569,8 @@
         this.bar       = null;        // ServerBossEvent (or null if disabled/unavailable)
         this._barParticipantKey = null;// sorted viewer UUIDs; avoids redundant team sync work
         this._barSyncWarned = false;  // log a conversion/API failure once, then self-retry
+        this._personalDeathBars = {}; // one hidden, player-specific HUD data bar per online member
+        this._personalDeathBarValues = {};
         this.barBase   = def.title || prettyId(def.id);
         this.roundTotalHealth = 1;    // sum of max-health for the current wave (bar denominator)
         this.roundTotalMobs = 0;      // actual current + carryover count displayed in the bar
@@ -2238,7 +2580,8 @@
         this._usesStrictDaylightGuard = raidUsesStrictDaylightGuard(def);
         this._terminalNotified = false;// terminal lifecycle event fires exactly once
         this._deathCount = 0;         // shown by the HUD and persisted; never changes raid outcome
-        this._diedDuringRaid = false; // compatibility flag used by flawless advancements
+        this._diedDuringRaid = false; // legacy aggregate retained for old active snapshots
+        this._playerDeathCounts = {}; // UUID -> personal deaths; flawless is evaluated per member
     }
     // Freeze the bar on an end state (victory green / defeat red) before it closes.
     RaidInstance.prototype.barEnd = function (name, colorName, progress) {
@@ -2298,8 +2641,51 @@
             warn("victory advancement " + advancement + ": " + e);
         }
     }
+
+    function hasVictoryAdvancement(player, defId) {
+        if (!player) return false;
+        var advancement = RAID_VICTORY_ADVANCEMENTS[String(defId)];
+        if (!advancement) return false;
+        try {
+            var rawPlayer = unwrapPlayer(player);
+            var server = player.server;
+            if (!server && rawPlayer && typeof rawPlayer.getServer === "function")
+                server = rawPlayer.getServer();
+            if (!rawPlayer || !server) return false;
+            var ResourceLocation = Java.loadClass("net.minecraft.resources.ResourceLocation");
+            var holder = server.getAdvancements().get(ResourceLocation.parse(advancement));
+            if (!holder || typeof rawPlayer.getAdvancements !== "function") return false;
+            return !!rawPlayer.getAdvancements().getOrStartProgress(holder).isDone();
+        } catch (e) {
+            return false;
+        }
+    }
+    function personalDeathCount(inst, playerOrUuid) {
+        if (!inst) return 0;
+        var uuid = "";
+        if (typeof playerOrUuid === "string") uuid = normUuid(playerOrUuid);
+        else uuid = playerUuidOf(playerOrUuid);
+        if (!uuid) return 0;
+        var counts = inst._playerDeathCounts || {};
+        return Math.max(0, Math.floor(Number(counts[uuid]) || 0));
+    }
+    function normalizedDeathCountMap(value) {
+        var out = {};
+        if (!value || typeof value !== "object") return out;
+        for (var key in value) {
+            var uuid = normUuid(key);
+            var count = Math.max(0, Math.floor(Number(value[key]) || 0));
+            if (uuid && count > 0) out[uuid] = count;
+        }
+        return out;
+    }
+    function deathCountMapSnapshot(inst) {
+        return normalizedDeathCountMap(inst ? inst._playerDeathCounts : null);
+    }
     function grantFlawlessAdvancement(inst, player) {
-        if (!inst || !player || inst._diedDuringRaid) return;
+        // A teammate dying no longer disqualifies somebody who personally
+        // survived the whole raid.
+        if (!inst || !player || personalDeathCount(inst, player) > 0) return;
         var advancement = RAID_FLAWLESS_ADVANCEMENTS[inst.defId];
         if (!advancement) return;
         try {
@@ -2356,13 +2742,16 @@
         for (var i = 0; i < online.length; i++) onlineById[playerUuidOf(online[i])] = online[i];
 
         var pending = readPendingTeamWins(server);
-        var flawless = !inst._diedDuringRaid;
         var deliverNow = [];
         for (var uuid in inst.participantUuids) {
             if (!inst.participantUuids[uuid]) continue;
             var player = onlineById[normUuid(uuid)];
             if (player) deliverNow.push(player);
-            else pending.push({ uuid: normUuid(uuid), defId: inst.defId, flawless: flawless });
+            else pending.push({
+                uuid: normUuid(uuid),
+                defId: inst.defId,
+                flawless: personalDeathCount(inst, uuid) === 0
+            });
         }
         // Persist offline entitlements before running item callbacks for online
         // members, so a callback failure can never erase somebody else's share.
@@ -2403,6 +2792,11 @@
                 level: playerLevel(player),
                 barBase: def.title || prettyId(def.id),
                 _diedDuringRaid: !record.flawless,
+                _playerDeathCounts: record.flawless ? {} : (function () {
+                    var counts = {};
+                    counts[playerUuidOf(player)] = 1;
+                    return counts;
+                })(),
                 ctx: function (p) {
                     return { player: p, level: playerLevel(p), raid: def, instance: this };
                 }
@@ -2436,7 +2830,7 @@
         try { this.bar.setName(Text.of(txt)); } catch (e) {}
     };
     RaidInstance.prototype.deathBarText = function () {
-        return " §7• §c☠ §f" + Math.max(0, Number(this._deathCount) || 0);
+        return " §7• §a☠ §f" + Math.max(0, Number(this._deathCount) || 0);
     };
     // Live combat bar carries compact structured fields for both the vanilla
     // fallback and the custom HUD: title, wave number, mob count and timer.
@@ -2470,6 +2864,7 @@
         try { this.bar.setProgress(p); } catch (e) {}
     };
     RaidInstance.prototype.closeBar = function () {
+        closePersonalDeathBars(this);
         if (!this.bar) return;
         try { this.bar.setVisible(false); } catch (e) {}
         try { this.bar.removeAllPlayers(); } catch (e2) {}   // sends client remove packet
@@ -2821,6 +3216,94 @@
         return unwrapPlayer(player);
     }
 
+    function personalDeathBarPath(inst, uuid) {
+        return String(inst.id) + PERSONAL_DEATH_BAR_PATH +
+               normUuid(uuid).replace(/[^a-z0-9]/g, "");
+    }
+
+    function removePersonalDeathBar(inst, uuid) {
+        if (!inst || !inst._personalDeathBars) return;
+        var bar = inst._personalDeathBars[uuid];
+        if (!bar) return;
+        try { bar.setVisible(false); } catch (eVisible) {}
+        try { bar.removeAllPlayers(); } catch (ePlayers) {}
+        try {
+            var ce = customBars(Manager._server);
+            if (ce) ce.remove(bar);
+        } catch (eRemove) {}
+        delete inst._personalDeathBars[uuid];
+        if (inst._personalDeathBarValues) delete inst._personalDeathBarValues[uuid];
+    }
+
+    function closePersonalDeathBars(inst) {
+        if (!inst || !inst._personalDeathBars) return;
+        var ids = [];
+        for (var uuid in inst._personalDeathBars) ids.push(uuid);
+        for (var i = 0; i < ids.length; i++) removePersonalDeathBar(inst, ids[i]);
+        inst._personalDeathBars = {};
+        inst._personalDeathBarValues = {};
+    }
+
+    // These zero-progress bars are a tiny server-to-client data channel. The
+    // client HUD consumes and cancels them before drawing, while the real shared
+    // raid bar still carries health/progress only once for the whole team.
+    function syncPersonalDeathBars(inst, players) {
+        if (!inst || inst.def.bossBar === false) return;
+        if (!inst._personalDeathBars) inst._personalDeathBars = {};
+        if (!inst._personalDeathBarValues) inst._personalDeathBarValues = {};
+        var live = {};
+
+        for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+            var uuid = playerUuidOf(player);
+            var raw = rawOnlineServerPlayer(Manager._server, player);
+            if (!uuid || !raw) continue;
+            live[uuid] = true;
+
+            var count = personalDeathCount(inst, uuid);
+            var bar = inst._personalDeathBars[uuid];
+            if (!bar) {
+                bar = makeBar(
+                    Manager._server,
+                    personalDeathBarPath(inst, uuid),
+                    PERSONAL_DEATH_BAR_MARKER + " " + count,
+                    "YELLOW",
+                    "PROGRESS"
+                );
+                if (!bar) continue;
+                inst._personalDeathBars[uuid] = bar;
+                inst._personalDeathBarValues[uuid] = count;
+                try { bar.setProgress(0.0); } catch (eProgress) {}
+            } else if (inst._personalDeathBarValues[uuid] !== count) {
+                try { bar.setName(Text.of(PERSONAL_DEATH_BAR_MARKER + " " + count)); }
+                catch (eName) {}
+                inst._personalDeathBarValues[uuid] = count;
+            }
+
+            // setPlayers performs a set diff internally, so unchanged viewers
+            // do not receive add/remove packets during the one-second team sync.
+            try {
+                var onlyPlayer = newJavaArrayList();
+                if (onlyPlayer && typeof bar.setPlayers === "function") {
+                    onlyPlayer.add(raw);
+                    bar.setPlayers(onlyPlayer);
+                } else {
+                    bar.removeAllPlayers();
+                    bar.addPlayer(raw);
+                }
+                bar.setVisible(true);
+            } catch (eSync) {
+                warn("personal death HUD sync failed for " + uuid + ": " + eSync);
+            }
+        }
+
+        var stale = [];
+        for (var existing in inst._personalDeathBars) {
+            if (!live[existing]) stale.push(existing);
+        }
+        for (var s = 0; s < stale.length; s++) removePersonalDeathBar(inst, stale[s]);
+    }
+
     // Recreate a missing/externally removed custom bar on the next existing
     // one-second team sync. This is an O(1) registry lookup, not an entity scan.
     function ensureRaidBar(inst) {
@@ -2844,6 +3327,7 @@
         if (!inst) return;
         var bar = ensureRaidBar(inst);
         if (!bar) return;
+        syncPersonalDeathBars(inst, players);
 
         var rawPlayers = newJavaArrayList();
         if (!rawPlayers) return;
@@ -2997,6 +3481,71 @@
         return out;
     }
 
+    // Save the last known position with each UUID. On resume this lets the core
+    // load only the few chunks that can actually contain a missing raid mob,
+    // instead of treating every entity outside the player's loaded chunks as
+    // dead after a fixed timeout.
+    function mobRestoreRecords(arr) {
+        var out = [];
+        for (var i = 0; i < arr.length; i++) {
+            var id = mobUuid(arr[i]);
+            if (!id) continue;
+            var record = { uuid: id };
+            var x = entityCoord(arr[i], "x", "getX");
+            var y = entityCoord(arr[i], "y", "getY");
+            var z = entityCoord(arr[i], "z", "getZ");
+            if (isFinite(x)) record.x = x;
+            if (isFinite(y)) record.y = y;
+            if (isFinite(z)) record.z = z;
+            out.push(record);
+        }
+        return out;
+    }
+
+    function recordUuidSet(records, fallbackIds) {
+        var out = {};
+        if (records && typeof records.length === "number") {
+            for (var i = 0; i < records.length; i++) {
+                var id = records[i] && records[i].uuid;
+                if (id) out[normUuid(id)] = true;
+            }
+        }
+        if (fallbackIds && typeof fallbackIds.length === "number") {
+            for (var j = 0; j < fallbackIds.length; j++) {
+                if (fallbackIds[j]) out[normUuid(fallbackIds[j])] = true;
+            }
+        }
+        return out;
+    }
+
+    function restoreLocationMap(roundRecords, carryRecords) {
+        var out = {};
+        var lists = [roundRecords || [], carryRecords || []];
+        for (var li = 0; li < lists.length; li++) {
+            for (var i = 0; i < lists[li].length; i++) {
+                var r = lists[li][i];
+                if (!r || !r.uuid || !isFinite(Number(r.x)) || !isFinite(Number(r.z))) continue;
+                out[normUuid(r.uuid)] = {
+                    x: Number(r.x),
+                    y: isFinite(Number(r.y)) ? Number(r.y) : 0,
+                    z: Number(r.z)
+                };
+            }
+        }
+        return out;
+    }
+
+    function recordsForRestoreSet(set, locations) {
+        var out = [];
+        for (var id in set) {
+            if (!set[id]) continue;
+            var loc = locations && locations[id];
+            if (loc) out.push({ uuid: id, x: loc.x, y: loc.y, z: loc.z });
+            else out.push({ uuid: id });
+        }
+        return out;
+    }
+
     function levelId(level) {
         try {
             if (typeof level.dimension === "function") {
@@ -3046,12 +3595,19 @@
 
     function prepareForRebind(inst) {
         if (!inst || inst._restoring || inst.phase === "DONE" || inst.phase === "ENDING") return;
-        inst._restoreRoundUuids = uuidSet(mobUuidList(inst.roundMobs));
-        inst._restoreCarryUuids = uuidSet(mobUuidList(inst.carryover));
+        var roundRecords = mobRestoreRecords(inst.roundMobs);
+        var carryRecords = mobRestoreRecords(inst.carryover);
+        inst._restoreRoundUuids = recordUuidSet(roundRecords, null);
+        inst._restoreCarryUuids = recordUuidSet(carryRecords, null);
+        inst._restoreMobLocations = restoreLocationMap(roundRecords, carryRecords);
         inst._restoreExpected = uuidKeys(inst._restoreRoundUuids).length + uuidKeys(inst._restoreCarryUuids).length;
         inst._restoreWait = RESTORE_MOB_WAIT;
         inst._restoreDelay = RESTORE_LOGIN_DELAY;
         inst._restoreScanCooldown = 0;
+        inst._restoreChunkQueue = null;
+        inst._restoreChunkIndex = 0;
+        inst._restoreChunkSettle = 0;
+        inst._restoreLegacyWarned = false;
         inst._restoring = true;
         // Do not retain stale Java entity wrappers across a chunk unload/login.
         inst.roundMobs = [];
@@ -3059,12 +3615,64 @@
         inst._mobState = {};
     }
 
+    function buildRestoreChunkQueue(inst, seen) {
+        var queue = [];
+        var added = {};
+        var sets = [inst._restoreRoundUuids, inst._restoreCarryUuids];
+        for (var si = 0; si < sets.length; si++) {
+            var set = sets[si] || {};
+            for (var id in set) {
+                if (!set[id] || seen[id]) continue;
+                var loc = inst._restoreMobLocations && inst._restoreMobLocations[id];
+                if (!loc) continue;
+                var centerX = Math.floor(Number(loc.x) / 16);
+                var centerZ = Math.floor(Number(loc.z) / 16);
+                for (var dx = -RESTORE_CHUNK_RADIUS; dx <= RESTORE_CHUNK_RADIUS; dx++) {
+                    for (var dz = -RESTORE_CHUNK_RADIUS; dz <= RESTORE_CHUNK_RADIUS; dz++) {
+                        var cx = centerX + dx, cz = centerZ + dz;
+                        var key = cx + "," + cz;
+                        if (added[key]) continue;
+                        added[key] = true;
+                        queue.push({ x: cx, z: cz });
+                    }
+                }
+            }
+        }
+        inst._restoreChunkQueue = queue;
+        inst._restoreChunkIndex = 0;
+        inst._restoreChunkSettle = RESTORE_CHUNK_SETTLE;
+    }
+
+    function requestRestoreChunks(inst) {
+        var queue = inst._restoreChunkQueue || [];
+        var rawLevel = heightLevel(inst.level) || inst.level;
+        var requested = 0;
+        while (inst._restoreChunkIndex < queue.length && requested < RESTORE_CHUNKS_PER_SCAN) {
+            var pos = queue[inst._restoreChunkIndex++];
+            try { rawLevel.getChunk(pos.x, pos.z); }
+            catch (e) { warn("restore chunk " + pos.x + "," + pos.z + " for " + inst.id + ": " + e); }
+            requested++;
+        }
+        return requested;
+    }
+
+    function discardVerifiedMissing(set, seen, locations) {
+        var removed = 0;
+        for (var id in set) {
+            if (!set[id] || seen[id] || !locations || !locations[id]) continue;
+            delete set[id];
+            delete locations[id];
+            removed++;
+        }
+        return removed;
+    }
+
     function rebindRestoredMobs(inst) {
         if (inst._restoreScanCooldown > 0) {
             inst._restoreScanCooldown -= TICK_THROTTLE;
             if (inst._restoreScanCooldown > 0) return false;
         }
-        var round = [], carry = [], matched = 0;
+        var round = [], carry = [], matched = 0, seen = {};
         try {
             var getter = inst.level.getEntities();
             if (getter && typeof getter.getAll === "function") {
@@ -3076,6 +3684,7 @@
                     if (!tags || !tags.contains("raid_" + inst.id)) continue;
                     var id = mobUuid(entity);
                     if (!id) continue;
+                    seen[id] = true;
                     if (inst._restoreCarryUuids[id]) { carry.push(entity); matched++; }
                     else if (inst._restoreRoundUuids[id]) { round.push(entity); matched++; }
                     else round.push(entity); // mod-created raid minion saved after the last snapshot
@@ -3090,21 +3699,71 @@
             inst._restoreWait -= 20;
             return false;
         }
+
+        if (matched < inst._restoreExpected) {
+            if (inst._restoreChunkQueue == null) buildRestoreChunkQueue(inst, seen);
+            if (inst._restoreChunkIndex < inst._restoreChunkQueue.length) {
+                requestRestoreChunks(inst);
+                inst._restoreScanCooldown = 20;
+                return false;
+            }
+            if (inst._restoreChunkSettle > 0) {
+                inst._restoreChunkSettle -= 20;
+                inst._restoreScanCooldown = 20;
+                return false;
+            }
+
+            // Every missing UUID with a saved position has now had its old chunk
+            // and all neighboring chunks loaded and rescanned. Only at this point
+            // can it be considered genuinely absent. Legacy snapshots had UUIDs
+            // only; those remain unresolved instead of creating a false victory.
+            var confirmedGone =
+                discardVerifiedMissing(inst._restoreRoundUuids, seen, inst._restoreMobLocations) +
+                discardVerifiedMissing(inst._restoreCarryUuids, seen, inst._restoreMobLocations);
+            if (confirmedGone > 0)
+                info("restore " + inst.id + ": confirmed " + confirmedGone + " saved mob(s) absent after chunk verification");
+            inst._restoreExpected =
+                uuidKeys(inst._restoreRoundUuids).length + uuidKeys(inst._restoreCarryUuids).length;
+            if (matched < inst._restoreExpected) {
+                if (!inst._restoreLegacyWarned) {
+                    inst._restoreLegacyWarned = true;
+                    warn("restore " + inst.id + ": waiting for " +
+                         (inst._restoreExpected - matched) +
+                         " legacy UUID(s) without saved chunk positions");
+                }
+                inst._restoreScanCooldown = 20;
+                return false;
+            }
+        }
+
         inst.roundMobs = round;
         inst.carryover = carry;
         inst._restoreRoundUuids = {};
         inst._restoreCarryUuids = {};
+        inst._restoreMobLocations = {};
         inst._restoreExpected = 0;
         inst._restoreWait = 0;
         inst._restoreDelay = 0;
         inst._restoreScanCooldown = 0;
+        inst._restoreChunkQueue = null;
+        inst._restoreChunkIndex = 0;
+        inst._restoreChunkSettle = 0;
+        inst._restoreLegacyWarned = false;
         inst._mobState = {};
         return true;
     }
 
     function snapshotInstance(inst) {
-        var roundIds = inst._restoring ? uuidKeys(inst._restoreRoundUuids) : mobUuidList(inst.roundMobs);
-        var carryIds = inst._restoring ? uuidKeys(inst._restoreCarryUuids) : mobUuidList(inst.carryover);
+        var roundRecords = inst._restoring
+            ? recordsForRestoreSet(inst._restoreRoundUuids, inst._restoreMobLocations)
+            : mobRestoreRecords(inst.roundMobs);
+        var carryRecords = inst._restoring
+            ? recordsForRestoreSet(inst._restoreCarryUuids, inst._restoreMobLocations)
+            : mobRestoreRecords(inst.carryover);
+        var roundIds = [];
+        var carryIds = [];
+        for (var ri = 0; ri < roundRecords.length; ri++) roundIds.push(roundRecords[ri].uuid);
+        for (var ci = 0; ci < carryRecords.length; ci++) carryIds.push(carryRecords[ci].uuid);
         return {
             id: inst.id,
             defId: inst.defId,
@@ -3121,8 +3780,11 @@
             roundTotalMobs: inst.roundTotalMobs,
             deathCount: Math.max(0, Number(inst._deathCount) || 0),
             diedDuringRaid: !!inst._diedDuringRaid,
+            playerDeathCounts: deathCountMapSnapshot(inst),
             roundMobUuids: roundIds,
-            carryoverUuids: carryIds
+            carryoverUuids: carryIds,
+            roundMobRecords: roundRecords,
+            carryoverMobRecords: carryRecords
         };
     }
 
@@ -3194,6 +3856,8 @@
                 makeBar(server, inst.id, def.title || prettyId(def.id), def.barColor, def.barOverlay);
             inst._barParticipantKey = null;
             inst._barSyncWarned = false;
+            inst._personalDeathBars = {};
+            inst._personalDeathBarValues = {};
             inst.barBase = def.title || prettyId(def.id);
             inst.roundTotalHealth = Math.max(1, Number(s.roundTotalHealth) || 1);
             inst.roundTotalMobs = Math.max(0, Number(s.roundTotalMobs) || 0);
@@ -3207,12 +3871,24 @@
                 Number(s.deathCount) || (s.diedDuringRaid ? 1 : 0)
             ));
             inst._diedDuringRaid = inst._deathCount > 0 || !!s.diedDuringRaid;
-            inst._restoreRoundUuids = uuidSet(s.roundMobUuids || []);
-            inst._restoreCarryUuids = uuidSet(s.carryoverUuids || []);
+            inst._playerDeathCounts = normalizedDeathCountMap(s.playerDeathCounts);
+            // Legacy active snapshots did not record who died. Attribute their
+            // aggregate to the original owner instead of unfairly disqualifying
+            // every teammate from their personal flawless advancement.
+            if (!s.playerDeathCounts && inst._deathCount > 0 && inst.playerUuid) {
+                inst._playerDeathCounts[inst.playerUuid] = inst._deathCount;
+            }
+            inst._restoreRoundUuids = recordUuidSet(s.roundMobRecords, s.roundMobUuids || []);
+            inst._restoreCarryUuids = recordUuidSet(s.carryoverMobRecords, s.carryoverUuids || []);
+            inst._restoreMobLocations = restoreLocationMap(s.roundMobRecords, s.carryoverMobRecords);
             inst._restoreExpected = uuidKeys(inst._restoreRoundUuids).length + uuidKeys(inst._restoreCarryUuids).length;
             inst._restoreWait = RESTORE_MOB_WAIT;
             inst._restoreDelay = RESTORE_LOGIN_DELAY;
             inst._restoreScanCooldown = 0;
+            inst._restoreChunkQueue = null;
+            inst._restoreChunkIndex = 0;
+            inst._restoreChunkSettle = 0;
+            inst._restoreLegacyWarned = false;
             inst._restoring = true;
             _active[inst.id] = inst;
 
@@ -3570,12 +4246,15 @@
         return killed;
     }
 
-    // A raidfactory bar is "owned" if its path matches a still-running instance id.
+    // A raidfactory bar is owned when it is either the shared raid bar or one
+    // of that instance's hidden per-player death-data bars.
     function barOwnedByActive(rl) {
         try {
             var path = String(rl.getPath());
             for (var k in _active) {
-                if (_active[k].phase !== "DONE" && String(_active[k].id) === path) return true;
+                if (_active[k].phase === "DONE") continue;
+                var id = String(_active[k].id);
+                if (path === id || path.indexOf(id + PERSONAL_DEATH_BAR_PATH) === 0) return true;
             }
         } catch (e) {}
         return false;
@@ -3641,6 +4320,17 @@
             try { return !!raidForPlayer(player); } catch (e) { return false; }
         },
 
+        // The day scheduler persists fired/pending state against this key. It is
+        // intentionally public so scheduling never has to duplicate FTB API
+        // reflection or accidentally treat teammates as separate raids.
+        ownerKeyForPlayer: function (player) {
+            try { return raidOwnerKeyForPlayer(player); } catch (e) { return ""; }
+        },
+
+        hasVictoryAdvancement: function (player, defId) {
+            return hasVictoryAdvancement(player, defId);
+        },
+
         // Scheduler recovery uses this to reconnect its in-progress transaction
         // to instances restored by the core instead of re-firing the raid.
         activeIdsForDef: function (defId) {
@@ -3648,6 +4338,17 @@
             for (var k in _active) {
                 var inst = _active[k];
                 if (inst.defId === String(defId) && inst.phase !== "DONE" && inst.phase !== "ENDING") out.push(inst.id);
+            }
+            return out;
+        },
+
+        activeOwnerInstancesForDef: function (defId) {
+            var out = [];
+            for (var k in _active) {
+                var inst = _active[k];
+                if (inst.defId !== String(defId) ||
+                    inst.phase === "DONE" || inst.phase === "ENDING") continue;
+                out.push({ id: inst.id, ownerKey: raidOwnerKeyForInstance(inst) });
             }
             return out;
         },
@@ -3753,8 +4454,8 @@
         Manager._drive(event.server);
     });
 
-    // Player death never ends a raid. Every death is counted for the HUD and
-    // persisted, while the compatibility flag disqualifies the no-death reward.
+    // Player death never ends a raid. Every death updates both the team total
+    // and that player's persisted personal count; flawless uses only the latter.
     EntityEvents.death("minecraft:player", function (event) {
         try {
             var player = event.entity;
@@ -3762,6 +4463,11 @@
             if (!inst) return;
             inst._deathCount = Math.max(0, Number(inst._deathCount) || 0) + 1;
             inst._diedDuringRaid = true;
+            if (!inst._playerDeathCounts) inst._playerDeathCounts = {};
+            var uuid = playerUuidOf(player);
+            inst._playerDeathCounts[uuid] = personalDeathCount(inst, uuid) + 1;
+            // Reuse the existing team/HUD sync; no new tick loop is introduced.
+            inst._teamSyncLeft = 0;
             persistActive(player.server || Manager._server);
         } catch (e) { warn("record raid player death: " + e); }
     });

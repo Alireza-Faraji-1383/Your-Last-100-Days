@@ -140,7 +140,7 @@ throttle (default every 5 ticks).
 
 One active raid per player (start refuses if the player already has one).
 
-## Commands (op permission level 2)
+## Commands (maximum op permission level 4)
 
 - `/raid start <id>` — start at the executing player.
 - `/raid start <id> <player>` — start targeting a named player.

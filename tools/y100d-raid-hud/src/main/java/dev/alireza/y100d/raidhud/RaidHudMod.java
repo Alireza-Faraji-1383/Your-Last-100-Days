@@ -2,11 +2,13 @@ package dev.alireza.y100d.raidhud;
 
 import java.util.Set;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
 import net.neoforged.api.distmarker.Dist;
@@ -17,6 +19,7 @@ import net.neoforged.neoforge.common.NeoForge;
 @Mod(value = RaidHudMod.MOD_ID, dist = Dist.CLIENT)
 public final class RaidHudMod {
     public static final String MOD_ID = "y100d_raid_hud";
+    private static final String PERSONAL_DEATH_DATA = "[Y100D_PERSONAL_DEATHS]";
 
     private static final ResourceLocation FRAME = ResourceLocation.fromNamespaceAndPath(
         MOD_ID,
@@ -55,6 +58,7 @@ public final class RaidHudMod {
     private static boolean failureLogged;
     private static String cachedSourceText = "";
     private static HudLabels cachedLabels = HudLabels.EMPTY;
+    private static int personalDeaths;
 
     public RaidHudMod() {
         NeoForge.EVENT_BUS.addListener(RaidHudMod::onBossBar);
@@ -62,6 +66,22 @@ public final class RaidHudMod {
     }
 
     private static void onBossBar(CustomizeGuiOverlayEvent.BossEventProgress event) {
+        // The server sends one zero-progress, player-specific data bar. Consume
+        // it before the disabled check so it can never appear as a vanilla bar,
+        // even if the decorative renderer has fallen back after an error.
+        String plainName = event.getBossEvent().getName().getString();
+        if (plainName.startsWith(PERSONAL_DEATH_DATA)) {
+            int parsed = parseNonNegativeInt(
+                plainName.substring(PERSONAL_DEATH_DATA.length()).trim()
+            );
+            if (parsed != personalDeaths) {
+                personalDeaths = parsed;
+                cachedSourceText = "";
+            }
+            event.setIncrement(0);
+            event.setCanceled(true);
+            return;
+        }
         if (disabled) {
             return;
         }
@@ -179,12 +199,12 @@ public final class RaidHudMod {
         String wave = between(source, "(", ")");
         String mobs = tokenAfter(source, "⚔");
         String time = tokenAfter(source, "⌛");
-        String deaths = tokenAfter(source, "☠");
+        String teamDeaths = tokenAfter(source, "☠");
         if (time.isEmpty()) {
             time = tokenAfter(source, "next wave in");
         }
-        if (deaths.isEmpty()) {
-            deaths = "0";
+        if (teamDeaths.isEmpty()) {
+            teamDeaths = "0";
         }
 
         String leftText = "";
@@ -194,7 +214,14 @@ public final class RaidHudMod {
         if (!mobs.isEmpty()) {
             leftText += (leftText.isEmpty() ? "" : "  ") + "⚔ " + mobs;
         }
-        String rightText = (time.isEmpty() ? "" : "⌛ " + time + "  ") + "☠ " + deaths;
+        MutableComponent right = Component.empty();
+        if (!time.isEmpty()) {
+            right.append(Component.literal("⌛ " + time + "  ").withStyle(ChatFormatting.GOLD));
+        }
+        // Green skull = aggregate deaths of the whole FTB team.
+        right.append(Component.literal("☠ " + teamDeaths + "  ").withStyle(ChatFormatting.GREEN));
+        // Yellow skull = deaths of this client/player only.
+        right.append(Component.literal("☠ " + personalDeaths).withStyle(ChatFormatting.YELLOW));
 
         // A breather has a countdown but no live-mob field. Use that existing
         // state to swap the center label without adding a tick or server packet.
@@ -203,7 +230,6 @@ public final class RaidHudMod {
             waitingForNextWave ? "NEXT WAVE INCOMING" : raidTitle
         );
         Component left = Component.literal(leftText);
-        Component right = Component.literal(rightText);
         cachedSourceText = source;
         cachedLabels = new HudLabels(
             title,
@@ -214,6 +240,14 @@ public final class RaidHudMod {
             font.width(right)
         );
         return cachedLabels;
+    }
+
+    private static int parseNonNegativeInt(String value) {
+        try {
+            return Math.max(0, Integer.parseInt(value));
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
     }
 
     private static String between(String source, String open, String close) {

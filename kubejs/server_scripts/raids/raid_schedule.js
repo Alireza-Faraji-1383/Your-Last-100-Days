@@ -1,133 +1,236 @@
 // priority: 85
-// kubejs/server_scripts/raids/raid_schedule.js
+// Team-aware day/night scheduler for the custom raids.
 //
-// Day/night auto-trigger layer for raids. Declare night raids in day files, e.g.
-// `kubejs/server_scripts/days/day20/night_raid.js`, after the raid is built:
+// Each scheduled raid has independent fired/pending state for every FTB Team.
+// An offline team therefore remains eligible and receives its own shared raid
+// on the first eligible night after one of its members returns. Solo players use
+// the same flow with their player UUID as the ownership key.
 //
-//   Raid("pillager_siege")...build();
-//   RaidSchedule.onDay(20, "pillager_siege")
-//
-// On the first nightfall on or after the overworld day count reaches `day`, the
-// raid fires once for every online FTB Team — teammates share one instance;
-// players whose team is already in a raid are skipped. One-shot: each
-// entry fires once per server run.
+// State is a small JSON object per scheduled raid in server.persistentData.
+// Starting a raid writes pending=true immediately; terminal events keep fired
+// and clear pending. After a crash/restart, pending entries reconnect to the
+// RaidInstance restored by raid_core.js or safely re-arm if no snapshot exists.
 //
 // Day counting matches ftbquests_day_spine.js: floor(overworld dayTime / 24000).
-// Night = overworld time-of-day >= 13000 ticks (monster hours). The ">= day"
-// (not "=== day") fire rule guarantees a missed/offline night still triggers on
-// the next eligible night, rather than being skipped forever.
+// Night begins at tick 13000. On-time raids still begin at night; a team that
+// was offline on its scheduled day starts its overdue raid shortly after login,
+// even in daytime, so logging in cannot permanently skip that team's raid.
 //
-// Fired flags persist in server.persistentData ("raidsched_day<N>_<raidId>"). A
-// second tiny "_in_progress" flag makes that write transactional: normal
-// win/loss/stop clears in_progress and keeps fired; a reload/restart/crash leaves
-// in_progress behind, so the next script load reconnects it to the core's saved
-// active raid, or clears both flags and re-arms only if no snapshot survived.
-// Active state is saved by raid_core.js in small throttled records; the scheduler
-// only owns its fired/in-progress flags. An empty night stays armed.
-//
-// Depends on RaidManager (raid_core.js, priority 90 -> loads first). Rhino: var-only.
-
+// Depends on RaidManager (raid_core.js, priority 90 -> loads first).
 (function (global) {
     "use strict";
 
-    var CHECK_EVERY = 200;     // server ticks between checks (~5s)
-    var NIGHT_START = 13000;   // overworld time-of-day (ticks past dawn) when night raids may fire
+    var CHECK_EVERY = 100;   // one small online-team pass every 5 seconds
+    var NIGHT_START = 13000;
+    var TEAM_STATE_SUFFIX = "_team_states_v2";
     var _accum = 0;
-    var _schedule = [];        // [{ day, raidId, fired, pending, pendingIds }]
-    var _server = null;        // captured each tick — lets reset() reach persistentData
-    var _recovered = false;    // interrupted transactions recovered once per script load
+    var _schedule = [];
+    var _server = null;
+    var _recovered = false;
 
-    function warn(m) { console.warn("[RaidSched] " + m); }
+    function warn(message) { console.warn("[RaidSched] " + message); }
 
-    function pdKey(s) { return "raidsched_day" + s.day + "_" + s.raidId; }
-    function pendingKey(s) { return pdKey(s) + "_in_progress"; }
+    // Old global keys are retained only for migration/reset compatibility. New
+    // launch decisions never use them because they cannot represent each team.
+    function legacyKey(s) { return "raidsched_day" + s.day + "_" + s.raidId; }
+    function legacyPendingKey(s) { return legacyKey(s) + "_in_progress"; }
+    function teamStateKey(s) { return legacyKey(s) + TEAM_STATE_SUFFIX; }
     function warningKey(s) { return "raidwarn_day" + s.day + "_" + s.raidId; }
-    // fired = in-memory flag OR the persisted world flag (cached back in-memory).
-    function pdFired(server, s) {
-        if (s.fired) return true;
+
+    function emptyTeamStates() { return {}; }
+
+    function loadTeamStates(server, s) {
+        if (s.teamStatesLoaded) return s.teamStates;
+        s.teamStatesLoaded = true;
+        s.teamStates = emptyTeamStates();
+        if (!server || !server.persistentData) return s.teamStates;
         try {
-            if (server.persistentData.getBoolean(pdKey(s))) { s.fired = true; return true; }
-        } catch (e) {}
-        return false;
-    }
-    // Begin the tiny persistent transaction. Write in_progress FIRST: if a crash
-    // lands between the two writes, recovery still re-arms instead of burning the
-    // raid. The only persistent writes are here and in completePending().
-    function beginPending(server, s, ids) {
-        s.fired = true;
-        s.pending = true;
-        s.pendingIds = ids.slice();
-        try {
-            server.persistentData.putBoolean(pendingKey(s), true);
-            server.persistentData.putBoolean(pdKey(s), true);
-        } catch (e) { warn("persist start " + pdKey(s) + ": " + e); }
+            var raw = String(server.persistentData.getString(teamStateKey(s)) || "");
+            if (!raw) return s.teamStates;
+            var parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== "object") return s.teamStates;
+            for (var ownerKey in parsed) {
+                var old = parsed[ownerKey];
+                if (!old || typeof old !== "object") continue;
+                s.teamStates[String(ownerKey)] = {
+                    fired: !!old.fired,
+                    pending: !!old.pending,
+                    instanceId: old.instanceId ? String(old.instanceId) : ""
+                };
+            }
+        } catch (e) {
+            warn("read team state for " + s.raidId + ": " + e);
+            s.teamStates = emptyTeamStates();
+        }
+        return s.teamStates;
     }
 
-    // Commit after every auto-launched instance reaches win/loss/stop. fired is
-    // intentionally kept; only the recovery marker is removed.
-    function completePending(server, s) {
-        s.pending = false;
-        s.pendingIds = [];
-        try { server.persistentData.remove(pendingKey(s)); }
-        catch (e) { warn("persist complete " + pendingKey(s) + ": " + e); }
+    function saveTeamStates(server, s) {
+        if (!server || !server.persistentData) return false;
+        var states = loadTeamStates(server, s);
+        try {
+            var any = false;
+            for (var key in states) {
+                if (states[key] && (states[key].fired || states[key].pending)) {
+                    any = true;
+                    break;
+                }
+            }
+            if (any) server.persistentData.putString(teamStateKey(s), JSON.stringify(states));
+            else server.persistentData.remove(teamStateKey(s));
+            return true;
+        } catch (e) {
+            warn("write team state for " + s.raidId + ": " + e);
+            return false;
+        }
     }
 
-    // A leftover in_progress marker first reconnects to any RaidInstance restored
-    // by the core. Only a genuinely missing snapshot is re-armed. This keeps the
-    // fired flag and active state transactional across logout/restart.
-    function recoverInterrupted(server) {
-        var recovered = 0;
+    function stateForOwner(server, s, ownerKey, create) {
+        var states = loadTeamStates(server, s);
+        var key = String(ownerKey || "");
+        if (!key) return null;
+        var state = states[key];
+        if (!state && create) {
+            state = { fired: false, pending: false, instanceId: "" };
+            states[key] = state;
+        }
+        return state || null;
+    }
+
+    function ownerHasFired(server, s, ownerKey) {
+        var state = stateForOwner(server, s, ownerKey, false);
+        return !!(state && state.fired);
+    }
+
+    function raidManager() {
+        return (typeof RaidManager !== "undefined") ? RaidManager : null;
+    }
+
+    function ownerKeyForPlayer(player) {
+        var manager = raidManager();
+        if (!manager || !manager.ownerKeyForPlayer) return "";
+        try { return String(manager.ownerKeyForPlayer(player) || ""); }
+        catch (e) { return ""; }
+    }
+
+    // A v1 world only remembers that "some team" fired the raid. Preserve the
+    // known winning team without blocking offline teams: an owner is migrated as
+    // completed only when its online member actually has that raid's victory
+    // advancement. Other owners remain eligible.
+    function migrateLegacyWinner(server, s, player, ownerKey) {
+        if (stateForOwner(server, s, ownerKey, false)) return false;
+        try {
+            if (!server.persistentData.getBoolean(legacyKey(s))) return false;
+            var manager = raidManager();
+            if (!manager || !manager.hasVictoryAdvancement ||
+                !manager.hasVictoryAdvancement(player, s.raidId)) return false;
+            var state = stateForOwner(server, s, ownerKey, true);
+            state.fired = true;
+            state.pending = false;
+            state.instanceId = "";
+            saveTeamStates(server, s);
+            console.info("[RaidSched] migrated completed v1 raid '" +
+                         s.raidId + "' for " + ownerKey);
+            return true;
+        } catch (e) {
+            warn("legacy winner migration for " + s.raidId + ": " + e);
+            return false;
+        }
+    }
+
+    function activeOwnerInstances(s) {
+        var manager = raidManager();
+        if (!manager || !manager.activeOwnerInstancesForDef) return [];
+        try { return manager.activeOwnerInstancesForDef(s.raidId) || []; }
+        catch (e) {
+            warn("active owner lookup for " + s.raidId + ": " + e);
+            return [];
+        }
+    }
+
+    function activeByOwner(s) {
+        var out = {};
+        var active = activeOwnerInstances(s);
+        for (var i = 0; i < active.length; i++) {
+            var ownerKey = String(active[i].ownerKey || "");
+            if (ownerKey) out[ownerKey] = String(active[i].id || "");
+        }
+        return out;
+    }
+
+    // Reconcile transactions after raid_core has restored its active snapshots.
+    // This also migrates an interrupted raid created by the old global scheduler:
+    // the restored RaidInstance supplies the exact FTB owner key.
+    function recoverTeamStates(server) {
+        var rearmed = 0, reconnected = 0, migrated = 0;
         for (var i = 0; i < _schedule.length; i++) {
             var s = _schedule[i];
-            var interrupted = false;
-            try { interrupted = server.persistentData.getBoolean(pendingKey(s)); }
-            catch (e) { warn("recover read " + pendingKey(s) + ": " + e); }
-            if (!interrupted) continue;
-            var restoredIds = [];
-            try {
-                var M0 = (typeof RaidManager !== "undefined") ? RaidManager : null;
-                if (M0 && M0.activeIdsForDef) restoredIds = M0.activeIdsForDef(s.raidId);
-            } catch (eFind) { warn("recover active lookup " + s.raidId + ": " + eFind); }
-            if (restoredIds && restoredIds.length > 0) {
-                s.fired = true;
-                s.pending = true;
-                s.pendingIds = restoredIds;
-                console.info("[RaidSched] resumed interrupted '" + s.raidId + "' with " + restoredIds.length + " restored instance(s)");
-                continue;
+            var states = loadTeamStates(server, s);
+            var active = activeByOwner(s);
+            var changed = false;
+
+            for (var ownerKey in active) {
+                var activeId = active[ownerKey];
+                var activeState = states[ownerKey];
+                if (!activeState) {
+                    states[ownerKey] = { fired: true, pending: true, instanceId: activeId };
+                    migrated++;
+                    changed = true;
+                } else if (!activeState.fired || !activeState.pending ||
+                           activeState.instanceId !== activeId) {
+                    activeState.fired = true;
+                    activeState.pending = true;
+                    activeState.instanceId = activeId;
+                    reconnected++;
+                    changed = true;
+                }
             }
-            s.fired = false;
-            s.pending = false;
-            s.pendingIds = [];
+
+            for (var key in states) {
+                var state = states[key];
+                if (!state || !state.pending) continue;
+                if (active[key]) continue;
+                // The scheduler said "started", but no resumable core snapshot
+                // exists. Re-arm only this team; every other team's state stays.
+                state.fired = false;
+                state.pending = false;
+                state.instanceId = "";
+                rearmed++;
+                changed = true;
+            }
+
+            // The v1 marker no longer owns recovery. Remove only its transaction
+            // bit after active instances have been migrated; its fired bit is
+            // harmless and kept so older backups remain intelligible.
             try {
-                server.persistentData.remove(pdKey(s));
-                server.persistentData.remove(pendingKey(s));
-            } catch (e2) { warn("recover clear " + pdKey(s) + ": " + e2); }
-            recovered++;
-            console.info("[RaidSched] recovered interrupted '" + s.raidId + "' — re-armed for the next eligible night");
+                if (server.persistentData.getBoolean(legacyPendingKey(s))) {
+                    server.persistentData.remove(legacyPendingKey(s));
+                }
+            } catch (eLegacy) {}
+
+            if (changed) saveTeamStates(server, s);
         }
-        if (recovered > 0) {
-            try {
-                var M = (typeof RaidManager !== "undefined") ? RaidManager : null;
-                // A full server start already swept in ServerEvents.loaded. A
-                // mid-session /reload does not fire that event, so sweep only
-                // when the new core has not done its load sweep yet.
-                if (M && M.sweepOrphans && !M._loadedSweepDone) M.sweepOrphans();
-            } catch (e3) { warn("recovery orphan sweep: " + e3); }
-        }
-        return recovered;
+        if (reconnected || migrated)
+            console.info("[RaidSched] restored " + (reconnected + migrated) +
+                         " team raid transaction(s)");
+        if (rearmed)
+            console.info("[RaidSched] re-armed " + rearmed +
+                         " team raid(s) whose active snapshot was missing");
     }
 
     function overworldTime(server) {
         try {
-            var ow = server.overworld();
-            var t = (typeof ow.getDayTime === "function") ? ow.getDayTime() : ow.dayTime;
-            return Number(t);
+            var overworld = server.overworld();
+            var time = (typeof overworld.getDayTime === "function")
+                ? overworld.getDayTime() : overworld.dayTime;
+            return Number(time);
         } catch (e) { return 0; }
     }
 
     function raidExists(raidId) {
         try {
-            return (typeof RaidRegistry !== "undefined" && RaidRegistry && RaidRegistry.has(String(raidId)));
+            return typeof RaidRegistry !== "undefined" &&
+                   RaidRegistry && RaidRegistry.has(String(raidId));
         } catch (e) { return false; }
     }
 
@@ -140,14 +243,11 @@
         return String(s.raidId).replace(/_/g, " ");
     }
 
-    // One compact, persistent warning per player and scheduled raid. This uses
-    // the scheduler's existing 5-second check, so it adds no tick/event loop.
-    // Players who missed the previous day get a final daytime warning on raid
-    // day; never show it at night immediately on top of the raid-start title.
     function showRaidWarning(server, player, s, tonight) {
         if (!server || !player) return false;
         var key = warningKey(s);
-        try { if (player.persistentData.getBoolean(key)) return false; } catch (eRead) {}
+        try { if (player.persistentData.getBoolean(key)) return false; }
+        catch (eRead) {}
 
         var when = tonight ? "RAID TONIGHT" : "RAID TOMORROW";
         var raidName = raidDisplayName(s);
@@ -168,7 +268,8 @@
         } catch (eTitle) { warn("warning display " + s.raidId + ": " + eTitle); }
         try {
             player.tell(Text.of(
-                "\u00a76\u00a7l\u26a0 " + when + "\u00a7r\u00a77  Day " + s.day + " \u2022 \u00a7e" + raidName +
+                "\u00a76\u00a7l\u26a0 " + when +
+                "\u00a7r\u00a77  Day " + s.day + " \u2022 \u00a7e" + raidName +
                 "\u00a7r\u00a78  Prepare armor, food, healing and defenses."
             ));
         } catch (eTell) {}
@@ -177,154 +278,233 @@
         return true;
     }
 
+    // Warnings are evaluated per owner. A raid completed by Team A no longer
+    // suppresses Team B's warning when one of B's members eventually logs in.
     function warnEligiblePlayers(server, day, timeOfDay) {
-        var next = null;
-        for (var i = 0; i < _schedule.length; i++) {
-            var s = _schedule[i];
-            if (day < s.day - 1 || pdFired(server, s)) continue;
-            if (!next || s.day < next.day) next = s;
-        }
-        if (!next) return;
-        var tonight = day >= next.day;
-        if (tonight && timeOfDay >= NIGHT_START) return;
         try {
             var it = server.players.iterator();
-            while (it.hasNext()) showRaidWarning(server, it.next(), next, tonight);
+            while (it.hasNext()) {
+                var player = it.next();
+                if (!player) continue;
+                try {
+                    var manager = raidManager();
+                    if (manager && manager.isInRaid && manager.isInRaid(player)) continue;
+                } catch (eInRaid) {}
+                var ownerKey = ownerKeyForPlayer(player);
+                if (!ownerKey) continue;
+
+                var next = null;
+                for (var i = 0; i < _schedule.length; i++) {
+                    var s = _schedule[i];
+                    migrateLegacyWinner(server, s, player, ownerKey);
+                    if (day < s.day - 1 || ownerHasFired(server, s, ownerKey)) continue;
+                    if (!next || s.day < next.day) next = s;
+                }
+                if (!next) continue;
+                var tonight = day >= next.day;
+                if (tonight && timeOfDay >= NIGHT_START) continue;
+
+                // Warning persistence is player-local, so every online teammate
+                // receives it once even though the eventual raid is team-shared.
+                showRaidWarning(server, player, next, tonight);
+            }
         } catch (e) { warn("warning player iteration: " + e); }
     }
 
     function findEntry(day, raidId) {
-        var d = Math.floor(Number(day));
+        var targetDay = Math.floor(Number(day));
         var id = String(raidId);
         for (var i = 0; i < _schedule.length; i++) {
-            if (_schedule[i].day === d && _schedule[i].raidId === id) return _schedule[i];
+            if (_schedule[i].day === targetDay && _schedule[i].raidId === id)
+                return _schedule[i];
         }
         return null;
     }
 
-    // Walk online players and start raidId once per FTB Team. RaidManager's
-    // team-aware guard makes subsequent members reuse/skip the shared instance.
-    // Returns launched ids so the transaction commits when every team raid ends.
-    function fireForAll(server, raidId) {
-        var M = (typeof RaidManager !== "undefined") ? RaidManager : null;
-        var result = { count: 0, ids: [] };
-        if (!M) { warn("RaidManager missing — cannot fire " + raidId); return result; }
+    function startForOnlineTeams(server, s) {
+        var manager = raidManager();
+        var launched = 0;
+        var seenOwners = {};
+        if (!manager) {
+            warn("RaidManager missing; cannot fire " + s.raidId);
+            return 0;
+        }
+
         try {
             var it = server.players.iterator();
             while (it.hasNext()) {
-                var p = it.next();
-                if (!p) continue;
-                // Quiet skip (no RaidManager warn spam) — an unfired entry retries
-                // every check while a player is mid-raid.
-                try { if (M.isInRaid && M.isInRaid(p)) continue; } catch (eIR) {}
+                var player = it.next();
+                if (!player) continue;
+                var ownerKey = ownerKeyForPlayer(player);
+                if (!ownerKey || seenOwners[ownerKey]) continue;
+                seenOwners[ownerKey] = true;
+                migrateLegacyWinner(server, s, player, ownerKey);
+                if (ownerHasFired(server, s, ownerKey)) continue;
+
+                // Busy teams remain queued and receive this raid after their
+                // current shared raid ends.
                 try {
-                    var iid = M.start(M.playerLevel(p), p, raidId);
-                    if (iid) { result.count++; result.ids.push(String(iid)); }
+                    if (manager.isInRaid && manager.isInRaid(player)) continue;
+                } catch (eInRaid) {}
+
+                try {
+                    var instanceId = manager.start(
+                        manager.playerLevel(player), player, s.raidId
+                    );
+                    if (!instanceId) continue;
+                    var state = stateForOwner(server, s, ownerKey, true);
+                    state.fired = true;
+                    state.pending = true;
+                    state.instanceId = String(instanceId);
+                    // Persist after every successful team launch. If a crash lands
+                    // just before this write, recovery reconstructs it from core.
+                    saveTeamStates(server, s);
+                    launched++;
+                } catch (eStart) {
+                    warn("start " + s.raidId + " for " + ownerKey + ": " + eStart);
                 }
-                catch (e) { warn("start " + raidId + " for a player: " + e); }
             }
-        } catch (e2) { warn("player iteration: " + e2); }
-        return result;
+        } catch (ePlayers) { warn("player iteration: " + ePlayers); }
+        return launched;
     }
 
-    // Core emits this once per win/loss/explicit stop. Manual raids are not in
-    // pendingIds and are ignored. With multiple players the transaction commits
-    // only after every instance launched by the same schedule entry has ended.
-    function onRaidTerminal(ev) {
-        if (!ev || !ev.id) return;
-        var id = String(ev.id);
+    function onRaidTerminal(event) {
+        if (!event || !event.id || !_server) return;
+        var instanceId = String(event.id);
         for (var i = 0; i < _schedule.length; i++) {
             var s = _schedule[i];
-            if (!s.pending || !s.pendingIds) continue;
-            var next = [];
-            var found = false;
-            for (var j = 0; j < s.pendingIds.length; j++) {
-                if (s.pendingIds[j] === id) found = true;
-                else next.push(s.pendingIds[j]);
+            var states = loadTeamStates(_server, s);
+            for (var ownerKey in states) {
+                var state = states[ownerKey];
+                if (!state || state.instanceId !== instanceId) continue;
+                state.fired = true;
+                state.pending = false;
+                state.instanceId = "";
+                saveTeamStates(_server, s);
+                return;
             }
-            if (!found) continue;
-            s.pendingIds = next;
-            if (next.length === 0) completePending(_server, s);
-            return;
         }
     }
 
     var Schedule = {
-        // Fire raidId on the first nightfall on/after the overworld reaches `day`.
         onDay: function (day, raidId) {
-            if (!(Number(day) >= 0) || !raidId) { warn("onDay: bad args (day, raidId)"); return false; }
-            var d = Math.floor(Number(day));
+            if (!(Number(day) >= 0) || !raidId) {
+                warn("onDay: bad args (day, raidId)");
+                return false;
+            }
+            var scheduledDay = Math.floor(Number(day));
             var id = String(raidId);
-            if (findEntry(d, id)) { warn("onDay: duplicate schedule ignored for day " + d + " raid " + id); return false; }
-            if (!raidExists(id)) warn("onDay: raid '" + id + "' is not registered yet");
-            _schedule.push({ day: d, raidId: id, fired: false, pending: false, pendingIds: [] });
+            if (findEntry(scheduledDay, id)) {
+                warn("onDay: duplicate schedule ignored for day " +
+                     scheduledDay + " raid " + id);
+                return false;
+            }
+            if (!raidExists(id))
+                warn("onDay: raid '" + id + "' is not registered yet");
+            _schedule.push({
+                day: scheduledDay,
+                raidId: id,
+                teamStates: emptyTeamStates(),
+                teamStatesLoaded: false
+            });
+            _schedule.sort(function (a, b) {
+                if (a.day !== b.day) return a.day - b.day;
+                return String(a.raidId).localeCompare(String(b.raidId));
+            });
             return true;
         },
+
         list: function () {
             var out = [];
             for (var i = 0; i < _schedule.length; i++) {
                 var s = _schedule[i];
-                out.push({ day: s.day, raidId: s.raidId, fired: s.fired });
+                var firedTeams = 0;
+                if (_server) {
+                    var states = loadTeamStates(_server, s);
+                    for (var key in states)
+                        if (states[key] && states[key].fired) firedTeams++;
+                }
+                out.push({
+                    day: s.day,
+                    raidId: s.raidId,
+                    fired: firedTeams > 0,
+                    firedTeams: firedTeams
+                });
             }
             return out;
         },
-        // Re-arm one-shot entries (testing). raidId omitted -> re-arm all. Returns
-        // count. Also clears the persisted world flags.
+
+        // Testing/admin reset. Clears the complete per-team ledger for selected
+        // entries and the old v1 flags. raidId omitted resets every schedule.
         reset: function (raidId) {
-            var n = 0;
+            var resetCount = 0;
             for (var i = 0; i < _schedule.length; i++) {
                 var s = _schedule[i];
-                if (!raidId || s.raidId === String(raidId)) {
-                    s.fired = false; s.pending = false; s.pendingIds = []; n++;
-                    try {
-                        if (_server) {
-                            _server.persistentData.remove(pdKey(s));
-                            _server.persistentData.remove(pendingKey(s));
-                        }
-                    } catch (e) {}
-                }
+                if (raidId && s.raidId !== String(raidId)) continue;
+                s.teamStates = emptyTeamStates();
+                s.teamStatesLoaded = true;
+                resetCount++;
+                try {
+                    if (_server) {
+                        _server.persistentData.remove(teamStateKey(s));
+                        _server.persistentData.remove(legacyKey(s));
+                        _server.persistentData.remove(legacyPendingKey(s));
+                    }
+                } catch (e) {}
             }
-            return n;
+            return resetCount;
         }
     };
 
+    ServerEvents.loaded(function (event) {
+        _server = event.server;
+        _accum = 0;
+        _recovered = false;
+        for (var i = 0; i < _schedule.length; i++) {
+            _schedule[i].teamStates = emptyTeamStates();
+            _schedule[i].teamStatesLoaded = false;
+        }
+    });
+
     ServerEvents.tick(function (event) {
+        // Capture immediately so a terminal event during the first five seconds
+        // after a /reload can still commit its per-team transaction.
+        _server = event.server;
         _accum++;
         if (_accum < CHECK_EVERY) return;
         _accum = 0;
         if (_schedule.length === 0) return;
 
         var server = event.server;
-        _server = server;
         if (!_recovered) {
             _recovered = true;
-            recoverInterrupted(server);
+            recoverTeamStates(server);
         }
-        var t = overworldTime(server);
-        var timeOfDay = t % 24000;
-        var day = Math.floor(t / 24000);
-        warnEligiblePlayers(server, day, timeOfDay);
-        if (timeOfDay < NIGHT_START) return;          // daytime — wait for nightfall
 
+        var time = overworldTime(server);
+        var timeOfDay = ((time % 24000) + 24000) % 24000;
+        var day = Math.floor(time / 24000);
+        // On the authored day, preserve the normal night start. Once that day
+        // has passed, an offline team's catch-up starts within this 5-second
+        // check window regardless of time-of-day.
         for (var i = 0; i < _schedule.length; i++) {
             var s = _schedule[i];
-            if (day < s.day || pdFired(server, s)) continue;
-            var launched = fireForAll(server, s.raidId);
-            if (launched.count > 0) {
-                beginPending(server, s, launched.ids);
-                console.info("[RaidSched] day " + day + " night: fired '" + s.raidId + "' for " + launched.count + " team(s)");
-            }
-            // launched.count === 0 (empty server / everyone mid-raid): stay armed, retry
-            // next check / next eligible night.
+            if (day < s.day) continue;
+            if (day === s.day && timeOfDay < NIGHT_START) continue;
+            var launched = startForOnlineTeams(server, s);
+            if (launched > 0)
+                console.info("[RaidSched] day " + day + ": fired '" +
+                             s.raidId + "' for " + launched + " new team(s)");
         }
+        warnEligiblePlayers(server, day, timeOfDay);
     });
 
     try {
-        var M = (typeof RaidManager !== "undefined") ? RaidManager : null;
-        if (!M || !M.onTerminal || !M.onTerminal(onRaidTerminal))
-            warn("RaidManager terminal hook unavailable — interrupted-raid transaction cannot commit");
+        var manager = raidManager();
+        if (!manager || !manager.onTerminal || !manager.onTerminal(onRaidTerminal))
+            warn("RaidManager terminal hook unavailable; team transactions cannot commit");
     } catch (e) { warn("terminal hook registration: " + e); }
 
     global.RaidSchedule = Schedule;
-    console.info("[RaidSched] ready — RaidSchedule.onDay(day, raidId)");
+    console.info("[RaidSched] ready - per-team offline catch-up enabled");
 })(this);

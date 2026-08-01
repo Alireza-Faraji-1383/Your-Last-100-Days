@@ -42,6 +42,15 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "40A420EAEEBDB544"
+			rewards: [{
+				count: 3
+				id: "52F6C2243E61208A"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "block_factorys_bosses:kill_sandworm"
 				criterion: ""
@@ -54,6 +63,15 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "160CD8B65B2BD16B"
+			rewards: [{
+				count: 3
+				id: "7A9FEAA07AA92D71"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "block_factorys_bosses:kill_kraken"
 				criterion: ""
@@ -66,6 +84,15 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "3831CD0CAEEE8E4F"
+			rewards: [{
+				count: 3
+				id: "1D4E8371D903B422"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "block_factorys_bosses:kill_underworld_knight"
 				criterion: ""
@@ -78,6 +105,15 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "789AA17C4D02BE94"
+			rewards: [{
+				count: 3
+				id: "661692D6AE43F51A"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "block_factorys_bosses:kill_yeti"
 				criterion: ""
@@ -198,6 +234,15 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "4CDC2E55A9584A0C"
+			rewards: [{
+				count: 3
+				id: "3709E3A2AD8CCD1F"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "mowziesmobs:kill_umvuthi"
 				criterion: ""
@@ -210,6 +255,15 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "17AB0649B90CFE9B"
+			rewards: [{
+				count: 3
+				id: "0BF1A9EF9BC3E5F0"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "mowziesmobs:kill_ferrous_wroughtnaut"
 				criterion: ""
@@ -222,6 +276,15 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "0BF93E0CDEDCB004"
+			rewards: [{
+				count: 3
+				id: "0654F5356DE630FD"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				advancement: "mowziesmobs:kill_frostmaw"
 				criterion: ""
@@ -276,19 +339,30 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "47A5CE8F2E46F18F"
-			rewards: [{
-				id: "386840F7D5F2E480"
-				item: {
-					components: {
-						"minecraft:potion_contents": {
-							potion: "enigmaticlegacyplus:ultimate_slow_falling"
+			rewards: [
+				{
+					id: "386840F7D5F2E480"
+					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "enigmaticlegacyplus:ultimate_slow_falling"
+							}
 						}
+						count: 1
+						id: "minecraft:splash_potion"
 					}
-					count: 1
-					id: "minecraft:splash_potion"
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 3
+					id: "63F604B686FB8E9A"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				entity: "mowziesmobs:sculptor"
 				id: "297F824B1036CCE8"
@@ -322,15 +396,22 @@
 		{
 			dependencies: ["409CAA9FC686CC59"]
 			id: "386F7567AECE38AF"
-			rewards: [{
-				count: 3
-				id: "039D8FE65CE46E73"
-				item: {
-					count: 1
-					id: "kubejs:coin"
+			rewards: [
+				{
+					count: 2
+					id: "039D8FE65CE46E73"
+					item: {
+						count: 1
+						id: "kubejs:coin"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "3BFEC2E06C30B1CB"
+					type: "xp"
+					xp: 500
+				}
+			]
 			shape: "gear"
 			size: 3.4d
 			tasks: [{

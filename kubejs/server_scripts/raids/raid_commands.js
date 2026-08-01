@@ -14,6 +14,16 @@
 (function () {
     "use strict";
 
+    // Minecraft's highest built-in operator level. Every route is protected
+    // both in Brigadier and again at execution time so a failed /raid root
+    // replacement/merge can never expose a custom command at vanilla level 2.
+    const RAID_ADMIN_PERMISSION = 4;
+
+    function hasRaidAdminPermission(src) {
+        try { return !!(src && src.hasPermission(RAID_ADMIN_PERMISSION)); }
+        catch (e) { return false; }
+    }
+
     function mgr() {
         if (typeof RaidManager === "undefined") {
             console.error("[Raid-cmd] RaidManager missing");
@@ -44,6 +54,14 @@
         }
 
         function safeExec(src, fn) {
+            if (!hasRaidAdminPermission(src)) {
+                try {
+                    src.sendFailure(Text.of(
+                        "[Raid] permission level " + RAID_ADMIN_PERMISSION + " is required."
+                    ));
+                } catch (ePermission) {}
+                return 0;
+            }
             try { return fn(); }
             catch (e) {
                 console.error("[Raid-cmd] " + e);
@@ -156,6 +174,7 @@
         }
 
         var helpNode = Commands.literal("help")
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     return showHelp(ctx.source);
@@ -163,7 +182,9 @@
             });
 
         var startNode = Commands.literal("start")
+            .requires(hasRaidAdminPermission)
             .then(Commands.argument("id", StringArg.word())
+                .requires(hasRaidAdminPermission)
                 .suggests(suggestRaidIds)
                 .executes(function (ctx) {
                     return safeExec(ctx.source, function () {
@@ -185,6 +206,7 @@
                     });
                 })
                 .then(Commands.argument("player", StringArg.word())
+                    .requires(hasRaidAdminPermission)
                     .suggests(suggestPlayers)
                     .executes(function (ctx) {
                         return safeExec(ctx.source, function () {
@@ -208,6 +230,7 @@
                     })));
 
         var statusNode = Commands.literal("status")
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     var M = mgr();
@@ -230,6 +253,7 @@
             });
 
         var killMobsNode = Commands.literal("killmobs")
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     var M = mgr();
@@ -250,6 +274,7 @@
             });
 
         var stopNode = Commands.literal("stop")
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     var M = mgr();
@@ -266,6 +291,7 @@
             });
 
         var listNode = Commands.literal("list")
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     var R = reg();
@@ -282,6 +308,7 @@
             });
 
         var cleanupNode = Commands.literal("cleanup")
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     var M = mgr();
@@ -295,6 +322,7 @@
             });
 
         var stopAllNode = Commands.literal("stopall")
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     var M = mgr();
@@ -306,7 +334,7 @@
             });
 
         var root = Commands.literal("raid")
-            .requires(function (src) { return src.hasPermission(2); })
+            .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
                 return safeExec(ctx.source, function () {
                     return showHelp(ctx.source);

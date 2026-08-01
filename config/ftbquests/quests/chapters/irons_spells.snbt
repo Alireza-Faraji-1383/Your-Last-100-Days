@@ -600,15 +600,22 @@
 		}
 		{
 			id: "541446863A72B96C"
-			rewards: [{
-				count: 2
-				id: "18ABCBE38C93164A"
-				item: {
-					count: 1
-					id: "irons_spellbooks:common_ink"
+			rewards: [
+				{
+					count: 2
+					id: "18ABCBE38C93164A"
+					item: {
+						count: 1
+						id: "irons_spellbooks:common_ink"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "089571E1169CF26B"
+					type: "xp"
+					xp: 50
+				}
+			]
 			shape: "diamond"
 			tasks: [{
 				id: "3508E0BECB5DD919"
@@ -620,15 +627,22 @@
 		}
 		{
 			id: "637C87D8968CD51A"
-			rewards: [{
-				count: 2
-				id: "5D16DACA6D6E8EA2"
-				item: {
-					count: 1
-					id: "irons_spellbooks:uncommon_ink"
+			rewards: [
+				{
+					count: 2
+					id: "5D16DACA6D6E8EA2"
+					item: {
+						count: 1
+						id: "irons_spellbooks:uncommon_ink"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "5DBD156DC2303A4A"
+					type: "xp"
+					xp: 100
+				}
+			]
 			shape: "diamond"
 			tasks: [{
 				id: "718C6E669D17F0C0"
@@ -640,15 +654,22 @@
 		}
 		{
 			id: "60FAD8BF235E381B"
-			rewards: [{
-				count: 2
-				id: "0DF72CE9CA1693CD"
-				item: {
-					count: 1
-					id: "irons_spellbooks:rare_ink"
+			rewards: [
+				{
+					count: 2
+					id: "0DF72CE9CA1693CD"
+					item: {
+						count: 1
+						id: "irons_spellbooks:rare_ink"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "2BDA8A2763BFCF6E"
+					type: "xp"
+					xp: 200
+				}
+			]
 			shape: "diamond"
 			tasks: [{
 				id: "38691751D6156791"
@@ -660,15 +681,22 @@
 		}
 		{
 			id: "06F8EDF7513F8611"
-			rewards: [{
-				count: 2
-				id: "1EEABD789960AC05"
-				item: {
-					count: 1
-					id: "irons_spellbooks:epic_ink"
+			rewards: [
+				{
+					count: 2
+					id: "1EEABD789960AC05"
+					item: {
+						count: 1
+						id: "irons_spellbooks:epic_ink"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "27902FD06A0C6607"
+					type: "xp"
+					xp: 300
+				}
+			]
 			shape: "diamond"
 			tasks: [{
 				id: "1C60DB6E320883DF"
@@ -680,15 +708,22 @@
 		}
 		{
 			id: "67D40A1A9332C03D"
-			rewards: [{
-				count: 2
-				id: "2AC73A86B874938C"
-				item: {
-					count: 1
-					id: "irons_spellbooks:legendary_ink"
+			rewards: [
+				{
+					count: 2
+					id: "2AC73A86B874938C"
+					item: {
+						count: 1
+						id: "irons_spellbooks:legendary_ink"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "414AB419E67E6A28"
+					type: "xp"
+					xp: 400
+				}
+			]
 			shape: "diamond"
 			tasks: [{
 				id: "4948A54224513853"
@@ -701,15 +736,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "36F87173D8CD1D68"
-			rewards: [{
-				count: 4
-				id: "3B60CA662CF4E48E"
-				item: {
-					count: 1
-					id: "irons_spellbooks:lightning_rune"
+			rewards: [
+				{
+					count: 4
+					id: "3B60CA662CF4E48E"
+					item: {
+						count: 1
+						id: "irons_spellbooks:lightning_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "03BF7155E6D97E39"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -763,15 +809,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "69763C2E2F454A73"
-			rewards: [{
-				count: 4
-				id: "4D17EFD179403504"
-				item: {
-					count: 1
-					id: "irons_spellbooks:fire_rune"
+			rewards: [
+				{
+					count: 4
+					id: "4D17EFD179403504"
+					item: {
+						count: 1
+						id: "irons_spellbooks:fire_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "0C4362A1D81EC3FD"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -785,15 +842,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "7C79BCE482A06199"
-			rewards: [{
-				count: 4
-				id: "47BE12E5770D5DDF"
-				item: {
-					count: 1
-					id: "irons_spellbooks:ice_rune"
+			rewards: [
+				{
+					count: 4
+					id: "47BE12E5770D5DDF"
+					item: {
+						count: 1
+						id: "irons_spellbooks:ice_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "4BAA1AEAC99833AB"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -807,15 +875,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "0EED5D755D2C866A"
-			rewards: [{
-				count: 4
-				id: "395F8BF373AC047E"
-				item: {
-					count: 1
-					id: "irons_spellbooks:ender_rune"
+			rewards: [
+				{
+					count: 4
+					id: "395F8BF373AC047E"
+					item: {
+						count: 1
+						id: "irons_spellbooks:ender_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "4294CE539DB62B9F"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -829,15 +908,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "7270A37E31A70C91"
-			rewards: [{
-				count: 4
-				id: "332785208A140301"
-				item: {
-					count: 1
-					id: "irons_spellbooks:holy_rune"
+			rewards: [
+				{
+					count: 4
+					id: "332785208A140301"
+					item: {
+						count: 1
+						id: "irons_spellbooks:holy_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "47B307DE2506959A"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -851,15 +941,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "24150DE600C2D761"
-			rewards: [{
-				count: 4
-				id: "547550452D865205"
-				item: {
-					count: 1
-					id: "irons_spellbooks:blood_rune"
+			rewards: [
+				{
+					count: 4
+					id: "547550452D865205"
+					item: {
+						count: 1
+						id: "irons_spellbooks:blood_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "3518156E9DA28730"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -873,15 +974,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "1BE69992D2C5085B"
-			rewards: [{
-				count: 4
-				id: "41C19F9FA3187DBA"
-				item: {
-					count: 1
-					id: "irons_spellbooks:evocation_rune"
+			rewards: [
+				{
+					count: 4
+					id: "41C19F9FA3187DBA"
+					item: {
+						count: 1
+						id: "irons_spellbooks:evocation_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "5460487D75BFEC05"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -895,15 +1007,26 @@
 		{
 			dependencies: ["639531AB27DCD267"]
 			id: "000C1ECD781F3F81"
-			rewards: [{
-				count: 4
-				id: "545B0278B6FE8509"
-				item: {
-					count: 1
-					id: "irons_spellbooks:nature_rune"
+			rewards: [
+				{
+					count: 4
+					id: "545B0278B6FE8509"
+					item: {
+						count: 1
+						id: "irons_spellbooks:nature_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					count: 5
+					id: "43A2B1E361F70618"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
+				}
+			]
 			shape: "pentagon"
 			size: 1.3d
 			tasks: [{
@@ -1382,15 +1505,22 @@
 				id: "minecraft:wither_skeleton_skull"
 			}
 			id: "0436DF3308681913"
-			rewards: [{
-				count: 5
-				id: "03C23C77EF25C4C0"
-				item: {
-					count: 1
-					id: "irons_spellbooks:blank_rune"
+			rewards: [
+				{
+					count: 5
+					id: "03C23C77EF25C4C0"
+					item: {
+						count: 1
+						id: "irons_spellbooks:blank_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "1A600E5586EA6C3B"
+					type: "xp"
+					xp: 500
+				}
+			]
 			shape: "diamond"
 			size: 1.2d
 			tasks: [{
@@ -1433,15 +1563,22 @@
 				id: "minecraft:totem_of_undying"
 			}
 			id: "68B44B9E939F4228"
-			rewards: [{
-				count: 3
-				id: "0984DAB8E3603A83"
-				item: {
-					count: 1
-					id: "irons_spellbooks:evocation_rune"
+			rewards: [
+				{
+					count: 3
+					id: "0984DAB8E3603A83"
+					item: {
+						count: 1
+						id: "irons_spellbooks:evocation_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "539F4E95CCF6BCD7"
+					type: "xp"
+					xp: 300
+				}
+			]
 			shape: "diamond"
 			size: 1.2d
 			tasks: [{
@@ -1489,15 +1626,22 @@
 				id: "minecraft:potion"
 			}
 			id: "548F85EE6B6F1811"
-			rewards: [{
-				count: 3
-				id: "4EBAE4CBE310C358"
-				item: {
-					count: 1
-					id: "irons_spellbooks:nature_rune"
+			rewards: [
+				{
+					count: 3
+					id: "4EBAE4CBE310C358"
+					item: {
+						count: 1
+						id: "irons_spellbooks:nature_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "71C0ABB8DFBEE0DE"
+					type: "xp"
+					xp: 200
+				}
+			]
 			shape: "diamond"
 			size: 1.2d
 			tasks: [{
@@ -1540,15 +1684,22 @@
 				id: "minecraft:fire_charge"
 			}
 			id: "59E68086A8B99EA7"
-			rewards: [{
-				count: 3
-				id: "7FEA8FCAF3452395"
-				item: {
-					count: 1
-					id: "irons_spellbooks:fire_rune"
+			rewards: [
+				{
+					count: 3
+					id: "7FEA8FCAF3452395"
+					item: {
+						count: 1
+						id: "irons_spellbooks:fire_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "7AF9E9AA453A0918"
+					type: "xp"
+					xp: 200
+				}
+			]
 			shape: "diamond"
 			size: 1.2d
 			tasks: [{
@@ -1591,15 +1742,22 @@
 				id: "minecraft:snowball"
 			}
 			id: "555ED1E39131D91B"
-			rewards: [{
-				count: 3
-				id: "6DA1755FA3A0E77F"
-				item: {
-					count: 1
-					id: "irons_spellbooks:ice_rune"
+			rewards: [
+				{
+					count: 3
+					id: "6DA1755FA3A0E77F"
+					item: {
+						count: 1
+						id: "irons_spellbooks:ice_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "2A4F05D6FB6CEFCE"
+					type: "xp"
+					xp: 200
+				}
+			]
 			shape: "diamond"
 			size: 1.2d
 			tasks: [{
@@ -1740,15 +1898,22 @@
 				id: "minecraft:golden_apple"
 			}
 			id: "7F85669FEA41CD97"
-			rewards: [{
-				count: 3
-				id: "061AE7083D11867A"
-				item: {
-					count: 1
-					id: "irons_spellbooks:holy_rune"
+			rewards: [
+				{
+					count: 3
+					id: "061AE7083D11867A"
+					item: {
+						count: 1
+						id: "irons_spellbooks:holy_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "231FCDC734C6D760"
+					type: "xp"
+					xp: 200
+				}
+			]
 			shape: "diamond"
 			size: 1.2d
 			tasks: [{

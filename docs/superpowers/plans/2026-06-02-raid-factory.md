@@ -640,7 +640,7 @@ Create `kubejs/server_scripts/raids/raid_commands.js`:
             }); });
 
         var root = Commands.literal("raid")
-            .requires(function (src) { return src.hasPermission(2); })
+            .requires(function (src) { return src.hasPermission(4); })
             .then(startNode)
             .then(stopNode)
             .then(stopAllNode)

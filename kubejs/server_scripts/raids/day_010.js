@@ -27,7 +27,7 @@
         .round("Shamblers")
             .breather(200)
             .timeLimit(6000)
-            .mob(M.ROTTING_ZOMBIE).count(7)
+            .mob(M.ROTTING_ZOMBIE).count(5)
             .mob(M.BARREL_ZOMBIE).count(3)
             .mob(M.MAGGOT).count(5)
             .mob(M.SWARMER).count(3)
@@ -39,7 +39,7 @@
             .mob(M.WITCH).count(1)
             .mob(M.LUMBERJACK).count(5)
             .mob(M.ZOMBIE_CLOWN).count(4)
-            .mob(M.DREAD_HOUND).count(6)
+            .mob(M.DREAD_HOUND).count(4)
             .mob(M.CORPSE_FLY).count(3)
             .mob(M.MINER_ZOMBIE).count(7)
         // --- Round 3 (FINAL): bruisers + maggot swarm + arrows ---
@@ -48,7 +48,7 @@
             .mob(M.ZOMBIE_BRUISER).count(3)
             .mob(M.PUMPKIN_BRUISER).count(3)
             .mob(M.PUMPKINHEAD).count(2)
-            .mob(M.BOW_SKELETON).count(5)
+            .mob(M.BOW_SKELETON).count(3)
             .mob(M.MAGGOT).count(3)
             .mob(M.MINER_LEATHER_STRONG).count(7)
         .onWin(function (ctx) {

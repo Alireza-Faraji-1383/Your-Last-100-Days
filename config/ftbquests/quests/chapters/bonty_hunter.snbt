@@ -3,6 +3,12 @@
 	default_quest_shape: ""
 	filename: "bonty_hunter"
 	group: "1EA4480B120F415D"
+	icon: {
+		components: {
+			"ftbquests:icon": "minecraft:item/diamond_sword"
+		}
+		id: "ftbquests:custom_icon"
+	}
 	id: "7BEE420E690C035A"
 	images: [
 		{
@@ -28,7 +34,7 @@
 			rotation: 0.0d
 			width: 7.0d
 			x: 0.5d
-			y: -8.0d
+			y: -8.5d
 		}
 		{
 			height: 2.0d
@@ -52,7 +58,7 @@
 			image: "minecraft:textures/gui/title/minecraft.png"
 			rotation: 0.0d
 			width: 12.0d
-			x: 1.0d
+			x: -0.5d
 			y: -5.0d
 		}
 		{
@@ -60,24 +66,33 @@
 			image: "irons_spellbooks:textures/quests/spells_title.png"
 			rotation: 0.0d
 			width: 8.0d
-			x: 19.0d
-			y: -9.5d
+			x: 0.5d
+			y: 16.0d
 		}
 		{
 			height: 1.0d
 			image: "minecraft:block/campfire_fire"
 			rotation: 0.0d
 			width: 1.0d
-			x: 20.0d
-			y: -6.5d
+			x: 2.0d
+			y: 19.5d
 		}
 		{
 			height: 1.0d
 			image: "minecraft:block/soul_campfire_fire"
 			rotation: 0.0d
 			width: 1.0d
-			x: 17.0d
-			y: -6.5d
+			x: -1.0d
+			y: 19.5d
+		}
+		{
+			height: 7.0d
+			image: "kubejs:textures/quests/art/earth.png"
+			order: -4
+			rotation: 0.0d
+			width: 7.0d
+			x: 0.5d
+			y: -8.5d
 		}
 	]
 	order_index: 2
@@ -1420,7 +1435,7 @@
 				}
 				id: "367603DFB6C5C564"
 				type: "kill"
-				value: 5L
+				value: 3L
 			}]
 			x: 0.5d
 			y: 7.5d
@@ -1458,7 +1473,7 @@
 				}
 				id: "15B3BC856F5ABB6F"
 				type: "kill"
-				value: 32L
+				value: 16L
 			}]
 			x: 0.5d
 			y: 9.5d
@@ -1496,7 +1511,7 @@
 				}
 				id: "14E2DD04E2E56AF5"
 				type: "kill"
-				value: 64L
+				value: 32L
 			}]
 			x: 0.5d
 			y: 11.5d
@@ -1534,7 +1549,7 @@
 				}
 				id: "6FC78108FEAEFB0D"
 				type: "kill"
-				value: 128L
+				value: 64L
 			}]
 			x: 0.5d
 			y: 13.5d
@@ -1569,7 +1584,7 @@
 				type: "kill"
 				value: 16L
 			}]
-			x: 5.0d
+			x: 11.0d
 			y: 5.5d
 		}
 		{
@@ -1610,7 +1625,7 @@
 				type: "kill"
 				value: 64L
 			}]
-			x: 5.0d
+			x: 11.0d
 			y: 7.5d
 		}
 		{
@@ -1651,7 +1666,7 @@
 				type: "kill"
 				value: 128L
 			}]
-			x: 5.0d
+			x: 11.0d
 			y: 9.5d
 		}
 		{
@@ -1692,7 +1707,7 @@
 				type: "kill"
 				value: 200L
 			}]
-			x: 5.0d
+			x: 11.0d
 			y: 11.5d
 		}
 		{
@@ -1720,7 +1735,7 @@
 				}
 				id: "135F9FA83FDB7D1B"
 				type: "kill"
-				value: 12L
+				value: 5L
 			}]
 			x: 2.0d
 			y: 5.5d
@@ -1856,8 +1871,8 @@
 				type: "kill"
 				value: 10L
 			}]
-			x: 21.5d
-			y: -7.0d
+			x: 3.5d
+			y: 19.0d
 		}
 		{
 			dependencies: ["4D8B8AE038552C78"]
@@ -1912,8 +1927,8 @@
 				type: "kill"
 				value: 32L
 			}]
-			x: 21.5d
-			y: -5.0d
+			x: 3.5d
+			y: 21.0d
 		}
 		{
 			dependencies: [
@@ -1936,8 +1951,8 @@
 				type: "kill"
 				value: 64L
 			}]
-			x: 21.5d
-			y: -3.0d
+			x: 3.5d
+			y: 23.0d
 		}
 		{
 			dependencies: [
@@ -1961,8 +1976,8 @@
 				type: "kill"
 				value: 128L
 			}]
-			x: 21.5d
-			y: -1.0d
+			x: 3.5d
+			y: 25.0d
 		}
 		{
 			id: "342DA5C07F1EB066"
@@ -1981,29 +1996,36 @@
 				type: "kill"
 				value: 1L
 			}]
-			x: 18.5d
-			y: -7.0d
+			x: 0.5d
+			y: 19.0d
 		}
 		{
 			dependencies: ["342DA5C07F1EB066"]
 			id: "6C815AC1A7CD46D6"
-			rewards: [{
-				count: 64
-				id: "6C6AC40E148C5680"
-				item: {
-					count: 1
-					id: "kubejs:copper_coin"
+			rewards: [
+				{
+					count: 64
+					id: "6C6AC40E148C5680"
+					item: {
+						count: 1
+						id: "kubejs:copper_coin"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "61A5E8BC8C00D69B"
+					type: "xp"
+					xp: 300
+				}
+			]
 			tasks: [{
 				entity: "irons_spellbooks:archevoker"
 				id: "1D4F7DE26442749A"
 				type: "kill"
-				value: 5L
+				value: 3L
 			}]
-			x: 18.5d
-			y: -5.0d
+			x: 0.5d
+			y: 21.0d
 		}
 		{
 			dependencies: ["6C815AC1A7CD46D6"]
@@ -2021,10 +2043,10 @@
 				entity: "irons_spellbooks:archevoker"
 				id: "78704893CD5372F5"
 				type: "kill"
-				value: 12L
+				value: 9L
 			}]
-			x: 18.5d
-			y: -3.0d
+			x: 0.5d
+			y: 23.0d
 		}
 		{
 			dependencies: ["28813D2D14D9906D"]
@@ -2042,10 +2064,10 @@
 				entity: "irons_spellbooks:archevoker"
 				id: "77FB63C147E60E81"
 				type: "kill"
-				value: 32L
+				value: 18L
 			}]
-			x: 18.5d
-			y: -1.0d
+			x: 0.5d
+			y: 25.0d
 		}
 		{
 			id: "1608F430BCD06748"
@@ -2064,8 +2086,8 @@
 				type: "kill"
 				value: 12L
 			}]
-			x: 15.5d
-			y: -7.0d
+			x: -2.5d
+			y: 19.0d
 		}
 		{
 			dependencies: ["1608F430BCD06748"]
@@ -2085,8 +2107,8 @@
 				type: "kill"
 				value: 32L
 			}]
-			x: 15.5d
-			y: -5.0d
+			x: -2.5d
+			y: 21.0d
 		}
 		{
 			dependencies: ["1BC0E1CA38969EE3"]
@@ -2106,8 +2128,8 @@
 				type: "kill"
 				value: 64L
 			}]
-			x: 15.5d
-			y: -3.0d
+			x: -2.5d
+			y: 23.0d
 		}
 		{
 			dependencies: ["12C75FDC1E557B6D"]
@@ -2127,8 +2149,8 @@
 				type: "kill"
 				value: 128L
 			}]
-			x: 15.5d
-			y: -1.0d
+			x: -2.5d
+			y: 25.0d
 		}
 		{
 			id: "43C7606D98B9E2A9"
@@ -2170,8 +2192,8 @@
 				type: "kill"
 				value: 1L
 			}]
-			x: 20.0d
-			y: -6.0d
+			x: 2.0d
+			y: 20.0d
 		}
 		{
 			dependencies: ["43C7606D98B9E2A9"]
@@ -2191,8 +2213,8 @@
 				type: "kill"
 				value: 5L
 			}]
-			x: 20.0d
-			y: -4.0d
+			x: 2.0d
+			y: 22.0d
 		}
 		{
 			dependencies: ["4623AB63F23933F3"]
@@ -2212,8 +2234,8 @@
 				type: "kill"
 				value: 12L
 			}]
-			x: 20.0d
-			y: -2.0d
+			x: 2.0d
+			y: 24.0d
 		}
 		{
 			dependencies: ["0A7963E1A3E40DD3"]
@@ -2233,8 +2255,8 @@
 				type: "kill"
 				value: 32L
 			}]
-			x: 20.0d
-			y: 0.0d
+			x: 2.0d
+			y: 26.0d
 		}
 		{
 			id: "5CA8E651F6AA0693"
@@ -2276,8 +2298,8 @@
 				type: "kill"
 				value: 1L
 			}]
-			x: 17.0d
-			y: -6.0d
+			x: -1.0d
+			y: 20.0d
 		}
 		{
 			dependencies: ["5CA8E651F6AA0693"]
@@ -2297,8 +2319,8 @@
 				type: "kill"
 				value: 5L
 			}]
-			x: 17.0d
-			y: -4.0d
+			x: -1.0d
+			y: 22.0d
 		}
 		{
 			dependencies: ["4BBED18E95CC7F36"]
@@ -2318,8 +2340,8 @@
 				type: "kill"
 				value: 12L
 			}]
-			x: 17.0d
-			y: -2.0d
+			x: -1.0d
+			y: 24.0d
 		}
 		{
 			dependencies: ["0F90A64B18FC9072"]
@@ -2339,8 +2361,353 @@
 				type: "kill"
 				value: 32L
 			}]
-			x: 17.0d
-			y: 0.0d
+			x: -1.0d
+			y: 26.0d
+		}
+		{
+			id: "614B5F420F9FCF60"
+			rewards: [{
+				count: 64
+				id: "53085370DE8E1622"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				team_reward: false
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_thrasher"
+				id: "2AA4EF74FC53F109"
+				type: "kill"
+				value: 8L
+			}]
+			x: 8.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["614B5F420F9FCF60"]
+			id: "7F6A2DB35BF8AE5F"
+			rewards: [{
+				count: 2
+				id: "7286B9BE2769DB5C"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_thrasher"
+				id: "5C6F4378112FBCD1"
+				type: "kill"
+				value: 16L
+			}]
+			x: 8.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["7F6A2DB35BF8AE5F"]
+			id: "6F8E2C3CBB2379AB"
+			rewards: [{
+				count: 4
+				id: "1566FEF7232CB34A"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_thrasher"
+				id: "778D83FC65933842"
+				type: "kill"
+				value: 32L
+			}]
+			x: 8.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["6F8E2C3CBB2379AB"]
+			id: "0B9BA8D49166A47A"
+			rewards: [{
+				count: 10
+				id: "32854733EBEFFCAB"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_thrasher"
+				id: "59F5E95C56EDDFD5"
+				type: "kill"
+				value: 64L
+			}]
+			x: 8.0d
+			y: 11.5d
+		}
+		{
+			id: "1C2A82E9F2B86CF7"
+			rewards: [{
+				count: 64
+				id: "3406070C7CF5261F"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:zombie_bruiser"
+				id: "3882474CADA5BAA2"
+				type: "kill"
+				value: 8L
+			}]
+			x: -7.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["1C2A82E9F2B86CF7"]
+			id: "6873C651A2AFFBEC"
+			rewards: [{
+				count: 2
+				id: "71481993896915C5"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:zombie_bruiser"
+				id: "3804ECFBD63F15C7"
+				type: "kill"
+				value: 16L
+			}]
+			x: -7.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["6873C651A2AFFBEC"]
+			id: "5F6CB06689DFB73B"
+			rewards: [{
+				count: 4
+				id: "1D7BB1819DA76759"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:zombie_bruiser"
+				id: "3BC287CDC4C512AD"
+				type: "kill"
+				value: 32L
+			}]
+			x: -7.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["5F6CB06689DFB73B"]
+			id: "0A84104223FD8075"
+			rewards: [{
+				count: 8
+				id: "5FEEB7706263CCEC"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:zombie_bruiser"
+				id: "40C4E782448201B3"
+				type: "kill"
+				value: 64L
+			}]
+			x: -7.0d
+			y: 11.5d
+		}
+		{
+			id: "52ABEE2BEF40BB78"
+			rewards: [{
+				count: 32
+				id: "4D74A0FDD343F4CE"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_demoman"
+				id: "071C2DBBA2651600"
+				type: "kill"
+				value: 16L
+			}]
+			x: -10.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["52ABEE2BEF40BB78"]
+			id: "12E31C2858662B20"
+			rewards: [{
+				count: 64
+				id: "128CE70A73F45F56"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_demoman"
+				id: "0FC4AA7FE76037C4"
+				type: "kill"
+				value: 32L
+			}]
+			x: -10.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["12E31C2858662B20"]
+			id: "187296552C092680"
+			rewards: [{
+				count: 2
+				id: "04B2D830483FD945"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_demoman"
+				id: "7C3853B5CDD80437"
+				type: "kill"
+				value: 64L
+			}]
+			x: -10.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["187296552C092680"]
+			id: "18178737F4B6A637"
+			rewards: [{
+				count: 8
+				id: "243DB4509138F57D"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:skeleton_demoman"
+				id: "7B122F084314EF21"
+				type: "kill"
+				value: 128L
+			}]
+			x: -10.0d
+			y: 11.5d
+		}
+		{
+			icon: {
+				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
+			}
+			id: "25341F5F45753CD5"
+			rewards: [{
+				count: 32
+				id: "25C5040A9F40E01C"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:lifestealer_true_form"
+				id: "0C23A4883BECC415"
+				type: "kill"
+				value: 1L
+			}]
+			x: 5.0d
+			y: 5.5d
+		}
+		{
+			dependencies: ["25341F5F45753CD5"]
+			icon: {
+				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
+			}
+			id: "20ED1DA1CE456A9A"
+			rewards: [{
+				count: 64
+				id: "144E3AFB55770861"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:lifestealer_true_form"
+				id: "1DFE98959FBCF5C6"
+				type: "kill"
+				value: 4L
+			}]
+			x: 5.0d
+			y: 7.5d
+		}
+		{
+			dependencies: ["20ED1DA1CE456A9A"]
+			icon: {
+				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
+			}
+			id: "77A78AE59270C185"
+			rewards: [{
+				count: 3
+				id: "4818E9FF2F29662C"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:lifestealer_true_form"
+				id: "32424C21563010CD"
+				type: "kill"
+				value: 8L
+			}]
+			x: 5.0d
+			y: 9.5d
+		}
+		{
+			dependencies: ["77A78AE59270C185"]
+			icon: {
+				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
+			}
+			id: "28E0CDDA3DF0F574"
+			rewards: [{
+				count: 16
+				id: "4024F382E0249FF5"
+				item: {
+					count: 1
+					id: "kubejs:silver_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "born_in_chaos_v1:lifestealer_true_form"
+				id: "7AA764751EBA562C"
+				type: "kill"
+				value: 16L
+			}]
+			x: 5.0d
+			y: 11.5d
 		}
 	]
 }
