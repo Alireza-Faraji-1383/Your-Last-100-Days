@@ -103,7 +103,8 @@
                 return;
             }
 
-            if (manager.isInRaid(player)) {
+            if ((manager.isOwnerInRaid && manager.isOwnerInRaid(player)) ||
+                (!manager.isOwnerInRaid && manager.isInRaid(player))) {
                 player.tell(Text.of("§eThis standard cannot be ignited while you are already in a raid."));
                 event.cancel();
                 return;

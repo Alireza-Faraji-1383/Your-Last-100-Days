@@ -30,6 +30,9 @@
     const PENDING_TEAM_WINS_KEY = "raidfactory_pending_team_wins_v1";
     const ACTIVE_SAVE_EVERY = 100;
     const TEAM_SYNC_EVERY = 20;       // refresh FTB roster/HUD once per second
+    const TEAM_RAID_DISTANCE = 500;
+    const TEAM_RAID_DISTANCE_SQ = TEAM_RAID_DISTANCE * TEAM_RAID_DISTANCE;
+    const TEAM_RAID_ESCAPE_SECONDS = 10;
     const RESTORE_LOGIN_DELAY = 40; // let the returning player's chunks load first
     const RESTORE_MOB_WAIT = 200;   // first allow 10s of natural chunk loading
     const RESTORE_CHUNKS_PER_SCAN = 2; // bounded synchronous loads per second
@@ -2546,15 +2549,22 @@
     // ---------- Instance (state machine) ------------------------------------
     // Phases: SPAWNING -> FIGHTING -> BREATHER -> ... -> WIN_WAIT -> DONE.
 
-    function RaidInstance(id, def, level, player) {
+    function RaidInstance(id, def, level, player, options) {
+        options = options || {};
         var identity = playerTeamIdentity(player);
         this.id        = id;
         this.defId     = def.id;
         this.def       = def;
         this.level     = level;
         this.playerUuid = playerUuidOf(player);
-        this.teamId = identity.teamId;
-        this.participantUuids = identity.members;
+        this.teamId = options.teamId !== undefined ? options.teamId : identity.teamId;
+        this.cohortId = String(options.cohortId || id);
+        this.participantUuids = options.participantUuids || identity.members;
+        this._lostParticipantUuids = options.lostParticipantUuids || {};
+        this._spatialDepartureCountdowns = options.spatialDepartureCountdowns || {};
+        this._spatialCountdownDirty = false;
+        this._currentTeamRoster = null;
+        this._cohortInitializing = !!options.cohortInitializing;
         this._onlineParticipants = [];
         this._teamSyncLeft = 0;
         this._offlinePrepared = false;
@@ -2973,6 +2983,13 @@
         var player = resolvePlayer(this);   // live player wrapper, or null if offline
         var round  = this.def.rounds[this.roundIdx];
 
+        // Every participant either left the FTB team or was disqualified by the
+        // 500-block rule. Do not leave an ownerless raid paused forever.
+        if (participantCount(this) === 0 && this.phase !== "ENDING") {
+            this.lose(null);
+            return;
+        }
+
         // No player-death loss: if the main player dies the mobs switch to nearby
         // villagers/players (see aggro) and re-aggro the player on respawn. The
         // only loss is the final round's timer expiring (see FIGHTING below).
@@ -3167,6 +3184,336 @@
         catch (e) { return false; }
     }
 
+    function playerDistanceSqr(a, b) {
+        if (!a || !b) return Infinity;
+        try {
+            if (levelId(playerLevel(a)) !== levelId(playerLevel(b))) return Infinity;
+            var dx = Number(a.x) - Number(b.x);
+            var dy = Number(a.y) - Number(b.y);
+            var dz = Number(a.z) - Number(b.z);
+            if (!isFinite(dx) || !isFinite(dy) || !isFinite(dz)) {
+                var pa = a.position(), pb = b.position();
+                dx = Number(pa.x) - Number(pb.x);
+                dy = Number(pa.y) - Number(pb.y);
+                dz = Number(pa.z) - Number(pb.z);
+            }
+            return dx * dx + dy * dy + dz * dz;
+        } catch (e) { return Infinity; }
+    }
+
+    // Complete-link spatial groups: every pair inside one group is within the
+    // 500-block limit. This avoids a 0/400/800 chain incorrectly treating the
+    // first and last players as one raid merely because the middle player links
+    // them. FTB teams are small and comparisons remain O(team²) once per second.
+    function spatialPlayerGroups(players) {
+        var ordered = players.slice();
+        ordered.sort(function (a, b) {
+            return playerUuidOf(a).localeCompare(playerUuidOf(b));
+        });
+        var groups = [];
+        for (var i = 0; i < ordered.length; i++) {
+            var player = ordered[i];
+            if (!playerUuidOf(player)) continue;
+            var placed = false;
+            for (var g = 0; g < groups.length && !placed; g++) {
+                var fits = true;
+                for (var j = 0; j < groups[g].length; j++) {
+                    if (playerDistanceSqr(player, groups[g][j]) > TEAM_RAID_DISTANCE_SQ) {
+                        fits = false;
+                        break;
+                    }
+                }
+                if (fits) {
+                    groups[g].push(player);
+                    placed = true;
+                }
+            }
+            if (!placed) groups.push([player]);
+        }
+        return groups;
+    }
+
+    function participantCount(inst) {
+        var count = 0;
+        if (!inst || !inst.participantUuids) return 0;
+        for (var uuid in inst.participantUuids)
+            if (inst.participantUuids[uuid]) count++;
+        return count;
+    }
+
+    function canAcceptEarlyTeamMember(inst) {
+        if (!inst || inst.phase === "DONE" || inst.phase === "ENDING") return false;
+        return inst.roundIdx === 0 &&
+               (inst.phase === "SPAWNING" || inst.phase === "FIGHTING");
+    }
+
+    function cohortInstances(inst) {
+        var out = [];
+        if (!inst) return out;
+        for (var key in _active) {
+            var candidate = _active[key];
+            if (!candidate || candidate.phase === "DONE" || candidate.phase === "ENDING") continue;
+            if (candidate.defId === inst.defId &&
+                candidate.teamId === inst.teamId &&
+                String(candidate.cohortId || candidate.id) === String(inst.cohortId || inst.id))
+                out.push(candidate);
+        }
+        return out;
+    }
+
+    function participantInstanceForCohort(inst, uuid) {
+        var wanted = normUuid(uuid);
+        var cohort = cohortInstances(inst);
+        for (var i = 0; i < cohort.length; i++) {
+            if (cohort[i].participantUuids && cohort[i].participantUuids[wanted])
+                return cohort[i];
+        }
+        return null;
+    }
+
+    function onlinePlayersInRoster(roster) {
+        var out = [];
+        var livePlayers = onlinePlayerList(Manager._server);
+        if (!roster || !livePlayers) return out;
+        try {
+            var it = livePlayers.iterator();
+            while (it.hasNext()) {
+                var player = it.next();
+                if (player && roster[playerUuidOf(player)]) out.push(player);
+            }
+        } catch (e) {}
+        return out;
+    }
+
+    function tellSpatialLoss(inst, player, reason) {
+        if (!inst || !player) return;
+        applyDefeatPenalty(player);
+        playSnd(player, inst.def.sounds.lose);
+        showTitle(player, "DEFEAT", reason || "Separated from the raid", "dark_red");
+        try {
+            player.tell(Text.of(
+                "§cYou left your raid group by more than " +
+                TEAM_RAID_DISTANCE + " blocks. This raid is lost for you."
+            ));
+        } catch (e) {}
+        fireCb(inst.def, "onLose", [inst.ctx(player)]);
+    }
+
+    function showSpatialActionbar(player, message, color) {
+        if (!player || !message) return;
+        try {
+            var server = player.server || Manager._server;
+            if (!server || typeof server.runCommandSilent !== "function") return;
+            server.runCommandSilent(
+                "title " + String(player.username) + " actionbar " +
+                JSON.stringify({
+                    text: String(message),
+                    color: String(color || "red"),
+                    bold: true
+                })
+            );
+        } catch (e) {}
+    }
+
+    function clearSpatialDepartureCountdown(inst, player, notifyReturn) {
+        if (!inst || !player || !inst._spatialDepartureCountdowns) return false;
+        var uuid = playerUuidOf(player);
+        if (!uuid || !inst._spatialDepartureCountdowns[uuid]) return false;
+        delete inst._spatialDepartureCountdowns[uuid];
+        inst._spatialCountdownDirty = true;
+        if (notifyReturn) {
+            showSpatialActionbar(
+                player,
+                "You are back inside the raid area.",
+                "green"
+            );
+        }
+        return true;
+    }
+
+    function freezeOfflineDepartureCountdowns(inst, onlineParticipantUuids) {
+        if (!inst || !inst._spatialDepartureCountdowns) return;
+        for (var uuid in inst._spatialDepartureCountdowns) {
+            if (onlineParticipantUuids && onlineParticipantUuids[uuid]) continue;
+            var record = inst._spatialDepartureCountdowns[uuid];
+            if (record) record.lastTick = _serverTickClock;
+        }
+    }
+
+    function advanceSpatialDepartureCountdown(inst, player, reason) {
+        if (!inst || !player) return false;
+        if (!inst._spatialDepartureCountdowns) inst._spatialDepartureCountdowns = {};
+        var uuid = playerUuidOf(player);
+        if (!uuid) return false;
+
+        var record = inst._spatialDepartureCountdowns[uuid];
+        if (!record) {
+            record = {
+                remaining: TEAM_RAID_ESCAPE_SECONDS,
+                lastTick: _serverTickClock,
+                lastShown: -1
+            };
+            inst._spatialDepartureCountdowns[uuid] = record;
+            inst._spatialCountdownDirty = true;
+        } else {
+            var elapsedTicks = Math.max(0, _serverTickClock - Number(record.lastTick || 0));
+            var elapsedSeconds = Math.floor(elapsedTicks / 20);
+            if (elapsedSeconds > 0) {
+                record.remaining = Math.max(0, Number(record.remaining || 0) - elapsedSeconds);
+                record.lastTick = Number(record.lastTick || 0) + elapsedSeconds * 20;
+            }
+        }
+
+        var remaining = Math.max(0, Math.ceil(Number(record.remaining) || 0));
+        if (remaining <= 0) {
+            delete inst._spatialDepartureCountdowns[uuid];
+            inst._spatialCountdownDirty = true;
+            return removeParticipantAsLost(inst, player, reason);
+        }
+        if (record.lastShown !== remaining) {
+            record.lastShown = remaining;
+            showSpatialActionbar(
+                player,
+                "You are moving away from the raid area! Return within " +
+                    remaining + (remaining === 1 ? " second." : " seconds."),
+                remaining <= 3 ? "dark_red" : "red"
+            );
+        }
+        return false;
+    }
+
+    function removeParticipantAsLost(inst, player, reason) {
+        if (!inst || !player) return false;
+        var uuid = playerUuidOf(player);
+        if (!uuid || !inst.participantUuids || !inst.participantUuids[uuid]) return false;
+        if (inst._spatialDepartureCountdowns)
+            delete inst._spatialDepartureCountdowns[uuid];
+        delete inst.participantUuids[uuid];
+        if (!inst._lostParticipantUuids) inst._lostParticipantUuids = {};
+        inst._lostParticipantUuids[uuid] = true;
+        removePersonalDeathBar(inst, uuid);
+        inst._barParticipantKey = null;
+        inst._teamSyncLeft = 0;
+        tellSpatialLoss(inst, player, reason);
+        return true;
+    }
+
+    function groupContainsUuid(group, uuid) {
+        var wanted = normUuid(uuid);
+        for (var i = 0; i < group.length; i++)
+            if (playerUuidOf(group[i]) === wanted) return true;
+        return false;
+    }
+
+    // Keep the largest valid 500-block group. In an exact tie, the group containing
+    // the original starter remains authoritative. This makes a travelling
+    // majority safe while a lone player who runs 500+ blocks away loses only
+    // their own participation.
+    function enforceSpatialCohesion(inst, onlineMembers) {
+        if (!inst) return 0;
+        if (!onlineMembers || onlineMembers.length === 0) {
+            freezeOfflineDepartureCountdowns(inst, {});
+            return 0;
+        }
+        var participants = [];
+        var outOfDimension = [];
+        var onlineParticipantUuids = {};
+        var onlineParticipantPlayers = {};
+        for (var i = 0; i < onlineMembers.length; i++) {
+            var player = onlineMembers[i];
+            var onlineUuid = playerUuidOf(player);
+            if (!inst.participantUuids[onlineUuid]) continue;
+            onlineParticipantUuids[onlineUuid] = true;
+            onlineParticipantPlayers[onlineUuid] = player;
+            if (sameRaidLevel(inst, player)) participants.push(player);
+            else outOfDimension.push(player);
+        }
+
+        freezeOfflineDepartureCountdowns(inst, onlineParticipantUuids);
+        var violations = {};
+        for (var od = 0; od < outOfDimension.length; od++) {
+            violations[playerUuidOf(outOfDimension[od])] = {
+                player: outOfDimension[od],
+                reason: "Left the raid dimension"
+            };
+        }
+
+        if (participants.length > 1) {
+            var groups = spatialPlayerGroups(participants);
+            if (groups.length > 1) {
+                groups.sort(function (a, b) {
+                    if (a.length !== b.length) return b.length - a.length;
+                    var aOwner = groupContainsUuid(a, inst.playerUuid) ? 1 : 0;
+                    var bOwner = groupContainsUuid(b, inst.playerUuid) ? 1 : 0;
+                    return bOwner - aOwner;
+                });
+                for (var g = 1; g < groups.length; g++) {
+                    for (var p = 0; p < groups[g].length; p++) {
+                        var separated = groups[g][p];
+                        violations[playerUuidOf(separated)] = {
+                            player: separated,
+                            reason: "Separated from the raid group"
+                        };
+                    }
+                }
+            }
+        }
+
+        var removed = 0;
+        for (var uuid in onlineParticipantUuids) {
+            var violation = violations[uuid];
+            if (violation) {
+                if (advanceSpatialDepartureCountdown(
+                    inst, violation.player, violation.reason
+                )) removed++;
+                continue;
+            }
+            var safePlayer = onlineParticipantPlayers[uuid];
+            if (safePlayer) clearSpatialDepartureCountdown(inst, safePlayer, true);
+        }
+        return removed;
+    }
+
+    function nearestEarlyInstance(inst, player) {
+        var cohort = cohortInstances(inst);
+        var best = null, bestDistance = Infinity;
+        for (var i = 0; i < cohort.length; i++) {
+            var candidate = cohort[i];
+            if (!canAcceptEarlyTeamMember(candidate) || !sameRaidLevel(candidate, player)) continue;
+            var current = onlinePlayersInRoster(candidate.participantUuids);
+            if (current.length === 0) continue;
+            var fitsWholeGroup = true;
+            var nearestMemberDistance = Infinity;
+            for (var j = 0; j < current.length; j++) {
+                var distance = playerDistanceSqr(player, current[j]);
+                if (distance > TEAM_RAID_DISTANCE_SQ) {
+                    fitsWholeGroup = false;
+                    break;
+                }
+                if (distance < nearestMemberDistance) nearestMemberDistance = distance;
+            }
+            if (fitsWholeGroup && nearestMemberDistance < bestDistance) {
+                best = candidate;
+                bestDistance = nearestMemberDistance;
+            }
+        }
+        return best;
+    }
+
+    function addEarlyParticipant(inst, player) {
+        if (!inst || !player || !canAcceptEarlyTeamMember(inst)) return false;
+        var uuid = playerUuidOf(player);
+        if (!uuid || (inst._lostParticipantUuids && inst._lostParticipantUuids[uuid])) return false;
+        if (participantInstanceForCohort(inst, uuid)) return false;
+        inst.participantUuids[uuid] = true;
+        inst._barParticipantKey = null;
+        inst._teamSyncLeft = 0;
+        try {
+            player.tell(Text.of("§aYou joined your team's raid before wave one ended."));
+        } catch (e) {}
+        return true;
+    }
+
     function refreshTeamRoster(inst) {
         if (!inst) return;
         // Upgrade snapshots created by the older solo-owner format as soon as
@@ -3179,17 +3526,17 @@
                 var identity = playerTeamIdentity(owner);
                 if (identity.teamId) {
                     inst.teamId = identity.teamId;
-                    inst.participantUuids = identity.members;
+                    inst._currentTeamRoster = identity.members;
                 }
             }
         }
         var team = inst.teamId ? ftbTeamById(inst.teamId) : null;
         if (team) {
-            inst.participantUuids = teamRoster(team, inst.playerUuid);
+            inst._currentTeamRoster = teamRoster(team, null);
             return;
         }
+        inst._currentTeamRoster = null;
         if (!inst.participantUuids) inst.participantUuids = {};
-        inst.participantUuids[normUuid(inst.playerUuid)] = true;
     }
 
     var _javaArrayListClass = null;
@@ -3375,6 +3722,101 @@
         }
     }
 
+    function lostInCohort(inst, uuid) {
+        var wanted = normUuid(uuid);
+        var cohort = cohortInstances(inst);
+        for (var i = 0; i < cohort.length; i++) {
+            if (cohort[i]._lostParticipantUuids &&
+                cohort[i]._lostParticipantUuids[wanted]) return true;
+        }
+        return false;
+    }
+
+    function removeFormerTeamMembers(inst, roster) {
+        if (!inst || !roster || !inst.participantUuids) return 0;
+        var removed = 0, stale = [];
+        for (var uuid in inst.participantUuids) {
+            if (inst.participantUuids[uuid] && !roster[uuid]) stale.push(uuid);
+        }
+        for (var i = 0; i < stale.length; i++) {
+            var player = findOnlinePlayer(Manager._server, function (candidate) {
+                return playerUuidOf(candidate) === stale[i];
+            });
+            if (player) {
+                if (removeParticipantAsLost(inst, player, "Left the FTB team")) removed++;
+            } else {
+                delete inst.participantUuids[stale[i]];
+                if (inst._spatialDepartureCountdowns)
+                    delete inst._spatialDepartureCountdowns[stale[i]];
+                if (!inst._lostParticipantUuids) inst._lostParticipantUuids = {};
+                inst._lostParticipantUuids[stale[i]] = true;
+                removePersonalDeathBar(inst, stale[i]);
+                inst._barParticipantKey = null;
+                removed++;
+            }
+        }
+        return removed;
+    }
+
+    // Reconcile one spatial raid cohort. Existing members are never replaced by
+    // the live FTB roster: it is only a source for legitimate early joiners and
+    // for detecting people who actually left the team.
+    function syncSpatialCohort(inst) {
+        if (!inst || inst._cohortInitializing || !inst.teamId) return false;
+        var roster = inst._currentTeamRoster;
+        if (!roster) return false; // temporary FTB API failure: preserve membership
+
+        var changed = removeFormerTeamMembers(inst, roster) > 0;
+        var onlineRoster = onlinePlayersInRoster(roster);
+        if (enforceSpatialCohesion(inst, onlineRoster) > 0) changed = true;
+        if (inst._spatialCountdownDirty) {
+            inst._spatialCountdownDirty = false;
+            changed = true;
+        }
+
+        var cohort = cohortInstances(inst);
+        var joinWindowOpen = false;
+        for (var ci = 0; ci < cohort.length; ci++) {
+            if (canAcceptEarlyTeamMember(cohort[ci])) {
+                joinWindowOpen = true;
+                break;
+            }
+        }
+        if (!joinWindowOpen) {
+            if (changed) persistActive(Manager._server);
+            return changed;
+        }
+
+        for (var i = 0; i < onlineRoster.length; i++) {
+            var player = onlineRoster[i];
+            var uuid = playerUuidOf(player);
+            if (!uuid || participantInstanceForCohort(inst, uuid) ||
+                lostInCohort(inst, uuid)) continue;
+
+            var nearest = nearestEarlyInstance(inst, player);
+            if (nearest) {
+                if (addEarlyParticipant(nearest, player)) changed = true;
+                continue;
+            }
+
+            // The member joined/logged in during wave one but is over 500 blocks
+            // from every existing group. Give them their own simultaneous copy
+            // of this raid instead of attaching a remote HUD/reward entitlement.
+            var participantSet = {};
+            participantSet[uuid] = true;
+            var split = createRaidInstance(
+                playerLevel(player), player, inst.def,
+                String(inst.cohortId || inst.id), participantSet, inst.teamId, false
+            );
+            if (split) {
+                activateRaidInstance(split, player);
+                changed = true;
+            }
+        }
+        if (changed) persistActive(Manager._server);
+        return changed;
+    }
+
     // Refresh FTB membership once per second: quick team changes propagate to
     // the shared HUD without doing team API work on every raid tick.
     function onlineParticipants(inst, force) {
@@ -3384,6 +3826,7 @@
             return inst._onlineParticipants;
 
         refreshTeamRoster(inst);
+        syncSpatialCohort(inst);
         var out = [];
         var livePlayers = onlinePlayerList(Manager._server);
         if (livePlayers) {
@@ -3430,21 +3873,10 @@
 
     function raidForPlayer(player) {
         if (!player) return null;
-        var direct = playerInRaid(playerUuidOf(player));
-        if (direct) return direct;
-
-        var identity = playerTeamIdentity(player);
-        if (!identity.teamId) return null;
-        for (var k in _active) {
-            var inst = _active[k];
-            if (inst.phase === "DONE" || inst.phase === "ENDING") continue;
-            if (inst.teamId && inst.teamId === identity.teamId) {
-                inst.participantUuids = identity.members;
-                inst._teamSyncLeft = 0;
-                return inst;
-            }
-        }
-        return null;
+        // Membership is explicit per 500-block spatial subgroup. Merely sharing
+        // an FTB Team must never attach a remote player to another group's HUD,
+        // rewards or advancement eligibility.
+        return playerInRaid(playerUuidOf(player));
     }
 
     // ---------- Manager -----------------------------------------------------
@@ -3453,6 +3885,7 @@
     const _terminalListeners = [];
     const _pendingLifestealerForms = [];
     var _idSeq    = 0;
+    var _serverTickClock = 0;
     var _tickAccum = 0;
     var _persistAccum = 0;
     var _restoreAttempted = false;
@@ -3461,6 +3894,127 @@
         var id = null;
         do { _idSeq++; id = defId + "_" + _idSeq; } while (_active[id]);
         return id;
+    }
+
+    function participantSetForPlayers(players) {
+        var out = {};
+        for (var i = 0; i < players.length; i++) {
+            var uuid = playerUuidOf(players[i]);
+            if (uuid) out[uuid] = true;
+        }
+        return out;
+    }
+
+    function onlineTeamPlayers(identity, starter) {
+        var out = [];
+        var seen = {};
+        var roster = identity && identity.members ? identity.members : {};
+        var live = onlinePlayerList(Manager._server || (starter ? starter.server : null));
+        if (live) {
+            try {
+                var it = live.iterator();
+                while (it.hasNext()) {
+                    var player = it.next();
+                    var uuid = playerUuidOf(player);
+                    if (!uuid || !roster[uuid] || seen[uuid]) continue;
+                    seen[uuid] = true;
+                    out.push(player);
+                }
+            } catch (e) {}
+        }
+        var starterId = playerUuidOf(starter);
+        if (starter && starterId && !seen[starterId]) out.push(starter);
+        return out;
+    }
+
+    function ownerHasActiveInstance(identity, starterUuid) {
+        var teamId = identity ? identity.teamId : null;
+        var wantedPlayer = normUuid(starterUuid);
+        for (var key in _active) {
+            var inst = _active[key];
+            if (!inst || inst.phase === "DONE" || inst.phase === "ENDING") continue;
+            if (teamId) {
+                if (inst.teamId === teamId) return true;
+            } else if (!inst.teamId && inst.playerUuid === wantedPlayer) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function createRaidInstance(level, player, def, cohortId, participants, teamId, initializing) {
+        if (!level || !player || !def) return null;
+        var id = newInstanceId(def.id);
+        var inst = new RaidInstance(id, def, level, player, {
+            teamId: teamId || null,
+            cohortId: cohortId || id,
+            participantUuids: participants || participantSetForPlayers([player]),
+            lostParticipantUuids: {},
+            cohortInitializing: !!initializing
+        });
+        if (def.bossBar !== false) {
+            inst.bar = makeBar(Manager._server, inst.id, inst.barBase, def.barColor, def.barOverlay);
+        }
+        _active[id] = inst;
+        return inst;
+    }
+
+    function activateRaidInstance(inst, representative) {
+        if (!inst || !representative) return false;
+        inst._cohortInitializing = false;
+        onlineParticipants(inst, true);
+        eachOnlineParticipant(inst, function (member) {
+            playSnd(member, inst.def.sounds.raidStart);
+            showTitle(member, "RAID INCOMING", inst.barBase, "red");
+            try { member.tell(Text.of("§c⚔ " + inst.barBase + " begins for your raid group...")); }
+            catch (eTell) {}
+        }, false);
+        fireCb(inst.def, "onStart", [inst.ctx(representative)]);
+        info(`started shared "${inst.defId}" as ${inst.id} for spatial group ${inst.cohortId}`);
+        return true;
+    }
+
+    function startSpatialTeamRaid(level, player, def) {
+        var identity = playerTeamIdentity(player);
+        if (ownerHasActiveInstance(identity, playerUuidOf(player))) return [];
+
+        var candidates = onlineTeamPlayers(identity, player);
+        var groups = spatialPlayerGroups(candidates);
+        if (groups.length === 0) groups = [[player]];
+
+        // The command/banner/scheduler caller receives the starter's instance ID.
+        // Other distant groups are real simultaneous instances in the same cohort.
+        var starterId = playerUuidOf(player);
+        groups.sort(function (a, b) {
+            var aStarter = groupContainsUuid(a, starterId) ? 1 : 0;
+            var bStarter = groupContainsUuid(b, starterId) ? 1 : 0;
+            return bStarter - aStarter;
+        });
+
+        var created = [];
+        var cohortId = "";
+        for (var i = 0; i < groups.length; i++) {
+            var representative = groups[i][0];
+            if (groupContainsUuid(groups[i], starterId)) representative = player;
+            var inst = createRaidInstance(
+                playerLevel(representative) || level,
+                representative,
+                def,
+                cohortId,
+                participantSetForPlayers(groups[i]),
+                identity.teamId,
+                true
+            );
+            if (!inst) continue;
+            if (!cohortId) cohortId = inst.id;
+            inst.cohortId = cohortId;
+            created.push({ instance: inst, representative: representative });
+        }
+
+        for (var a = 0; a < created.length; a++)
+            activateRaidInstance(created[a].instance, created[a].representative);
+        persistActive(Manager._server);
+        return created;
     }
 
     function mobUuid(entity) {
@@ -3753,6 +4307,45 @@
         return true;
     }
 
+    function spatialDepartureCountdownSnapshot(inst) {
+        var out = {};
+        var records = inst && inst._spatialDepartureCountdowns;
+        if (!records) return out;
+        for (var uuid in records) {
+            if (!inst.participantUuids || !inst.participantUuids[uuid]) continue;
+            var remaining = Math.max(
+                0,
+                Math.min(
+                    TEAM_RAID_ESCAPE_SECONDS,
+                    Math.ceil(Number(records[uuid] && records[uuid].remaining) || 0)
+                )
+            );
+            if (remaining > 0) out[uuid] = remaining;
+        }
+        return out;
+    }
+
+    function restoredSpatialDepartureCountdowns(saved) {
+        var out = {};
+        if (!saved || typeof saved !== "object") return out;
+        for (var uuid in saved) {
+            var remaining = Math.max(
+                0,
+                Math.min(
+                    TEAM_RAID_ESCAPE_SECONDS,
+                    Math.ceil(Number(saved[uuid]) || 0)
+                )
+            );
+            if (remaining <= 0) continue;
+            out[normUuid(uuid)] = {
+                remaining: remaining,
+                lastTick: _serverTickClock,
+                lastShown: -1
+            };
+        }
+        return out;
+    }
+
     function snapshotInstance(inst) {
         var roundRecords = inst._restoring
             ? recordsForRestoreSet(inst._restoreRoundUuids, inst._restoreMobLocations)
@@ -3769,7 +4362,10 @@
             defId: inst.defId,
             playerUuid: inst.playerUuid,
             teamId: inst.teamId,
+            cohortId: inst.cohortId,
             participantUuids: uuidKeys(inst.participantUuids),
+            lostParticipantUuids: uuidKeys(inst._lostParticipantUuids),
+            spatialDepartureCountdowns: spatialDepartureCountdownSnapshot(inst),
             dimension: levelId(inst.level),
             roundIdx: inst.roundIdx,
             phase: inst.phase,
@@ -3837,8 +4433,17 @@
             inst.level = level;
             inst.playerUuid = normUuid(s.playerUuid);
             inst.teamId = s.teamId ? normUuid(s.teamId) : null;
+            inst.cohortId = String(s.cohortId || s.id);
             inst.participantUuids = uuidSet(s.participantUuids || [inst.playerUuid]);
-            inst.participantUuids[inst.playerUuid] = true;
+            // Legacy snapshots had no explicit participant list. New snapshots
+            // may intentionally exclude the original starter after spatial loss.
+            if (!s.participantUuids) inst.participantUuids[inst.playerUuid] = true;
+            inst._lostParticipantUuids = uuidSet(s.lostParticipantUuids || []);
+            inst._spatialDepartureCountdowns =
+                restoredSpatialDepartureCountdowns(s.spatialDepartureCountdowns);
+            inst._spatialCountdownDirty = false;
+            inst._currentTeamRoster = null;
+            inst._cohortInitializing = false;
             inst._onlineParticipants = [];
             inst._teamSyncLeft = 0;
             inst._offlinePrepared = false;
@@ -4119,6 +4724,8 @@
             id: inst.id,
             defId: inst.defId,
             playerUuid: inst.playerUuid,
+            ownerKey: raidOwnerKeyForInstance(inst),
+            cohortId: String(inst.cohortId || inst.id),
             outcome: String(outcome || "ended")
         };
         for (var i = 0; i < _terminalListeners.length; i++) {
@@ -4139,8 +4746,7 @@
             var inst = _active[k];
             var ph = inst.phase;
             if (ph === "DONE" || ph === "ENDING") continue;
-            if (inst.playerUuid === wanted ||
-                (inst.participantUuids && inst.participantUuids[wanted])) return inst;
+            if (inst.participantUuids && inst.participantUuids[wanted]) return inst;
         }
         return null;
     }
@@ -4295,29 +4901,27 @@
             var def = Registry.get(defId);
             if (!def) { err(`start: unknown raid "${defId}"`); return null; }
             if (!player) { err("start: no player"); return null; }
-            if (raidForPlayer(player)) { warn(`start: ${player.username}'s team is already in a raid`); return null; }
-            var id = newInstanceId(defId);
-            var inst = new RaidInstance(id, def, level || playerLevel(player), player);
             if (!Manager._server) { try { Manager._server = player.server; } catch (eSv) {} }
-            if (def.bossBar !== false) {
-                inst.bar = makeBar(Manager._server, inst.id, inst.barBase, def.barColor, def.barOverlay);
+            var created = startSpatialTeamRaid(level || playerLevel(player), player, def);
+            if (created.length === 0) {
+                warn(`start: ${player.username}'s team is already in a raid`);
+                return null;
             }
-            _active[id] = inst;
-            onlineParticipants(inst, true);
-            persistActive(Manager._server);
-            eachOnlineParticipant(inst, function (member) {
-                playSnd(member, def.sounds.raidStart);
-                showTitle(member, "RAID INCOMING", inst.barBase, "red");
-                try { member.tell(Text.of("§c⚔ " + inst.barBase + " begins for your team...")); } catch (eT) {}
-            }, false);
-            fireCb(def, "onStart", [inst.ctx(player)]);
-            info(`started shared "${defId}" as ${id} for team ${inst.teamId || inst.playerUuid}`);
-            return id;
+            return created[0].instance.id;
         },
 
         // True when the player has a raid still fighting (ENDING/DONE excluded).
         isInRaid: function (player) {
             try { return !!raidForPlayer(player); } catch (e) { return false; }
+        },
+
+        // Scheduler guard: one spatial subgroup finishing must not start the
+        // team's next overdue raid while another 500-block subgroup is fighting.
+        isOwnerInRaid: function (player) {
+            try {
+                var identity = playerTeamIdentity(player);
+                return ownerHasActiveInstance(identity, playerUuidOf(player));
+            } catch (e) { return false; }
         },
 
         // The day scheduler persists fired/pending state against this key. It is
@@ -4424,6 +5028,7 @@
 
         _drive: function (server) {
             Manager._server = server;
+            _serverTickClock++;
             if (!_restoreAttempted) restoreActive(server);
             _persistAccum++;
             if (_persistAccum >= ACTIVE_SAVE_EVERY) {
@@ -4476,6 +5081,22 @@
         try {
             deliverPendingTeamWins(event.player);
             var inst = raidForPlayer(event.player);
+            if (!inst) {
+                var identity = playerTeamIdentity(event.player);
+                if (identity.teamId) {
+                    for (var key in _active) {
+                        var candidate = _active[key];
+                        if (!candidate || candidate.phase === "DONE" ||
+                            candidate.phase === "ENDING" ||
+                            candidate.teamId !== identity.teamId) continue;
+                        candidate._teamSyncLeft = 0;
+                        refreshTeamRoster(candidate);
+                        syncSpatialCohort(candidate);
+                        inst = raidForPlayer(event.player);
+                        if (inst) break;
+                    }
+                }
+            }
             if (inst) {
                 inst._teamSyncLeft = 0;
                 inst._barParticipantKey = null;
@@ -4492,6 +5113,24 @@
             var leaving = playerUuidOf(event.player);
             var inst = raidForPlayer(event.player);
             if (inst) {
+                // The logout callback can run after PlayerList already removed
+                // this wrapper. Include it explicitly for one final distance
+                // check so stepping outside 500 blocks and instantly quitting
+                // cannot preserve reward/advancement eligibility.
+                refreshTeamRoster(inst);
+                var spatialPlayers = onlinePlayersInRoster(
+                    inst._currentTeamRoster || inst.participantUuids
+                );
+                var leavingListed = false;
+                for (var sp = 0; sp < spatialPlayers.length; sp++) {
+                    if (playerUuidOf(spatialPlayers[sp]) === leaving) {
+                        leavingListed = true;
+                        break;
+                    }
+                }
+                if (!leavingListed) spatialPlayers.push(event.player);
+                enforceSpatialCohesion(inst, spatialPlayers);
+
                 var players = combatParticipants(inst, true);
                 var hasOther = false;
                 for (var i = 0; i < players.length; i++) {

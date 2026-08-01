@@ -52,10 +52,18 @@
             for (var ownerKey in parsed) {
                 var old = parsed[ownerKey];
                 if (!old || typeof old !== "object") continue;
+                var ids = [];
+                if (old.instanceIds && typeof old.instanceIds.length === "number") {
+                    for (var ii = 0; ii < old.instanceIds.length; ii++)
+                        if (old.instanceIds[ii]) ids.push(String(old.instanceIds[ii]));
+                } else if (old.instanceId) {
+                    ids.push(String(old.instanceId));
+                }
                 s.teamStates[String(ownerKey)] = {
                     fired: !!old.fired,
                     pending: !!old.pending,
-                    instanceId: old.instanceId ? String(old.instanceId) : ""
+                    instanceId: ids.length > 0 ? ids[0] : "",
+                    instanceIds: ids
                 };
             }
         } catch (e) {
@@ -91,7 +99,7 @@
         if (!key) return null;
         var state = states[key];
         if (!state && create) {
-            state = { fired: false, pending: false, instanceId: "" };
+            state = { fired: false, pending: false, instanceId: "", instanceIds: [] };
             states[key] = state;
         }
         return state || null;
@@ -128,6 +136,7 @@
             state.fired = true;
             state.pending = false;
             state.instanceId = "";
+            state.instanceIds = [];
             saveTeamStates(server, s);
             console.info("[RaidSched] migrated completed v1 raid '" +
                          s.raidId + "' for " + ownerKey);
@@ -153,7 +162,9 @@
         var active = activeOwnerInstances(s);
         for (var i = 0; i < active.length; i++) {
             var ownerKey = String(active[i].ownerKey || "");
-            if (ownerKey) out[ownerKey] = String(active[i].id || "");
+            if (!ownerKey) continue;
+            if (!out[ownerKey]) out[ownerKey] = [];
+            out[ownerKey].push(String(active[i].id || ""));
         }
         return out;
     }
@@ -170,17 +181,24 @@
             var changed = false;
 
             for (var ownerKey in active) {
-                var activeId = active[ownerKey];
+                var activeIds = active[ownerKey];
+                var activeId = activeIds.length > 0 ? activeIds[0] : "";
                 var activeState = states[ownerKey];
                 if (!activeState) {
-                    states[ownerKey] = { fired: true, pending: true, instanceId: activeId };
+                    states[ownerKey] = {
+                        fired: true,
+                        pending: true,
+                        instanceId: activeId,
+                        instanceIds: activeIds
+                    };
                     migrated++;
                     changed = true;
                 } else if (!activeState.fired || !activeState.pending ||
-                           activeState.instanceId !== activeId) {
+                           JSON.stringify(activeState.instanceIds || []) !== JSON.stringify(activeIds)) {
                     activeState.fired = true;
                     activeState.pending = true;
                     activeState.instanceId = activeId;
+                    activeState.instanceIds = activeIds;
                     reconnected++;
                     changed = true;
                 }
@@ -195,6 +213,7 @@
                 state.fired = false;
                 state.pending = false;
                 state.instanceId = "";
+                state.instanceIds = [];
                 rearmed++;
                 changed = true;
             }
@@ -288,7 +307,9 @@
                 if (!player) continue;
                 try {
                     var manager = raidManager();
-                    if (manager && manager.isInRaid && manager.isInRaid(player)) continue;
+                    if (manager && manager.isOwnerInRaid && manager.isOwnerInRaid(player)) continue;
+                    if (manager && !manager.isOwnerInRaid &&
+                        manager.isInRaid && manager.isInRaid(player)) continue;
                 } catch (eInRaid) {}
                 var ownerKey = ownerKeyForPlayer(player);
                 if (!ownerKey) continue;
@@ -344,7 +365,8 @@
                 // Busy teams remain queued and receive this raid after their
                 // current shared raid ends.
                 try {
-                    if (manager.isInRaid && manager.isInRaid(player)) continue;
+                    if (manager.isOwnerInRaid && manager.isOwnerInRaid(player)) continue;
+                    if (!manager.isOwnerInRaid && manager.isInRaid && manager.isInRaid(player)) continue;
                 } catch (eInRaid) {}
 
                 try {
@@ -356,6 +378,14 @@
                     state.fired = true;
                     state.pending = true;
                     state.instanceId = String(instanceId);
+                    state.instanceIds = [];
+                    var active = activeOwnerInstances(s);
+                    for (var ai = 0; ai < active.length; ai++) {
+                        if (String(active[ai].ownerKey || "") === ownerKey)
+                            state.instanceIds.push(String(active[ai].id || ""));
+                    }
+                    if (state.instanceIds.length === 0)
+                        state.instanceIds.push(String(instanceId));
                     // Persist after every successful team launch. If a crash lands
                     // just before this write, recovery reconstructs it from core.
                     saveTeamStates(server, s);
@@ -373,13 +403,34 @@
         var instanceId = String(event.id);
         for (var i = 0; i < _schedule.length; i++) {
             var s = _schedule[i];
+            if (event.defId && String(event.defId) !== String(s.raidId)) continue;
             var states = loadTeamStates(_server, s);
             for (var ownerKey in states) {
                 var state = states[ownerKey];
-                if (!state || state.instanceId !== instanceId) continue;
+                if (!state) continue;
+                var ownerMatches = event.ownerKey &&
+                    String(event.ownerKey) === String(ownerKey);
+                var idMatches = state.instanceId === instanceId;
+                var ids = state.instanceIds || [];
+                for (var ii = 0; ii < ids.length && !idMatches; ii++)
+                    if (String(ids[ii]) === instanceId) idMatches = true;
+                // ownerKey is needed for an early-join spatial split whose ID was
+                // created after the scheduler's initial transaction write. Never
+                // let an unrelated manual raid reopen an already-closed schedule
+                // entry merely because it belongs to the same FTB Team.
+                if (!idMatches && !(ownerMatches && state.pending)) continue;
+
+                var remaining = [];
+                var active = activeOwnerInstances(s);
+                for (var ai = 0; ai < active.length; ai++) {
+                    if (String(active[ai].id || "") !== instanceId &&
+                        String(active[ai].ownerKey || "") === String(ownerKey))
+                        remaining.push(String(active[ai].id || ""));
+                }
                 state.fired = true;
-                state.pending = false;
-                state.instanceId = "";
+                state.pending = remaining.length > 0;
+                state.instanceId = remaining.length > 0 ? remaining[0] : "";
+                state.instanceIds = remaining;
                 saveTeamStates(_server, s);
                 return;
             }
