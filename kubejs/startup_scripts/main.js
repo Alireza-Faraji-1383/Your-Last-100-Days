@@ -10,4 +10,7 @@ StartupEvents.registry('item', (event) => {
   event.create('copper_coin')
     .displayName('Copper Coin')
     .tooltip('§6Official modpack currency')
+
+  event.create('help')
+    .displayName('Help')
 })

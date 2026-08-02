@@ -79,6 +79,8 @@
 	quest.0316E30A250105ED.title: "Wood Supply Crate"
 	quest.0347B872A2C8896C.quest_desc: ["Claim The Infinitum as the final Abyssal relic milestone."]
 	quest.0347B872A2C8896C.title: "The Infinitum"
+	quest.0367FE53FC0CC35B.quest_desc: ["Once you've crafted a &1Dormant Deepshelf&r, you need to infuse it. This infusion recipe will require some extra blocks to reach the stat threshold. Completing the infusion will yield a  &0Deepshelf&r, which can get you to Level 70."]
+	quest.0367FE53FC0CC35B.quest_subtitle: "Reaching Level 70 requires a Level 60 Enchanting Table and access to Deepslate."
 	quest.03E3259694F8C307.quest_desc: ["Collect Evil Essence after the Ichor branch opens hostile materials."]
 	quest.03E3259694F8C307.title: "Evil Essence"
 	quest.0400000000000001.title: "Day 10: Wanderlust"
@@ -123,6 +125,11 @@
 	quest.0700000000000007.title: "Slay Ignis"
 	quest.070000000000000A.title: "The Netherite Monstrosity"
 	quest.070000000000000D.title: "Guardian of the End"
+	quest.076FED7E9FF5C848.quest_desc: [
+		"The last step to Level 80 requires slaying the &0Warden&r, which allows crafting &1Sculkshelves&r."
+		""
+	]
+	quest.076FED7E9FF5C848.quest_subtitle: "Reaching Level 80"
 	quest.078E09A6283D607D.quest_desc: ["Upgrade into full diamond armor for midgame exploration."]
 	quest.078E09A6283D607D.title: "Diamond Armor Set"
 	quest.0800000000000001.title: "Day 50: Trials Await"
@@ -144,11 +151,16 @@
 	quest.09356B5CE3839F2C.quest_desc: ["Upgrade into the Library of Alexandria through tightly tuned Infusion Enchanting. Keep Eterna and Arcana maxed while holding Quanta in the required narrow range."]
 	quest.09356B5CE3839F2C.quest_subtitle: "Utility Route - Ultimate Library"
 	quest.09356B5CE3839F2C.title: "Library of Alexandria"
+	quest.0A64DCF2FEFE6DBC.quest_desc: ["To hit level 75, you will need to upgrade your Deepshelves. Doing this requires materials only found in the &0Deep Dark&r. &1Echo Shards&r may be looted from the Ancient City, and &1Sculk&r may be collected with Silk Touch."]
+	quest.0A64DCF2FEFE6DBC.quest_subtitle: "Reaching Level 75"
 	quest.0AB503478883A9BC.quest_desc: ["Infuse a Dormant Deepshelf after the Hell and Sea tiers are stable. Deepshelves move the table into the Deep Dark tier and prepare the path to level 80."]
 	quest.0AB503478883A9BC.quest_subtitle: "Step 08 - Deep Dark Tier"
 	quest.0AB503478883A9BC.title: "Delving Into Darkness"
 	quest.0B009391E3F76D6E.quest_desc: ["Build the Fisherman Hut to add reliable food production. A good fishing setup helps feed citizens while sometimes producing useful extra loot."]
 	quest.0B009391E3F76D6E.title: "Fisherman Hut"
+	quest.0B0D3699E7F39F29.quest_desc: ["Obtain a Leggings Tome to focus enchanting results toward leggings."]
+	quest.0B0D3699E7F39F29.quest_subtitle: "Leg armor enchantments"
+	quest.0B0D3699E7F39F29.title: "Tome of Legplates"
 	quest.0B1150037754A4EB.quest_desc: ["Infuse Seashelves when the table has enough Eterna, Quanta, and Arcana, then craft Heart-Forged or Crystalline variants. This branch gives the table cleaner high-quality rolls."]
 	quest.0B1150037754A4EB.quest_subtitle: "Step 05B - Infused Seashelves"
 	quest.0B1150037754A4EB.title: "Sleeping in the Cold Below"
@@ -165,6 +177,9 @@
 	quest.0D6E099A1A242153.title: "Found the Colony"
 	quest.0D7D0A11D7517585.quest_desc: ["Obtain a Diamond Trade Coin. This completes the Trade Post coin progression from basic coin to the highest-value currency."]
 	quest.0D7D0A11D7517585.title: "Bling Bling"
+	quest.0DA09629733D2F68.quest_desc: ["At this stage, there are a few basic options for increasing other stats. you can use Candles to increase &5Arcana&r, Skulls to increase &cQuanta&r, and Amethyst Clusters to increase &eQuantic Stability&r."]
+	quest.0DA09629733D2F68.quest_subtitle: "Reaching Level 30 is done in the usual way, with fifteen bookshelves."
+	quest.0DA09629733D2F68.title: "Level 30"
 	quest.0DB241AA8AB171C9.quest_desc: ["Find the Soul Blacksmith before challenging the Monstrosity."]
 	quest.0DB241AA8AB171C9.title: "Soul Blacksmith"
 	quest.0DD8CE32CA2D3810.quest_desc: ["Build the Spellstone Table before controlled Spellstone crafting."]
@@ -188,12 +203,26 @@
 	quest.0EED5D755D2C866A.title: "&d&lEnder"
 	quest.0F409DACBEB7BBF8.quest_desc: ["Place or prepare a Supply Ship as an alternate colony start. It provides early resources, but it needs enough open space and careful placement to deploy correctly."]
 	quest.0F409DACBEB7BBF8.title: "Supply Ship"
+	quest.0FCC32F686193F78.quest_desc: [
+		"Tomes are a special type of Book. A Tome can be enchanted just like a book, but can only receive specific enchantments."
+		""
+		"Once you enchant a tome, it will transform into an enchanted book."
+	]
+	quest.0FCC32F686193F78.title: "Tomes"
 	quest.10B41FCF6D3D548C.quest_desc: ["Build a level 1 Pet Shop after the colony has proper housing. This opens the functional pet branch for companion-based support."]
 	quest.10B41FCF6D3D548C.title: "Pet Shop"
 	quest.11274B9716914F83.quest_desc: ["Forge Etherium Ingots after Astral Dust."]
 	quest.11274B9716914F83.title: "Etherium Ingot"
 	quest.113615E96E320BB0.quest_desc: ["Trigger a rare Trade Post find through the travel network. Keep the Station branch active until a valuable discovery appears."]
 	quest.113615E96E320BB0.title: "Rare Find"
+	quest.117DC5DDBE26FF9E.quest_subtitle: "Reaching Level 90"
+	quest.11872459EE2E3A0B.quest_desc: [
+		"Apothic Enchanting includes several tools and collectibles outside the normal bookshelf progression."
+		""
+		"Begin with a Flimsy Ender Lead, then complete the four surrounding specialist quests."
+	]
+	quest.11872459EE2E3A0B.quest_subtitle: "Beyond the shelf tree"
+	quest.11872459EE2E3A0B.title: "Ender Binding"
 	quest.11A858C09DB25C9B.quest_desc: ["Craft a Tome of Extraction. This is the clean version of the scrapping path: it removes all enchantments while keeping the original item intact."]
 	quest.11A858C09DB25C9B.quest_subtitle: "Utility Route - Safe Extraction"
 	quest.11A858C09DB25C9B.title: "Tome of Extraction"
@@ -212,6 +241,13 @@
 	quest.132AF80A62FFF98D.title: "Tavern"
 	quest.13C5FAB90F6EAACA.quest_desc: ["Craft or find a Cursed Scroll after mastering the darker scroll path."]
 	quest.13C5FAB90F6EAACA.title: "Cursed Scroll"
+	quest.13E31601F723D2DD.quest_desc: [
+		"The &dGeode Shelf&r is the compatible third shelf route in this version. It replaces RAD3's unavailable Aether Skyshelf branch."
+		""
+		"Craft it with a Bookshelf, Calcite, and Budding Amethyst to gain Quantic Stability for precise Infusion Enchanting setups."
+	]
+	quest.13E31601F723D2DD.quest_subtitle: "The compatible third shelf"
+	quest.13E31601F723D2DD.title: "The Geode Shelf"
 	quest.13F77C38AC015E9F.quest_desc: [
 		"High above the Mountains, high above the Clouds rests another &bTower&r. This one giving you shivers down your spine. \n\nThe &bTower&r is made of Stone, Dark Oak, and Deepslate. It has a second Tower branching off of it. There is a staircase on the outside that leads to the first floor. From there you can climb the inside staircase to go up to the bedroom or second tower. \n\nOr you can venture behind that staircase down the Ladder to the Basement, where the &b&lCryomancer&r will most likely be. \n\nIn the &bTower&r you can find Inscription Tables, Amethyst, and Loot Chests!"
 		"{image:irons_spellbooks:textures/quests/spells_mountaintower.png width:200 height:100 align:center}"
@@ -244,6 +280,9 @@
 	quest.160CD8B65B2BD16B.title: "Kraken"
 	quest.17371E278B5E8441.quest_desc: ["Claim The Cube after completing the core Spellstone collection."]
 	quest.17371E278B5E8441.title: "The Cube"
+	quest.1738A11EB21B6E74.quest_desc: ["Obtain a Bow Tome to focus enchanting results toward bows."]
+	quest.1738A11EB21B6E74.quest_subtitle: "Ranged enchantments"
+	quest.1738A11EB21B6E74.title: "Tome of the Archers"
 	quest.179F0314EF6F15F9.quest_desc: ["Obtain the Storm Eye to begin the skyward route."]
 	quest.179F0314EF6F15F9.title: "Storm Eye"
 	quest.17AB0649B90CFE9B.quest_desc: ["Defeat the Ferrous Wroughtnaut and continue the Mowzie boss route."]
@@ -263,6 +302,7 @@
 	quest.1B416F55DB53C59C.quest_desc: ["Hunt Creepers to start this bounty chain. The next tier asks for a larger kill count."]
 	quest.1B8F8360FA7CAB0D.quest_desc: ["Receive Silver Coins for regular shop use."]
 	quest.1B8F8360FA7CAB0D.title: "Gold to Silver Exchange"
+	quest.1BA9D21E423F5547.quest_subtitle: "Clues +2"
 	quest.1BAE0E9F2EF84463.quest_desc: ["Build a level 1 Marketplace after your basic delivery network is running. This becomes the economic hub for Trade Coins and addon buildings."]
 	quest.1BAE0E9F2EF84463.title: "Marketplace"
 	quest.1BE69992D2C5085B.quest_desc: ["&n&aEvocation:&r\nTo invoke a Spirit or Deity. \n\n&a&lEvokation&r is all about what &aEvokers&r do, mainly summoning. Whether it be &aFangs&r or &aVexes&r if it's summoned it's most likely an &aEvokation&r. \n\n&a&lEvokation's&r Focus Material is &aEmeralds&r. You can either craft the Rune or get it from the &a&lArchevoker&r. \n\n&aEvokation Scrolls&r are &fWhite&r with &0Black&r texts."]
@@ -271,6 +311,13 @@
 	quest.1C16AEE8E29FB5A0.title: "Rally Banner"
 	quest.1C47017E1661966A.quest_desc: ["Acquire an Abyssal Heart after The Twist."]
 	quest.1C47017E1661966A.title: "Abyssal Heart"
+	quest.1CA6332B5CCCF7A5.quest_desc: [
+		"An Enchantment Library is a storage system for Enchantments. Simply insert enchanted books, and every enchantment on the book will be stored as points."
+		""
+		"Each library has a Level Capacity, representing the highest level of enchantment it can store. Excess enchantments are voided."
+		""
+		"Clicking on a stored enchantment will extract one level of that enchantment. Shift-clicking a stored enchantment will extract as many levels as possible. Books are generated in the output slot as necessary."
+	]
 	quest.1CAEC4C273EDDB99.quest_desc: ["It's here! It's there! It's everywhere and it's rotten! You can find these in most Chests. \n\nThey can hold 8 &3Spells&r but give you less Spell Resistance."]
 	quest.1CAEC4C273EDDB99.title: "Rotten Spell Book"
 	quest.1D21918DEB56B1A6.quest_desc: ["Obtain the Cursed Eye to open the Frosted Prison route."]
@@ -303,11 +350,27 @@
 	quest.219A93D1B55C768D.title: "Desert Eye"
 	quest.21AA7D04E58FDD78.quest_desc: ["Build a level 1 Resort after the Tavern path is open. This introduces tourism and comfort as a support system for the colony economy."]
 	quest.21AA7D04E58FDD78.title: "Resort"
+	quest.2226FC4894277EEB.quest_desc: [
+		"During the enchanting process, you spend &aexperience&r and &9Lapis Lazuli&r to enchant an item. From this, enchantments are randomly selected using some complex formulas. This quest explains that process."
+		""
+		"First, we'll go over how enchantments are selected. Each enchantment has a  &dPower Function&r, which controls what &dFinal  power&r will make a specific level available. Once all the available enchantments are gathered, some are selected randomly based on their weights."
+		""
+		"&dFinal Power&r is calculated using the following steps: Intially, you have a &6Base Power&r, which is the level you spent while enchanting. Then, &cQuanta&r and &eQuantic Stability&r modify your &6Base Power&r to produce your &dFinal power&r."
+		""
+		"The specifics of how each stat modifies your &6Base Power&r can be found in the &cQuanta&r and &eQuantic Stability&r entries. Typically, a higher &dFinal Power&r will get you access to higher level enchantments."
+	]
 	quest.2270662C32BFDF81.quest_desc: ["Enchant an item at level 30. This proves the vanilla baseline is working before you replace ordinary shelves with Apothic shelves for stronger stats."]
 	quest.2270662C32BFDF81.quest_subtitle: "Step 03 - Vanilla Baseline"
 	quest.2270662C32BFDF81.title: "The Basics"
 	quest.23012F6C4C522CEB.quest_desc: ["Build the Lumberjack Hut to create a steady wood supply. Wood is required constantly for building upgrades, tools, decorations, and early automation."]
 	quest.23012F6C4C522CEB.title: "Lumberjack Hut"
+	quest.2365FE766CBF602F.quest_desc: [
+		"Find the record dedicated to Quanta, the enchanting variance stat."
+		""
+		"This collectible replaces RAD3's unavailable Void Shelf node."
+	]
+	quest.2365FE766CBF602F.quest_subtitle: "The melody of variance"
+	quest.2365FE766CBF602F.title: "Melody of Quanta"
 	quest.23C3704D131B2DF1.quest_desc: ["Enchant an item at 100% Quanta. This is the full chaos route and shows the strongest possible random swing before Stability is added."]
 	quest.23C3704D131B2DF1.quest_subtitle: "Stat Route - Full Quanta"
 	quest.23C3704D131B2DF1.title: "Rolling the Dice"
@@ -328,6 +391,8 @@
 	quest.2768BCABBE854AE2.title: "Mech Eye"
 	quest.27EF4C1254D06288.quest_desc: ["Build a level 1 Marketplace. This is the first real Trade Post building and the parent step for coins, services, transport, recycling, and pets."]
 	quest.27EF4C1254D06288.title: "Marketplace"
+	quest.2830CB386FEDEF1F.quest_desc: ["The last step to Level 80 requires slaying the &0Warden&r, which allows crafting &1Sculkshelves&r."]
+	quest.2830CB386FEDEF1F.quest_subtitle: "Reaching Level 80"
 	quest.28F188346E50DD6A.quest_desc: ["Receive a random ore reward. Common ores are frequent; Diamond Ore and Ancient Debris are very rare."]
 	quest.28F188346E50DD6A.title: "Ore Supply Crate"
 	quest.2913D198FA2B860D.quest_desc: ["Complete a vacation at the Resort. Finish this to prove the tourism side of the colony is working end to end."]
@@ -355,6 +420,11 @@
 	quest.2C9F7712321854BE.title: "Adventure Calls"
 	quest.2D3422284A9EFF23.quest_desc: ["Accept the Cursed Ring path before opening the deeper relic routes."]
 	quest.2D3422284A9EFF23.title: "Wear the Curse"
+	quest.2D875F9BAD35800F.quest_desc: [
+		"Once you reach Level 45, you'll need to explore &5Infusion Enchanting&r to upgrade your shelves."
+		""
+		"Create a few more of the type of shelf you were using, infuse them, and upgrade them. These new shelves, on top of your old ones, will let you reach Level 60."
+	]
 	quest.2DDFBA95A9138CA4.quest_desc: ["Craft the Twisted Mirror after the Twisted Heart."]
 	quest.2DDFBA95A9138CA4.title: "Twisted Mirror"
 	quest.2E6F1C8718EB8C66.title: "&4Blood&r Upgrade Orb"
@@ -390,15 +460,29 @@
 	quest.33BA6855BBED8FEA.title: "The Bless"
 	quest.342A1EF584823D2C.quest_desc: ["Teach the colony how to craft torches. This helps Builders request and use basic lighting without relying on you to craft every piece manually."]
 	quest.342A1EF584823D2C.title: "Teach Torches"
+	quest.342F9A4A1E8BE362.quest_subtitle: "The modern replacement for Rectifier III"
+	quest.342F9A4A1E8BE362.title: "Maximum Quantic Stability"
 	quest.3460E28FAD1187CA.quest_desc: ["Craft the full diamond tool set to finish the core mining tier."]
 	quest.3460E28FAD1187CA.title: "Diamond Toolkit"
+	quest.34D1EAED46BB61BE.quest_desc: [
+		"Enchantment Tomes focus enchanting results toward a particular equipment category."
+		""
+		"Collect the specialist tomes and utilities in this side tree. It replaces RAD3's unavailable Evil Enchanting branch."
+	]
+	quest.34D1EAED46BB61BE.quest_subtitle: "Focused enchanting"
+	quest.34D1EAED46BB61BE.title: "Specialized Tomes"
 	quest.34D7731987C3DE5A.quest_desc: ["Collect cobblestone, granite, andesite, and diorite. These materials start the mixed-stone route toward Trade Post wishing mechanics."]
 	quest.34D7731987C3DE5A.title: "Got Stone?"
+	quest.351792A9531ADFF4.quest_desc: ["Amethyst is the modern source of &eQuantic Stability&r. Start by obtaining an Amethyst Cluster, which can stabilize the negative side of Quanta."]
+	quest.351792A9531ADFF4.title: "Amethyst Stability"
 	quest.359B4C333CD4394A.quest_desc: ["Enchant with maximum Eterna, Quanta, and Arcana. This proves the table can reach full power, full chaos, and full rare-enchantment quality at the same time."]
 	quest.359B4C333CD4394A.quest_subtitle: "Endgame Route - Max Stats"
 	quest.359B4C333CD4394A.title: "Maximum Strength"
 	quest.360E9E02A494217C.quest_desc: ["Build a Barracks Tower to extend organized military coverage. It strengthens your defensive network beyond individual guard posts."]
 	quest.360E9E02A494217C.title: "Barracks Tower"
+	quest.363119A9CC31EF1A.quest_desc: ["Recover a Warden Tendril, a Deep Dark material used by advanced enchanting recipes."]
+	quest.363119A9CC31EF1A.quest_subtitle: "A Deep Dark catalyst"
+	quest.363119A9CC31EF1A.title: "Warden Tendril"
 	quest.367899B66A4BC30F.quest_desc: ["Finish the final Pillager bounty for the largest reward in this chain."]
 	quest.3694D22867FF07EF.quest_desc: ["Build a level 1 Station. This begins the travel and logistics branch for connecting the colony to wider trade routes."]
 	quest.3694D22867FF07EF.title: "Station"
@@ -411,11 +495,22 @@
 	quest.37E43341FA234E84.quest_desc: ["Build the Florist to supply flowers, dyes, and decorative resources. This adds a softer production branch that still supports many recipes."]
 	quest.37E43341FA234E84.quest_subtitle: "Build a Flower Shop"
 	quest.37E43341FA234E84.title: "Florist"
+	quest.38037091D6488B24.quest_desc: ["Obtain a Helmet Tome to focus enchanting results toward helmets."]
+	quest.38037091D6488B24.quest_subtitle: "Headgear enchantments"
+	quest.38037091D6488B24.title: "Tome of Helmets"
 	quest.3831CD0CAEEE8E4F.quest_desc: ["Defeat the Underworld Knight and unlock its flawless challenge."]
 	quest.3831CD0CAEEE8E4F.title: "Underworld Knight"
 	quest.38E7B79D2C6D8483.quest_desc: ["Enchant an item at level 60. Eterna is the main power stat, so combine upgraded Hell and Sea shelves until the table reaches the next major tier."]
 	quest.38E7B79D2C6D8483.quest_subtitle: "Step 06 - Level 60 Enchanting"
 	quest.38E7B79D2C6D8483.title: "Mastering Hell and Sea"
+	quest.3953AFE08C194E79.quest_desc: [
+		"The highest level an Enchanting Table can reach is &6Level 100&r, but only one shelf can provide this much power. Creating such a shelf requires venturing into the outer end to retrieve a &5Dragon Head&r."
+		""
+		"&5Dragon Heads&r spawn on end ships. You can also find one in the library of an &bAviary&r or simply craft it from dragon scales."
+		""
+		"A single &dDraconic Endshelf&r provides enough raw strength to boost a table from Level 80 to Level 100. However, it provides no other stat bonuses."
+	]
+	quest.3953AFE08C194E79.quest_subtitle: "Reaching Level 100"
 	quest.395A33977B18B9AD.quest_desc: [
 		"After trying to harvest the &5Piles of Armor&r they appear to come back to life as if there was a body using it. \n\nThey have 60 Hearts and they are different from other bosses as they don't use magic, rather I believe they are something made from magic. They will attack using their Sword either by swinging it or charging at you with it. \n\nFrom what I've seen they will attack everything they see besides other &5&lKnights&r! \n\nOnce killed they dropped Netherite Scraps and Cinder Essence, that should definitely be of good use!"
 		"{image:irons_spellbooks:textures/quests/spells_knight.png width:100 height:200 align:center}"
@@ -425,15 +520,30 @@
 	quest.39A0C8C98F8C7D0D.title: "Cursed Material Cache"
 	quest.39CBE1417FEE719A.quest_desc: ["Claim The Twist before pursuing Abyssal relics."]
 	quest.39CBE1417FEE719A.title: "The Twist"
+	quest.39FFF3DDA03C40EF.quest_desc: ["Accessing the penultimate tier requires a Level 80 table and access to &dDragon's Breath&r. With these, you can create Infused Dragon's Breath, a core component of &eEndshelves&r."]
+	quest.39FFF3DDA03C40EF.quest_subtitle: "Reaching Level 90"
 	quest.3AE1C3290500638F.quest_desc: ["Grow the colony to ten citizens. This confirms the early housing, food, and job systems are working together."]
 	quest.3AE1C3290500638F.title: "Population 10"
 	quest.3B40A769EDB26EA2.quest_desc: ["Prepare a Postbox and Stash for colony item routing. These tools help transfer resources and support logistics before the settlement is fully automated."]
 	quest.3B40A769EDB26EA2.title: "Mail and Stash"
+	quest.3B62486F60D527E7.quest_desc: ["Obtain an Extraction Tome to complete the enchantment extraction utility chain."]
+	quest.3B62486F60D527E7.quest_subtitle: "Controlled extraction"
+	quest.3B62486F60D527E7.title: "Tome of Extraction"
 	quest.3B6C0A0C144F0CEE.quest_desc: ["Prepare the Wishing Well route with Mixed Stone. This follows Got Stone and sets up the wish mechanic."]
 	quest.3B6C0A0C144F0CEE.title: "Make a Wishing Well"
 	quest.3B91163DE3DA885C.quest_desc: ["Craft the Nether Worker hut block for dangerous resource gathering. This prepares the colony for materials that normal workers cannot safely handle."]
 	quest.3B91163DE3DA885C.quest_subtitle: "Build a Nether Mine"
 	quest.3B91163DE3DA885C.title: "Nether Worker Hut"
+	quest.3C4CBE20B2EE36D3.quest_desc: [
+		"&cQuanta&r"
+		""
+		"&cQuanta&r is a secondary stat. It controls enchanting variance. "
+		""
+		"&5Arcana&r"
+		""
+		"&5Arcana&r is a secondary stat. It controls the rarity weights, and at certain thresholds will guarantee you get additional enchantments. At 25% &5Arcana&r, you will always receive at least two enchantments. At 75%, you will always receive three."
+	]
+	quest.3C4CBE20B2EE36D3.quest_subtitle: "To reach level 45, you'll want to create some Hellshelves and add them to your existing Bookshelves."
 	quest.3CB8AFABD435DAFD.quest_desc: ["Unlock the cursed shop route after reaching the Cursed Ring milestone and receive startup currency."]
 	quest.3CB8AFABD435DAFD.title: "Cursed Investor"
 	quest.3E8077AB45C79E6A.quest_desc: [
@@ -447,6 +557,9 @@
 	quest.3F36AFBB7CFBD4A3.quest_subtitle: "Final Route - Quantic Stability"
 	quest.3F36AFBB7CFBD4A3.title: "Only the Best"
 	quest.401BB95B740385B7.title: "&6Holy&r Upgrade Orb"
+	quest.40450AFB706D9456.quest_desc: ["Obtain an Inert Trident, a rare component in Apothic Enchanting's equipment progression."]
+	quest.40450AFB706D9456.quest_subtitle: "A weapon awaiting power"
+	quest.40450AFB706D9456.title: "Inert Trident"
 	quest.409CAA9FC686CC59.quest_desc: ["Defeat any hostile mob to open the extra boss board."]
 	quest.409CAA9FC686CC59.title: "First Blood"
 	quest.40A420EAEEBDB544.quest_desc: ["Defeat the Sandworm and unlock its flawless challenge."]
@@ -457,6 +570,13 @@
 	quest.4142367445F42CF7.quest_desc: ["Craft a Seashelf with Prismarine materials. This shelf starts the Sea branch, adding Eterna and Arcana so rare and multi-enchantment results become more common."]
 	quest.4142367445F42CF7.quest_subtitle: "Step 04B - Sea Branch"
 	quest.4142367445F42CF7.title: "The Purity of the Seas"
+	quest.41677ADA7C09E30E.quest_desc: [
+		"Obtain an Improved Scrap Tome."
+		""
+		"It is the advanced entry point for the extraction utility chain."
+	]
+	quest.41677ADA7C09E30E.quest_subtitle: "Advanced scrapping"
+	quest.41677ADA7C09E30E.title: "Superior Scrapping"
 	quest.417325440A91B09F.quest_desc: ["Build a level 1 Outpost from the Station branch. Use it to extend your reach beyond the main settlement and support remote trade activity."]
 	quest.417325440A91B09F.title: "Outpost"
 	quest.41B1C88067F9ADB8.quest_desc: ["Locate the Frosted Prison before facing Maledictus."]
@@ -466,12 +586,28 @@
 	quest.41E0C4A2DFB4A709.quest_desc: ["Reach the Deep Mine milestone for advanced mining progress. This pushes the colony resource chain into deeper and more valuable materials."]
 	quest.41E0C4A2DFB4A709.quest_subtitle: "Your MIner Should Rich the bottom of the world"
 	quest.41E0C4A2DFB4A709.title: "Deep Mine"
+	quest.420570F8D2406F88.quest_desc: ["Obtain a Boots Tome to focus enchanting results toward boots."]
+	quest.420570F8D2406F88.quest_subtitle: "Footwear enchantments"
+	quest.420570F8D2406F88.title: "Tome of Boots"
+	quest.4243DD8F2FA37B9E.quest_desc: [
+		"Cobwebs can be combined with an item in an anvil to remove all enchantments."
+		""
+		"&bPrismatic Cobwebs&r can be combined with an item in an anvil to remove all curses."
+		""
+		"A &8Grindstone&r can remove normal enchantments, but not curses."
+		""
+		"&bPrismatic Webs&r provide the curse-removal option available in this pack."
+	]
+	quest.4243DD8F2FA37B9E.title: "Removing enchants"
 	quest.430475E11D259B74.quest_desc: ["Build the Stone Smeltery to refine stone materials. This supports higher-level construction and reduces the need for manual smelting."]
 	quest.430475E11D259B74.quest_subtitle: "Build a Stone Smelter"
 	quest.430475E11D259B74.title: "Stone Smeltery"
 	quest.431FE96D8045138D.quest_desc: ["Hunt Skeletons to start this bounty chain. The next tier asks for a larger kill count."]
 	quest.4407BD7B5F033765.quest_desc: ["Another Craftable &eSpell Book&r and following the pattern this one is even more expensive. It requires Arcane Clothes, Gold, and an Enchanted Book. It's not picky on which Book just needs to be Enchanted! \n\nIt has 10 &3Spell&r Slots and grants a huge Mana Boost!"]
 	quest.4407BD7B5F033765.title: "Enchanted Spell Book"
+	quest.440D46347B7FE013.quest_desc: ["Obtain a Pickaxe Tome to focus enchanting results toward pickaxes."]
+	quest.440D46347B7FE013.quest_subtitle: "Mining enchantments"
+	quest.440D46347B7FE013.title: "Tome of the Miners"
 	quest.4454DC053175B397.quest_desc: ["Gather Astral Dust after Ichor to unlock Etherium progression."]
 	quest.4454DC053175B397.title: "Astral Dust"
 	quest.44B1D7CD5CCE18FD.quest_desc: ["Hunt Piglin Brutes to start this bounty chain. The next tier asks for a larger kill count."]
@@ -514,8 +650,56 @@
 	quest.49B3EA9E16620709.title: "Recycling Center"
 	quest.49CD80F28CE04D39.quest_desc: ["Obtain your first Trade Coin from the Marketplace loop. This teaches how surplus colony resources turn into spendable currency."]
 	quest.49CD80F28CE04D39.title: "First Trade Coin"
+	quest.4A498CD14AEEE7E9.quest_desc: [
+		"With Apothic Enchanting, enchanting is dependent on more than just levels. There are currently five new enchanting stats. Blocks that provide enchanting stats will have them on their tooltip."
+		""
+		"&aEterna&r"
+		""
+		"&aEterna&r is the primary stat of enchanting. Each point of &aEterna&r increases the maximum enchanting level by two. Some blocks can only provide &aEterna&r up to a certain maximum value."
+		""
+		"{@pagebreak}"
+		""
+		"&cQuanta&r"
+		""
+		"&cQuanta&r is a secondary stat. It controls enchanting variance. During enchanting, you have a &6Base Power&r, which is the level you spent to enchant with, and then a &5Final Power&r, after all modifications. &cQuanta&r is one of the factors in the modification process."
+		""
+		"A value is selected, between 1 - &cQuanta&r and 1 + &cQuanta&r. "
+		"Your &5Final Power&r is equal to that value multiplied by your &6Base Power&r. Higher &cQuanta&r values increase the power range, which means your enchantments are less consistent in their &5Final Power&r."
+		""
+		"{@pagebreak}"
+		"&5Arcana&r"
+		""
+		"&5Arcana&r is a secondary stat. It controls the rarity weights, and at certain thresholds will guarantee you get additional enchantments. At 25% &5Arcana&r, you will always receive at least two enchantments. At 75%, you will always receive three."
+		""
+		"By default, the rarities have the following weights: "
+		"Common: 10"
+		"Uncommon: 5"
+		"Rare: 3"
+		"Very Rare: 1"
+		""
+		"Every 10% of &5Arcana&r changes the weights, eventually becoming fully inverted. Hovering the &5Arcana&r Bar will show the current weights."
+		""
+		"{@pagebreak}"
+		"&eQuantic Stability&r"
+		""
+		"&eQuantic Stability&r is a tertiary stat. It directly impacts the lower bound of &cQuanta&r modifications. Recall that your &4Min Power&r is equal to 1 - &cQuanta&r. With Quantic Stability (R), your &4Min Power&r is equal to 1 - (1 - R) * &cQuanta&r."
+		""
+		"If that doesn't make a ton of sense, don't worry about it. Just know that higher &eQuantic Stability&r values are always a good thing. You can also have &4negative&r &eQuantic Stability&r, which is always bad."
+		""
+		""
+		"{@pagebreak}"
+		"&8Clues&r"
+		""
+		"&8Clues&r are another tertiary stat. Each clue allows you to see one additional item in the preview window. When you can see every available enchantment, the text will change slightly."
+		""
+		"You can also drop to zero clues, and be able to see nothing."
+	]
+	quest.4A498CD14AEEE7E9.title: "Enchanting Stats"
 	quest.4AFD222259C9360A.quest_desc: ["Use the Unholy Grail after gathering Evil Essence."]
 	quest.4AFD222259C9360A.title: "Unholy Grail"
+	quest.4B9155CB4BBCACC8.quest_desc: ["Obtain a Chestplate Tome to focus enchanting results toward chestplates."]
+	quest.4B9155CB4BBCACC8.quest_subtitle: "Chest armor enchantments"
+	quest.4B9155CB4BBCACC8.title: "Tome of Chestplates"
 	quest.4CA7ACB8384A6CB8.quest_desc: ["Defeat the Leviathan and finish the abyss route."]
 	quest.4CA7ACB8384A6CB8.title: "The Leviathan"
 	quest.4CCA1E2AAA9AB9D9.quest_desc: [
@@ -543,6 +727,7 @@
 	quest.4DD7E2BD8508A117.title: "All Herders"
 	quest.4E3355FDCB65BB63.quest_desc: ["&aEvokers&r are known as being a powerful and deadly Miniboss of Minecraft. So of course &lIron&r added an even more powerful and deadly version! And yes this &eBook&r is a rare drop from both! \n\nIt has 10 Spell Slots but 3 are occupied. &aFang Strike&r, &aFang Ward&r, and &aVex Swarm&r all come with the &eBook&r and can not be moved. \n\nAlso gives a boost to &a&lEvocation&r!"]
 	quest.4E3355FDCB65BB63.title: "&aGrimore of Evokation"
+	quest.4E76C25DD113D334.quest_desc: ["The &dLibrary of Alexandria&r has a Level Capacity of thirty-one (XXXI). It cannot be crafted directly, and must be created using Infusion Enchanting."]
 	quest.4E7A100000000001.quest_desc: ["Build, light, and enter a Nether portal. This central quest opens every exploration branch in the chapter."]
 	quest.4E7A100000000001.title: "We Need to Go Deeper"
 	quest.4E7A100000000002.quest_desc: ["Collect Soul Sand from a Soul Sand Valley or a Nether Fortress."]
@@ -644,10 +829,25 @@
 	quest.4FAD724CA501BB15.quest_desc: ["Create a Bookshelf and learn table placement. Valid stat blocks sit in the two rings around the table, on the same level or one block higher, with air between the shelf and table."]
 	quest.4FAD724CA501BB15.quest_subtitle: "Step 02 - Shelf Placement"
 	quest.4FAD724CA501BB15.title: "Local Librarian"
+	quest.4FFE28F3DB5EC162.quest_desc: [
+		"There are multiple methods to perform disenchanting."
+		""
+		"&5Tome of Extraction&r removes enchantments while preserving the original item."
+		""
+		"&5Tome of Scrapping&r costs a few levels, destroys the item, and returns half the enchantments, rounded up, on a book."
+		""
+		"&5Tome of Superior Scrapping&r costs a lot of levels, destroys the item, but returns all of the enchantments."
+	]
+	quest.4FFE28F3DB5EC162.title: "Extracting Enchantments"
 	quest.50AECE055AD40AAF.quest_desc: ["Connect a colony through the Station system. This turns Trade Post from a local market into a true transport network."]
 	quest.50AECE055AD40AAF.title: "Express Line"
 	quest.51220C5BC6F1F179.quest_desc: ["Receive a random wood reward. Common overworld woods are likely; Nether woods are rarer."]
 	quest.51220C5BC6F1F179.title: "Wood Supply Crate"
+	quest.517F851353600623.quest_desc: [
+		"Once you reach Level 45, you'll need to explore &5Infusion Enchanting&r to upgrade your shelves."
+		""
+		"Create a few more of the type of shelf you were using, infuse them, and upgrade them. These new shelves, on top of your old ones, will let you reach Level 60."
+	]
 	quest.51DCE7CCB7BE3A57.quest_desc: ["Craft the Chaos Elytra after the Abyssal Heart."]
 	quest.51DCE7CCB7BE3A57.title: "Chaos Elytra"
 	quest.52453550206EC770.quest_desc: ["Craft the Dyer hut block to add dye and color production. This supports decoration, recipes, and later colony crafting needs."]
@@ -694,6 +894,13 @@
 	quest.58B729AF39986B86.title: "Embracing the Sculk"
 	quest.58B7D24C1A208A0A.quest_desc: ["Craft or obtain Mixed Stone and prepare the Wishing Well path. This sets up the special wish mechanics from Trade Post."]
 	quest.58B7D24C1A208A0A.title: "Make a Wishing Well"
+	quest.59D00BCFD888DADF.quest_desc: [
+		"Obtain the Occult Ender Lead, the most advanced tether in this branch."
+		""
+		"It fills RAD3's unavailable Wavebinder position with a functional item from this pack."
+	]
+	quest.59D00BCFD888DADF.quest_subtitle: "Occult binding"
+	quest.59D00BCFD888DADF.title: "Occult Ender Lead"
 	quest.59E68086A8B99EA7.quest_desc: [
 		"The &c&lPyromancer&r (different from the Pie Romancer) is another Neutral Mob added by &lIron's Spells&r. He will maybe set Mobs that are close to him on &cfire&r though... \n\nYou can trade him all things &cFire&r, Ink, and even &cFire Scrolls&r. \n\nIf you want to risk all the hair on your body by fighting him be prepared, he has 60 Hearts. He will set you on &cFire&r with &cFire Spells&r, not even a question. \n\nOn death he will drop Arcane Essence, Inks, &cFire Runes&r, and &cFire Spells&r!"
 		"{image:irons_spellbooks:textures/quests/spells_pyromancer.png width:100 height:200 align:center}"
@@ -707,6 +914,8 @@
 	quest.5A6266BFD238B9B9.quest_desc: ["Mine diamonds to open the next equipment and enchanting path."]
 	quest.5A6266BFD238B9B9.title: "Diamonds Below"
 	quest.5AAD08944CDC97B0.title: "Lucky Egg"
+	quest.5AFB6E15C24246D2.quest_subtitle: "Prepare the core of a Geode Shelf"
+	quest.5AFB6E15C24246D2.title: "Budding Stability"
 	quest.5AFFF6D2AB06C8E5.quest_desc: ["Enter the world and claim the first supplies for the road ahead."]
 	quest.5AFFF6D2AB06C8E5.title: "Awakening"
 	quest.5B013A3A37D6902B.quest_desc: ["You can find the fragments of Ancient Knowledge spread out in the Chests of the &9Ancient City&r. \n\nYou'll also need &9Echo Shards&r to 1. Combine the Fragments to learn of the &9Spells&r and 2. Actually make the &9Spells&r."]
@@ -730,6 +939,11 @@
 	quest.5E56057555772780.title: "Trade Post Charter"
 	quest.5ED368C926E5F32C.quest_desc: ["There is a final class of &3Spells&r I forgot to mention. Well all knowledge of these &9Spells&r have been forgotten so it's not just me. \n\nIn order to regain memories we need to walk, quietly, down memory lane. Which happens to be the &9Ancient City&r."]
 	quest.5ED368C926E5F32C.title: "The Last Class..."
+	quest.5F4F7ABD18E5EF9C.quest_desc: [
+		"&6Treasure enchantments&r are special enchantments that are typically unavailable in the Enchanting Table. However, this can be remedied with a &6Deepshelf of Arcane Treasures&r."
+		""
+		"Placing this bookshelf in a valid slot will cause treasure enchantments to appear while enchanting. Bear in mind that most &cCurses&r are treasure enchantments."
+	]
 	quest.5F5DB67F6A470C73.quest_desc: ["Grow the colony military to thirty guards. At this size, defense becomes a major system instead of a small support role."]
 	quest.5F5DB67F6A470C73.title: "Thirty Guards"
 	quest.5F719198E56C9417.quest_desc: ["Upgrade an Endshelf into a Draconic Endshelf. Draconic shelves provide the highest Eterna cap in this chain and form the core of level 100 setups."]
@@ -741,6 +955,8 @@
 	quest.5F895C96E1163335.title: "Recall Potion"
 	quest.5FC01763770A062E.quest_desc: ["Build the Town Hall to establish the administrative center of the colony. Upgrading it raises the settlement ceiling and anchors future expansion."]
 	quest.5FC01763770A062E.title: "Town Hall Built"
+	quest.607B8B7D560BA6A8.quest_desc: ["They can be useful for precisely adjusting stats for infusion recipes, but not much else."]
+	quest.607B8B7D560BA6A8.title: "The Weird Shelves"
 	quest.60CB4B59DF9639E5.quest_desc: ["Locate an Ancient City before pushing deeper into high-risk exploration."]
 	quest.60CB4B59DF9639E5.title: "Ancient City"
 	quest.60DCDD30EE93F6D2.quest_desc: ["Receive a random food reward. Basic meals are common; golden food is rare."]
@@ -748,6 +964,13 @@
 	quest.60FAD8BF235E381B.title: "&bRare&r Ink"
 	quest.615C3E012B2DECD3.quest_desc: ["&eSpellbooks&r! Where else would you put &3Spells&r? \n\nYou can add &3Scrolls&r to a &eSpellbook&r by putting both into an Inscription Table. They have a certain amount they can hold but no longer having to worry about Rarity. \n\nWhen &3Scrolls&r are added to your &eSpellbook&r they won't be consumed but rather Mana will be consumed."]
 	quest.615C3E012B2DECD3.title: "&eSpellBooks&r!"
+	quest.622AEF3DA469F1C9.quest_desc: [
+		"Find the record dedicated to Eterna, the enchanting power stat."
+		""
+		"This collectible replaces RAD3's unavailable Sacrificial Shelf node."
+	]
+	quest.622AEF3DA469F1C9.quest_subtitle: "The melody of power"
+	quest.622AEF3DA469F1C9.title: "Melody of Eterna"
 	quest.62DA05A109DCFA92.quest_desc: ["Continue the Pillager bounty with a larger target. Complete it to unlock the next tier."]
 	quest.635C194330BA9376.quest_desc: ["Continue the Enderman bounty with a larger target. Complete it to unlock the next tier."]
 	quest.637C87D8968CD51A.title: "&aUncommon&r Ink"
@@ -762,6 +985,13 @@
 	quest.641888DC7BC40AA9.title: "&aEvoker Fort"
 	quest.647F95EED59927B7.quest_desc: ["Build the Cook Hut to turn raw ingredients into better meals. A Cook improves food quality and helps keep citizens productive during longer projects."]
 	quest.647F95EED59927B7.title: "Cook Hut"
+	quest.64A92D70448C1445.quest_desc: [
+		"Find the record dedicated to Arcana, the enchanting rarity stat."
+		""
+		"This small leaf restores the final open position beside the compatible Geode Shelf branch."
+	]
+	quest.64A92D70448C1445.quest_subtitle: "The melody of rarity"
+	quest.64A92D70448C1445.title: "Arcana in the Clouds"
 	quest.652A14E17DDE97E6.quest_desc: ["Another that needs the Ruined Book to Craft. You can find the Ruined Books in &9Ancient City&r Chests. \n\nYou'll also need Dragon Skin which drops from the &dEnder Dragon&r! \n\nIt will have 12 &3Spell&r Slots and give a boost to &dEnder Spells&r!"]
 	quest.652A14E17DDE97E6.title: "&dDragonskin Spell Book"
 	quest.6576C98A4DB6221C.quest_desc: ["Obtain the Flame Eye to open the Burning Arena route."]
@@ -774,6 +1004,13 @@
 	quest.66762A4743104157.title: "Apprentice's Spell Book"
 	quest.66BBED961CBFADF3.quest_desc: ["Find the Cursed Pyramid before challenging the Ancient Remnant."]
 	quest.66BBED961CBFADF3.title: "Cursed Pyramid"
+	quest.67212BA264C3C792.quest_desc: [
+		"Upgrade the first tether into a reliable Ender Lead."
+		""
+		"This branch replaces an unavailable RAD3 shelf while keeping the original position and connection."
+	]
+	quest.67212BA264C3C792.quest_subtitle: "A stronger tether"
+	quest.67212BA264C3C792.title: "Ender Lead"
 	quest.67688DF5FCCD3447.quest_desc: ["Defeat the Kraken without taking a hit for a mastery reward."]
 	quest.67688DF5FCCD3447.title: "Flawless Kraken"
 	quest.67A587F4BAD76C70.quest_desc: ["The most basic &eSpellbook&r, which also makes it the cheapest! \n\nIt can only hold a total of 5 &3Spells&r."]
@@ -867,8 +1104,13 @@
 	quest.73D6B980D35082A0.title: "&6Villager Bible"
 	quest.7408CCF998D9CD37.quest_desc: ["A Craftable &eSpell Book&r... yeah it's not easy to craft. \n\nHardest to get would be the Ruined Book, which you can find in &9Ancient City&r Chests. &4Blood Vials&r can be obtained from either putting a Mob (or even yourself) into a Cauldron above a Campfire or an Alchemical Cauldron. &5Bottle O' Lightning&r comes from using a Bottle on a Charged Creeper. \n\nOnce you do all that you can craft the Ancient Codex. Its 12 &3Spell&r Slots is very helpful!"]
 	quest.7408CCF998D9CD37.title: "Ancient Codex"
+	quest.740AAF52DF9EBE8F.quest_desc: ["Obtain a Fishing Tome to focus enchanting results toward fishing rods."]
+	quest.740AAF52DF9EBE8F.quest_subtitle: "Fishing enchantments"
+	quest.740AAF52DF9EBE8F.title: "Tome of the Fishers"
 	quest.743D7D9204915A13.quest_desc: ["Handle a citizen burial and keep the colony stable after loss. This marks the point where recovery systems become part of colony management."]
 	quest.743D7D9204915A13.title: "Burial Duty"
+	quest.74AAE9C994E2993F.quest_desc: ["To hit level 75, you will need to upgrade your Deepshelves. Doing this requires materials only found in the &0Deep Dark&r. &1Echo Shards&r may be looted from the Ancient City, and &1Sculk&r may be collected with Silk Touch."]
+	quest.74AAE9C994E2993F.quest_subtitle: "Reaching Level 75"
 	quest.74AF1CE2FEEF22BC.quest_desc: ["Defeat the Ancient Remnant and finish the desert route."]
 	quest.74AF1CE2FEEF22BC.title: "Ancient Remnant"
 	quest.74C114D0C0D4D374.quest_desc: ["Craft the Hospital hut block to prepare medical support. Health services become important as the population grows and danger increases."]
@@ -887,8 +1129,23 @@
 	quest.761C7DF67620DC29.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
 	quest.76558D23A70AFF78.title: "&bIce&r Upgrade Orb"
 	quest.767FA524371C9480.quest_desc: ["Hunt Endermen to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.77CADB958D24D541.quest_desc: [
+		"Sometimes, it is desirable to avoid certain enchantments entirely during the enchanting process. The &bSeashelf of Aquatic Filtration&r allows you to do just that."
+		""
+		"The shelf allows you to insert up to six single-enchantment books in it, preventing those enchantments from appearing."
+		""
+		"To use it, simply insert a single-enchantment book of an enchantment you wish to blacklist. The enchantment will then no longer be available in the Enchanting Table. The shelf will also gain &cEterna&r and &5Arcana&r based on the number of books inserted."
+		""
+		"&oNote: books can be inserted the same way you use a chiseled bookshelf, and the shelf must be in a valid bookshelf slot to operate. Blacklisted enchantments will be reflected in the Enchanting Info Screen&r"
+	]
 	quest.7870800C28A7E199.quest_desc: ["Craft the Chicken Herder hut block to support poultry production. Chickens provide eggs, feathers, and food for the colony chain."]
 	quest.7870800C28A7E199.title: "Chicken Herder Hut"
+	quest.7878E38C1FFB963D.quest_desc: [
+		"&aEterna&r"
+		""
+		"&aEterna&r is the primary stat of enchanting. Each point of &aEterna&r increases the maximum enchanting level by two. Some blocks can only provide &aEterna&r up to a certain maximum value."
+	]
+	quest.7878E38C1FFB963D.quest_subtitle: "If you aren't fond of the Nether, you can also venture to the Ocean, and create Seashelves instead."
 	quest.789AA17C4D02BE94.quest_desc: ["Defeat the Yeti and unlock its flawless challenge."]
 	quest.789AA17C4D02BE94.title: "Yeti"
 	quest.78AA7BFABBFB9973.quest_desc: ["&2&lNature's&r &eSpell Book&r. \n\nIt has 10 &3Spells&r and gives a boost to &2Nature Spells&r! \n\nYou need a Rotten Spell Book to craft it though..."]
@@ -907,6 +1164,8 @@
 	quest.7B5E2CD676A1A1C4.quest_desc: ["Build the Baker to improve food quality and variety. Better meals help keep citizens fed during larger building projects."]
 	quest.7B5E2CD676A1A1C4.quest_subtitle: "Build a Bakery"
 	quest.7B5E2CD676A1A1C4.title: "Baker"
+	quest.7B62D55B886496AF.quest_desc: ["You now have access to better options for increasing other stats. On top of the bonuses from Hellshelves and Seashelves, you may now also create &4Sightshelves&r  to increase your &8Clues&r."]
+	quest.7B62D55B886496AF.quest_subtitle: "Clues +1"
 	quest.7BCF084B6C070D66.quest_desc: ["Acquire the Darkest Scroll before attempting cursed scrollcraft."]
 	quest.7BCF084B6C070D66.title: "Darkest Scroll"
 	quest.7C79BCE482A06199.quest_desc: ["&b&lIce&r is all about Winter time Spells. Using &bIce&r and &bSnow&r to chill and harm enemies. \n\n&b&lIce's&r Focus Material is the &bFrozen Bone&r which are drops from &bStrays&r. You can use those to craft the &bIce Rune&r or kill the &b&lCryomancer&r to get it. \n\nIts &bScrolls&r are &bLight Blue&r with a &9Darker Blue&r text."]
@@ -1059,8 +1318,10 @@
 	task.060000000000000B.title: "Reach colony level 5"
 	task.090000000000000B.title: "Claim your legend"
 	task.12135B574D6B6BBA.title: "You all meet in a tavern..."
+	task.20BA799FC787AF1A.title: "Enchanting Power"
 	task.3F271D09198AE025.title: "Find IT!"
 	task.44CB12F671435930.title: "Restaurant"
+	task.56783C0C1D7A3936.title: "Any Tome"
 	task.6DE4A94B6AB968A9.title: "a"
 	task.7BD0EEAD4D643C4F.title: "Chapter Complete"
 }
