@@ -158,9 +158,6 @@
 	quest.0AB503478883A9BC.title: "Delving Into Darkness"
 	quest.0B009391E3F76D6E.quest_desc: ["Build the Fisherman Hut to add reliable food production. A good fishing setup helps feed citizens while sometimes producing useful extra loot."]
 	quest.0B009391E3F76D6E.title: "Fisherman Hut"
-	quest.0B0D3699E7F39F29.quest_desc: ["Obtain a Leggings Tome to focus enchanting results toward leggings."]
-	quest.0B0D3699E7F39F29.quest_subtitle: "Leg armor enchantments"
-	quest.0B0D3699E7F39F29.title: "Tome of Legplates"
 	quest.0B1150037754A4EB.quest_desc: ["Infuse Seashelves when the table has enough Eterna, Quanta, and Arcana, then craft Heart-Forged or Crystalline variants. This branch gives the table cleaner high-quality rolls."]
 	quest.0B1150037754A4EB.quest_subtitle: "Step 05B - Infused Seashelves"
 	quest.0B1150037754A4EB.title: "Sleeping in the Cold Below"
@@ -480,9 +477,6 @@
 	quest.359B4C333CD4394A.title: "Maximum Strength"
 	quest.360E9E02A494217C.quest_desc: ["Build a Barracks Tower to extend organized military coverage. It strengthens your defensive network beyond individual guard posts."]
 	quest.360E9E02A494217C.title: "Barracks Tower"
-	quest.363119A9CC31EF1A.quest_desc: ["Recover a Warden Tendril, a Deep Dark material used by advanced enchanting recipes."]
-	quest.363119A9CC31EF1A.quest_subtitle: "A Deep Dark catalyst"
-	quest.363119A9CC31EF1A.title: "Warden Tendril"
 	quest.367899B66A4BC30F.quest_desc: ["Finish the final Pillager bounty for the largest reward in this chain."]
 	quest.3694D22867FF07EF.quest_desc: ["Build a level 1 Station. This begins the travel and logistics branch for connecting the colony to wider trade routes."]
 	quest.3694D22867FF07EF.title: "Station"

@@ -28,6 +28,13 @@ The background uses centered cover scaling against the real framebuffer. The
 stock 854x480 UI is alpha-composited at centered contain scale, keeping its
 proportions across fullscreen, 16:10, 4:3, and ultrawide windows.
 
+Before Minecraft reads `options.txt`, the provider also moves
+`Y100D_Vanilla_Menu_1.21.1.zip` to the highest optional resource-pack
+priority. This protects only the menu pack's own paths (panorama, title,
+buttons, and menu surfaces); textures the pack does not contain still come
+from the player's selected resource packs. The check runs once per launch and
+does not add a tick handler, watcher, resource reload, or background thread.
+
 ## CurseForge release
 
 For a public CurseForge modpack, publish the prebuilt JAR once as the pack's

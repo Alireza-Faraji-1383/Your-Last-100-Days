@@ -168,21 +168,6 @@
 					type: "item"
 				}
 				{
-					id: "6E4E6487D3F94C98"
-					item: {
-						components: {
-							"minecraft:stored_enchantments": {
-								levels: {
-									"minecraft:looting": 3
-								}
-							}
-						}
-						count: 1
-						id: "minecraft:enchanted_book"
-					}
-					type: "item"
-				}
-				{
 					id: "56E9EC155144D427"
 					item: {
 						components: {

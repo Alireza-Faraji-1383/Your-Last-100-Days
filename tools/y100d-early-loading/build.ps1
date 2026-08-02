@@ -32,18 +32,9 @@ if (!$BuildDir.StartsWith($ProjectDir, [StringComparison]::OrdinalIgnoreCase)) {
     throw 'Refusing to clean a build directory outside this project.'
 }
 
-$Cache = Join-Path $env:USERPROFILE '.gradle\caches\modules-2\files-2.1'
-function Find-OnlyJar([string]$Root, [string]$Name) {
-    $Candidates = @(Get-ChildItem -LiteralPath $Root -Recurse -Filter $Name |
-        Where-Object { $_.Name -notmatch 'sources|javadoc' })
-    if ($Candidates.Count -ne 1) {
-        throw "Expected exactly one $Name under $Root; found $($Candidates.Count)."
-    }
-    return $Candidates[0].FullName
-}
-
-$EarlyDisplay = Find-OnlyJar (Join-Path $Cache 'net.neoforged.fancymodloader\earlydisplay\4.0.42') 'earlydisplay-4.0.42.jar'
-$Loader = Find-OnlyJar (Join-Path $Cache 'net.neoforged.fancymodloader\loader\4.0.42') 'loader-4.0.42.jar'
+$FmlLibraries = Join-Path $env:APPDATA 'PrismLauncher\libraries\net\neoforged\fancymodloader'
+$EarlyDisplay = Join-Path $FmlLibraries 'earlydisplay\4.0.42\earlydisplay-4.0.42.jar'
+$Loader = Join-Path $FmlLibraries 'loader\4.0.42\loader-4.0.42.jar'
 $PrismLibraries = Join-Path $env:APPDATA 'PrismLauncher\libraries\org\lwjgl'
 $Lwjgl = Join-Path $PrismLibraries 'lwjgl\3.3.3\lwjgl-3.3.3.jar'
 $LwjglGlfw = Join-Path $PrismLibraries 'lwjgl-glfw\3.3.3\lwjgl-glfw-3.3.3.jar'

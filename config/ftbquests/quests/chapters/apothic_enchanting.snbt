@@ -199,7 +199,10 @@
 			y: -2.0d
 		}
 		{
-			dependencies: ["7B62D55B886496AF"]
+			dependencies: [
+				"7B62D55B886496AF"
+				"767EB6A574FCFE2D"
+			]
 			id: "1BA9D21E423F5547"
 			rewards: [
 				{
@@ -222,7 +225,7 @@
 				item: { count: 1, id: "apothic_enchanting:sightshelf_t2" }
 				type: "item"
 			}]
-			x: 4.0d
+			x: 4.5d
 			y: -1.0d
 		}
 		{
@@ -302,32 +305,6 @@
 		}
 		{
 			dependencies: ["2D875F9BAD35800F"]
-			id: "1D5F27093CFCE081"
-			rewards: [
-				{
-					id: "2EBF3696217F2FA5"
-					type: "xp"
-					xp: 250
-				}
-				{
-					id: "5ED2D5B9AD7640F6"
-					item: {
-						count: 1
-						id: "kubejs:coin"
-					}
-					type: "item"
-				}
-			]
-			tasks: [{
-				id: "00494FFD8DA05F52"
-				item: { count: 1, id: "apothic_enchanting:heart_seashelf" }
-				type: "item"
-			}]
-			x: -3.0d
-			y: -2.0d
-		}
-		{
-			dependencies: ["2D875F9BAD35800F"]
 			id: "77CADB958D24D541"
 			rewards: [
 				{
@@ -378,7 +355,7 @@
 				item: { count: 1, id: "minecraft:amethyst_cluster" }
 				type: "item"
 			}]
-			x: -3.0d
+			x: -3.5d
 			y: 0.0d
 		}
 		{
@@ -853,8 +830,8 @@
 				item: { count: 1, id: "minecraft:budding_amethyst" }
 				type: "item"
 			}]
-			x: -3.5d
-			y: 1.5d
+			x: -5.5d
+			y: -1.0d
 		}
 		{
 			dependencies: ["5AFB6E15C24246D2"]
@@ -884,7 +861,7 @@
 				type: "advancement"
 			}]
 			x: -3.5d
-			y: 3.0d
+			y: -2.0d
 		}
 		{
 			dependencies: [
@@ -1031,7 +1008,7 @@
 		{
 			id: "34D1EAED46BB61BE"
 			rewards: [{
-				count: 12
+				count: 8
 				id: "31BCF8D46F43D754"
 				item: {
 					count: 1
@@ -1052,6 +1029,15 @@
 		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "38037091D6488B24"
+			rewards: [{
+				count: 16
+				id: "7672F266F5F65765"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "04245C84C319ED1E"
 				item: { count: 1, id: "apothic_enchanting:helmet_tome" }
@@ -1063,6 +1049,15 @@
 		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "740AAF52DF9EBE8F"
+			rewards: [{
+				count: 16
+				id: "6FA7F8F56207CFC8"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "3AF8A00925D2AF78"
 				item: { count: 1, id: "apothic_enchanting:fishing_tome" }
@@ -1074,6 +1069,15 @@
 		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "4B9155CB4BBCACC8"
+			rewards: [{
+				count: 16
+				id: "16471407C195087B"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "2A95BAB955D7B78D"
 				item: { count: 1, id: "apothic_enchanting:chestplate_tome" }
@@ -1085,6 +1089,15 @@
 		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "1738A11EB21B6E74"
+			rewards: [{
+				count: 16
+				id: "73D2914E521E38D3"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "0F05BDA16E88EF6C"
 				item: { count: 1, id: "apothic_enchanting:bow_tome" }
@@ -1096,6 +1109,15 @@
 		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "41677ADA7C09E30E"
+			rewards: [{
+				count: 16
+				id: "3C3B15AABECEA5AB"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "08BF2CE37417C1FC"
 				item: { count: 1, id: "apothic_enchanting:improved_scrap_tome" }
@@ -1107,6 +1129,15 @@
 		{
 			dependencies: ["41677ADA7C09E30E"]
 			id: "3B62486F60D527E7"
+			rewards: [{
+				count: 32
+				id: "3EAF25882CADB306"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "5D823594A6756C80"
 				item: { count: 1, id: "apothic_enchanting:extraction_tome" }
@@ -1118,6 +1149,15 @@
 		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "420570F8D2406F88"
+			rewards: [{
+				count: 16
+				id: "2A4392F23682187F"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "7C1406B95909BCBD"
 				item: { count: 1, id: "apothic_enchanting:boots_tome" }
@@ -1127,19 +1167,17 @@
 			y: -6.5d
 		}
 		{
-			dependencies: ["420570F8D2406F88"]
-			id: "0B0D3699E7F39F29"
-			tasks: [{
-				id: "39A0DCCFCBCB7A04"
-				item: { count: 1, id: "apothic_enchanting:leggings_tome" }
-				type: "item"
-			}]
-			x: -8.0d
-			y: -5.5d
-		}
-		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "40450AFB706D9456"
+			rewards: [{
+				count: 16
+				id: "790CE61F69A8346A"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "1961E0DDC2689A71"
 				item: { count: 1, id: "apothic_enchanting:inert_trident" }
@@ -1149,19 +1187,17 @@
 			y: -6.5d
 		}
 		{
-			dependencies: ["40450AFB706D9456"]
-			id: "363119A9CC31EF1A"
-			tasks: [{
-				id: "353AFBAB692AA4C4"
-				item: { count: 1, id: "apothic_enchanting:warden_tendril" }
-				type: "item"
-			}]
-			x: -4.0d
-			y: -5.5d
-		}
-		{
 			dependencies: ["34D1EAED46BB61BE"]
 			id: "440D46347B7FE013"
+			rewards: [{
+				count: 16
+				id: "7E52BFF6AE736912"
+				item: {
+					count: 1
+					id: "minecraft:book"
+				}
+				type: "item"
+			}]
 			tasks: [{
 				id: "3F7007A64A43DBB2"
 				item: { count: 1, id: "apothic_enchanting:pickaxe_tome" }

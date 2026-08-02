@@ -46,6 +46,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
@@ -80,6 +86,9 @@ import org.lwjgl.system.MemoryUtil;
 public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvider {
     private static final String PROVIDER_NAME = "y100danimated";
     private static final String ATLAS_RESOURCE = "/y100d_loading_atlas.png";
+    private static final String MENU_PACK_FILE = "Y100D_Vanilla_Menu_1.21.1.zip";
+    private static final String MENU_PACK_ENTRY = "file/" + MENU_PACK_FILE;
+    private static final String QUOTED_MENU_PACK_ENTRY = "\"" + MENU_PACK_ENTRY + "\"";
     private static final String ICON_RESOURCE_DIRECTORY = "/y100d_icons/";
     private static final int[] ICON_SIZES = {16, 32, 48, 128, 256};
     private static final String COVER_FRAMEBUFFER_RESOURCE =
@@ -109,10 +118,131 @@ public final class Y100DAnimatedWindowProvider implements ImmediateWindowProvide
 
     @Override
     public Runnable initialize(final String[] arguments) {
+        protectMenuResourcePack(arguments);
         final Runnable stockTick = delegate.initialize(arguments);
         captureEarlyWindowAndApplyIcon();
         scheduleBackgroundInjection();
         return stockTick;
+    }
+
+    /**
+     * Keeps the pack-owned menu layer above optional user resource packs. This
+     * runs once before Minecraft reads options.txt; it performs no runtime or
+     * per-frame checks and leaves every path not owned by the menu pack alone.
+     */
+    private static void protectMenuResourcePack(final String[] arguments) {
+        try {
+            final Path gameDirectory = findGameDirectory(arguments);
+            final Path menuPack = gameDirectory.resolve("resourcepacks").resolve(MENU_PACK_FILE);
+            final Path options = gameDirectory.resolve("options.txt");
+            if (!Files.isRegularFile(menuPack) || !Files.isRegularFile(options)) {
+                return;
+            }
+
+            final String original = Files.readString(options, StandardCharsets.UTF_8);
+            final String lineSeparator = original.contains("\r\n") ? "\r\n" : "\n";
+            final String[] lines = original.split("\\R", -1);
+            boolean resourcePacksFound = false;
+            for (int index = 0; index < lines.length; index++) {
+                if (lines[index].startsWith("resourcePacks:")) {
+                    lines[index] = pinMenuPackLast(lines[index]);
+                    resourcePacksFound = true;
+                    break;
+                }
+            }
+
+            if (!resourcePacksFound) {
+                return;
+            }
+
+            final String updated = String.join(lineSeparator, lines);
+            if (updated.equals(original)) {
+                return;
+            }
+
+            final Path temporary = options.resolveSibling(options.getFileName() + ".y100d.tmp");
+            Files.writeString(temporary, updated, StandardCharsets.UTF_8);
+            try {
+                Files.move(
+                        temporary,
+                        options,
+                        StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException ignored) {
+                Files.move(temporary, options, StandardCopyOption.REPLACE_EXISTING);
+            }
+            System.out.println(
+                    "[Y100D Early Loading] Menu resource pack pinned above optional user packs");
+        } catch (Throwable failure) {
+            System.err.println(
+                    "[Y100D Early Loading] Could not protect menu resource-pack priority; "
+                            + "continuing normally: " + failure);
+        }
+    }
+
+    private static Path findGameDirectory(final String[] arguments) {
+        for (int index = 0; index < arguments.length; index++) {
+            final String argument = arguments[index];
+            if ("--gameDir".equals(argument) && index + 1 < arguments.length) {
+                return Path.of(arguments[index + 1]).toAbsolutePath().normalize();
+            }
+            if (argument.startsWith("--gameDir=")) {
+                return Path.of(argument.substring("--gameDir=".length()))
+                        .toAbsolutePath()
+                        .normalize();
+            }
+        }
+        return Path.of(System.getProperty("user.dir", ".")).toAbsolutePath().normalize();
+    }
+
+    private static String pinMenuPackLast(final String line) throws IOException {
+        final int openingBracket = line.indexOf('[');
+        final int closingBracket = line.lastIndexOf(']');
+        if (openingBracket < 0 || closingBracket <= openingBracket) {
+            throw new IOException("Malformed resourcePacks option");
+        }
+
+        final List<String> entries = splitResourcePackEntries(
+                line.substring(openingBracket + 1, closingBracket));
+        entries.removeIf(entry -> QUOTED_MENU_PACK_ENTRY.equals(entry.trim()));
+        entries.add(QUOTED_MENU_PACK_ENTRY);
+        return line.substring(0, openingBracket + 1)
+                + String.join(",", entries)
+                + line.substring(closingBracket);
+    }
+
+    private static List<String> splitResourcePackEntries(final String body) throws IOException {
+        final List<String> entries = new ArrayList<>();
+        final StringBuilder current = new StringBuilder();
+        boolean insideString = false;
+        boolean escaped = false;
+        for (int index = 0; index < body.length(); index++) {
+            final char character = body.charAt(index);
+            if (escaped) {
+                current.append(character);
+                escaped = false;
+            } else if (character == '\\' && insideString) {
+                current.append(character);
+                escaped = true;
+            } else if (character == '"') {
+                current.append(character);
+                insideString = !insideString;
+            } else if (character == ',' && !insideString) {
+                if (!current.toString().isBlank()) {
+                    entries.add(current.toString().trim());
+                }
+                current.setLength(0);
+            } else {
+                current.append(character);
+            }
+        }
+        if (insideString || escaped) {
+            throw new IOException("Malformed resourcePacks string");
+        }
+        if (!current.toString().isBlank()) {
+            entries.add(current.toString().trim());
+        }
+        return entries;
     }
 
     private void captureEarlyWindowAndApplyIcon() {
