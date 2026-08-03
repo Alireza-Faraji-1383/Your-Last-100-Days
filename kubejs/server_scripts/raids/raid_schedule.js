@@ -8,10 +8,11 @@
 // personally have been present for 10 Minecraft days.
 //
 // Raid instances themselves stay team- and distance-shared (raid_core.js:
-// FTB Team + 500-block spatial groups). When an instance ends - win or loss -
-// every UUID still on its participant roster gets that scheduled raid ticked
-// off. A veteran who already cleared the raid and only helped a newer teammate
-// keeps fired = true and receives the rewards again; that is intended.
+// FTB Team + 500-block spatial groups). When an instance ends - win, loss, or
+// an admin stop - every UUID still on its participant roster gets that
+// scheduled raid ticked off. A veteran who already cleared the raid and only
+// helped a newer teammate keeps fired = true and receives the rewards again;
+// that is intended.
 //
 // State is a small JSON object per scheduled raid in server.persistentData:
 //   raidsched_day<N>_<raidId>_player_states_v1
@@ -439,8 +440,8 @@
         var changed = false;
         // raid_core.js reports four outcomes. "win"/"lose" are the real fight
         // and tick the whole roster off. "stopped" (/raid stop, /raid stopall)
-        // still consumes the raid for its starter - stop has to mean stop, or
-        // the next 5-second check would immediately restart it. "cancelled" (a
+        // still consumes the raid for its whole roster - stop has to mean stop,
+        // or the next 5-second check would immediately restart it. "cancelled" (a
         // queued raid whose participants all went offline) never happened at
         // all, so it re-arms.
         var outcome = String(event.outcome || "");
@@ -466,6 +467,12 @@
                 changed = true;
             }
         }
+        // An admin stop permanently burns the raid for everyone listed here,
+        // and the undo (/raid done <player> <raidId> false) is per player, so
+        // name them rather than making the operator reconstruct the roster.
+        if (outcome === "stopped" && uuids.length > 0)
+            console.info("[RaidSched] admin stop consumed '" + s.raidId +
+                         "' for " + uuids.length + " player(s): " + uuids.join(", "));
 
         // 2) Close the transaction of whoever started this exact instance. A
         //    spatial split can leave that starter with a second live instance
