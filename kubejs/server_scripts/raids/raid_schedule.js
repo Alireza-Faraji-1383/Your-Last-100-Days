@@ -162,7 +162,13 @@
                 if (!uuid) continue;
                 if (daysForUuid(server, uuid) >= s.day) out[uuid] = true;
             }
-        } catch (e) { warn("eligible set for " + s.raidId + ": " + e); }
+        } catch (e) {
+            // null means "no filter" in raid_core.js. An empty or partial set
+            // would be truthy and would filter out every player instead, so a
+            // failed scan degrades to the unfiltered behaviour.
+            warn("eligible set for " + s.raidId + ": " + e);
+            return null;
+        }
         return out;
     }
 
@@ -357,9 +363,12 @@
             return 0;
         }
 
-        // Computed once per pass: it is the same set for every player launched
-        // in this window, and building it is a full online-player scan.
-        var eligible = eligibleUuidsForDay(server, s);
+        // The same set for every player launched in this window, and building it
+        // is a full online-player scan - so compute it at most once per pass,
+        // and not at all on the overwhelming majority of passes that launch
+        // nothing.
+        var eligible = null;
+        var eligibleComputed = false;
         try {
             var it = server.players.iterator();
             while (it.hasNext()) {
@@ -383,6 +392,10 @@
                 } catch (eInRaid) {}
 
                 try {
+                    if (!eligibleComputed) {
+                        eligibleComputed = true;
+                        eligible = eligibleUuidsForDay(server, s);
+                    }
                     var instanceId = manager.start(
                         manager.playerLevel(player), player, s.raidId,
                         { eligibleUuids: eligible, scheduled: true }
@@ -394,6 +407,7 @@
                     state.instanceIds = [];
                     var active = activeInstances(s);
                     for (var ai = 0; ai < active.length; ai++) {
+                        if (!active[ai].scheduled) continue;
                         if (String(active[ai].playerUuid || "").toLowerCase() === uuid)
                             state.instanceIds.push(String(active[ai].id || ""));
                     }
@@ -437,7 +451,10 @@
         //    completed this scheduled raid - win or loss, exactly like the old
         //    per-team behaviour. This is what lets a veteran clear a raid for a
         //    newer teammate and what stops a helper repeating it tomorrow.
-        var uuids = resolved ? (event.participantUuids || []) : [];
+        //    An admin stop counts too: a teammate the instance was blocking has
+        //    no ledger entry of their own, so ticking only the starter would let
+        //    that teammate restart the raid on the very next check.
+        var uuids = consumed ? (event.participantUuids || []) : [];
         for (var u = 0; u < uuids.length; u++) {
             var key = String(uuids[u] || "").toLowerCase();
             if (!key) continue;
@@ -462,10 +479,12 @@
                 if (String(ids[ii]) !== instanceId) remaining.push(String(ids[ii]));
             if (remaining.length === ids.length) continue;
             // A cancelled raid re-arms the starter instead of consuming their
-            // scheduled raid; it fires again at the next 5-second check.
+            // scheduled raid; it fires again at the next 5-second check. pending
+            // tracks live instances regardless of outcome, so a surviving
+            // sibling can still close the transaction when it ends.
             ownerState.fired = consumed;
             ownerState.instanceIds = remaining;
-            ownerState.pending = consumed && remaining.length > 0;
+            ownerState.pending = remaining.length > 0;
             changed = true;
         }
 
