@@ -5113,7 +5113,12 @@
             playerUuid: inst.playerUuid,
             ownerKey: raidOwnerKeyForInstance(inst),
             cohortId: String(inst.cohortId || inst.id),
-            outcome: String(outcome || "ended")
+            outcome: String(outcome || "ended"),
+            // Everyone still on the roster when the fight ended - i.e. exactly
+            // the players who earn the rewards, including a nearby teammate who
+            // logged out mid-fight and gets paid by deliverPendingTeamWins.
+            // raid_schedule.js ticks the scheduled raid off for all of them.
+            participantUuids: finishedParticipants
         };
         for (var i = 0; i < _terminalListeners.length; i++) {
             try { _terminalListeners[i](ev); }
@@ -5296,6 +5301,10 @@
         playerLevel: playerLevel,
         findOnlinePlayer: findOnlinePlayer,
 
+        // raid_schedule.js keys its per-player ledger with this exact
+        // normalisation, so schedule keys and participantUuids keys always match.
+        uuidOf: playerUuidOf,
+
         start: function (level, player, defId, options) {
             var def = Registry.get(defId);
             if (!def) { err(`start: unknown raid "${defId}"`); return null; }
@@ -5366,7 +5375,11 @@
                 var inst = _active[k];
                 if (inst.defId !== String(defId) ||
                     inst.phase === "DONE" || inst.phase === "ENDING") continue;
-                out.push({ id: inst.id, ownerKey: raidOwnerKeyForInstance(inst) });
+                out.push({
+                    id: inst.id,
+                    ownerKey: raidOwnerKeyForInstance(inst),
+                    playerUuid: normUuid(inst.playerUuid)
+                });
             }
             return out;
         },
