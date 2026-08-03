@@ -1,7 +1,13 @@
 // priority: 45
 // Keeps Enhanced Celestials blood moons away from scheduled raid nights.
-// Scheduled raids protect day -1/day/day +1. A manual or delayed raid also
-// protects every day it remains active and the following day.
+//
+// Raids fire on each player's own Minecraft-day counter (player_days.js), not
+// on the world day, so a scheduled raid has no fixed world day to protect.
+// The guard instead projects every online player's next unfired raid onto the
+// lunar calendar - a player n play days short of it reaches it in n more days
+// of continuous presence - and protects that night plus the one before and
+// after. A manual or delayed raid also protects every day it remains active
+// and the following day.
 (function () {
     "use strict";
 
@@ -65,13 +71,12 @@
         return null;
     }
 
-    function scheduleEntries() {
-        try {
-            if (typeof RaidSchedule !== "undefined" &&
-                RaidSchedule && typeof RaidSchedule.list === "function")
-                return RaidSchedule.list();
-        } catch (e) {}
-        return [];
+    function playerDaysApi() {
+        return (typeof PlayerDays !== "undefined") ? PlayerDays : null;
+    }
+
+    function raidScheduleApi() {
+        return (typeof RaidSchedule !== "undefined") ? RaidSchedule : null;
     }
 
     function activeRaidExists() {
@@ -107,17 +112,46 @@
         return null;
     }
 
-    function protectedDays(server, entries) {
+    // currentDay is Enhanced Celestials' lunar day, the same space the forecast
+    // entries' scheduledDay() live in, so the projection lands in that space too.
+    function protectedDays(server, currentDay) {
         var days = {};
         var signatureParts = [];
-        for (var i = 0; i < entries.length; i++) {
-            var raidDay = Math.floor(Number(entries[i].day));
-            if (!isFinite(raidDay)) continue;
-            days[raidDay - 1] = true;
-            days[raidDay] = true;
-            days[raidDay + 1] = true;
-            signatureParts.push(String(raidDay) + ":" + String(entries[i].raidId || ""));
+        var api = playerDaysApi();
+        var sched = raidScheduleApi();
+        if (api && sched && typeof sched.statusForUuid === "function") {
+            try {
+                var it = server.players.iterator();
+                while (it.hasNext()) {
+                    var player = it.next();
+                    if (!player) continue;
+                    var uuid = String(api.uuidOf(player) || "");
+                    if (!uuid) continue;
+                    var playDays = Number(api.get(server, uuid) || 0);
+                    var rows = sched.statusForUuid(uuid) || [];
+                    var next = null;
+                    for (var i = 0; i < rows.length; i++) {
+                        if (rows[i].fired) continue;
+                        if (!next || rows[i].day < next.day) next = rows[i];
+                    }
+                    if (!next) continue;
+                    // Already eligible (they were offline that night) counts as
+                    // zero days away, so tonight is protected.
+                    var away = Math.floor(Number(next.day) - playDays);
+                    if (!isFinite(away)) continue;
+                    if (away < 0) away = 0;
+                    var raidDay = currentDay + away;
+                    days[raidDay - 1] = true;
+                    days[raidDay] = true;
+                    days[raidDay + 1] = true;
+                    signatureParts.push(uuid + ":" + raidDay + ":" +
+                                        String(next.raidId || ""));
+                }
+            } catch (e) { warn("player raid projection: " + e); }
         }
+        // Player iteration order is not stable, and an unstable signature would
+        // force a needless full forecast sweep every second.
+        signatureParts.sort();
 
         // A manual raid has no knowable "day before". Its active day(s) and the
         // day after the last active day are still guaranteed blood-moon-free.
@@ -176,8 +210,7 @@
         if (!isFinite(currentDay)) return;
 
         var activeDayChanged = rememberActiveRaidDay(server, currentDay);
-        var entries = scheduleEntries();
-        var protection = protectedDays(server, entries);
+        var protection = protectedDays(server, currentDay);
         var fullSweep = _lastFullSweepDay !== currentDay ||
                         _lastScheduleSignature !== protection.signature ||
                         activeDayChanged;
