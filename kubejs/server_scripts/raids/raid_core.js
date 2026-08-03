@@ -2587,6 +2587,14 @@
         this.cohortId = String(options.cohortId || id);
         this.participantUuids = options.participantUuids || identity.members;
         this._lostParticipantUuids = options.lostParticipantUuids || {};
+        // Set by the day scheduler. _eligibleUuids is the set of players who
+        // have personally reached this raid's scheduled day; it keeps a remote
+        // late joiner the raid is not due for from being given their own copy.
+        // _scheduled tells the scheduler's terminal handler that this instance
+        // came from the schedule, so a manual /raid start never touches the
+        // per-player ledger. Both are null/false for a manual raid.
+        this._eligibleUuids = options.eligibleUuids || null;
+        this._scheduled = !!options.scheduled;
         this._spatialDepartureCountdowns = options.spatialDepartureCountdowns || {};
         this._spatialCountdownDirty = false;
         this._currentTeamRoster = null;
@@ -3884,6 +3892,14 @@
                 continue;
             }
 
+            // A scheduled raid is only due for the players the scheduler listed.
+            // Without this, the cluster filter in startSpatialTeamRaid would be
+            // undone here: a distant teammate the raid is not due for would get
+            // their own copy of it and permanently lose that scheduled raid.
+            // The nearby addEarlyParticipant path above stays unfiltered - a
+            // teammate standing with the group is meant to join the fight.
+            if (inst._eligibleUuids && !inst._eligibleUuids[uuid]) continue;
+
             // The member joined/logged in during wave one but is over 500 blocks
             // from every existing group. Give them their own simultaneous copy
             // of this raid instead of attaching a remote HUD/reward entitlement.
@@ -3896,6 +3912,8 @@
                 false, queueSplit
             );
             if (split) {
+                split._eligibleUuids = inst._eligibleUuids;
+                split._scheduled = inst._scheduled;
                 if (queueSplit) notifyQueuedRaid(split);
                 else activateRaidInstance(split, player);
                 changed = true;
@@ -4328,6 +4346,8 @@
                 !!options.queueGraceServed
             );
             if (!inst) continue;
+            inst._eligibleUuids = options.eligibleUuids || null;
+            inst._scheduled = !!options.scheduled;
             if (!cohortId) cohortId = inst.id;
             inst.cohortId = cohortId;
             created.push({ instance: inst, representative: representative });
@@ -4745,6 +4765,8 @@
             cohortId: inst.cohortId,
             participantUuids: uuidKeys(inst.participantUuids),
             lostParticipantUuids: uuidKeys(inst._lostParticipantUuids),
+            eligibleUuids: inst._eligibleUuids ? uuidKeys(inst._eligibleUuids) : null,
+            scheduled: !!inst._scheduled,
             spatialDepartureCountdowns: spatialDepartureCountdownSnapshot(inst),
             dimension: levelId(inst.level),
             roundIdx: inst.roundIdx,
@@ -4822,6 +4844,8 @@
             // may intentionally exclude the original starter after spatial loss.
             if (!s.participantUuids) inst.participantUuids[inst.playerUuid] = true;
             inst._lostParticipantUuids = uuidSet(s.lostParticipantUuids || []);
+            inst._eligibleUuids = s.eligibleUuids ? uuidSet(s.eligibleUuids) : null;
+            inst._scheduled = !!s.scheduled;
             inst._spatialDepartureCountdowns =
                 restoredSpatialDepartureCountdowns(s.spatialDepartureCountdowns);
             inst._spatialCountdownDirty = false;
@@ -5135,6 +5159,9 @@
             ownerKey: raidOwnerKeyForInstance(inst),
             cohortId: String(inst.cohortId || inst.id),
             outcome: String(outcome || "ended"),
+            // False for a manual /raid start, so the day scheduler can leave
+            // the per-player ledger completely alone for those.
+            scheduled: !!inst._scheduled,
             // Everyone still on the roster when the fight ended - i.e. exactly
             // the players who earn the rewards, including a nearby teammate who
             // logged out mid-fight and gets paid by deliverPendingTeamWins.
@@ -5399,7 +5426,8 @@
                 out.push({
                     id: inst.id,
                     ownerKey: raidOwnerKeyForInstance(inst),
-                    playerUuid: normUuid(inst.playerUuid)
+                    playerUuid: normUuid(inst.playerUuid),
+                    scheduled: !!inst._scheduled
                 });
             }
             return out;

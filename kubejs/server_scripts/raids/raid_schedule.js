@@ -183,6 +183,9 @@
         var out = {};
         var active = activeInstances(s);
         for (var i = 0; i < active.length; i++) {
+            // A manual /raid start must never be reconnected to a scheduler
+            // transaction on restart.
+            if (!active[i].scheduled) continue;
             var starter = String(active[i].playerUuid || "").toLowerCase();
             if (!starter) continue;
             if (!out[starter]) out[starter] = [];
@@ -354,6 +357,9 @@
             return 0;
         }
 
+        // Computed once per pass: it is the same set for every player launched
+        // in this window, and building it is a full online-player scan.
+        var eligible = eligibleUuidsForDay(server, s);
         try {
             var it = server.players.iterator();
             while (it.hasNext()) {
@@ -379,7 +385,7 @@
                 try {
                     var instanceId = manager.start(
                         manager.playerLevel(player), player, s.raidId,
-                        { eligibleUuids: eligibleUuidsForDay(server, s) }
+                        { eligibleUuids: eligible, scheduled: true }
                     );
                     if (!instanceId) continue;
                     var state = stateForUuid(server, s, uuid, true);
@@ -410,15 +416,22 @@
         var s = findEntryByRaidId(event.defId);
         if (!s) return;
 
+        // A manual /raid start shares the raid id but is not the scheduled raid;
+        // it must leave the per-player ledger completely alone.
+        if (!event.scheduled) return;
+
         var instanceId = String(event.id);
         var states = loadStates(_server, s);
         var changed = false;
-        // raid_core.js also reports "stopped" (/raid stop, /raid stopall) and
-        // "cancelled" (a queued raid whose participants all went offline). The
-        // fight never resolved in either case, so it must not consume the
-        // scheduled raid - the behaviour spec ticks a raid off on win or loss.
+        // raid_core.js reports four outcomes. "win"/"lose" are the real fight
+        // and tick the whole roster off. "stopped" (/raid stop, /raid stopall)
+        // still consumes the raid for its starter - stop has to mean stop, or
+        // the next 5-second check would immediately restart it. "cancelled" (a
+        // queued raid whose participants all went offline) never happened at
+        // all, so it re-arms.
         var outcome = String(event.outcome || "");
         var resolved = (outcome === "win" || outcome === "lose");
+        var consumed = resolved || outcome === "stopped";
 
         // 1) Everyone who was still on the roster when the fight ended has now
         //    completed this scheduled raid - win or loss, exactly like the old
@@ -448,11 +461,11 @@
             for (var ii = 0; ii < ids.length; ii++)
                 if (String(ids[ii]) !== instanceId) remaining.push(String(ids[ii]));
             if (remaining.length === ids.length) continue;
-            // An unresolved raid re-arms the starter instead of consuming their
+            // A cancelled raid re-arms the starter instead of consuming their
             // scheduled raid; it fires again at the next 5-second check.
-            ownerState.fired = resolved;
+            ownerState.fired = consumed;
             ownerState.instanceIds = remaining;
-            ownerState.pending = resolved && remaining.length > 0;
+            ownerState.pending = consumed && remaining.length > 0;
             changed = true;
         }
 
