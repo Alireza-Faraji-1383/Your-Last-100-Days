@@ -149,6 +149,7 @@
 				id: "relics:ice_breaker"
 			}
 			id: "1D7F6CDB5830460A"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -212,6 +213,7 @@
 				id: "relics:space_dissector"
 			}
 			id: "04D1B2FE07C5A96A"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				id: "5FEDEEE670164249"
@@ -321,6 +323,8 @@
 				id: "relics:holy_locket"
 			}
 			id: "52C9E92A9CC991F8"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				id: "58538BCDC7C1B5F9"
@@ -348,6 +352,7 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "3CB8AFABD435DAFD"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				id: "1F0DDADE4BAD9597"
@@ -377,6 +382,8 @@
 			}
 			id: "0E9ABFF41F038D8B"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				id: "40C19401CB1DC36C"
@@ -412,6 +419,7 @@
 			can_repeat: true
 			disable_toast: true
 			id: "1B8F8360FA7CAB0D"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				count: 64
@@ -437,6 +445,7 @@
 			can_repeat: true
 			disable_toast: true
 			id: "59EA669ABE8ABD8D"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				id: "311550123DFD06A4"
@@ -467,6 +476,8 @@
 			}
 			id: "1E771F8D69CD355D"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -500,6 +511,7 @@
 			can_repeat: true
 			disable_toast: true
 			id: "36CFAF2E18974908"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				id: "0B41898968732585"
@@ -525,6 +537,7 @@
 			can_repeat: true
 			disable_toast: true
 			id: "0038426316854F1C"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				count: 64
@@ -553,6 +566,7 @@
 				id: "minecraft:diamond_ore"
 			}
 			id: "28F188346E50DD6A"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -579,6 +593,7 @@
 				id: "minecraft:cookie"
 			}
 			id: "08EC21D0F20FBEF8"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -605,6 +620,7 @@
 				id: "minecraft:oak_wood"
 			}
 			id: "0316E30A250105ED"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -631,6 +647,7 @@
 				id: "minecraft:arrow"
 			}
 			id: "6E75402CC8F32092"
+			mqt_per_player: true
 			rewards: [{
 				auto: "enabled"
 				id: "1B82BBF95BEF9693"
@@ -658,6 +675,8 @@
 			}
 			id: "07AADFF6800AC85E"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				id: "788CA1585C890BDE"
 				item: {
@@ -696,6 +715,8 @@
 			}
 			id: "2DDF28ED5A1F9F4E"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				id: "507DDCBB99991200"
 				item: {
@@ -735,6 +756,8 @@
 			}
 			id: "65D31C65AC32B67F"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				id: "4CE14F1BF622183C"
 				item: {
@@ -774,6 +797,8 @@
 			}
 			id: "3B5CD1E8CC348059"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				id: "25E9FE6C65BB66EF"
 				item: {
@@ -821,6 +846,8 @@
 			}
 			id: "33F1A2A536FC9A45"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				id: "044A86E2FFEC8D5A"
 				item: {
@@ -868,6 +895,8 @@
 			}
 			id: "65C476C9FC6DDBCD"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				id: "08D8714AAA8FDB9F"
 				item: {
@@ -905,6 +934,7 @@
 				id: "minecraft:fox_spawn_egg"
 			}
 			id: "5AAD08944CDC97B0"
+			mqt_per_player: true
 			rewards: [{
 				exclude_from_claim_all: true
 				id: "394412743A117BE2"
@@ -933,6 +963,8 @@
 			}
 			id: "4D3E3B2760803C14"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				count: 16
 				id: "4E000135CFF7198E"
@@ -1011,6 +1043,8 @@
 			}
 			id: "7C419CFD781293FE"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				count: 16
 				id: "077FD50ECA6216C9"
@@ -1051,6 +1085,8 @@
 			}
 			id: "39508A1024E710DC"
 			min_required_dependencies: 1
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
 			rewards: [{
 				count: 16
 				id: "437CAA6594122FE6"

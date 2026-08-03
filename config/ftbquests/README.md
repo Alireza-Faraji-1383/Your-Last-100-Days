@@ -39,6 +39,18 @@ config/ftbquests/
 The in-game FTB Quests editor writes straight into this folder, so edits are
 already in the tracked master — just commit them.
 
+## Per-player chapters (Per Player Quests mod)
+`shop` and `bonty_hunter` are per-player: every quest in them carries
+`mqt_per_player: true`, so completion and rewards are tracked for the individual
+player instead of the team — one member buying from the shop does not hand the
+purchase to the rest of the team. Quests in those chapters that gate on
+`min_required_dependencies` / `dependency_requirement` also carry
+`mqt_exclusivity_scope: "PER_ACTOR"` so the gate counts that player's own
+completions. Tasks default to `INHERIT`, so they follow their quest with no extra
+key. After adding quests to either chapter, re-run
+`python tools/apply_per_player.py config/ftbquests/quests/chapters/shop.snbt config/ftbquests/quests/chapters/bonty_hunter.snbt`
+(idempotent) or set the flags via the in-game editor's *Per-Player Quest* toggle.
+
 ## Notes
 - The MineColonies chapter uses `checkmark` tasks (no verified item ids). Swap to
   `{ type: "item", item: "minecolonies:<id>" }` once confirmed in JEI.

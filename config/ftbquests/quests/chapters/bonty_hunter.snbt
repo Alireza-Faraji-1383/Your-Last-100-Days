@@ -100,6 +100,7 @@
 	quests: [
 		{
 			id: "46A64FE462A309A2"
+			mqt_per_player: true
 			rewards: [{
 				count: 24
 				id: "77C974230DCAD855"
@@ -128,6 +129,7 @@
 		{
 			dependencies: ["46A64FE462A309A2"]
 			id: "7F9A15CD13D2D7CE"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 32
@@ -163,6 +165,7 @@
 		{
 			dependencies: ["7F9A15CD13D2D7CE"]
 			id: "0C6336145194DF5F"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -198,6 +201,7 @@
 		{
 			dependencies: ["0C6336145194DF5F"]
 			id: "7553083A4719E09B"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 2
@@ -232,6 +236,7 @@
 		}
 		{
 			id: "431FE96D8045138D"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "7E221F0F47C4547A"
@@ -260,6 +265,7 @@
 		{
 			dependencies: ["431FE96D8045138D"]
 			id: "2B490712D752F2AA"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -295,6 +301,7 @@
 		{
 			dependencies: ["2B490712D752F2AA"]
 			id: "4DC0476240C74913"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 128
@@ -330,6 +337,7 @@
 		{
 			dependencies: ["4DC0476240C74913"]
 			id: "10DE9863EFA5F528"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 3
@@ -364,6 +372,7 @@
 		}
 		{
 			id: "1B416F55DB53C59C"
+			mqt_per_player: true
 			rewards: [{
 				count: 42
 				id: "4186154938021498"
@@ -392,6 +401,7 @@
 		{
 			dependencies: ["1B416F55DB53C59C"]
 			id: "761C7DF67620DC29"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 128
@@ -427,6 +437,7 @@
 		{
 			dependencies: ["761C7DF67620DC29"]
 			id: "326677DEA12C0398"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 3
@@ -462,6 +473,7 @@
 		{
 			dependencies: ["326677DEA12C0398"]
 			id: "7AA9A3A54292DADF"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 10
@@ -496,6 +508,7 @@
 		}
 		{
 			id: "767FA524371C9480"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "07CF139DB9F806FF"
@@ -524,6 +537,7 @@
 		{
 			dependencies: ["767FA524371C9480"]
 			id: "635C194330BA9376"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 100
@@ -559,6 +573,7 @@
 		{
 			dependencies: ["635C194330BA9376"]
 			id: "21152CBE4D146E81"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 5
@@ -594,6 +609,7 @@
 		{
 			dependencies: ["21152CBE4D146E81"]
 			id: "66A8C41F7F4F726B"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 20
@@ -628,6 +644,7 @@
 		}
 		{
 			id: "44B1D7CD5CCE18FD"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "6D1D1A3D93509E9C"
@@ -656,6 +673,7 @@
 		{
 			dependencies: ["44B1D7CD5CCE18FD"]
 			id: "73947C4B8254774E"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -691,6 +709,7 @@
 		{
 			dependencies: ["73947C4B8254774E"]
 			id: "7FABA4362B1747BD"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 3
@@ -726,6 +745,7 @@
 		{
 			dependencies: ["7FABA4362B1747BD"]
 			id: "1552D2ED4A036712"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 5
@@ -760,6 +780,7 @@
 		}
 		{
 			id: "4D8B8AE038552C78"
+			mqt_per_player: true
 			rewards: [{
 				count: 24
 				id: "63FF9CB8A381A88F"
@@ -788,6 +809,7 @@
 		{
 			dependencies: ["340F0444044D60BA"]
 			id: "62DA05A109DCFA92"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 80
@@ -823,6 +845,7 @@
 		{
 			dependencies: ["62DA05A109DCFA92"]
 			id: "367899B66A4BC30F"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 3
@@ -857,6 +880,7 @@
 		}
 		{
 			id: "75CB70D6340B9E4B"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "2A971C2FE48078D5"
@@ -885,6 +909,7 @@
 		{
 			dependencies: ["75CB70D6340B9E4B"]
 			id: "155C9B6E1BE2255D"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -920,6 +945,7 @@
 		{
 			dependencies: ["155C9B6E1BE2255D"]
 			id: "49DB89311DB8C3E5"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 2
@@ -955,6 +981,7 @@
 		{
 			dependencies: ["49DB89311DB8C3E5"]
 			id: "3E8EA6809CFE7F83"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 5
@@ -989,6 +1016,7 @@
 		}
 		{
 			id: "5C815269EA7B055E"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "3D682159B7C108B9"
@@ -1017,6 +1045,7 @@
 		{
 			dependencies: ["5C815269EA7B055E"]
 			id: "79EC9E317DCDD70C"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -1052,6 +1081,7 @@
 		{
 			dependencies: ["79EC9E317DCDD70C"]
 			id: "0081C9FE085A14BD"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 2
@@ -1087,6 +1117,7 @@
 		{
 			dependencies: ["0081C9FE085A14BD"]
 			id: "562C9082EA53DE02"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 10
@@ -1127,6 +1158,7 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "228A571FEFE2EDAA"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "33318801895CF088"
@@ -1158,6 +1190,7 @@
 				id: "born_in_chaos_v1:missionary_hat_helmet"
 			}
 			id: "1F47D5A964354601"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 2
@@ -1196,6 +1229,7 @@
 				id: "born_in_chaos_v1:missionary_hat_helmet"
 			}
 			id: "5368F734DF31A768"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 8
@@ -1234,6 +1268,7 @@
 				id: "born_in_chaos_v1:missionary_hat_helmet"
 			}
 			id: "3D16905887ECCFCC"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 50
@@ -1271,6 +1306,7 @@
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
 			id: "44A2E11BCD2A97A8"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "581C670969CFA055"
@@ -1302,6 +1338,7 @@
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
 			id: "4456DF4F17EE974B"
+			mqt_per_player: true
 			rewards: [
 				{
 					id: "1BDAAC763E1A197C"
@@ -1340,6 +1377,7 @@
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
 			id: "6094F3D5234A99BE"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 8
@@ -1378,6 +1416,7 @@
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
 			id: "3A80D5F8B58DCF72"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 32
@@ -1415,6 +1454,7 @@
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
 			id: "16AB5EBC9FC3D0A6"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "3775B7683CB01A59"
@@ -1446,6 +1486,7 @@
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
 			id: "24936A36AA105819"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 12
@@ -1484,6 +1525,7 @@
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
 			id: "7C0D8D03B1585871"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 24
@@ -1522,6 +1564,7 @@
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
 			id: "5841235154F20F41"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -1562,6 +1605,7 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "432BCBA63DDF143F"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "0342E21181321FA8"
@@ -1596,6 +1640,7 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "68C45EE6E1929275"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 2
@@ -1637,6 +1682,7 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "5CD0B8FBE3D0248D"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 10
@@ -1678,6 +1724,7 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "752201E2F85A9A1C"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 16
@@ -1715,6 +1762,7 @@
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
 			id: "6D89803F760D5658"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "179EF1BE73D6E8A0"
@@ -1746,6 +1794,7 @@
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
 			id: "7508A124081E679C"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -1784,6 +1833,7 @@
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
 			id: "3BD9809A4BDA5445"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 2
@@ -1822,6 +1872,7 @@
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
 			id: "04B585AE7EEA7583"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 5
@@ -1856,6 +1907,7 @@
 		}
 		{
 			id: "3FE9B15A4C6B8D21"
+			mqt_per_player: true
 			rewards: [{
 				count: 24
 				id: "5AF2E12494E1441C"
@@ -1877,6 +1929,7 @@
 		{
 			dependencies: ["4D8B8AE038552C78"]
 			id: "340F0444044D60BA"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 40
@@ -1912,6 +1965,7 @@
 		{
 			dependencies: ["3FE9B15A4C6B8D21"]
 			id: "375A5B42DB4A31C3"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "1F060AEE1D05B73D"
@@ -1936,6 +1990,7 @@
 				"3FE9B15A4C6B8D21"
 			]
 			id: "19E60C14ABB32C38"
+			mqt_per_player: true
 			rewards: [{
 				count: 2
 				id: "5B65209DB95A0914"
@@ -1961,6 +2016,7 @@
 				"19E60C14ABB32C38"
 			]
 			id: "49E97A0BA6E7DB63"
+			mqt_per_player: true
 			rewards: [{
 				count: 10
 				id: "6ADE1BAB17502C7B"
@@ -1981,6 +2037,7 @@
 		}
 		{
 			id: "342DA5C07F1EB066"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "2D8812ED7D200B55"
@@ -2002,6 +2059,7 @@
 		{
 			dependencies: ["342DA5C07F1EB066"]
 			id: "6C815AC1A7CD46D6"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 64
@@ -2030,6 +2088,7 @@
 		{
 			dependencies: ["6C815AC1A7CD46D6"]
 			id: "28813D2D14D9906D"
+			mqt_per_player: true
 			rewards: [{
 				count: 8
 				id: "5D99E18D8FCF0A09"
@@ -2051,6 +2110,7 @@
 		{
 			dependencies: ["28813D2D14D9906D"]
 			id: "634DF9EF9679D939"
+			mqt_per_player: true
 			rewards: [{
 				count: 16
 				id: "2CEEB1FA250647D7"
@@ -2071,6 +2131,7 @@
 		}
 		{
 			id: "1608F430BCD06748"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "2E09C51ED4641116"
@@ -2092,6 +2153,7 @@
 		{
 			dependencies: ["1608F430BCD06748"]
 			id: "1BC0E1CA38969EE3"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "624BAE13A50DDF81"
@@ -2113,6 +2175,7 @@
 		{
 			dependencies: ["1BC0E1CA38969EE3"]
 			id: "12C75FDC1E557B6D"
+			mqt_per_player: true
 			rewards: [{
 				count: 2
 				id: "66240C93C341FF25"
@@ -2134,6 +2197,7 @@
 		{
 			dependencies: ["12C75FDC1E557B6D"]
 			id: "1A17FE8F3A048524"
+			mqt_per_player: true
 			rewards: [{
 				count: 10
 				id: "4482D7ACAE128C78"
@@ -2154,6 +2218,7 @@
 		}
 		{
 			id: "43C7606D98B9E2A9"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 32
@@ -2198,6 +2263,7 @@
 		{
 			dependencies: ["43C7606D98B9E2A9"]
 			id: "4623AB63F23933F3"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "79C507AF4B38220F"
@@ -2219,6 +2285,7 @@
 		{
 			dependencies: ["4623AB63F23933F3"]
 			id: "0A7963E1A3E40DD3"
+			mqt_per_player: true
 			rewards: [{
 				count: 8
 				id: "311E25E14CBC1284"
@@ -2240,6 +2307,7 @@
 		{
 			dependencies: ["0A7963E1A3E40DD3"]
 			id: "4D4A72B430B269A8"
+			mqt_per_player: true
 			rewards: [{
 				count: 16
 				id: "75A1123E896F785A"
@@ -2260,6 +2328,7 @@
 		}
 		{
 			id: "5CA8E651F6AA0693"
+			mqt_per_player: true
 			rewards: [
 				{
 					count: 32
@@ -2304,6 +2373,7 @@
 		{
 			dependencies: ["5CA8E651F6AA0693"]
 			id: "4BBED18E95CC7F36"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "5327BE5F505C6E3E"
@@ -2325,6 +2395,7 @@
 		{
 			dependencies: ["4BBED18E95CC7F36"]
 			id: "0F90A64B18FC9072"
+			mqt_per_player: true
 			rewards: [{
 				count: 8
 				id: "001CD89C60A2FF7D"
@@ -2346,6 +2417,7 @@
 		{
 			dependencies: ["0F90A64B18FC9072"]
 			id: "0CFBEC334AB5AE28"
+			mqt_per_player: true
 			rewards: [{
 				count: 16
 				id: "41FBA295B2D6C1B8"
@@ -2366,6 +2438,7 @@
 		}
 		{
 			id: "614B5F420F9FCF60"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "53085370DE8E1622"
@@ -2388,6 +2461,7 @@
 		{
 			dependencies: ["614B5F420F9FCF60"]
 			id: "7F6A2DB35BF8AE5F"
+			mqt_per_player: true
 			rewards: [{
 				count: 2
 				id: "7286B9BE2769DB5C"
@@ -2409,6 +2483,7 @@
 		{
 			dependencies: ["7F6A2DB35BF8AE5F"]
 			id: "6F8E2C3CBB2379AB"
+			mqt_per_player: true
 			rewards: [{
 				count: 4
 				id: "1566FEF7232CB34A"
@@ -2430,6 +2505,7 @@
 		{
 			dependencies: ["6F8E2C3CBB2379AB"]
 			id: "0B9BA8D49166A47A"
+			mqt_per_player: true
 			rewards: [{
 				count: 10
 				id: "32854733EBEFFCAB"
@@ -2450,6 +2526,7 @@
 		}
 		{
 			id: "1C2A82E9F2B86CF7"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "3406070C7CF5261F"
@@ -2471,6 +2548,7 @@
 		{
 			dependencies: ["1C2A82E9F2B86CF7"]
 			id: "6873C651A2AFFBEC"
+			mqt_per_player: true
 			rewards: [{
 				count: 2
 				id: "71481993896915C5"
@@ -2492,6 +2570,7 @@
 		{
 			dependencies: ["6873C651A2AFFBEC"]
 			id: "5F6CB06689DFB73B"
+			mqt_per_player: true
 			rewards: [{
 				count: 4
 				id: "1D7BB1819DA76759"
@@ -2513,6 +2592,7 @@
 		{
 			dependencies: ["5F6CB06689DFB73B"]
 			id: "0A84104223FD8075"
+			mqt_per_player: true
 			rewards: [{
 				count: 8
 				id: "5FEEB7706263CCEC"
@@ -2533,6 +2613,7 @@
 		}
 		{
 			id: "52ABEE2BEF40BB78"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "4D74A0FDD343F4CE"
@@ -2554,6 +2635,7 @@
 		{
 			dependencies: ["52ABEE2BEF40BB78"]
 			id: "12E31C2858662B20"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "128CE70A73F45F56"
@@ -2575,6 +2657,7 @@
 		{
 			dependencies: ["12E31C2858662B20"]
 			id: "187296552C092680"
+			mqt_per_player: true
 			rewards: [{
 				count: 2
 				id: "04B2D830483FD945"
@@ -2596,6 +2679,7 @@
 		{
 			dependencies: ["187296552C092680"]
 			id: "18178737F4B6A637"
+			mqt_per_player: true
 			rewards: [{
 				count: 8
 				id: "243DB4509138F57D"
@@ -2619,6 +2703,7 @@
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
 			id: "25341F5F45753CD5"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "25C5040A9F40E01C"
@@ -2643,6 +2728,7 @@
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
 			id: "20ED1DA1CE456A9A"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "144E3AFB55770861"
@@ -2667,6 +2753,7 @@
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
 			id: "77A78AE59270C185"
+			mqt_per_player: true
 			rewards: [{
 				count: 3
 				id: "4818E9FF2F29662C"
@@ -2691,6 +2778,7 @@
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
 			id: "28E0CDDA3DF0F574"
+			mqt_per_player: true
 			rewards: [{
 				count: 16
 				id: "4024F382E0249FF5"
@@ -2711,6 +2799,7 @@
 		}
 		{
 			id: "741662DCA4E8C257"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "37C2F7B5722962ED"
@@ -2739,6 +2828,7 @@
 		{
 			dependencies: ["741662DCA4E8C257"]
 			id: "1E122063FEF0C582"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "0DF27B3938A7F2D7"
@@ -2767,6 +2857,7 @@
 		{
 			dependencies: ["1E122063FEF0C582"]
 			id: "63929FB8805FA52A"
+			mqt_per_player: true
 			rewards: [{
 				count: 2
 				id: "740A10A9F16493D9"
@@ -2795,6 +2886,7 @@
 		{
 			dependencies: ["63929FB8805FA52A"]
 			id: "6BECC946904E7312"
+			mqt_per_player: true
 			rewards: [{
 				count: 4
 				id: "38294DF57137E384"
@@ -2822,6 +2914,7 @@
 		}
 		{
 			id: "14A267A5F2541EBF"
+			mqt_per_player: true
 			rewards: [{
 				count: 32
 				id: "332A28ECCEBFD5EA"
@@ -2850,6 +2943,7 @@
 		{
 			dependencies: ["14A267A5F2541EBF"]
 			id: "61680E311BF4DCAD"
+			mqt_per_player: true
 			rewards: [{
 				count: 64
 				id: "6EAB6C6B8AEA41C9"
@@ -2878,6 +2972,7 @@
 		{
 			dependencies: ["61680E311BF4DCAD"]
 			id: "09C7FEC7ECCC4CB3"
+			mqt_per_player: true
 			rewards: [{
 				count: 4
 				id: "5753078F366A3E1E"
@@ -2906,6 +3001,7 @@
 		{
 			dependencies: ["09C7FEC7ECCC4CB3"]
 			id: "3D8D66D3FA5F4297"
+			mqt_per_player: true
 			rewards: [{
 				count: 8
 				id: "34B811F4C377495A"
