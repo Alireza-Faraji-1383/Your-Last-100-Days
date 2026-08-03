@@ -4283,6 +4283,27 @@
         // The command/banner/scheduler caller receives the starter's instance ID.
         // Other distant groups are real simultaneous instances in the same cohort.
         var starterId = playerUuidOf(player);
+
+        // The day scheduler passes the set of players who have personally
+        // reached this raid's scheduled day. Without this filter a distant
+        // 500-block cluster gets its own live instance, so a brand-new teammate
+        // mining far away would have a high-day raid spawned on them and would
+        // permanently lose it at terminal. The starter's own cluster always
+        // stays: a teammate standing next to an eligible starter is meant to
+        // share the fight and is ticked off with everyone else. Manual
+        // /raid start passes no eligibleUuids and is unaffected.
+        if (options.eligibleUuids) {
+            var eligibleGroups = [];
+            for (var gi = 0; gi < groups.length; gi++) {
+                var keep = groupContainsUuid(groups[gi], starterId);
+                for (var mi = 0; !keep && mi < groups[gi].length; mi++) {
+                    if (options.eligibleUuids[playerUuidOf(groups[gi][mi])]) keep = true;
+                }
+                if (keep) eligibleGroups.push(groups[gi]);
+            }
+            if (eligibleGroups.length > 0) groups = eligibleGroups;
+        }
+
         groups.sort(function (a, b) {
             var aStarter = groupContainsUuid(a, starterId) ? 1 : 0;
             var bStarter = groupContainsUuid(b, starterId) ? 1 : 0;

@@ -145,6 +145,25 @@
         catch (e) { return 0; }
     }
 
+    // Every online player who has personally reached this raid's scheduled day.
+    // raid_core.js uses it to skip spawning a separate instance for a distant
+    // 500-block cluster that contains nobody the raid is due for; a teammate
+    // standing next to the starter still joins the shared fight.
+    function eligibleUuidsForDay(server, s) {
+        var out = {};
+        try {
+            var it = server.players.iterator();
+            while (it.hasNext()) {
+                var player = it.next();
+                if (!player) continue;
+                var uuid = uuidOf(player);
+                if (!uuid) continue;
+                if (daysForUuid(server, uuid) >= s.day) out[uuid] = true;
+            }
+        } catch (e) { warn("eligible set for " + s.raidId + ": " + e); }
+        return out;
+    }
+
     function activeInstances(s) {
         var manager = raidManager();
         if (!manager || !manager.activeOwnerInstancesForDef) return [];
@@ -357,7 +376,8 @@
 
                 try {
                     var instanceId = manager.start(
-                        manager.playerLevel(player), player, s.raidId
+                        manager.playerLevel(player), player, s.raidId,
+                        { eligibleUuids: eligibleUuidsForDay(server, s) }
                     );
                     if (!instanceId) continue;
                     var state = stateForUuid(server, s, uuid, true);
