@@ -42,8 +42,10 @@
     function stateKey(s) {
         return "raidsched_day" + s.day + "_" + s.raidId + STATE_SUFFIX;
     }
-    function warningKey(s) {
-        return "raidwarn_day" + s.day + "_" + s.raidId;
+    // Keyed by variant: a player warned "TOMORROW" on their day N-1 must still
+    // get the "TONIGHT" warning on their day N.
+    function warningKey(s, tonight) {
+        return "raidwarn_day" + s.day + "_" + s.raidId + (tonight ? "_t" : "_m");
     }
 
     function emptyStates() { return {}; }
@@ -261,7 +263,7 @@
 
     function showRaidWarning(server, player, s, tonight) {
         if (!server || !player) return false;
-        var key = warningKey(s);
+        var key = warningKey(s, tonight);
         try { if (player.persistentData.getBoolean(key)) return false; }
         catch (eRead) {}
 
@@ -411,12 +413,18 @@
         var instanceId = String(event.id);
         var states = loadStates(_server, s);
         var changed = false;
+        // raid_core.js also reports "stopped" (/raid stop, /raid stopall) and
+        // "cancelled" (a queued raid whose participants all went offline). The
+        // fight never resolved in either case, so it must not consume the
+        // scheduled raid - the behaviour spec ticks a raid off on win or loss.
+        var outcome = String(event.outcome || "");
+        var resolved = (outcome === "win" || outcome === "lose");
 
         // 1) Everyone who was still on the roster when the fight ended has now
         //    completed this scheduled raid - win or loss, exactly like the old
         //    per-team behaviour. This is what lets a veteran clear a raid for a
         //    newer teammate and what stops a helper repeating it tomorrow.
-        var uuids = event.participantUuids || [];
+        var uuids = resolved ? (event.participantUuids || []) : [];
         for (var u = 0; u < uuids.length; u++) {
             var key = String(uuids[u] || "").toLowerCase();
             if (!key) continue;
@@ -440,9 +448,11 @@
             for (var ii = 0; ii < ids.length; ii++)
                 if (String(ids[ii]) !== instanceId) remaining.push(String(ids[ii]));
             if (remaining.length === ids.length) continue;
-            ownerState.fired = true;
+            // An unresolved raid re-arms the starter instead of consuming their
+            // scheduled raid; it fires again at the next 5-second check.
+            ownerState.fired = resolved;
             ownerState.instanceIds = remaining;
-            ownerState.pending = remaining.length > 0;
+            ownerState.pending = resolved && remaining.length > 0;
             changed = true;
         }
 
@@ -585,7 +595,8 @@
 
         if (!_recovered) {
             _recovered = true;
-            recoverPlayerStates(server);
+            try { recoverPlayerStates(server); }
+            catch (eRecover) { warn("recovery: " + eRecover); }
         }
 
         var time = overworldTime(server);

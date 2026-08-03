@@ -137,8 +137,10 @@
                         } else if (days >= row.day) {
                             line = "§e➤ day " + row.day + "  §f" + row.title + " §8tonight";
                         } else {
+                            var awayDays = row.day - days;
                             line = "§8✖ day " + row.day + "  " + row.title +
-                                   "  (in " + (row.day - days) + " days)";
+                                   "  (in " + awayDays +
+                                   (awayDays === 1 ? " day)" : " days)");
                         }
                         player.tell(Text.of(line));
                     }

@@ -10,6 +10,8 @@
 //   /raid list
 //   /raid cleanup
 //   /raid stopall
+//   /raid days <player>
+//   /raid done <player> [id] [true|false]
 
 (function () {
     "use strict";
