@@ -65,9 +65,9 @@
             .mob(M.MINER_ABYSSAL).count(8)
         .onWin(function (ctx) {
             try {
-      ctx.player.give("minecraft:heart_of_the_sea 1");
-      ctx.player.give("minecraft:trident 1");
-      ctx.player.give("cataclysm:crystallized_coral_fragments 8");
+      ctx.giveRaidReward("minecraft:heart_of_the_sea", 4);
+      ctx.giveRaidReward("cataclysm:coral_spear", 1);
+      ctx.giveRaidReward("cataclysm:crystallized_coral_fragments", 32);
             } catch (e) {}
         })
         .build();

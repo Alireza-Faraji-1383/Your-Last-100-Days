@@ -64,9 +64,9 @@
             .mob(M.MINER_CHAMPION).count(8)
         .onWin(function (ctx) {
             try {
-      ctx.player.give("born_in_chaos_v1:dark_metal_ingot 8");
-      ctx.player.give("born_in_chaos_v1:krampus_horn 1");
-      ctx.player.give("born_in_chaos_v1:death_totem 1");
+      ctx.giveRaidReward("born_in_chaos_v1:dark_metal_ingot", 32);
+      ctx.giveRaidReward("born_in_chaos_v1:krampus_horn", 4);
+      ctx.giveRaidReward("born_in_chaos_v1:death_totem", 4);
             } catch (e) {}
         })
         .build();

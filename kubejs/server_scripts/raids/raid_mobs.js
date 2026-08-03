@@ -235,7 +235,7 @@
                                     head: "minecraft:diamond_helmet", chest: "minecraft:diamond_chestplate",
                                     feet: "minecraft:diamond_boots" },
                            extraArgs: ["attributes/max_health=50"] },
-        EVOKER:          { type: "minecraft:evoker", presets: ["sharpTargeting"] },
+        EVOKER:          { type: "minecraft:evoker" },
         WARBEAST_RAVAGER:{ type: "minecraft:ravager",
                            extraArgs: ["attributes/max_health=150", "attributes/movement_speed=0.32"] },
         BLAZE:           { type: "minecraft:blaze" },

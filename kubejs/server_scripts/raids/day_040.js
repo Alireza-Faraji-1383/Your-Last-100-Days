@@ -63,9 +63,9 @@
             .mob(M.MINER_SPIRIT_ELITE).count(9)
         .onWin(function (ctx) {
             try {
-      ctx.player.give("born_in_chaos_v1:ethereal_spirit 4");
-      ctx.player.give("born_in_chaos_v1:spiritual_dust 12");
-      ctx.player.give("minecraft:echo_shard 2");
+      ctx.giveRaidReward("born_in_chaos_v1:ethereal_spirit", 16);
+      ctx.giveRaidReward("born_in_chaos_v1:spiritual_dust", 48);
+      ctx.giveRaidReward("minecraft:echo_shard", 8);
             } catch (e) {}
         })
         .build();

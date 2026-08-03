@@ -98,9 +98,9 @@
             .mob(M.MINER_LAST_SHADOW).count(8)
         .onWin(function (ctx) {
             try {
-      ctx.player.give("cataclysm:witherite_ingot 4");
-      ctx.player.give("cataclysm_spellbooks:abyssal_upgrade_orb 1");
-      ctx.player.give("minecraft:nether_star 1");
+      ctx.giveRaidReward("cataclysm:witherite_ingot", 16);
+      ctx.giveRaidReward("cataclysm_spellbooks:abyssal_upgrade_orb", 4);
+      ctx.giveRaidReward("minecraft:nether_star", 4);
             } catch (e) {}
         })
         .build();

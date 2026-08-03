@@ -28,6 +28,7 @@
     // NBT work while keeping a crash rollback bounded to at most five seconds.
     const ACTIVE_STATE_KEY = "raidfactory_active_v1";
     const PENDING_TEAM_WINS_KEY = "raidfactory_pending_team_wins_v1";
+    const WIN_REWARD_MARKER_PREFIX = "raidfactory_full_reward_claimed_v1_";
     const ACTIVE_SAVE_EVERY = 100;
     const TEAM_SYNC_EVERY = 20;       // refresh FTB roster/HUD once per second
     const TEAM_RAID_DISTANCE = 500;
@@ -36,6 +37,7 @@
     const MAX_CONCURRENT_RAIDS = 5;    // global combat cap; additional raids wait in a persisted queue
     const RAID_QUEUE_CHECK_EVERY = 20; // one tiny queue pass per second while no terminal event fires
     const RAID_DRIVER_WATCHDOG_EVERY = 20; // one no-op readiness check per second while raids exist
+    const QUEUED_RAID_GRACE_TICKS = 24000; // one full Minecraft day before a queued raid may activate
     const RESTORE_LOGIN_DELAY = 40; // let the returning player's chunks load first
     const RESTORE_MOB_WAIT = 200;   // first allow 10s of natural chunk loading
     const RESTORE_CHUNKS_PER_SCAN = 2; // bounded synchronous loads per second
@@ -360,6 +362,20 @@
         var s = Math.ceil(t / 20); if (s < 0) s = 0;
         var m = Math.floor(s / 60), r = s % 60;
         return m + ":" + (r < 10 ? "0" : "") + r;
+    }
+    function raidWorldTime(server) {
+        try {
+            var overworld = server && typeof server.overworld === "function"
+                ? server.overworld() : null;
+            if (overworld) {
+                var time = (typeof overworld.getDayTime === "function")
+                    ? overworld.getDayTime() : overworld.dayTime;
+                var numeric = Number(time);
+                if (isFinite(numeric)) return numeric;
+            }
+        } catch (e) {}
+        // Test/API fallback only. Real servers always expose overworld dayTime.
+        return Math.max(0, Number(_serverTickClock) || 0);
     }
     function prettyId(id) {
         var parts = String(id).split("_"), out = [];
@@ -2582,6 +2598,7 @@
         this.roundIdx     = 0;
         this.phase        = "SPAWNING";
         this._queueOrder  = 0;
+        this._queueReadyAt = 0;         // absolute overworld time; persisted across logout/restart
         this.spawnRetryLeft = 0;       // backoff when terrain has no safe spawn plan
         this.breatherLeft = 0;
         this.roundTimeLeft = null;
@@ -2740,10 +2757,54 @@
         } catch (e) { warn("write pending team wins: " + e); }
     }
 
+    function fullRewardMarkerKey(defId) {
+        return WIN_REWARD_MARKER_PREFIX +
+               String(defId || "unknown").toLowerCase().replace(/[^a-z0-9_]/g, "_");
+    }
+
+    // Returns true only once per player and raid. Existing victory advancements
+    // seed the history, so worlds upgraded from an older script do not hand an
+    // already-established winner another full first-clear package.
+    function claimFullVictoryReward(player, defId) {
+        if (!player) return false;
+        var key = fullRewardMarkerKey(defId);
+        var claimed = false;
+        try { claimed = !!player.persistentData.getBoolean(key); }
+        catch (eRead) {}
+        if (!claimed) claimed = hasVictoryAdvancement(player, defId);
+
+        // Consume the first-clear status before external reward callbacks run.
+        // A disconnect or callback failure can therefore never replay the full
+        // package on the next login.
+        try { player.persistentData.putBoolean(key, true); }
+        catch (eWrite) { warn("victory reward history " + defId + ": " + eWrite); }
+        return !claimed;
+    }
+
+    function victoryRewardContext(inst, player) {
+        var ctx = inst.ctx ? inst.ctx(player) :
+            { player: player, level: playerLevel(player), raid: inst.def, instance: inst };
+        var fullReward = claimFullVictoryReward(player, inst.defId);
+        ctx.isFirstVictoryReward = fullReward;
+        ctx.rewardDivisor = fullReward ? 1 : 2;
+        ctx.giveRaidReward = function (itemId, fullCount) {
+            var authoredCount = Math.max(0, Math.floor(Number(fullCount) || 0));
+            var count = fullReward ? authoredCount : Math.floor(authoredCount / 2);
+            if (count <= 0) return false;
+            try {
+                player.give(String(itemId) + " " + count);
+                return true;
+            } catch (eGive) {
+                warn("victory reward " + itemId + " x" + count + ": " + eGive);
+                return false;
+            }
+        };
+        return ctx;
+    }
+
     function deliverVictory(inst, player, delayed) {
         if (!inst || !player) return;
-        fireCb(inst.def, "onWin", [inst.ctx ? inst.ctx(player) :
-            { player: player, level: playerLevel(player), raid: inst.def, instance: inst }]);
+        fireCb(inst.def, "onWin", [victoryRewardContext(inst, player)]);
         grantVictoryAdvancement(inst, player);
         grantFlawlessAdvancement(inst, player);
         if (delayed) {
@@ -4137,21 +4198,29 @@
     function notifyQueuedRaid(inst) {
         if (!inst || inst.phase !== "QUEUED") return;
         var position = queuePosition(inst);
+        var remaining = Math.max(
+            0,
+            Math.ceil(Number(inst._queueReadyAt || 0) - raidWorldTime(Manager._server))
+        );
         var members = explicitOnlineParticipants(inst);
         for (var i = 0; i < members.length; i++) {
             try {
                 members[i].tell(Text.of(
                     "[Raid] " + inst.barBase + " is queued" +
                     (position > 0 ? " (#" + position + ")" : "") +
-                    ". It will start when one of the " +
-                    MAX_CONCURRENT_RAIDS + " raid slots is free."
+                    (remaining > 0
+                        ? ". You have one Minecraft day to prepare before it can start."
+                        : ". Its preparation day is complete.") +
+                    " It also waits for one of the " +
+                    MAX_CONCURRENT_RAIDS + " raid slots to be free."
                 ));
             } catch (e) {}
         }
         info(`queued "${inst.defId}" as ${inst.id} at position ${position}`);
     }
 
-    function createRaidInstance(level, player, def, cohortId, participants, teamId, initializing, queued) {
+    function createRaidInstance(level, player, def, cohortId, participants, teamId,
+                                initializing, queued, queueGraceServed) {
         if (!level || !player || !def) return null;
         var id = newInstanceId(def.id);
         var inst = new RaidInstance(id, def, level, player, {
@@ -4164,6 +4233,9 @@
         if (queued) {
             inst.phase = "QUEUED";
             inst._queueOrder = ++_queueSeq;
+            inst._queueReadyAt = queueGraceServed
+                ? raidWorldTime(Manager._server)
+                : raidWorldTime(Manager._server) + QUEUED_RAID_GRACE_TICKS;
         } else if (def.bossBar !== false) {
             inst.bar = makeBar(Manager._server, inst.id, inst.barBase, def.barColor, def.barOverlay);
         }
@@ -4176,6 +4248,7 @@
         if (inst.phase === "QUEUED") {
             inst.phase = "SPAWNING";
             inst._queueOrder = 0;
+            inst._queueReadyAt = 0;
             inst.level = playerLevel(representative) || inst.level;
             inst._ctxPlayer = representative;
             if (inst.def.bossBar !== false) {
@@ -4198,7 +4271,8 @@
         return true;
     }
 
-    function startSpatialTeamRaid(level, player, def) {
+    function startSpatialTeamRaid(level, player, def, options) {
+        options = options || {};
         var identity = playerTeamIdentity(player);
         if (ownerHasActiveInstance(identity, playerUuidOf(player))) return [];
 
@@ -4229,7 +4303,8 @@
                 participantSetForPlayers(groups[i]),
                 identity.teamId,
                 true,
-                queueThis
+                queueThis,
+                !!options.queueGraceServed
             );
             if (!inst) continue;
             if (!cohortId) cohortId = inst.id;
@@ -4263,20 +4338,23 @@
         return fallback;
     }
 
-    // Fill free combat slots in FIFO order. An offline queue head is preserved
-    // but does not block later online groups. This runs only once per second or
-    // immediately after a terminal transition, never once per mob/tick.
+    // Fill eligible combat slots in FIFO order. An offline or still-preparing
+    // entry is preserved but does not block later eligible online groups. This
+    // runs only once per second or immediately after a terminal transition,
+    // never once per mob/tick.
     function drainQueuedRaids(server) {
         if (!server) return 0;
         var free = Math.max(0, MAX_CONCURRENT_RAIDS - runningRaidCount());
         if (free <= 0) return 0;
 
         var queued = queuedRaidInstances();
+        var now = raidWorldTime(server);
         var started = 0;
         var changed = false;
         for (var i = 0; i < queued.length && free > 0; i++) {
             var inst = queued[i];
             if (!inst || inst.phase !== "QUEUED") continue;
+            if (now < Math.max(0, Number(inst._queueReadyAt) || 0)) continue;
             var representative = queuedRepresentative(inst);
 
             if (participantCount(inst) === 0) {
@@ -4651,6 +4729,8 @@
             roundIdx: inst.roundIdx,
             phase: inst.phase,
             queueOrder: Math.max(0, Number(inst._queueOrder) || 0),
+            queueReadyAt: inst.phase === "QUEUED"
+                ? Math.max(0, Number(inst._queueReadyAt) || 0) : 0,
             spawnRetryLeft: inst.spawnRetryLeft,
             breatherLeft: inst.breatherLeft,
             roundTimeLeft: inst.roundTimeLeft,
@@ -4736,6 +4816,11 @@
                 inst.phase !== "BREATHER" && inst.phase !== "WIN_WAIT") inst.phase = "SPAWNING";
             inst._queueOrder = (inst.phase === "QUEUED")
                 ? Math.max(1, Number(s.queueOrder) || (++_queueSeq))
+                : 0;
+            inst._queueReadyAt = (inst.phase === "QUEUED")
+                ? (s.queueReadyAt != null
+                    ? Math.max(0, Number(s.queueReadyAt) || 0)
+                    : raidWorldTime(server) + QUEUED_RAID_GRACE_TICKS)
                 : 0;
             if (inst._queueOrder > _queueSeq) _queueSeq = inst._queueOrder;
             inst.spawnRetryLeft = Math.max(0, Number(s.spawnRetryLeft) || 0);
@@ -5211,7 +5296,7 @@
         playerLevel: playerLevel,
         findOnlinePlayer: findOnlinePlayer,
 
-        start: function (level, player, defId) {
+        start: function (level, player, defId, options) {
             var def = Registry.get(defId);
             if (!def) { err(`start: unknown raid "${defId}"`); return null; }
             if (!player) { err("start: no player"); return null; }
@@ -5226,7 +5311,9 @@
             // Respect existing FIFO reservations before admitting a brand-new
             // request into a free slot.
             drainQueuedRaids(Manager._server);
-            var created = startSpatialTeamRaid(level || playerLevel(player), player, def);
+            var created = startSpatialTeamRaid(
+                level || playerLevel(player), player, def, options || {}
+            );
             if (created.length === 0) {
                 warn(`start: ${player.username}'s team is already in a raid`);
                 return null;
@@ -5441,8 +5528,8 @@
                 inst._barParticipantKey = null;
                 onlineParticipants(inst, true);
             }
-            // A queued raid whose first participant just came online can use an
-            // already-free slot immediately instead of waiting for the next pass.
+            // A queued raid whose participant just came online can use a free
+            // slot on this pass once its persisted preparation day is complete.
             drainQueuedRaids(event.server || Manager._server);
         } catch (e) { warn("team raid login sync: " + e); }
     });

@@ -60,9 +60,9 @@
             .mob(M.MINER_STRONG).count(7)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("born_in_chaos_v1:bone_heart 1");
-                ctx.player.give("born_in_chaos_v1:bundle_of_bones 8");
-                ctx.player.give("minecraft:experience_bottle 24");
+                ctx.giveRaidReward("born_in_chaos_v1:bone_heart", 4);
+                ctx.giveRaidReward("born_in_chaos_v1:bundle_of_bones", 32);
+                ctx.giveRaidReward("minecraft:experience_bottle", 96);
             } catch (e) {}
         })
         .build();

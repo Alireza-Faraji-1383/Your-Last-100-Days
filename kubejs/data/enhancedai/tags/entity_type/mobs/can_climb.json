@@ -4,5 +4,8 @@
     "minecraft:zombie",
     "minecraft:husk",
     "minecraft:drowned"
+  ],
+  "remove": [
+    "minecraft:evoker"
   ]
 }

@@ -67,9 +67,9 @@
             .mob(M.MINER_IGNIS).count(8)
         .onWin(function (ctx) {
             try {
-      ctx.player.give("cataclysm:cursium_ingot 4");
-      ctx.player.give("irons_spellbooks:fire_upgrade_orb 1");
-      ctx.player.give("minecraft:enchanted_golden_apple 1");
+      ctx.giveRaidReward("cataclysm:cursium_ingot", 16);
+      ctx.giveRaidReward("irons_spellbooks:fire_upgrade_orb", 4);
+      ctx.giveRaidReward("minecraft:enchanted_golden_apple", 4);
             } catch (e) {}
         })
         .build();

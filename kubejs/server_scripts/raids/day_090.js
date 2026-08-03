@@ -80,8 +80,8 @@
             .mob(M.MINER_MYTHIC).count(9)
         .onWin(function (ctx) {
             try {
-      ctx.player.give("cataclysm:ignitium_ingot 2");
-      ctx.player.give("irons_spellbooks:epic_ink 3");
+      ctx.giveRaidReward("cataclysm:ignitium_ingot", 8);
+      ctx.giveRaidReward("irons_spellbooks:legendary_ink", 4);
             } catch (e) {}
         })
         .build();

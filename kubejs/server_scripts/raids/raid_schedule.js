@@ -3,8 +3,8 @@
 //
 // Each scheduled raid has independent fired/pending state for every FTB Team.
 // An offline team therefore remains eligible and receives its own shared raid
-// on the first eligible night after one of its members returns. Solo players use
-// the same flow with their player UUID as the ownership key.
+// after one member returns and its preparation day has elapsed. Solo players
+// use the same flow with their player UUID as the ownership key.
 //
 // State is a small JSON object per scheduled raid in server.persistentData.
 // Starting a raid writes pending=true immediately; terminal events keep fired
@@ -13,8 +13,8 @@
 //
 // Day counting matches ftbquests_day_spine.js: floor(overworld dayTime / 24000).
 // Night begins at tick 13000. On-time raids still begin at night; a team that
-// was offline on its scheduled day starts its overdue raid shortly after login,
-// even in daytime, so logging in cannot permanently skip that team's raid.
+// was offline on its scheduled day gets a persisted full-day preparation window
+// after returning; the overdue raid may then start even in daytime.
 //
 // Depends on RaidManager (raid_core.js, priority 90 -> loads first).
 (function (global) {
@@ -22,6 +22,7 @@
 
     var CHECK_EVERY = 100;   // one small online-team pass every 5 seconds
     var NIGHT_START = 13000;
+    var CATCHUP_GRACE_TICKS = 24000; // one full Minecraft day before an overdue raid
     var TEAM_STATE_SUFFIX = "_team_states_v2";
     var _accum = 0;
     var _schedule = [];
@@ -63,7 +64,8 @@
                     fired: !!old.fired,
                     pending: !!old.pending,
                     instanceId: ids.length > 0 ? ids[0] : "",
-                    instanceIds: ids
+                    instanceIds: ids,
+                    graceUntil: Math.max(0, Number(old.graceUntil) || 0)
                 };
             }
         } catch (e) {
@@ -79,7 +81,8 @@
         try {
             var any = false;
             for (var key in states) {
-                if (states[key] && (states[key].fired || states[key].pending)) {
+                if (states[key] && (states[key].fired || states[key].pending ||
+                                    Number(states[key].graceUntil) > 0)) {
                     any = true;
                     break;
                 }
@@ -99,7 +102,13 @@
         if (!key) return null;
         var state = states[key];
         if (!state && create) {
-            state = { fired: false, pending: false, instanceId: "", instanceIds: [] };
+            state = {
+                fired: false,
+                pending: false,
+                instanceId: "",
+                instanceIds: [],
+                graceUntil: 0
+            };
             states[key] = state;
         }
         return state || null;
@@ -137,6 +146,7 @@
             state.pending = false;
             state.instanceId = "";
             state.instanceIds = [];
+            state.graceUntil = 0;
             saveTeamStates(server, s);
             console.info("[RaidSched] migrated completed v1 raid '" +
                          s.raidId + "' for " + ownerKey);
@@ -189,16 +199,19 @@
                         fired: true,
                         pending: true,
                         instanceId: activeId,
-                        instanceIds: activeIds
+                        instanceIds: activeIds,
+                        graceUntil: 0
                     };
                     migrated++;
                     changed = true;
                 } else if (!activeState.fired || !activeState.pending ||
+                           Number(activeState.graceUntil) > 0 ||
                            JSON.stringify(activeState.instanceIds || []) !== JSON.stringify(activeIds)) {
                     activeState.fired = true;
                     activeState.pending = true;
                     activeState.instanceId = activeId;
                     activeState.instanceIds = activeIds;
+                    activeState.graceUntil = 0;
                     reconnected++;
                     changed = true;
                 }
@@ -214,6 +227,9 @@
                 state.pending = false;
                 state.instanceId = "";
                 state.instanceIds = [];
+                // A missing active snapshot is a delayed re-attempt. Give the
+                // team a fresh preparation day instead of firing immediately.
+                state.graceUntil = overworldTime(server) + CATCHUP_GRACE_TICKS;
                 rearmed++;
                 changed = true;
             }
@@ -342,7 +358,34 @@
         return null;
     }
 
-    function startForOnlineTeams(server, s) {
+    function hasEarlierOutstandingRaid(server, s, ownerKey) {
+        for (var i = 0; i < _schedule.length; i++) {
+            var earlier = _schedule[i];
+            if (earlier === s) break;
+            var state = stateForOwner(server, earlier, ownerKey, false);
+            if (!state || !state.fired || state.pending) return true;
+        }
+        return false;
+    }
+
+    function armOrCheckCatchupGrace(server, s, player, ownerKey, worldTime) {
+        var state = stateForOwner(server, s, ownerKey, true);
+        var readyAt = Math.max(0, Number(state.graceUntil) || 0);
+        if (readyAt <= 0) {
+            state.graceUntil = worldTime + CATCHUP_GRACE_TICKS;
+            saveTeamStates(server, s);
+            try {
+                player.tell(Text.of(
+                    "§6⚠ Your overdue raid §e" + raidDisplayName(s) +
+                    "§6 will become active after one full Minecraft day. Prepare now."
+                ));
+            } catch (eTell) {}
+            return false;
+        }
+        return worldTime >= readyAt;
+    }
+
+    function startForOnlineTeams(server, s, currentDay, worldTime) {
         var manager = raidManager();
         var launched = 0;
         var seenOwners = {};
@@ -361,9 +404,22 @@
                 seenOwners[ownerKey] = true;
                 migrateLegacyWinner(server, s, player, ownerKey);
                 if (ownerHasFired(server, s, ownerKey)) continue;
+                // Backlogged raids are strictly sequential. A team receives a
+                // full preparation day for the oldest missed raid; later missed
+                // raids do not silently burn their grace periods in parallel.
+                if (hasEarlierOutstandingRaid(server, s, ownerKey)) continue;
 
-                // Busy teams remain queued and receive this raid after their
-                // current shared raid ends.
+                var overdue = currentDay > s.day;
+                var graceServed = false;
+                if (overdue) {
+                    graceServed = armOrCheckCatchupGrace(
+                        server, s, player, ownerKey, worldTime
+                    );
+                    if (!graceServed) continue;
+                }
+
+                // Busy teams keep the prepared catch-up entry and receive it
+                // after their current shared raid ends.
                 try {
                     if (manager.isOwnerInRaid && manager.isOwnerInRaid(player)) continue;
                     if (!manager.isOwnerInRaid && manager.isInRaid && manager.isInRaid(player)) continue;
@@ -371,7 +427,8 @@
 
                 try {
                     var instanceId = manager.start(
-                        manager.playerLevel(player), player, s.raidId
+                        manager.playerLevel(player), player, s.raidId,
+                        { queueGraceServed: graceServed }
                     );
                     if (!instanceId) continue;
                     var state = stateForOwner(server, s, ownerKey, true);
@@ -379,6 +436,7 @@
                     state.pending = true;
                     state.instanceId = String(instanceId);
                     state.instanceIds = [];
+                    state.graceUntil = 0;
                     var active = activeOwnerInstances(s);
                     for (var ai = 0; ai < active.length; ai++) {
                         if (String(active[ai].ownerKey || "") === ownerKey)
@@ -431,6 +489,7 @@
                 state.pending = remaining.length > 0;
                 state.instanceId = remaining.length > 0 ? remaining[0] : "";
                 state.instanceIds = remaining;
+                state.graceUntil = 0;
                 saveTeamStates(_server, s);
                 return;
             }
@@ -536,13 +595,13 @@
         var timeOfDay = ((time % 24000) + 24000) % 24000;
         var day = Math.floor(time / 24000);
         // On the authored day, preserve the normal night start. Once that day
-        // has passed, an offline team's catch-up starts within this 5-second
-        // check window regardless of time-of-day.
+        // has passed, arm a persisted one-day preparation window for the oldest
+        // missed raid instead of starting it immediately on login.
         for (var i = 0; i < _schedule.length; i++) {
             var s = _schedule[i];
             if (day < s.day) continue;
             if (day === s.day && timeOfDay < NIGHT_START) continue;
-            var launched = startForOnlineTeams(server, s);
+            var launched = startForOnlineTeams(server, s, day, time);
             if (launched > 0)
                 console.info("[RaidSched] day " + day + ": fired '" +
                              s.raidId + "' for " + launched + " new team(s)");

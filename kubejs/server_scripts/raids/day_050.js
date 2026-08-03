@@ -68,9 +68,9 @@
             .mob(M.MINER_ELITE).count(8)
         .onWin(function (ctx) {
             try {
-      ctx.player.give("irons_spellbooks:arcane_essence 16");
-      ctx.player.give("irons_spellbooks:upgrade_orb 1");
-      ctx.player.give("irons_spellbooks:mithril_ingot 4");
+      ctx.giveRaidReward("irons_spellbooks:arcane_essence", 64);
+      ctx.giveRaidReward("irons_spellbooks:upgrade_orb", 4);
+      ctx.giveRaidReward("irons_spellbooks:mithril_ingot", 16);
             } catch (e) {}
         })
         .build();

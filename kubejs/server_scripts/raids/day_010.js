@@ -53,9 +53,9 @@
             .mob(M.MINER_LEATHER_STRONG).count(7)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:iron_ingot 16");
-                ctx.player.give("minecraft:golden_apple 2");
-                ctx.player.give("born_in_chaos_v1:pieceofdarkmetal 4");
+                ctx.giveRaidReward("minecraft:iron_ingot", 64);
+                ctx.giveRaidReward("minecraft:golden_apple", 8);
+                ctx.giveRaidReward("born_in_chaos_v1:pieceofdarkmetal", 16);
             } catch (e) {}
         })
         .build();

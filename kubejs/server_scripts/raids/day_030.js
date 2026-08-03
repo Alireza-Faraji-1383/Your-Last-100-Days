@@ -63,9 +63,9 @@
             .mob(M.MINER_VETERAN).count(9)
         .onWin(function (ctx) {
             try {
-                ctx.player.give("minecraft:diamond 6");
-                ctx.player.give("minecraft:emerald_block 2");
-                ctx.player.give("minecraft:totem_of_undying 1");
+                ctx.giveRaidReward("minecraft:diamond", 24);
+                ctx.giveRaidReward("minecraft:emerald_block", 8);
+                ctx.giveRaidReward("minecraft:totem_of_undying", 4);
             } catch (e) {}
         })
         .build();
