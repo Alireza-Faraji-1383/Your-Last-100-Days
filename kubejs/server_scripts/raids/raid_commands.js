@@ -39,6 +39,8 @@
     ServerEvents.commandRegistry(function (event) {
         var Commands = event.commands;
         var StringArg = Java.loadClass("com.mojang.brigadier.arguments.StringArgumentType");
+        var BoolArg = Java.loadClass("com.mojang.brigadier.arguments.BoolArgumentType");
+        var IntArg = Java.loadClass("com.mojang.brigadier.arguments.IntegerArgumentType");
 
         function getPlayer(src) {
             try { return src.getPlayer(); }
@@ -184,6 +186,10 @@
             src.sendSystemMessage(Text.of("  /raid list - show registered raid ids"));
             src.sendSystemMessage(Text.of("  /raid cleanup - remove orphaned raid mobs and bars"));
             src.sendSystemMessage(Text.of("  /raid stopall - stop every active raid"));
+            src.sendSystemMessage(Text.of("  /raid days <player> - show a player's play day"));
+            src.sendSystemMessage(Text.of("  /raid days set <player> <n> - set a player's play day"));
+            src.sendSystemMessage(Text.of("  /raid done <player> - list that player's scheduled raids"));
+            src.sendSystemMessage(Text.of("  /raid done <player> <id> <true|false> - tick a raid off or back on"));
             return 1;
         }
 
@@ -351,6 +357,149 @@
                 });
             });
 
+        function playerDaysApi() {
+            return (typeof PlayerDays !== "undefined") ? PlayerDays : null;
+        }
+
+        function scheduleApi() {
+            return (typeof RaidSchedule !== "undefined") ? RaidSchedule : null;
+        }
+
+        // /raid days set <player> <n>   (literals bind before arguments, so the
+        // "set" branch never gets swallowed by the <player> branch)
+        var daysNode = Commands.literal("days")
+            .requires(hasRaidAdminPermission)
+            .then(Commands.literal("set")
+                .requires(hasRaidAdminPermission)
+                .then(Commands.argument("player", StringArg.word())
+                    .requires(hasRaidAdminPermission)
+                    .suggests(suggestPlayers)
+                    .then(Commands.argument("n", IntArg.integer(0))
+                        .requires(hasRaidAdminPermission)
+                        .executes(function (ctx) {
+                            return safeExec(ctx.source, function () {
+                                var api = playerDaysApi();
+                                if (!api) {
+                                    ctx.source.sendFailure(Text.of("[Raid] PlayerDays is not loaded."));
+                                    return 0;
+                                }
+                                var name = StringArg.getString(ctx, "player");
+                                var target = findKjsPlayer(ctx.source, name);
+                                if (!target) {
+                                    ctx.source.sendFailure(Text.of("[Raid] player not found: " + name));
+                                    return 0;
+                                }
+                                var server = getServer(ctx.source) || target.server;
+                                var days = IntArg.getInteger(ctx, "n");
+                                if (!api.set(server, api.uuidOf(target), days)) {
+                                    ctx.source.sendFailure(Text.of("[Raid] could not write play days."));
+                                    return 0;
+                                }
+                                ctx.source.sendSystemMessage(Text.of(
+                                    "[Raid] " + target.username + " is now on play day " + days + "."
+                                ));
+                                return 1;
+                            });
+                        }))))
+            .then(Commands.argument("player", StringArg.word())
+                .requires(hasRaidAdminPermission)
+                .suggests(suggestPlayers)
+                .executes(function (ctx) {
+                    return safeExec(ctx.source, function () {
+                        var api = playerDaysApi();
+                        if (!api) {
+                            ctx.source.sendFailure(Text.of("[Raid] PlayerDays is not loaded."));
+                            return 0;
+                        }
+                        var name = StringArg.getString(ctx, "player");
+                        var target = findKjsPlayer(ctx.source, name);
+                        if (!target) {
+                            ctx.source.sendFailure(Text.of("[Raid] player not found: " + name));
+                            return 0;
+                        }
+                        var server = getServer(ctx.source) || target.server;
+                        ctx.source.sendSystemMessage(Text.of(
+                            "[Raid] " + target.username + " play day: " +
+                            api.get(server, api.uuidOf(target))
+                        ));
+                        return 1;
+                    });
+                }));
+
+        // /raid done <player> [<raidId> <true|false>]
+        var doneNode = Commands.literal("done")
+            .requires(hasRaidAdminPermission)
+            .then(Commands.argument("player", StringArg.word())
+                .requires(hasRaidAdminPermission)
+                .suggests(suggestPlayers)
+                .executes(function (ctx) {
+                    return safeExec(ctx.source, function () {
+                        var api = playerDaysApi();
+                        var sched = scheduleApi();
+                        if (!api || !sched) {
+                            ctx.source.sendFailure(Text.of("[Raid] raid schedule is not loaded."));
+                            return 0;
+                        }
+                        var name = StringArg.getString(ctx, "player");
+                        var target = findKjsPlayer(ctx.source, name);
+                        if (!target) {
+                            ctx.source.sendFailure(Text.of("[Raid] player not found: " + name));
+                            return 0;
+                        }
+                        var server = getServer(ctx.source) || target.server;
+                        var uuid = api.uuidOf(target);
+                        var rows = sched.statusForUuid(uuid);
+                        ctx.source.sendSystemMessage(Text.of(
+                            "[Raid] " + target.username + " - play day " +
+                            api.get(server, uuid) + ", " + rows.length + " scheduled raid(s):"
+                        ));
+                        for (var i = 0; i < rows.length; i++) {
+                            var row = rows[i];
+                            var mark = row.fired ? "§a[done]" : "§8[open]";
+                            ctx.source.sendSystemMessage(Text.of(
+                                "  " + mark + "§r day " + row.day + "  " +
+                                row.raidId + (row.pending ? "  §e(running)" : "")
+                            ));
+                        }
+                        return 1;
+                    });
+                })
+                .then(Commands.argument("id", StringArg.word())
+                    .requires(hasRaidAdminPermission)
+                    .suggests(suggestRaidIds)
+                    .then(Commands.argument("value", BoolArg.bool())
+                        .requires(hasRaidAdminPermission)
+                        .executes(function (ctx) {
+                            return safeExec(ctx.source, function () {
+                                var api = playerDaysApi();
+                                var sched = scheduleApi();
+                                if (!api || !sched) {
+                                    ctx.source.sendFailure(Text.of("[Raid] raid schedule is not loaded."));
+                                    return 0;
+                                }
+                                var name = StringArg.getString(ctx, "player");
+                                var target = findKjsPlayer(ctx.source, name);
+                                if (!target) {
+                                    ctx.source.sendFailure(Text.of("[Raid] player not found: " + name));
+                                    return 0;
+                                }
+                                var raidId = StringArg.getString(ctx, "id");
+                                var value = BoolArg.getBool(ctx, "value");
+                                if (!sched.setFired(api.uuidOf(target), raidId, value)) {
+                                    ctx.source.sendFailure(Text.of(
+                                        "[Raid] '" + raidId + "' is not a scheduled raid."
+                                    ));
+                                    return 0;
+                                }
+                                ctx.source.sendSystemMessage(Text.of(
+                                    "[Raid] " + target.username + " '" + raidId + "' marked " +
+                                    (value ? "done" : "open") +
+                                    (value ? "." : " - it fires again once their play day is reached.")
+                                ));
+                                return 1;
+                            });
+                        }))));
+
         var root = Commands.literal("raid")
             .requires(hasRaidAdminPermission)
             .executes(function (ctx) {
@@ -365,11 +514,13 @@
             .then(stopNode)
             .then(listNode)
             .then(cleanupNode)
-            .then(stopAllNode);
+            .then(stopAllNode)
+            .then(daysNode)
+            .then(doneNode);
 
         removeExistingRaidRoot(event.dispatcher);
         event.register(root);
     });
 
-    console.info("[Raid-cmd] commands registered: /raid help|start|status|killmobs|stop|list|cleanup|stopall");
+    console.info("[Raid-cmd] commands registered: /raid help|start|status|killmobs|stop|list|cleanup|stopall|days|done");
 })();
