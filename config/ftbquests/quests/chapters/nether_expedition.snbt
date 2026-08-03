@@ -1588,24 +1588,6 @@
 					type: "item"
 				}
 				{
-					count: 10
-					id: "4E7A300000000084"
-					item: {
-						count: 1
-						id: "minecraft:iron_ingot"
-					}
-					type: "item"
-				}
-				{
-					count: 5
-					id: "4E7A300000000085"
-					item: {
-						count: 1
-						id: "minecraft:gold_ingot"
-					}
-					type: "item"
-				}
-				{
 					count: 5
 					id: "4E7A300000000086"
 					item: {
@@ -1622,12 +1604,6 @@
 						id: "kubejs:silver_coin"
 					}
 					type: "item"
-				}
-				{
-					exclude_from_claim_all: true
-					id: "4E7A300000000088"
-					table_id: 5654832282117140481L
-					type: "random"
 				}
 			]
 			shape: "hexagon"
@@ -1655,15 +1631,6 @@
 					item: {
 						count: 1
 						id: "minecraft:diamond"
-					}
-					type: "item"
-				}
-				{
-					count: 10
-					id: "4E7A30000000008B"
-					item: {
-						count: 1
-						id: "minecraft:iron_ingot"
 					}
 					type: "item"
 				}
