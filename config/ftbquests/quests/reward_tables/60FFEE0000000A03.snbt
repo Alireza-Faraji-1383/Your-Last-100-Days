@@ -124,5 +124,13 @@
 				id: "minecraft:breeze_rod"
 			}
 		}
+		{
+			count: 6
+			id: "6F667D1F71CA2612"
+			item: {
+				count: 1
+				id: "minecraft:leather"
+			}
+		}
 	]
 }
