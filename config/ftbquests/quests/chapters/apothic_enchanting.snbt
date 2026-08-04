@@ -10,6 +10,7 @@
 	images: [
 		{
 			height: 0.5d
+			id: "16AFC3B31FE9FCE1"
 			image: "kubejs:textures/quests/art/lvl1.png"
 			rotation: 0.0d
 			width: 7.0d
@@ -18,6 +19,7 @@
 		}
 		{
 			height: 0.5d
+			id: "10BA51AF1CFFF83A"
 			image: "kubejs:textures/quests/art/lvl30.png"
 			rotation: 0.0d
 			width: 7.0d
@@ -26,6 +28,7 @@
 		}
 		{
 			height: 0.5d
+			id: "416094CCDBAB66A3"
 			image: "kubejs:textures/quests/art/lvl60.png"
 			rotation: 0.0d
 			width: 7.0d
@@ -34,6 +37,7 @@
 		}
 		{
 			height: 0.5d
+			id: "711F20278771F89B"
 			image: "kubejs:textures/quests/art/lvl80.png"
 			rotation: 0.0d
 			width: 7.0d
@@ -42,6 +46,7 @@
 		}
 		{
 			height: 5.0d
+			id: "146F7E80763F8E53"
 			image: "kubejs:textures/quests/art/marks/class_.png"
 			rotation: 0.0d
 			width: 5.0d
@@ -50,6 +55,7 @@
 		}
 		{
 			height: 1.0d
+			id: "4A4D71D16DE47EAA"
 			image: "apothic_enchanting:blocks/glowing_hellshelf"
 			rotation: 0.0d
 			width: 1.0d
@@ -58,6 +64,7 @@
 		}
 		{
 			height: 1.0d
+			id: "6625A498D2EA5CE0"
 			image: "minecraft:block/chiseled_bookshelf_occupied"
 			rotation: 0.0d
 			width: 1.0d
@@ -66,6 +73,7 @@
 		}
 		{
 			height: 1.0d
+			id: "7F7E14772CE8DC3D"
 			image: "apothic_enchanting:blocks/echoing_sculkshelf"
 			rotation: 0.0d
 			width: 1.0d
@@ -74,6 +82,7 @@
 		}
 		{
 			height: 1.0d
+			id: "1A32AC37880ECB27"
 			image: "apothic_enchanting:blocks/draconic_endshelf"
 			rotation: 0.0d
 			width: 1.0d

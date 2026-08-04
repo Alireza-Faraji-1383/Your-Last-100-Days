@@ -13,6 +13,7 @@
 	images: [
 		{
 			height: 10.0d
+			id: "6952AD45683651E5"
 			image: "minecraft:textures/painting/humble.png"
 			rotation: 0.0d
 			width: 10.0d
@@ -21,6 +22,7 @@
 		}
 		{
 			height: 0.4657039711191336d
+			id: "45BC84BD96739941"
 			image: "minecolonies:textures/quests/hc_logistics.png"
 			rotation: 0.0d
 			width: 3.0d
@@ -29,6 +31,7 @@
 		}
 		{
 			height: 1.5d
+			id: "6A442A9835238663"
 			image: "minecolonies:textures/quests/hc_university_research.png"
 			rotation: 0.0d
 			width: 4.5d
@@ -37,6 +40,7 @@
 		}
 		{
 			height: 1.5d
+			id: "7E19D11117B26A58"
 			image: "minecolonies:textures/quests/hc_the_builder.png"
 			rotation: 0.0d
 			width: 3.1601941747572813d
@@ -45,6 +49,7 @@
 		}
 		{
 			height: 1.0d
+			id: "3BAD1787EECCA3BF"
 			image: "minecolonies:textures/quests/hc_defense.png"
 			rotation: 0.0d
 			width: 4.0d
@@ -53,6 +58,7 @@
 		}
 		{
 			height: 2.0d
+			id: "033F4C964A6CD1F8"
 			image: "minecolonies:textures/quests/hc_feed_the_machine.png"
 			rotation: 0.0d
 			width: 4.0d
@@ -61,6 +67,7 @@
 		}
 		{
 			height: 2.0d
+			id: "47D8AC670730D4AA"
 			image: "mctradepost:item/mctp_coin"
 			rotation: 0.0d
 			width: 2.0d

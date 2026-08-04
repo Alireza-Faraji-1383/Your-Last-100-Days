@@ -9,8 +9,8 @@
 	id: "07DDCEA56A248369"
 	images: [
 		{
-			click: "1"
 			height: 5.5d
+			id: "4FAC4F739C2E8F80"
 			image: "cataclysm:textures/entity/flame_strike_sigil.png"
 			order: -29
 			rotation: 0.0d
@@ -19,8 +19,8 @@
 			y: -0.5d
 		}
 		{
-			click: "1"
 			height: 12.0d
+			id: "636B6611D9DB08BC"
 			image: "cataclysm:textures/entity/soul_flame_strike_sigil.png"
 			order: -30
 			rotation: 0.0d
@@ -30,6 +30,7 @@
 		}
 		{
 			height: 1.6034985422740524d
+			id: "55E08039F2699D35"
 			image: "cataclysm:textures/quests/cataclysm_title.png"
 			order: -5
 			rotation: 0.0d
@@ -39,6 +40,7 @@
 		}
 		{
 			height: 2.4802631578947367d
+			id: "7C1131A73BB4CD2F"
 			image: "cataclysm:textures/quests/cataclysm_harbinger.png"
 			order: -15
 			rotation: 0.0d
@@ -48,6 +50,7 @@
 		}
 		{
 			height: 0.7457627118644068d
+			id: "0581129996B6470D"
 			image: "cataclysm:textures/quests/cataclysm_title_harbinger.png"
 			order: -10
 			rotation: 0.0d
@@ -57,6 +60,7 @@
 		}
 		{
 			height: 2.0276497695852536d
+			id: "6BFA383AD7C594B9"
 			image: "cataclysm:textures/quests/cataclysm_maledictus.png"
 			order: -15
 			rotation: 0.0d
@@ -66,6 +70,7 @@
 		}
 		{
 			height: 0.7541436464088398d
+			id: "415BEAF720C330BC"
 			image: "cataclysm:textures/quests/cataclysm_title_maledictus.png"
 			order: -10
 			rotation: 0.0d
@@ -75,6 +80,7 @@
 		}
 		{
 			height: 2.496617050067659d
+			id: "487BB598C30FB50E"
 			image: "cataclysm:textures/quests/cataclysm_scylla.png"
 			order: -15
 			rotation: 0.0d
@@ -84,6 +90,7 @@
 		}
 		{
 			height: 0.9771573604060914d
+			id: "5EB59DEFA7C06859"
 			image: "cataclysm:textures/quests/cataclysm_title_scylla.png"
 			order: -10
 			rotation: 0.0d
@@ -93,6 +100,7 @@
 		}
 		{
 			height: 2.0992616899097625d
+			id: "3054CFDB8E7894E3"
 			image: "cataclysm:textures/quests/cataclysm_leviathan.png"
 			order: -15
 			rotation: 0.0d
@@ -102,6 +110,7 @@
 		}
 		{
 			height: 0.5783898305084746d
+			id: "0500272495040609"
 			image: "cataclysm:textures/quests/cataclysm_title_leviathan.png"
 			order: -10
 			rotation: 0.0d
@@ -111,6 +120,7 @@
 		}
 		{
 			height: 2.484076433121019d
+			id: "3031882F3A30A56F"
 			image: "cataclysm:textures/quests/cataclysm_remnant.png"
 			order: -15
 			rotation: 0.0d
@@ -120,6 +130,7 @@
 		}
 		{
 			height: 0.4831858407079646d
+			id: "0BA96B5638F24197"
 			image: "cataclysm:textures/quests/cataclysm_title_remnant.png"
 			order: -10
 			rotation: 0.0d
@@ -129,6 +140,7 @@
 		}
 		{
 			height: 2.522658610271903d
+			id: "17AA70C8BA2EAF55"
 			image: "cataclysm:textures/quests/cataclysm_monstrosity.png"
 			order: -15
 			rotation: 0.0d
@@ -138,6 +150,7 @@
 		}
 		{
 			height: 0.4291287386215865d
+			id: "2C8D3A5DEAC3C8CC"
 			image: "cataclysm:textures/quests/cataclysm_title_monstrosity.png"
 			order: -10
 			rotation: 0.0d
@@ -147,6 +160,7 @@
 		}
 		{
 			height: 2.273361227336122d
+			id: "661F56E2CF4060E5"
 			image: "cataclysm:textures/quests/cataclysm_ignis.png"
 			order: -15
 			rotation: 0.0d
@@ -156,6 +170,7 @@
 		}
 		{
 			height: 1.0754189944134078d
+			id: "5E35910C015EB1D7"
 			image: "cataclysm:textures/quests/cataclysm_title_ignis.png"
 			order: -10
 			rotation: 0.0d
@@ -165,6 +180,7 @@
 		}
 		{
 			height: 2.4914236706689534d
+			id: "7B4FF3BBAA28A3AA"
 			image: "cataclysm:textures/quests/cataclysm_guardian.png"
 			order: -15
 			rotation: 0.0d
@@ -174,6 +190,7 @@
 		}
 		{
 			height: 0.5363457760314342d
+			id: "1585B523338BD7CA"
 			image: "cataclysm:textures/quests/cataclysm_title_guardian.png"
 			order: -10
 			rotation: 0.0d

@@ -10,6 +10,7 @@
 	images: [
 		{
 			height: 1.0d
+			id: "1333ECEC1A23FF0E"
 			image: "minecraft:block/seagrass"
 			rotation: 0.0d
 			width: 1.0d
@@ -18,6 +19,7 @@
 		}
 		{
 			height: 1.0d
+			id: "0F558A8FE81DAC12"
 			image: "minecraft:textures/gui/sprites/hud/armor_full.png"
 			rotation: 0.0d
 			width: 1.0d
@@ -26,6 +28,7 @@
 		}
 		{
 			height: 1.0d
+			id: "51888BD91BF28A8D"
 			image: "minecraft:item/diamond"
 			rotation: 0.0d
 			width: 1.0d

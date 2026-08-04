@@ -14,6 +14,7 @@
 	images: [
 		{
 			height: 8.0d
+			id: "1599F54C3C0C54A3"
 			image: "ftbquests:textures/gui/shop.png"
 			rotation: 0.0d
 			width: 8.0d
@@ -21,8 +22,9 @@
 			y: -8.5d
 		}
 		{
-			corner: true
+			corner: 1b
 			height: 2.0d
+			id: "3B4D50E7C00C346D"
 			image: "supplementaries:block/cannon_arrow"
 			rotation: 90.0d
 			width: 1.0d
@@ -30,8 +32,9 @@
 			y: -3.5d
 		}
 		{
-			corner: true
+			corner: 1b
 			height: 2.0d
+			id: "1095049A8AC5E368"
 			image: "supplementaries:block/cannon_arrow"
 			rotation: -90.0d
 			width: 1.0d
@@ -39,8 +42,9 @@
 			y: -3.0d
 		}
 		{
-			corner: true
+			corner: 1b
 			height: 2.0d
+			id: "58D4FF145A919355"
 			image: "supplementaries:block/cannon_arrow"
 			rotation: -90.0d
 			width: 1.0d
@@ -48,8 +52,9 @@
 			y: -1.0d
 		}
 		{
-			corner: true
+			corner: 1b
 			height: 2.0d
+			id: "16F38D5EC9B5BA8D"
 			image: "supplementaries:block/cannon_arrow"
 			rotation: 90.0d
 			width: 1.0d
@@ -59,6 +64,7 @@
 		{
 			color: 16712482
 			height: 7.0d
+			id: "321205C88907D815"
 			image: "relics:item/aqua_walker_bubble"
 			rotation: 0.0d
 			width: 7.0d
@@ -67,6 +73,7 @@
 		}
 		{
 			height: 2.4d
+			id: "43EA5D2BAAFEFBAF"
 			image: "relics:textures/gui/description/research/tip_background.png"
 			rotation: 0.0d
 			width: 2.0d
@@ -75,6 +82,7 @@
 		}
 		{
 			height: 2.4d
+			id: "7AE5E5278434E3D7"
 			image: "relics:textures/gui/description/research/tip_background.png"
 			rotation: 0.0d
 			width: 2.0d
@@ -149,7 +157,10 @@
 				id: "relics:ice_breaker"
 			}
 			id: "1D7F6CDB5830460A"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -213,7 +224,10 @@
 				id: "relics:space_dissector"
 			}
 			id: "04D1B2FE07C5A96A"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				id: "5FEDEEE670164249"
@@ -323,8 +337,10 @@
 				id: "relics:holy_locket"
 			}
 			id: "52C9E92A9CC991F8"
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				id: "58538BCDC7C1B5F9"
@@ -352,7 +368,10 @@
 				id: "ftbquests:custom_icon"
 			}
 			id: "3CB8AFABD435DAFD"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				id: "1F0DDADE4BAD9597"
@@ -382,8 +401,10 @@
 			}
 			id: "0E9ABFF41F038D8B"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				id: "40C19401CB1DC36C"
@@ -419,7 +440,10 @@
 			can_repeat: true
 			disable_toast: true
 			id: "1B8F8360FA7CAB0D"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				count: 64
@@ -445,7 +469,10 @@
 			can_repeat: true
 			disable_toast: true
 			id: "59EA669ABE8ABD8D"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				id: "311550123DFD06A4"
@@ -476,8 +503,10 @@
 			}
 			id: "1E771F8D69CD355D"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -511,7 +540,10 @@
 			can_repeat: true
 			disable_toast: true
 			id: "36CFAF2E18974908"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				id: "0B41898968732585"
@@ -537,7 +569,10 @@
 			can_repeat: true
 			disable_toast: true
 			id: "0038426316854F1C"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				count: 64
@@ -566,7 +601,10 @@
 				id: "minecraft:diamond_ore"
 			}
 			id: "28F188346E50DD6A"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -593,7 +631,10 @@
 				id: "minecraft:cookie"
 			}
 			id: "08EC21D0F20FBEF8"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -620,7 +661,10 @@
 				id: "minecraft:oak_wood"
 			}
 			id: "0316E30A250105ED"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				exclude_from_claim_all: true
@@ -647,7 +691,10 @@
 				id: "minecraft:arrow"
 			}
 			id: "6E75402CC8F32092"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				auto: "enabled"
 				id: "1B82BBF95BEF9693"
@@ -675,8 +722,10 @@
 			}
 			id: "07AADFF6800AC85E"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				id: "788CA1585C890BDE"
 				item: {
@@ -715,8 +764,10 @@
 			}
 			id: "2DDF28ED5A1F9F4E"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				id: "507DDCBB99991200"
 				item: {
@@ -756,8 +807,10 @@
 			}
 			id: "65D31C65AC32B67F"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				id: "4CE14F1BF622183C"
 				item: {
@@ -797,8 +850,10 @@
 			}
 			id: "3B5CD1E8CC348059"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				id: "25E9FE6C65BB66EF"
 				item: {
@@ -846,8 +901,10 @@
 			}
 			id: "33F1A2A536FC9A45"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				id: "044A86E2FFEC8D5A"
 				item: {
@@ -895,8 +952,10 @@
 			}
 			id: "65C476C9FC6DDBCD"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				id: "08D8714AAA8FDB9F"
 				item: {
@@ -934,7 +993,10 @@
 				id: "minecraft:fox_spawn_egg"
 			}
 			id: "5AAD08944CDC97B0"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				exclude_from_claim_all: true
 				id: "394412743A117BE2"
@@ -963,8 +1025,10 @@
 			}
 			id: "4D3E3B2760803C14"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 16
 				id: "4E000135CFF7198E"
@@ -1043,8 +1107,10 @@
 			}
 			id: "7C419CFD781293FE"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 16
 				id: "077FD50ECA6216C9"
@@ -1085,8 +1151,10 @@
 			}
 			id: "39508A1024E710DC"
 			min_required_dependencies: 1
+			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
+			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 16
 				id: "437CAA6594122FE6"

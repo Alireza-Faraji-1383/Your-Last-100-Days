@@ -10,6 +10,7 @@
 	images: [
 		{
 			height: 2.0d
+			id: "0C3EFA7B3BA6BCB9"
 			image: "enigmaticlegacyplus:item/cursed_ring"
 			rotation: 0.0d
 			width: 2.0d
@@ -18,6 +19,7 @@
 		}
 		{
 			height: 2.0d
+			id: "63E20806DA4965C6"
 			image: "enigmaticlegacyplus:item/etherium_ingot"
 			rotation: 0.0d
 			width: 2.0d

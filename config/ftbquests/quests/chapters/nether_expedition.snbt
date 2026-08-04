@@ -12,6 +12,7 @@
 	id: "4E7A000000000000"
 	images: [{
 		height: 3.0d
+		id: "7244DF1190966657"
 		image: "relics:item/magma_walker_fire"
 		rotation: 0.0d
 		width: 2.5d
