@@ -774,15 +774,22 @@
 		}
 		{
 			id: "639531AB27DCD267"
-			rewards: [{
-				count: 3
-				id: "22A13BA6CFA84533"
-				item: {
-					count: 1
-					id: "irons_spellbooks:blank_rune"
+			rewards: [
+				{
+					count: 3
+					id: "22A13BA6CFA84533"
+					item: {
+						count: 1
+						id: "irons_spellbooks:blank_rune"
+					}
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "47555011D219DA3A"
+					type: "xp"
+					xp: 100
+				}
+			]
 			shape: "octagon"
 			size: 2.0d
 			tasks: [{
@@ -2041,21 +2048,28 @@
 				id: "minecraft:sculk_sensor"
 			}
 			id: "5ED368C926E5F32C"
-			rewards: [{
-				id: "7168285F8D52B227"
-				item: {
-					components: {
-						"minecraft:stored_enchantments": {
-							levels: {
-								"minecraft:swift_sneak": 2
+			rewards: [
+				{
+					id: "7168285F8D52B227"
+					item: {
+						components: {
+							"minecraft:stored_enchantments": {
+								levels: {
+									"minecraft:swift_sneak": 2
+								}
 							}
 						}
+						count: 1
+						id: "minecraft:enchanted_book"
 					}
-					count: 1
-					id: "minecraft:enchanted_book"
+					type: "item"
 				}
-				type: "item"
-			}]
+				{
+					id: "1CCB019783375160"
+					type: "xp"
+					xp: 100
+				}
+			]
 			shape: "octagon"
 			size: 1.5d
 			tasks: [{

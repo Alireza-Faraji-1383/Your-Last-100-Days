@@ -1185,5 +1185,66 @@
 			x: -1.0d
 			y: 15.0d
 		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "irons_spellbooks:invisibility_elixir"
+			}
+			id: "69F6489441E12A0B"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				id: "3E73BFF7B163BE29"
+				item: {
+					count: 1
+					id: "irons_spellbooks:invisibility_elixir"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				disable_toast: true
+				id: "030EB7867FF5328F"
+				item: { count: 1, id: "kubejs:silver_coin" }
+				type: "item"
+			}]
+			x: -10.0d
+			y: -1.0d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "irons_spellbooks:greater_invisibility_elixir"
+			}
+			id: "2591DC67038917CD"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "TEAM"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				id: "29607A6CC2BD4C32"
+				item: {
+					count: 1
+					id: "irons_spellbooks:greater_invisibility_elixir"
+				}
+				type: "item"
+			}]
+			size: 2.0d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "68F90693906A1EF3"
+				item: { count: 1, id: "kubejs:silver_coin" }
+				type: "item"
+			}]
+			x: 8.0d
+			y: -1.0d
+		}
 	]
 }
