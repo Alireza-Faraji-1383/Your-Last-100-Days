@@ -28,7 +28,11 @@
     // NBT work while keeping a crash rollback bounded to at most five seconds.
     const ACTIVE_STATE_KEY = "raidfactory_active_v1";
     const PENDING_TEAM_WINS_KEY = "raidfactory_pending_team_wins_v1";
-    const WIN_REWARD_MARKER_PREFIX = "raidfactory_full_reward_claimed_v1_";
+    // v1 delivered a textual item specification to player.give(), which this
+    // KubeJS version parses as a single stack of one item. v2 begins the
+    // first-clear history again so a player who only received that broken
+    // payout can receive their one proper full reward after this fix.
+    const WIN_REWARD_MARKER_PREFIX = "raidfactory_full_reward_claimed_v2_";
     const ACTIVE_SAVE_EVERY = 100;
     const TEAM_SYNC_EVERY = 20;       // refresh FTB roster/HUD once per second
     const TEAM_RAID_DISTANCE = 500;
@@ -2800,7 +2804,18 @@
             var count = fullReward ? authoredCount : Math.floor(authoredCount / 2);
             if (count <= 0) return false;
             try {
-                player.give(String(itemId) + " " + count);
+                // Do not pass "item_id count" as a string. KubeJS 2101 parses
+                // that form as an item id and silently discards the count,
+                // yielding exactly one item. An explicit ItemStack preserves
+                // counts above 64 as well; player.give() distributes it safely.
+                var rewardStack = Item.of(String(itemId));
+                if (!rewardStack || typeof rewardStack.setCount !== "function")
+                    throw new Error("could not create reward stack");
+                rewardStack.setCount(count);
+                player.give(rewardStack);
+                info("reward " + inst.defId + " -> " + player.username +
+                     ": " + itemId + " x" + count +
+                     (fullReward ? " (full)" : " (repeat)"));
                 return true;
             } catch (eGive) {
                 warn("victory reward " + itemId + " x" + count + ": " + eGive);

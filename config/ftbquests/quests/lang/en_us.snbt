@@ -392,6 +392,7 @@
 		"{image:irons_spellbooks:textures/quests/spells_outfit_priest.png width:60 height:100 align:center}"
 	]
 	quest.24BAC1C0392E950E.title: "&6Priest Outfit"
+	quest.2591DC67038917CD.title: "Invis"
 	quest.26E4868B7C280A98.quest_desc: ["Use an Escape Scroll after securing recall-based travel."]
 	quest.26E4868B7C280A98.title: "Emergency Exit"
 	quest.272558ECD49E41B3.quest_desc: ["Build a level 1 Outpost. Use it to extend your colony influence and support remote trade activity beyond the main settlement."]
@@ -1057,6 +1058,7 @@
 	quest.69EAF1072D492F1A.quest_desc: ["Obtain an Ancient Tome for knowledge-based rewards and later utility. Keep it as a useful progression item while the colony grows."]
 	quest.69EAF1072D492F1A.quest_subtitle: "Keep one in your hotbar"
 	quest.69EAF1072D492F1A.title: "Ancient Tome"
+	quest.69F6489441E12A0B.title: "Invis"
 	quest.6A60B76053393288.quest_desc: ["Build the Smeltery to process metals for tools and equipment. It becomes a core part of advanced production chains."]
 	quest.6A60B76053393288.quest_subtitle: "Builder a Smelter"
 	quest.6A60B76053393288.title: "Smeltery"
