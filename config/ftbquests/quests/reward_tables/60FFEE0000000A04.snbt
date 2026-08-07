@@ -119,5 +119,14 @@
 			}
 			weight: 0.5f
 		}
+		{
+			count: 2
+			id: "707148FF485C3298"
+			item: {
+				count: 1
+				id: "minecraft:cake"
+			}
+			weight: 2.0f
+		}
 	]
 }

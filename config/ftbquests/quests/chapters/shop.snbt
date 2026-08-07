@@ -158,7 +158,7 @@
 			}
 			id: "1D7F6CDB5830460A"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -225,7 +225,7 @@
 			}
 			id: "04D1B2FE07C5A96A"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -369,7 +369,7 @@
 			}
 			id: "3CB8AFABD435DAFD"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -441,7 +441,7 @@
 			disable_toast: true
 			id: "1B8F8360FA7CAB0D"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -470,7 +470,7 @@
 			disable_toast: true
 			id: "59EA669ABE8ABD8D"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -541,7 +541,7 @@
 			disable_toast: true
 			id: "36CFAF2E18974908"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -570,7 +570,7 @@
 			disable_toast: true
 			id: "0038426316854F1C"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -602,7 +602,7 @@
 			}
 			id: "28F188346E50DD6A"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -632,7 +632,7 @@
 			}
 			id: "08EC21D0F20FBEF8"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -662,7 +662,7 @@
 			}
 			id: "0316E30A250105ED"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -692,7 +692,7 @@
 			}
 			id: "6E75402CC8F32092"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -994,7 +994,7 @@
 			}
 			id: "5AAD08944CDC97B0"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1193,7 +1193,7 @@
 			}
 			id: "69F6489441E12A0B"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1223,7 +1223,7 @@
 			}
 			id: "2591DC67038917CD"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1245,6 +1245,255 @@
 			}]
 			x: 8.0d
 			y: -1.0d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				components: {
+					"ftbquests:icon": "supplementaries:textures/particle/empty.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "4152720C94EF6D83"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [
+				{
+					count: 5
+					id: "60AD4E392CB068A4"
+					item: {
+						count: 1
+						id: "minecraft:diamond_block"
+					}
+					type: "item"
+				}
+				{
+					count: 2
+					id: "2C4AED78771C4F75"
+					item: {
+						count: 1
+						id: "minecraft:netherite_scrap"
+					}
+					type: "item"
+				}
+				{
+					id: "3141A187CE434CF6"
+					type: "xp"
+					xp: 800
+				}
+				{
+					id: "1E64BC689B70756F"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+			]
+			shape: "none"
+			size: 0.5d
+			tasks: [{
+				consume_items: true
+				disable_toast: true
+				id: "5150FA70447C469A"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: -15.75d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:dark_oak_sapling"
+			}
+			id: "54F80CAD58358423"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 4
+				id: "3B4526058825A668"
+				item: {
+					count: 1
+					id: "minecraft:dark_oak_sapling"
+				}
+				type: "item"
+			}]
+			size: 1.2d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "3AE237C594BB1549"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.7999999999999998d
+			y: 1.2d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:acacia_sapling"
+			}
+			id: "7A2A2AFB90C05C34"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 4
+				id: "02CAE48BAFDD4501"
+				item: {
+					count: 1
+					id: "minecraft:acacia_sapling"
+				}
+				type: "item"
+			}]
+			size: 1.2d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "1683D23D9356B8A2"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -0.2999999999999998d
+			y: 1.2d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:jungle_sapling"
+			}
+			id: "14E3354CA91774A0"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 4
+				id: "57BAEA685CBFB59A"
+				item: {
+					count: 1
+					id: "minecraft:jungle_sapling"
+				}
+				type: "item"
+			}]
+			size: 1.2d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "39DBDCD72C290D15"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.7999999999999998d
+			y: 2.4d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:spruce_sapling"
+			}
+			id: "3B3B0B00C759708D"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 4
+				id: "50427DE9DA7A8862"
+				item: {
+					count: 1
+					id: "minecraft:spruce_sapling"
+				}
+				type: "item"
+			}]
+			size: 1.2d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "52F4A1D88DE0815C"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -0.2999999999999998d
+			y: 2.4d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:golden_carrot"
+			}
+			id: "71ED44B2CC0D3F38"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 16
+				id: "12E18AF214987B93"
+				item: {
+					count: 1
+					id: "minecraft:golden_carrot"
+				}
+				type: "item"
+			}]
+			size: 1.7d
+			tasks: [{
+				consume_items: true
+				disable_toast: true
+				id: "0E86302790ED824B"
+				item: { count: 1, id: "kubejs:silver_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: 3.7d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:experience_bottle"
+			}
+			id: "7B506E82238F6AA8"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 32
+				id: "42DC21DF258E1D04"
+				item: {
+					count: 1
+					id: "minecraft:experience_bottle"
+				}
+				type: "item"
+			}]
+			size: 1.7d
+			tasks: [{
+				consume_items: true
+				disable_toast: true
+				id: "22641F5EDA4E1830"
+				item: { count: 1, id: "kubejs:silver_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: 0.0d
 		}
 	]
 }

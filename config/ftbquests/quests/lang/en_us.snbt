@@ -268,6 +268,7 @@
 	quest.149C8729A5AF48A5.title: "Trade Post Charter"
 	quest.14DA3DC7C0009A6A.quest_desc: ["Grow the colony to fifty citizens. This is a major midgame settlement milestone that requires stable housing and jobs."]
 	quest.14DA3DC7C0009A6A.title: "Population 50"
+	quest.14E3354CA91774A0.title: "Sapling"
 	quest.150B22BC04F1A682.quest_desc: ["Smelt iron to unlock reliable tools and the next mining tier."]
 	quest.150B22BC04F1A682.title: "First Iron"
 	quest.153216DF47821D6F.quest_desc: ["Infuse Hellshelves once your table reaches the Hell infusion requirements, then craft Blazing or Glowing Hellshelves. This branch pushes power and Quanta toward level 60."]
@@ -531,6 +532,7 @@
 	quest.39FFF3DDA03C40EF.quest_subtitle: "Reaching Level 90"
 	quest.3AE1C3290500638F.quest_desc: ["Grow the colony to ten citizens. This confirms the early housing, food, and job systems are working together."]
 	quest.3AE1C3290500638F.title: "Population 10"
+	quest.3B3B0B00C759708D.title: "Sapling"
 	quest.3B40A769EDB26EA2.quest_desc: ["Prepare a Postbox and Stash for colony item routing. These tools help transfer resources and support logistics before the settlement is fully automated."]
 	quest.3B40A769EDB26EA2.title: "Mail and Stash"
 	quest.3B62486F60D527E7.quest_desc: ["Obtain an Extraction Tome to complete the enchantment extraction utility chain."]
@@ -577,6 +579,7 @@
 	quest.4142367445F42CF7.quest_desc: ["Craft a Seashelf with Prismarine materials. This shelf starts the Sea branch, adding Eterna and Arcana so rare and multi-enchantment results become more common."]
 	quest.4142367445F42CF7.quest_subtitle: "Step 04B - Sea Branch"
 	quest.4142367445F42CF7.title: "The Purity of the Seas"
+	quest.4152720C94EF6D83.title: "    "
 	quest.41677ADA7C09E30E.quest_desc: [
 		"Obtain an Improved Scrap Tome."
 		""
@@ -873,6 +876,7 @@
 		"{image:irons_spellbooks:textures/quests/spells_apothecarist.png width:100 height:200 align:center}"
 	]
 	quest.548F85EE6B6F1811.title: "&2&lApothecarist"
+	quest.54F80CAD58358423.title: "Sapling"
 	quest.551A4916F032ACCF.quest_desc: [
 		"The Arcane Anvil has the most uses out of any block in &lIron Spells&r. \n\nYou can combine &3Spells&r with the same Ink to level it up. \nIt can combine &3Scrolls&r into Weapons to be used with them, like a Sword. \nYou can also set an Affinity to Rings using Upgrade Orbs, or add Upgrade Orbs to Weapons and Gear."
 		"{image:irons_spellbooks:textures/quests/spells_anvil_gui.png width:100 height:100 align:center}"
@@ -1100,6 +1104,7 @@
 	quest.6F60F67F81C1CC7C.title: "Dragon-Slaying Enchanter"
 	quest.6FC427158E014F38.quest_desc: ["Complete the major Enigmatic branches to finish this chapter."]
 	quest.6FC427158E014F38.title: "Beyond the Curse"
+	quest.71ED44B2CC0D3F38.title: "Invis"
 	quest.71FCF06A98CC66D7.quest_desc: ["Obtain a Clipboard to inspect citizens, work orders, and colony problems. It is one of the best tools for quickly understanding what your settlement needs next."]
 	quest.71FCF06A98CC66D7.title: "Clipboard"
 	quest.7270A37E31A70C91.quest_desc: ["&6&lHoly&r is for all the Medic/Support players. It's mostly meant for healing and helping. \n\n&6&lHoly's&r Focus Material is &6Divine Pearls&r which are crafted. You can make Runes with those or kill the &6&lPriest&r to get &6Holy Runes&r. \n\n&6Holy Scrolls&r are &fWhite&r with &6Gold&r texts."]
@@ -1166,9 +1171,11 @@
 	quest.792FFB9899C14E0A.title: "Marketplace"
 	quest.7966BC6250F38D48.quest_desc: ["Make one wish through the Trade Post wishing system. This completes the addon wish progression after the Wishing Well step."]
 	quest.7966BC6250F38D48.title: "Make a Wish"
+	quest.7A2A2AFB90C05C34.title: "Sapling"
 	quest.7A73657F0C2B5062.quest_desc: ["Craft a Hellshelf with Nether materials. This shelf starts the Hell branch, raising Eterna for stronger enchant levels and Quanta for more unstable rolls."]
 	quest.7A73657F0C2B5062.quest_subtitle: "Step 04A - Hell Branch"
 	quest.7A73657F0C2B5062.title: "The Chaos of Hell"
+	quest.7B506E82238F6AA8.title: "XP"
 	quest.7B5E2CD676A1A1C4.quest_desc: ["Build the Baker to improve food quality and variety. Better meals help keep citizens fed during larger building projects."]
 	quest.7B5E2CD676A1A1C4.quest_subtitle: "Build a Bakery"
 	quest.7B5E2CD676A1A1C4.title: "Baker"

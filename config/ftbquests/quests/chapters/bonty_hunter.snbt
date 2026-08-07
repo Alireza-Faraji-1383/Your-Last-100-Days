@@ -111,7 +111,7 @@
 		{
 			id: "46A64FE462A309A2"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -143,7 +143,7 @@
 			dependencies: ["46A64FE462A309A2"]
 			id: "7F9A15CD13D2D7CE"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -182,7 +182,7 @@
 			dependencies: ["7F9A15CD13D2D7CE"]
 			id: "0C6336145194DF5F"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -221,7 +221,7 @@
 			dependencies: ["0C6336145194DF5F"]
 			id: "7553083A4719E09B"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -259,7 +259,7 @@
 		{
 			id: "431FE96D8045138D"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -291,7 +291,7 @@
 			dependencies: ["431FE96D8045138D"]
 			id: "2B490712D752F2AA"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -330,7 +330,7 @@
 			dependencies: ["2B490712D752F2AA"]
 			id: "4DC0476240C74913"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -369,7 +369,7 @@
 			dependencies: ["4DC0476240C74913"]
 			id: "10DE9863EFA5F528"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -407,7 +407,7 @@
 		{
 			id: "1B416F55DB53C59C"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -439,7 +439,7 @@
 			dependencies: ["1B416F55DB53C59C"]
 			id: "761C7DF67620DC29"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -478,7 +478,7 @@
 			dependencies: ["761C7DF67620DC29"]
 			id: "326677DEA12C0398"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -517,7 +517,7 @@
 			dependencies: ["326677DEA12C0398"]
 			id: "7AA9A3A54292DADF"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -555,7 +555,7 @@
 		{
 			id: "767FA524371C9480"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -587,7 +587,7 @@
 			dependencies: ["767FA524371C9480"]
 			id: "635C194330BA9376"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -626,7 +626,7 @@
 			dependencies: ["635C194330BA9376"]
 			id: "21152CBE4D146E81"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -665,7 +665,7 @@
 			dependencies: ["21152CBE4D146E81"]
 			id: "66A8C41F7F4F726B"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -703,7 +703,7 @@
 		{
 			id: "44B1D7CD5CCE18FD"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -735,7 +735,7 @@
 			dependencies: ["44B1D7CD5CCE18FD"]
 			id: "73947C4B8254774E"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -774,7 +774,7 @@
 			dependencies: ["73947C4B8254774E"]
 			id: "7FABA4362B1747BD"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -813,7 +813,7 @@
 			dependencies: ["7FABA4362B1747BD"]
 			id: "1552D2ED4A036712"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -851,7 +851,7 @@
 		{
 			id: "4D8B8AE038552C78"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -883,7 +883,7 @@
 			dependencies: ["340F0444044D60BA"]
 			id: "62DA05A109DCFA92"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -922,7 +922,7 @@
 			dependencies: ["62DA05A109DCFA92"]
 			id: "367899B66A4BC30F"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -960,7 +960,7 @@
 		{
 			id: "75CB70D6340B9E4B"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -992,7 +992,7 @@
 			dependencies: ["75CB70D6340B9E4B"]
 			id: "155C9B6E1BE2255D"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1031,7 +1031,7 @@
 			dependencies: ["155C9B6E1BE2255D"]
 			id: "49DB89311DB8C3E5"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1070,7 +1070,7 @@
 			dependencies: ["49DB89311DB8C3E5"]
 			id: "3E8EA6809CFE7F83"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1108,7 +1108,7 @@
 		{
 			id: "5C815269EA7B055E"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1140,7 +1140,7 @@
 			dependencies: ["5C815269EA7B055E"]
 			id: "79EC9E317DCDD70C"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1179,7 +1179,7 @@
 			dependencies: ["79EC9E317DCDD70C"]
 			id: "0081C9FE085A14BD"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1218,7 +1218,7 @@
 			dependencies: ["0081C9FE085A14BD"]
 			id: "562C9082EA53DE02"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1262,7 +1262,7 @@
 			}
 			id: "228A571FEFE2EDAA"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1297,7 +1297,7 @@
 			}
 			id: "1F47D5A964354601"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1339,7 +1339,7 @@
 			}
 			id: "5368F734DF31A768"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1381,7 +1381,7 @@
 			}
 			id: "3D16905887ECCFCC"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1422,7 +1422,7 @@
 			}
 			id: "44A2E11BCD2A97A8"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1457,7 +1457,7 @@
 			}
 			id: "4456DF4F17EE974B"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1499,7 +1499,7 @@
 			}
 			id: "6094F3D5234A99BE"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1541,7 +1541,7 @@
 			}
 			id: "3A80D5F8B58DCF72"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1582,7 +1582,7 @@
 			}
 			id: "16AB5EBC9FC3D0A6"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1617,7 +1617,7 @@
 			}
 			id: "24936A36AA105819"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1659,7 +1659,7 @@
 			}
 			id: "7C0D8D03B1585871"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1701,7 +1701,7 @@
 			}
 			id: "5841235154F20F41"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1745,7 +1745,7 @@
 			}
 			id: "432BCBA63DDF143F"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1783,7 +1783,7 @@
 			}
 			id: "68C45EE6E1929275"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1828,7 +1828,7 @@
 			}
 			id: "5CD0B8FBE3D0248D"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1873,7 +1873,7 @@
 			}
 			id: "752201E2F85A9A1C"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1914,7 +1914,7 @@
 			}
 			id: "6D89803F760D5658"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -1949,7 +1949,7 @@
 			}
 			id: "7508A124081E679C"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -1991,7 +1991,7 @@
 			}
 			id: "3BD9809A4BDA5445"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -2033,7 +2033,7 @@
 			}
 			id: "04B585AE7EEA7583"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -2071,7 +2071,7 @@
 		{
 			id: "3FE9B15A4C6B8D21"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2096,7 +2096,7 @@
 			dependencies: ["4D8B8AE038552C78"]
 			id: "340F0444044D60BA"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -2135,7 +2135,7 @@
 			dependencies: ["3FE9B15A4C6B8D21"]
 			id: "375A5B42DB4A31C3"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2163,7 +2163,7 @@
 			]
 			id: "19E60C14ABB32C38"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2192,7 +2192,7 @@
 			]
 			id: "49E97A0BA6E7DB63"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2216,7 +2216,7 @@
 		{
 			id: "342DA5C07F1EB066"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2241,7 +2241,7 @@
 			dependencies: ["342DA5C07F1EB066"]
 			id: "6C815AC1A7CD46D6"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -2273,7 +2273,7 @@
 			dependencies: ["6C815AC1A7CD46D6"]
 			id: "28813D2D14D9906D"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2298,7 +2298,7 @@
 			dependencies: ["28813D2D14D9906D"]
 			id: "634DF9EF9679D939"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2322,7 +2322,7 @@
 		{
 			id: "1608F430BCD06748"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2347,7 +2347,7 @@
 			dependencies: ["1608F430BCD06748"]
 			id: "1BC0E1CA38969EE3"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2372,7 +2372,7 @@
 			dependencies: ["1BC0E1CA38969EE3"]
 			id: "12C75FDC1E557B6D"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2397,7 +2397,7 @@
 			dependencies: ["12C75FDC1E557B6D"]
 			id: "1A17FE8F3A048524"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2421,7 +2421,7 @@
 		{
 			id: "43C7606D98B9E2A9"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -2469,7 +2469,7 @@
 			dependencies: ["43C7606D98B9E2A9"]
 			id: "4623AB63F23933F3"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2494,7 +2494,7 @@
 			dependencies: ["4623AB63F23933F3"]
 			id: "0A7963E1A3E40DD3"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2519,7 +2519,7 @@
 			dependencies: ["0A7963E1A3E40DD3"]
 			id: "4D4A72B430B269A8"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2543,7 +2543,7 @@
 		{
 			id: "5CA8E651F6AA0693"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
@@ -2591,7 +2591,7 @@
 			dependencies: ["5CA8E651F6AA0693"]
 			id: "4BBED18E95CC7F36"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2616,7 +2616,7 @@
 			dependencies: ["4BBED18E95CC7F36"]
 			id: "0F90A64B18FC9072"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2641,7 +2641,7 @@
 			dependencies: ["0F90A64B18FC9072"]
 			id: "0CFBEC334AB5AE28"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2665,7 +2665,7 @@
 		{
 			id: "614B5F420F9FCF60"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2691,7 +2691,7 @@
 			dependencies: ["614B5F420F9FCF60"]
 			id: "7F6A2DB35BF8AE5F"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2716,7 +2716,7 @@
 			dependencies: ["7F6A2DB35BF8AE5F"]
 			id: "6F8E2C3CBB2379AB"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2741,7 +2741,7 @@
 			dependencies: ["6F8E2C3CBB2379AB"]
 			id: "0B9BA8D49166A47A"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2765,7 +2765,7 @@
 		{
 			id: "1C2A82E9F2B86CF7"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2790,7 +2790,7 @@
 			dependencies: ["1C2A82E9F2B86CF7"]
 			id: "6873C651A2AFFBEC"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2815,7 +2815,7 @@
 			dependencies: ["6873C651A2AFFBEC"]
 			id: "5F6CB06689DFB73B"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2840,7 +2840,7 @@
 			dependencies: ["5F6CB06689DFB73B"]
 			id: "0A84104223FD8075"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2864,7 +2864,7 @@
 		{
 			id: "52ABEE2BEF40BB78"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2889,7 +2889,7 @@
 			dependencies: ["52ABEE2BEF40BB78"]
 			id: "12E31C2858662B20"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2914,7 +2914,7 @@
 			dependencies: ["12E31C2858662B20"]
 			id: "187296552C092680"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2939,7 +2939,7 @@
 			dependencies: ["187296552C092680"]
 			id: "18178737F4B6A637"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2966,7 +2966,7 @@
 			}
 			id: "25341F5F45753CD5"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -2994,7 +2994,7 @@
 			}
 			id: "20ED1DA1CE456A9A"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3022,7 +3022,7 @@
 			}
 			id: "77A78AE59270C185"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3050,7 +3050,7 @@
 			}
 			id: "28E0CDDA3DF0F574"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3074,7 +3074,7 @@
 		{
 			id: "741662DCA4E8C257"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3106,7 +3106,7 @@
 			dependencies: ["741662DCA4E8C257"]
 			id: "1E122063FEF0C582"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3138,7 +3138,7 @@
 			dependencies: ["1E122063FEF0C582"]
 			id: "63929FB8805FA52A"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3170,7 +3170,7 @@
 			dependencies: ["63929FB8805FA52A"]
 			id: "6BECC946904E7312"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3201,7 +3201,7 @@
 		{
 			id: "14A267A5F2541EBF"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3233,7 +3233,7 @@
 			dependencies: ["14A267A5F2541EBF"]
 			id: "61680E311BF4DCAD"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3265,7 +3265,7 @@
 			dependencies: ["61680E311BF4DCAD"]
 			id: "09C7FEC7ECCC4CB3"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
@@ -3297,7 +3297,7 @@
 			dependencies: ["09C7FEC7ECCC4CB3"]
 			id: "3D8D66D3FA5F4297"
 			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "TEAM"
+			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
