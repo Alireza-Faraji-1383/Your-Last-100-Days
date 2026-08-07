@@ -727,6 +727,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "788CA1585C890BDE"
 				item: {
 					count: 1
@@ -769,6 +770,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "507DDCBB99991200"
 				item: {
 					count: 1
@@ -812,6 +814,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "4CE14F1BF622183C"
 				item: {
 					count: 1
@@ -855,6 +858,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "25E9FE6C65BB66EF"
 				item: {
 					count: 1
@@ -906,6 +910,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "044A86E2FFEC8D5A"
 				item: {
 					components: {
@@ -957,6 +962,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "08D8714AAA8FDB9F"
 				item: {
 					count: 1
@@ -998,6 +1004,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				exclude_from_claim_all: true
 				id: "394412743A117BE2"
 				table_id: 5764213249982343484L
@@ -1030,6 +1037,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 16
 				id: "4E000135CFF7198E"
 				item: {
@@ -1112,6 +1120,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 16
 				id: "077FD50ECA6216C9"
 				item: {
@@ -1156,6 +1165,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 16
 				id: "437CAA6594122FE6"
 				item: {
@@ -1197,6 +1207,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "3E73BFF7B163BE29"
 				item: {
 					count: 1
@@ -1227,6 +1238,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				id: "29607A6CC2BD4C32"
 				item: {
 					count: 1
@@ -1262,6 +1274,7 @@
 			mqt_show_roster_tooltip: false
 			rewards: [
 				{
+					auto: "enabled"
 					count: 5
 					id: "60AD4E392CB068A4"
 					item: {
@@ -1271,6 +1284,7 @@
 					type: "item"
 				}
 				{
+					auto: "enabled"
 					count: 2
 					id: "2C4AED78771C4F75"
 					item: {
@@ -1280,11 +1294,13 @@
 					type: "item"
 				}
 				{
+					auto: "enabled"
 					id: "3141A187CE434CF6"
 					type: "xp"
 					xp: 800
 				}
 				{
+					auto: "enabled"
 					id: "1E64BC689B70756F"
 					item: {
 						count: 1
@@ -1317,6 +1333,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 4
 				id: "3B4526058825A668"
 				item: {
@@ -1349,6 +1366,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 4
 				id: "02CAE48BAFDD4501"
 				item: {
@@ -1381,6 +1399,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 4
 				id: "57BAEA685CBFB59A"
 				item: {
@@ -1413,6 +1432,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 4
 				id: "50427DE9DA7A8862"
 				item: {
@@ -1445,6 +1465,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 16
 				id: "12E18AF214987B93"
 				item: {
@@ -1476,6 +1497,7 @@
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
+				auto: "enabled"
 				count: 32
 				id: "42DC21DF258E1D04"
 				item: {
