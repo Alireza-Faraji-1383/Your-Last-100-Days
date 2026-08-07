@@ -13,4 +13,8 @@ StartupEvents.registry('item', (event) => {
 
   event.create('help')
     .displayName('Help')
+
+  event.create('raid_time_rewind')
+    .displayName('Raid Time Rewind')
+    .tooltip('Right-click to rewind your personal raid day by 10.')
 })

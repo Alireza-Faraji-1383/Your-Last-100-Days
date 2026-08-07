@@ -47,7 +47,10 @@ function captureRecipe(callback) {
 }
 
 function useItem(handler, playerDays, currentDays) {
-    const item = { count: 1 };
+    const item = {
+        count: 1,
+        shrink(amount) { this.count -= amount; }
+    };
     const player = { messages: [], tell(message) { this.messages.push(message); } };
     const server = {};
     let savedDays = null;
@@ -67,7 +70,7 @@ const api = {};
 const registered = loadScript(api);
 
 assert.equal(registered.usedItemId, "kubejs:raid_time_rewind");
-assert.deepEqual(captureRecipe(registered.recipeCallback), {
+assert.deepEqual(JSON.parse(JSON.stringify(captureRecipe(registered.recipeCallback))), {
     output: "kubejs:raid_time_rewind",
     pattern: ["DDD", "DED", "DDD"],
     keys: { D: "minecraft:diamond", E: "minecraft:ender_pearl" }
@@ -86,8 +89,19 @@ const failedApi = {
     set() { return false; }
 };
 const failedRegistered = loadScript(failedApi);
-const failedItem = { count: 1 };
+const failedItem = {
+    count: 1,
+    shrink(amount) { this.count -= amount; }
+};
 failedRegistered.useCallback({ server: {}, player: { tell() {} }, item: failedItem });
 assert.equal(failedItem.count, 1, "does not consume the item when the progress save fails");
+
+const missingApiRegistered = loadScript(null);
+const missingApiItem = {
+    count: 1,
+    shrink(amount) { this.count -= amount; }
+};
+missingApiRegistered.useCallback({ server: {}, player: { tell() {} }, item: missingApiItem });
+assert.equal(missingApiItem.count, 1, "does not consume the item when raid progress is unavailable");
 
 console.log("raid_time_rewind.test.js: PASS");
