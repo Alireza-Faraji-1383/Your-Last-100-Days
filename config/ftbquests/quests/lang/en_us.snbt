@@ -173,6 +173,7 @@
 	quest.0B1150037754A4EB.quest_desc: ["Infuse Seashelves when the table has enough Eterna, Quanta, and Arcana, then craft Heart-Forged or Crystalline variants. This branch gives the table cleaner high-quality rolls."]
 	quest.0B1150037754A4EB.quest_subtitle: "Step 05B - Infused Seashelves"
 	quest.0B1150037754A4EB.title: "Sleeping in the Cold Below"
+	quest.0B6ACA4922CCF7E8.title: "    "
 	quest.0BCD3AEC3A4ACC8B.quest_desc: ["Craft or obtain an Enchanting Table to open the Apothic system. The table now shows enchanting stats, supports higher power levels, and becomes the center of every later shelf setup."]
 	quest.0BCD3AEC3A4ACC8B.quest_subtitle: "Step 01 - Table Foundation"
 	quest.0BCD3AEC3A4ACC8B.title: "The Secrets of Enchanting"
@@ -579,7 +580,6 @@
 	quest.4142367445F42CF7.quest_desc: ["Craft a Seashelf with Prismarine materials. This shelf starts the Sea branch, adding Eterna and Arcana so rare and multi-enchantment results become more common."]
 	quest.4142367445F42CF7.quest_subtitle: "Step 04B - Sea Branch"
 	quest.4142367445F42CF7.title: "The Purity of the Seas"
-	quest.4152720C94EF6D83.title: "    "
 	quest.41677ADA7C09E30E.quest_desc: [
 		"Obtain an Improved Scrap Tome."
 		""
@@ -876,7 +876,6 @@
 		"{image:irons_spellbooks:textures/quests/spells_apothecarist.png width:100 height:200 align:center}"
 	]
 	quest.548F85EE6B6F1811.title: "&2&lApothecarist"
-	quest.54F80CAD58358423.title: "Sapling"
 	quest.551A4916F032ACCF.quest_desc: [
 		"The Arcane Anvil has the most uses out of any block in &lIron Spells&r. \n\nYou can combine &3Spells&r with the same Ink to level it up. \nIt can combine &3Scrolls&r into Weapons to be used with them, like a Sword. \nYou can also set an Affinity to Rings using Upgrade Orbs, or add Upgrade Orbs to Weapons and Gear."
 		"{image:irons_spellbooks:textures/quests/spells_anvil_gui.png width:100 height:100 align:center}"
@@ -983,6 +982,7 @@
 	quest.622AEF3DA469F1C9.quest_subtitle: "The melody of power"
 	quest.622AEF3DA469F1C9.title: "Melody of Eterna"
 	quest.62DA05A109DCFA92.quest_desc: ["Continue the Pillager bounty with a larger target. Complete it to unlock the next tier."]
+	quest.63183D00FF35ED61.title: "Sapling"
 	quest.635C194330BA9376.quest_desc: ["Continue the Enderman bounty with a larger target. Complete it to unlock the next tier."]
 	quest.637C87D8968CD51A.title: "&aUncommon&r Ink"
 	quest.639531AB27DCD267.quest_desc: ["&7Runes&r are how we make our Classes and their parts. To get a &7Blank Rune&r you can either kill the &4&lDead King&r or wipe clean an Inscribed Rune with a Shriving Stone. \n\nThere's 8 different classes (1 secret one) each having their own &3Scrolls&r, Focus Material, Upgrades, and Outfits. "]

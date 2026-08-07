@@ -1262,102 +1262,6 @@
 			can_repeat: true
 			disable_toast: true
 			icon: {
-				components: {
-					"ftbquests:icon": "supplementaries:textures/particle/empty.png"
-				}
-				id: "ftbquests:custom_icon"
-			}
-			id: "4152720C94EF6D83"
-			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "PER_ACTOR"
-			mqt_per_player: true
-			mqt_show_roster_tooltip: false
-			rewards: [
-				{
-					auto: "enabled"
-					count: 5
-					id: "60AD4E392CB068A4"
-					item: {
-						count: 1
-						id: "minecraft:diamond_block"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
-					count: 2
-					id: "2C4AED78771C4F75"
-					item: {
-						count: 1
-						id: "minecraft:netherite_scrap"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
-					id: "3141A187CE434CF6"
-					type: "xp"
-					xp: 800
-				}
-				{
-					auto: "enabled"
-					id: "1E64BC689B70756F"
-					item: {
-						count: 1
-						id: "kubejs:silver_coin"
-					}
-					type: "item"
-				}
-			]
-			shape: "none"
-			size: 0.5d
-			tasks: [{
-				consume_items: true
-				disable_toast: true
-				id: "5150FA70447C469A"
-				item: { count: 1, id: "kubejs:copper_coin" }
-				type: "item"
-			}]
-			x: -1.0d
-			y: -15.75d
-		}
-		{
-			can_repeat: true
-			disable_toast: true
-			icon: {
-				id: "minecraft:dark_oak_sapling"
-			}
-			id: "54F80CAD58358423"
-			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "PER_ACTOR"
-			mqt_per_player: true
-			mqt_show_roster_tooltip: false
-			rewards: [{
-				auto: "enabled"
-				count: 4
-				id: "3B4526058825A668"
-				item: {
-					count: 1
-					id: "minecraft:dark_oak_sapling"
-				}
-				type: "item"
-			}]
-			size: 1.2d
-			tasks: [{
-				consume_items: true
-				count: 2L
-				disable_toast: true
-				id: "3AE237C594BB1549"
-				item: { count: 1, id: "kubejs:copper_coin" }
-				type: "item"
-			}]
-			x: -1.7999999999999998d
-			y: 1.2d
-		}
-		{
-			can_repeat: true
-			disable_toast: true
-			icon: {
 				id: "minecraft:acacia_sapling"
 			}
 			id: "7A2A2AFB90C05C34"
@@ -1516,6 +1420,102 @@
 			}]
 			x: -1.0d
 			y: 0.0d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:dark_oak_sapling"
+			}
+			id: "63183D00FF35ED61"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 4
+				id: "3538F997E83A9074"
+				item: {
+					count: 1
+					id: "minecraft:dark_oak_sapling"
+				}
+				type: "item"
+			}]
+			size: 1.2d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "43BE32C49125464F"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.7999999999999998d
+			y: 1.2d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				components: {
+					"ftbquests:icon": "supplementaries:textures/particle/empty.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "0B6ACA4922CCF7E8"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [
+				{
+					auto: "enabled"
+					count: 5
+					id: "6AB68C64CDF2C3CD"
+					item: {
+						count: 1
+						id: "minecraft:diamond_block"
+					}
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					count: 2
+					id: "4E5C9B043990A00B"
+					item: {
+						count: 1
+						id: "minecraft:netherite_scrap"
+					}
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					id: "66414E5A8878D2F6"
+					type: "xp"
+					xp: 800
+				}
+				{
+					auto: "enabled"
+					id: "1960889DB2252B41"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+			]
+			shape: "none"
+			size: 0.5d
+			tasks: [{
+				consume_items: true
+				disable_toast: true
+				id: "0FB3EB2B24277096"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: -14.0d
 		}
 	]
 }
