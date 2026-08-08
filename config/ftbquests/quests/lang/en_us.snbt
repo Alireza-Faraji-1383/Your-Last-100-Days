@@ -67,6 +67,7 @@
 	quest.01119871B1D5C576.title: "&6Village"
 	quest.016FC2B5041148D6.quest_desc: ["Build the enchanter setup and begin improving your gear."]
 	quest.016FC2B5041148D6.title: "Apothic Enchanter"
+	quest.018E8278711C02F2.title: "Sapling"
 	quest.0200000000000001.title: "Iron-Clad"
 	quest.0200000000000004.title: "Diamond Edge"
 	quest.0200000000000007.quest_desc: ["Enchant any item at an Enchanting Table."]
@@ -556,6 +557,7 @@
 	quest.3C4CBE20B2EE36D3.quest_subtitle: "To reach level 45, you'll want to create some Hellshelves and add them to your existing Bookshelves."
 	quest.3CB8AFABD435DAFD.quest_desc: ["Unlock the cursed shop route after reaching the Cursed Ring milestone and receive startup currency."]
 	quest.3CB8AFABD435DAFD.title: "Cursed Investor"
+	quest.3DC165932F86E48A.title: "Sapling"
 	quest.3E8077AB45C79E6A.quest_desc: [
 		"Definitely better than a Normal Minecraft Cauldron! \n\nThe Alchemist Cauldron can: \n1. Be used to get &4Blood&r by cooking Mobs or the Player. \n2. Make and upgrade Potions. \n3. Have half a chance at getting Ink from a Scroll. \n4. Combine 4 Ink of a Rarity to a higher Rarity. "
 		"{image:irons_spellbooks:textures/quests/spells_cauldron.png width:100 height:100 align:center}"
@@ -1139,6 +1141,7 @@
 	quest.75599A9909C7A8C8.title: "First Meal"
 	quest.75CC6A3ABF5E66E2.quest_desc: ["Grow the colony to seventy-five citizens. This is a late colony milestone that demands strong logistics, food, housing, and defense."]
 	quest.75CC6A3ABF5E66E2.title: "Population 75"
+	quest.7611B7FE98792535.title: "End"
 	quest.761C7DF67620DC29.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
 	quest.76558D23A70AFF78.title: "&bIce&r Upgrade Orb"
 	quest.767FA524371C9480.quest_desc: ["Hunt Endermen to start this bounty chain. The next tier asks for a larger kill count."]

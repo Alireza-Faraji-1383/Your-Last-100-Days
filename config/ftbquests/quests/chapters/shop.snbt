@@ -1288,8 +1288,8 @@
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: -0.2999999999999998d
-			y: 1.2d
+			x: 0.5214285714285696d
+			y: 1.0857142857142819d
 		}
 		{
 			can_repeat: true
@@ -1321,8 +1321,8 @@
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: -1.7999999999999998d
-			y: 2.4d
+			x: -2.4785714285714304d
+			y: 2.285714285714282d
 		}
 		{
 			can_repeat: true
@@ -1354,8 +1354,8 @@
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: -0.2999999999999998d
-			y: 2.4d
+			x: 0.5214285714285696d
+			y: 2.285714285714282d
 		}
 		{
 			can_repeat: true
@@ -1419,7 +1419,7 @@
 				type: "item"
 			}]
 			x: -1.0d
-			y: 0.0d
+			y: -0.34285714285714874d
 		}
 		{
 			can_repeat: true
@@ -1451,8 +1451,8 @@
 				item: { count: 1, id: "kubejs:copper_coin" }
 				type: "item"
 			}]
-			x: -1.7999999999999998d
-			y: 1.2d
+			x: -2.4785714285714304d
+			y: 1.0857142857142819d
 		}
 		{
 			can_repeat: true
@@ -1471,7 +1471,6 @@
 			rewards: [
 				{
 					auto: "enabled"
-					count: 5
 					id: "6AB68C64CDF2C3CD"
 					item: {
 						count: 1
@@ -1493,7 +1492,7 @@
 					auto: "enabled"
 					id: "66414E5A8878D2F6"
 					type: "xp"
-					xp: 800
+					xp: 1000
 				}
 				{
 					auto: "enabled"
@@ -1501,6 +1500,26 @@
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					count: 9
+					id: "2E4E85D3AFE60984"
+					item: {
+						count: 1
+						id: "minecraft:ender_pearl"
+					}
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					count: 2
+					id: "25A54D58DDDFA02B"
+					item: {
+						count: 1
+						id: "enigmaticlegacyplus:recall_potion"
 					}
 					type: "item"
 				}
@@ -1516,6 +1535,72 @@
 			}]
 			x: -1.0d
 			y: -14.0d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:birch_sapling"
+			}
+			id: "3DC165932F86E48A"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 4
+				id: "4D6E0BC51DDAB6F7"
+				item: {
+					count: 1
+					id: "minecraft:birch_sapling"
+				}
+				type: "item"
+			}]
+			size: 1.2d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "0436A399C2A30968"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -0.9642857142857153d
+			y: 1.0857142857142819d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:oak_sapling"
+			}
+			id: "018E8278711C02F2"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 4
+				id: "1760E4481C890827"
+				item: {
+					count: 1
+					id: "minecraft:oak_sapling"
+				}
+				type: "item"
+			}]
+			size: 1.2d
+			tasks: [{
+				consume_items: true
+				count: 2L
+				disable_toast: true
+				id: "7E40E9BBA67214FB"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -0.9642857142857153d
+			y: 2.3071428571428543d
 		}
 	]
 }
