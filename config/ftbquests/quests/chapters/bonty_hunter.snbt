@@ -13,7 +13,7 @@
 	images: [
 		{
 			height: 4.0d
-			id: "147B44F0A56679BC"
+			id: "474D3649CED2A23C"
 			image: "minecraft:item/iron_sword"
 			rotation: 0.0d
 			width: 4.0d
@@ -22,7 +22,7 @@
 		}
 		{
 			height: 4.0d
-			id: "581F749092ECE53A"
+			id: "651096D5428DCDA6"
 			image: "minecraft:item/iron_sword"
 			rotation: -90.0d
 			width: 4.0d
@@ -31,7 +31,7 @@
 		}
 		{
 			height: 7.0d
-			id: "5ADF163465ECDA0E"
+			id: "43789EA863AD0AB1"
 			image: "supplementaries:item/antique_map"
 			order: -1
 			rotation: 0.0d
@@ -41,7 +41,7 @@
 		}
 		{
 			height: 2.0d
-			id: "48F03A13758361F9"
+			id: "664DBF0929E5241F"
 			image: "born_in_chaos_v1:textures/born_in_chaos_title.png"
 			rotation: 0.0d
 			width: 5.0d
@@ -50,7 +50,7 @@
 		}
 		{
 			height: 3.0d
-			id: "3AD35429CE800F27"
+			id: "6EE3B7E294A2C95B"
 			image: "born_in_chaos_v1:textures/chaosicon2.png"
 			order: -1
 			rotation: 0.0d
@@ -60,7 +60,7 @@
 		}
 		{
 			height: 3.0d
-			id: "31E98A821D027390"
+			id: "1FF1FE8D06EE6A3D"
 			image: "minecraft:textures/gui/title/minecraft.png"
 			rotation: 0.0d
 			width: 12.0d
@@ -69,7 +69,7 @@
 		}
 		{
 			height: 3.0d
-			id: "51D95519FD2B4693"
+			id: "5DDC67EFBDA3DA8B"
 			image: "irons_spellbooks:textures/quests/spells_title.png"
 			rotation: 0.0d
 			width: 8.0d
@@ -78,7 +78,7 @@
 		}
 		{
 			height: 1.0d
-			id: "671AA3D870435337"
+			id: "7284F6E23C15F984"
 			image: "minecraft:block/campfire_fire"
 			rotation: 0.0d
 			width: 1.0d
@@ -87,7 +87,7 @@
 		}
 		{
 			height: 1.0d
-			id: "69EF63FC6F12863A"
+			id: "679BC80E3FA96694"
 			image: "minecraft:block/soul_campfire_fire"
 			rotation: 0.0d
 			width: 1.0d
@@ -96,7 +96,7 @@
 		}
 		{
 			height: 7.0d
-			id: "6C11FC933C74F8F5"
+			id: "3861033AF1B3EEAA"
 			image: "kubejs:textures/quests/art/earth.png"
 			order: -4
 			rotation: 0.0d
@@ -109,14 +109,14 @@
 	quest_links: [ ]
 	quests: [
 		{
-			id: "46A64FE462A309A2"
+			id: "725D4B5645CC73BF"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 24
-				id: "77C974230DCAD855"
+				id: "73AC0A45F6725E26"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -132,7 +132,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "03F0FA8C9A1B7D62"
+				id: "7170171DFE0D7D24"
 				type: "kill"
 				value: 20L
 			}]
@@ -140,8 +140,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["46A64FE462A309A2"]
-			id: "7F9A15CD13D2D7CE"
+			id: "6D9B2AEEBD3A4E30"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -149,7 +148,7 @@
 			rewards: [
 				{
 					count: 32
-					id: "1B3A633EF73D8362"
+					id: "48FEBFE2F752299B"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -157,7 +156,7 @@
 					type: "item"
 				}
 				{
-					id: "288235AB277316DE"
+					id: "5E11F916849E834A"
 					type: "xp"
 					xp: 150
 				}
@@ -171,7 +170,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "2FB27A09A0F7F0DD"
+				id: "40595E03C8FE090D"
 				type: "kill"
 				value: 64L
 			}]
@@ -179,8 +178,7 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["7F9A15CD13D2D7CE"]
-			id: "0C6336145194DF5F"
+			id: "60ACD805056B6844"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -188,7 +186,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "4B60A4F6DA5276A0"
+					id: "078A307BF2913BC1"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -196,7 +194,7 @@
 					type: "item"
 				}
 				{
-					id: "6FC0AB6EF7DFC918"
+					id: "20E04502621E56E0"
 					type: "xp"
 					xp: 500
 				}
@@ -210,7 +208,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "7E3008E4C23B84DB"
+				id: "2557A98B15DA3709"
 				type: "kill"
 				value: 128L
 			}]
@@ -218,8 +216,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["0C6336145194DF5F"]
-			id: "7553083A4719E09B"
+			id: "7AC37BF36A1B3478"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -227,7 +224,7 @@
 			rewards: [
 				{
 					count: 2
-					id: "557718083F353201"
+					id: "4C514ADF496C2765"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -235,7 +232,7 @@
 					type: "item"
 				}
 				{
-					id: "215861B629D726D3"
+					id: "44958CB5F200CF73"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -249,7 +246,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "263CEB825E1BD06C"
+				id: "530B74CCDECC818E"
 				type: "kill"
 				value: 300L
 			}]
@@ -257,14 +254,14 @@
 			y: 2.5d
 		}
 		{
-			id: "431FE96D8045138D"
+			id: "5F5BF9A1A6009072"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "7E221F0F47C4547A"
+				id: "5E7D189F58A8160C"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -280,7 +277,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "7C00784D2665F29E"
+				id: "4D7DD3D7046035BF"
 				type: "kill"
 				value: 20L
 			}]
@@ -288,8 +285,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["431FE96D8045138D"]
-			id: "2B490712D752F2AA"
+			id: "5E269C8121FF35B4"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -297,7 +293,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "4D93C153DE8B4F23"
+					id: "3B9C14F99327BE13"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -305,7 +301,7 @@
 					type: "item"
 				}
 				{
-					id: "3993E7382568C04E"
+					id: "4E26F902B742D954"
 					type: "xp"
 					xp: 150
 				}
@@ -319,7 +315,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "671F8C027877FF39"
+				id: "260ACD726B956725"
 				type: "kill"
 				value: 64L
 			}]
@@ -327,8 +323,7 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["2B490712D752F2AA"]
-			id: "4DC0476240C74913"
+			id: "704B1380903A2850"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -336,7 +331,7 @@
 			rewards: [
 				{
 					count: 128
-					id: "692978F0F99A168D"
+					id: "5B680EE7F7658D3F"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -344,7 +339,7 @@
 					type: "item"
 				}
 				{
-					id: "71F1671DC1112929"
+					id: "7C103C2FEEF072DE"
 					type: "xp"
 					xp: 500
 				}
@@ -358,7 +353,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "2BC3F176A51417E9"
+				id: "5DC46B1A9EFD3B0A"
 				type: "kill"
 				value: 128L
 			}]
@@ -366,8 +361,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["4DC0476240C74913"]
-			id: "10DE9863EFA5F528"
+			id: "18ED46E06A7DDE4C"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -375,7 +369,7 @@
 			rewards: [
 				{
 					count: 3
-					id: "751DCEC7A98D0BB4"
+					id: "20E06DAC7F8FCBAB"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -383,7 +377,7 @@
 					type: "item"
 				}
 				{
-					id: "45AB7BBC85125D65"
+					id: "6259D19E3CFB8FBD"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -397,7 +391,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "7D79C208F96F3232"
+				id: "682E19E42F4D4747"
 				type: "kill"
 				value: 500L
 			}]
@@ -405,14 +399,14 @@
 			y: 2.5d
 		}
 		{
-			id: "1B416F55DB53C59C"
+			id: "324CFB8174B64249"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 42
-				id: "4186154938021498"
+				id: "27FCA201CAA07D5C"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -428,7 +422,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "3A7F0E5F274C1C56"
+				id: "201D4752FF8DB52C"
 				type: "kill"
 				value: 20L
 			}]
@@ -436,8 +430,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["1B416F55DB53C59C"]
-			id: "761C7DF67620DC29"
+			id: "6B6B71B460DB95C8"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -445,7 +438,7 @@
 			rewards: [
 				{
 					count: 128
-					id: "6FA4517B6359A770"
+					id: "7984966001F2A279"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -453,7 +446,7 @@
 					type: "item"
 				}
 				{
-					id: "3036C60CD9AE6BFA"
+					id: "2692C06112CB3ECF"
 					type: "xp"
 					xp: 150
 				}
@@ -467,7 +460,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "3A86ABADD7E33712"
+				id: "18B68B06A693D7DB"
 				type: "kill"
 				value: 64L
 			}]
@@ -475,8 +468,7 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["761C7DF67620DC29"]
-			id: "326677DEA12C0398"
+			id: "50C25D9C14D387DC"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -484,7 +476,7 @@
 			rewards: [
 				{
 					count: 3
-					id: "41D5C84E5B0B88DF"
+					id: "48991FC6B5F0604A"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -492,7 +484,7 @@
 					type: "item"
 				}
 				{
-					id: "3D59750047E15808"
+					id: "37C06FBCE146F73B"
 					type: "xp"
 					xp: 500
 				}
@@ -506,7 +498,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "19F05509C1032FE3"
+				id: "3BB57B58579DC92C"
 				type: "kill"
 				value: 128L
 			}]
@@ -514,8 +506,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["326677DEA12C0398"]
-			id: "7AA9A3A54292DADF"
+			id: "13D3CE6C6FFE249D"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -523,7 +514,7 @@
 			rewards: [
 				{
 					count: 10
-					id: "1D1C4252A9F21B3C"
+					id: "4690579366FE8B9A"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -531,7 +522,7 @@
 					type: "item"
 				}
 				{
-					id: "13351465FC74637B"
+					id: "53059D97D5DA3343"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -545,7 +536,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "3A2A386C8828F897"
+				id: "7447C3E0E9511F28"
 				type: "kill"
 				value: 360L
 			}]
@@ -553,14 +544,14 @@
 			y: 2.5d
 		}
 		{
-			id: "767FA524371C9480"
+			id: "52B064D0F8568D51"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "07CF139DB9F806FF"
+				id: "3B5CA0A782DFB1F7"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -576,7 +567,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "2FB0C35045C5CBE0"
+				id: "0AF21B4BC1D5A470"
 				type: "kill"
 				value: 10L
 			}]
@@ -584,8 +575,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["767FA524371C9480"]
-			id: "635C194330BA9376"
+			id: "478A32F1FCB17F41"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -593,7 +583,7 @@
 			rewards: [
 				{
 					count: 100
-					id: "5467FA5D00A81E67"
+					id: "5828B66DE0D2C109"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -601,7 +591,7 @@
 					type: "item"
 				}
 				{
-					id: "715FABB3FB08DFEF"
+					id: "500D2FCDAB647ABD"
 					type: "xp"
 					xp: 150
 				}
@@ -615,7 +605,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "2F7D4CD8E1C9DC9E"
+				id: "0775CAAA50022011"
 				type: "kill"
 				value: 40L
 			}]
@@ -623,8 +613,7 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["635C194330BA9376"]
-			id: "21152CBE4D146E81"
+			id: "0BC1648EFDBCEDE6"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -632,7 +621,7 @@
 			rewards: [
 				{
 					count: 5
-					id: "6174460C3312D7F0"
+					id: "6B9B11185106C498"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -640,7 +629,7 @@
 					type: "item"
 				}
 				{
-					id: "21435EE0ED8829A0"
+					id: "0C5ED4921EA8C7EE"
 					type: "xp"
 					xp: 500
 				}
@@ -654,7 +643,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "32731AF3C460D7D1"
+				id: "0BA4E7DF8AC5A096"
 				type: "kill"
 				value: 80L
 			}]
@@ -662,8 +651,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["21152CBE4D146E81"]
-			id: "66A8C41F7F4F726B"
+			id: "01A90EB9C3267D13"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -671,7 +659,7 @@
 			rewards: [
 				{
 					count: 20
-					id: "051B35C48745ACD0"
+					id: "3E58B0F69171F0D2"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -679,7 +667,7 @@
 					type: "item"
 				}
 				{
-					id: "0B4B6723ADE03274"
+					id: "4AF164A374639D6B"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -693,7 +681,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "674A002836F441D2"
+				id: "6A5A47314C0DD313"
 				type: "kill"
 				value: 168L
 			}]
@@ -701,14 +689,14 @@
 			y: 2.5d
 		}
 		{
-			id: "44B1D7CD5CCE18FD"
+			id: "47C25E40FBD737A0"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "6D1D1A3D93509E9C"
+				id: "1CD0020C152F8B56"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -724,7 +712,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "56BDBAFCD8C027F1"
+				id: "3B51406741BCC45D"
 				type: "kill"
 				value: 15L
 			}]
@@ -732,8 +720,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["44B1D7CD5CCE18FD"]
-			id: "73947C4B8254774E"
+			id: "446E8AE53A693316"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -741,7 +728,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "70CD0175D3E78C2F"
+					id: "053AAD841C297BE6"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -749,7 +736,7 @@
 					type: "item"
 				}
 				{
-					id: "7AFBB047D33136D0"
+					id: "626E246C505595B0"
 					type: "xp"
 					xp: 150
 				}
@@ -763,7 +750,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "4BCBD20E9026D1D0"
+				id: "7630E1912FE6746A"
 				type: "kill"
 				value: 64L
 			}]
@@ -771,8 +758,7 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["73947C4B8254774E"]
-			id: "7FABA4362B1747BD"
+			id: "0AB19EA0BDC5FF63"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -780,7 +766,7 @@
 			rewards: [
 				{
 					count: 3
-					id: "51FE43A2BC1FECDD"
+					id: "2C7C6DC58AFA0E1A"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -788,7 +774,7 @@
 					type: "item"
 				}
 				{
-					id: "590D457FBF325665"
+					id: "09E52B87E191F9F6"
 					type: "xp"
 					xp: 500
 				}
@@ -802,7 +788,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "019C004B2897CB0D"
+				id: "33B6DD60A1AE0ACB"
 				type: "kill"
 				value: 128L
 			}]
@@ -810,8 +796,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["7FABA4362B1747BD"]
-			id: "1552D2ED4A036712"
+			id: "707CB3FD27F78A23"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -819,7 +804,7 @@
 			rewards: [
 				{
 					count: 5
-					id: "02128CE3674684ED"
+					id: "3036BC89CD35DC27"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -827,7 +812,7 @@
 					type: "item"
 				}
 				{
-					id: "794385E9BC506642"
+					id: "262B6DE3C1A58DF4"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -841,7 +826,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "549F5D458CCA4830"
+				id: "18C005A792DEC8EF"
 				type: "kill"
 				value: 256L
 			}]
@@ -849,14 +834,14 @@
 			y: 2.5d
 		}
 		{
-			id: "4D8B8AE038552C78"
+			id: "150E3364C46BEA5E"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 24
-				id: "63FF9CB8A381A88F"
+				id: "3F47FAE567F82A01"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -872,7 +857,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "77BA0C79A9D5EA31"
+				id: "382AFB1704DDADD5"
 				type: "kill"
 				value: 20L
 			}]
@@ -880,8 +865,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["340F0444044D60BA"]
-			id: "62DA05A109DCFA92"
+			id: "1F03ED415E7E3B62"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -889,7 +873,7 @@
 			rewards: [
 				{
 					count: 80
-					id: "1417BEA6A1EF2041"
+					id: "20C3804080D22683"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -897,7 +881,7 @@
 					type: "item"
 				}
 				{
-					id: "5E765A3A607B2DA6"
+					id: "3743941EF4E4BDE1"
 					type: "xp"
 					xp: 500
 				}
@@ -911,7 +895,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "41D788AEC514F852"
+				id: "1DB850228728381E"
 				type: "kill"
 				value: 128L
 			}]
@@ -919,8 +903,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["62DA05A109DCFA92"]
-			id: "367899B66A4BC30F"
+			id: "6AA42BDB1C897AAE"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -928,7 +911,7 @@
 			rewards: [
 				{
 					count: 3
-					id: "35D5E736BEB0F3E1"
+					id: "1ED6B96B4B0547BA"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -936,7 +919,7 @@
 					type: "item"
 				}
 				{
-					id: "719C1B87C30CC0DF"
+					id: "6CCEDEB9D72D1900"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -950,7 +933,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "312B2BA86C6AC50C"
+				id: "0EE333A097818E63"
 				type: "kill"
 				value: 300L
 			}]
@@ -958,14 +941,14 @@
 			y: 2.5d
 		}
 		{
-			id: "75CB70D6340B9E4B"
+			id: "5BA6FD5084DEF4BB"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "2A971C2FE48078D5"
+				id: "4C240DAFA00D4709"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -981,7 +964,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "01C8661C66F61755"
+				id: "158FD35D57F67E00"
 				type: "kill"
 				value: 16L
 			}]
@@ -989,8 +972,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["75CB70D6340B9E4B"]
-			id: "155C9B6E1BE2255D"
+			id: "670FC3CBC4279779"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -998,7 +980,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "4948FB166D246153"
+					id: "74467F04232E2125"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -1006,7 +988,7 @@
 					type: "item"
 				}
 				{
-					id: "5ACF9694593E34DC"
+					id: "1AA2AA220997B434"
 					type: "xp"
 					xp: 150
 				}
@@ -1020,7 +1002,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "4642E3CCE1DF1897"
+				id: "18724AFA6EF6F5D3"
 				type: "kill"
 				value: 32L
 			}]
@@ -1028,8 +1010,7 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["155C9B6E1BE2255D"]
-			id: "49DB89311DB8C3E5"
+			id: "319D52E5E82CAECF"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1037,7 +1018,7 @@
 			rewards: [
 				{
 					count: 2
-					id: "2303F386E854034B"
+					id: "19EF26C7463BEE55"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1045,7 +1026,7 @@
 					type: "item"
 				}
 				{
-					id: "4DEFE0C0E691B24B"
+					id: "24C0F82FAEF2082F"
 					type: "xp"
 					xp: 500
 				}
@@ -1059,7 +1040,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "77E2F113BE04BB68"
+				id: "275D0CF58B3699F5"
 				type: "kill"
 				value: 64L
 			}]
@@ -1067,8 +1048,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["49DB89311DB8C3E5"]
-			id: "3E8EA6809CFE7F83"
+			id: "59FB5ECAD85A8B24"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1076,7 +1056,7 @@
 			rewards: [
 				{
 					count: 5
-					id: "4545FD094295285E"
+					id: "0B11D054DC3A5EA5"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1084,7 +1064,7 @@
 					type: "item"
 				}
 				{
-					id: "4FA5886F1A1E4D35"
+					id: "6814A13B36CDCC41"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -1098,7 +1078,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "0EAE01E8F8DFFF6E"
+				id: "0F183428D2820098"
 				type: "kill"
 				value: 128L
 			}]
@@ -1106,14 +1086,14 @@
 			y: 2.5d
 		}
 		{
-			id: "5C815269EA7B055E"
+			id: "2A439058AD396DDF"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "3D682159B7C108B9"
+				id: "274D00F90D58183E"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -1129,7 +1109,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "1B6778F0AC407DB8"
+				id: "0C3C8146FAFA38DD"
 				type: "kill"
 				value: 8L
 			}]
@@ -1137,8 +1117,7 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["5C815269EA7B055E"]
-			id: "79EC9E317DCDD70C"
+			id: "1B9DF6786FB75F52"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1146,7 +1125,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "04D0B698B91755C5"
+					id: "02E7A36DA63AAC8E"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -1154,7 +1133,7 @@
 					type: "item"
 				}
 				{
-					id: "0BEE464B46A57256"
+					id: "42BACF64DF3080DE"
 					type: "xp"
 					xp: 150
 				}
@@ -1168,7 +1147,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "3965E98F7FBEF66E"
+				id: "65668661B59E9EB4"
 				type: "kill"
 				value: 16L
 			}]
@@ -1176,8 +1155,7 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["79EC9E317DCDD70C"]
-			id: "0081C9FE085A14BD"
+			id: "6480D899CBFF1B96"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1185,7 +1163,7 @@
 			rewards: [
 				{
 					count: 2
-					id: "664F68F189FDED75"
+					id: "53A31C1E3B4811A8"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1193,7 +1171,7 @@
 					type: "item"
 				}
 				{
-					id: "3F349C35ED30DDAA"
+					id: "6BDBD3D3F63B63A8"
 					type: "xp"
 					xp: 500
 				}
@@ -1207,7 +1185,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "5FF923F4BDA4EFDF"
+				id: "6E2125BEB4CA6764"
 				type: "kill"
 				value: 32L
 			}]
@@ -1215,8 +1193,7 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["0081C9FE085A14BD"]
-			id: "562C9082EA53DE02"
+			id: "686B55FC26A8E33C"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1224,7 +1201,7 @@
 			rewards: [
 				{
 					count: 10
-					id: "0E02EF31ADCC79FA"
+					id: "52EF2A62978151E9"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1232,7 +1209,7 @@
 					type: "item"
 				}
 				{
-					id: "77AA50A8A6109C3E"
+					id: "41DB45BB59BEC4F1"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -1246,7 +1223,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "4DDAFD65994D83D0"
+				id: "7B7EFCB918D93CA2"
 				type: "kill"
 				value: 128L
 			}]
@@ -1260,14 +1237,14 @@
 				}
 				id: "ftbquests:custom_icon"
 			}
-			id: "228A571FEFE2EDAA"
+			id: "699E07570DDB7A4D"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "33318801895CF088"
+				id: "5786B1F99FFD30E9"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -1283,7 +1260,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "0EEF6EFEB5F12685"
+				id: "462AA4F5A5A41150"
 				type: "kill"
 				value: 3L
 			}]
@@ -1291,11 +1268,10 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["228A571FEFE2EDAA"]
 			icon: {
 				id: "born_in_chaos_v1:missionary_hat_helmet"
 			}
-			id: "1F47D5A964354601"
+			id: "0AC1378E05EC787F"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1303,7 +1279,7 @@
 			rewards: [
 				{
 					count: 2
-					id: "3F4AC5CF68CFF847"
+					id: "3356AD0730F69007"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1311,7 +1287,7 @@
 					type: "item"
 				}
 				{
-					id: "69ECDC9A25BED209"
+					id: "10DADCF28B5F277B"
 					type: "xp"
 					xp: 100
 				}
@@ -1325,7 +1301,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "274519A882512D06"
+				id: "69FC48164981FDD7"
 				type: "kill"
 				value: 8L
 			}]
@@ -1333,11 +1309,10 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["1F47D5A964354601"]
 			icon: {
 				id: "born_in_chaos_v1:missionary_hat_helmet"
 			}
-			id: "5368F734DF31A768"
+			id: "1F327546B0D489B5"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1345,7 +1320,7 @@
 			rewards: [
 				{
 					count: 8
-					id: "0E953D08D001927C"
+					id: "25572A620D4FBBAA"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1353,7 +1328,7 @@
 					type: "item"
 				}
 				{
-					id: "4515D9498B2F170A"
+					id: "10052D36CCAB5093"
 					type: "xp"
 					xp: 250
 				}
@@ -1367,7 +1342,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "14665A6FC2583D65"
+				id: "5833EFB7573F00D1"
 				type: "kill"
 				value: 16L
 			}]
@@ -1375,11 +1350,10 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["5368F734DF31A768"]
 			icon: {
 				id: "born_in_chaos_v1:missionary_hat_helmet"
 			}
-			id: "3D16905887ECCFCC"
+			id: "5C191F6CDAE6242F"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1387,7 +1361,7 @@
 			rewards: [
 				{
 					count: 50
-					id: "542C8D1E055E5F7F"
+					id: "593E05A164CA54CC"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1395,7 +1369,7 @@
 					type: "item"
 				}
 				{
-					id: "56620C7A9735B149"
+					id: "6C519380DB70822D"
 					type: "xp_levels"
 					xp_levels: 3
 				}
@@ -1409,7 +1383,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "24DBC3971F95C9ED"
+				id: "58913D8575508468"
 				type: "kill"
 				value: 64L
 			}]
@@ -1420,14 +1394,14 @@
 			icon: {
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
-			id: "44A2E11BCD2A97A8"
+			id: "1AFC9AFB70EE828B"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "581C670969CFA055"
+				id: "0BB1A515EE1C6BEA"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -1443,7 +1417,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "520A68A844609682"
+				id: "7D8A51B2FC17BF94"
 				type: "kill"
 				value: 15L
 			}]
@@ -1451,24 +1425,23 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["44A2E11BCD2A97A8"]
 			icon: {
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
-			id: "4456DF4F17EE974B"
+			id: "1E2ACBA623352649"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [
 				{
-					id: "1BDAAC763E1A197C"
+					id: "7D069F92D241E45C"
 					type: "xp"
 					xp: 200
 				}
 				{
 					count: 2
-					id: "7FC235A51DA25155"
+					id: "0DC6511063ADCE12"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1485,7 +1458,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "033DD1ED31781E04"
+				id: "65B622EA2AA4F6AC"
 				type: "kill"
 				value: 48L
 			}]
@@ -1493,11 +1466,10 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["4456DF4F17EE974B"]
 			icon: {
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
-			id: "6094F3D5234A99BE"
+			id: "7C49CA6681E86694"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1505,7 +1477,7 @@
 			rewards: [
 				{
 					count: 8
-					id: "071FD37998080160"
+					id: "5790AB4F31B63341"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1513,7 +1485,7 @@
 					type: "item"
 				}
 				{
-					id: "4D074F9ED4E55838"
+					id: "19BD167BA063B63F"
 					type: "xp"
 					xp: 450
 				}
@@ -1527,7 +1499,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "1603DC66499ED017"
+				id: "47AB8C309B682490"
 				type: "kill"
 				value: 96L
 			}]
@@ -1535,11 +1507,10 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["6094F3D5234A99BE"]
 			icon: {
 				id: "born_in_chaos_v1:fallen_chaos_knight_spawn_egg"
 			}
-			id: "3A80D5F8B58DCF72"
+			id: "141D58F522EBBEDC"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1547,7 +1518,7 @@
 			rewards: [
 				{
 					count: 32
-					id: "29E59ED31D46854C"
+					id: "765F2184DCB76CBC"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1555,7 +1526,7 @@
 					type: "item"
 				}
 				{
-					id: "505C5DE51FA55CF8"
+					id: "257FF6E56992A8F2"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -1569,7 +1540,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "39176CEB2ADB9728"
+				id: "7345B77AD5893555"
 				type: "kill"
 				value: 168L
 			}]
@@ -1580,14 +1551,14 @@
 			icon: {
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
-			id: "16AB5EBC9FC3D0A6"
+			id: "681D191631DEDE74"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "3775B7683CB01A59"
+				id: "00225D15BB444D3C"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -1603,7 +1574,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "367603DFB6C5C564"
+				id: "54F57FFC37FC2800"
 				type: "kill"
 				value: 3L
 			}]
@@ -1611,11 +1582,10 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["16AB5EBC9FC3D0A6"]
 			icon: {
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
-			id: "24936A36AA105819"
+			id: "5D5632B036454447"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1623,7 +1593,7 @@
 			rewards: [
 				{
 					count: 12
-					id: "35C4F38237034848"
+					id: "7018F9939FDFFAAB"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1631,7 +1601,7 @@
 					type: "item"
 				}
 				{
-					id: "4C2AC5A03224B281"
+					id: "29EB9DC7873F59EB"
 					type: "xp"
 					xp: 150
 				}
@@ -1645,7 +1615,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "15B3BC856F5ABB6F"
+				id: "582C18DD0316A2CD"
 				type: "kill"
 				value: 16L
 			}]
@@ -1653,11 +1623,10 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["24936A36AA105819"]
 			icon: {
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
-			id: "7C0D8D03B1585871"
+			id: "7F457CC1093B19D6"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1665,7 +1634,7 @@
 			rewards: [
 				{
 					count: 24
-					id: "3C73C0BDF832F9B6"
+					id: "5FBF6C53F1D831A7"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1673,7 +1642,7 @@
 					type: "item"
 				}
 				{
-					id: "03DFBD728127021C"
+					id: "4A5968C03D6F3437"
 					type: "xp"
 					xp: 350
 				}
@@ -1687,7 +1656,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "14E2DD04E2E56AF5"
+				id: "2879E734AC247966"
 				type: "kill"
 				value: 32L
 			}]
@@ -1695,11 +1664,10 @@
 			y: 11.5d
 		}
 		{
-			dependencies: ["7C0D8D03B1585871"]
 			icon: {
 				id: "born_in_chaos_v1:nightmare_stalker_skull"
 			}
-			id: "5841235154F20F41"
+			id: "0CE7F84F98A659B5"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1707,7 +1675,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "31D887ACCE091BF7"
+					id: "11E64C8927C39ACB"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1715,7 +1683,7 @@
 					type: "item"
 				}
 				{
-					id: "59C9573209AACF79"
+					id: "1AA8C3527F912E80"
 					type: "xp_levels"
 					xp_levels: 5
 				}
@@ -1729,7 +1697,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "6FC78108FEAEFB0D"
+				id: "2A7BC6534F0A0DB1"
 				type: "kill"
 				value: 64L
 			}]
@@ -1743,14 +1711,14 @@
 				}
 				id: "ftbquests:custom_icon"
 			}
-			id: "432BCBA63DDF143F"
+			id: "09D3E77DA461D0AB"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "0342E21181321FA8"
+				id: "5568DAD34BDFB257"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -1766,7 +1734,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "4A056FE4A5032E67"
+				id: "753940545D044D5F"
 				type: "kill"
 				value: 16L
 			}]
@@ -1774,14 +1742,13 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["432BCBA63DDF143F"]
 			icon: {
 				components: {
 					"ftbquests:icon": "minecraft:textures/mob_effect/darkness.png"
 				}
 				id: "ftbquests:custom_icon"
 			}
-			id: "68C45EE6E1929275"
+			id: "58850A4699DA886E"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1789,7 +1756,7 @@
 			rewards: [
 				{
 					count: 2
-					id: "197F6098756FEF1C"
+					id: "6DA61064C22DB4FA"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1797,7 +1764,7 @@
 					type: "item"
 				}
 				{
-					id: "16CD5684CB976CCC"
+					id: "536329EAA4E9FF99"
 					type: "xp"
 					xp: 250
 				}
@@ -1811,7 +1778,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "5ADC9FE7B9658F63"
+				id: "3059B4447E9F7303"
 				type: "kill"
 				value: 64L
 			}]
@@ -1819,14 +1786,13 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["68C45EE6E1929275"]
 			icon: {
 				components: {
 					"ftbquests:icon": "minecraft:textures/mob_effect/darkness.png"
 				}
 				id: "ftbquests:custom_icon"
 			}
-			id: "5CD0B8FBE3D0248D"
+			id: "47A65E3B42BC60DA"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1834,7 +1800,7 @@
 			rewards: [
 				{
 					count: 10
-					id: "76ED8B8CCE0960D7"
+					id: "2B49465B6DBFC367"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1842,7 +1808,7 @@
 					type: "item"
 				}
 				{
-					id: "059A888754AEA102"
+					id: "72D590C07CE76809"
 					type: "xp"
 					xp: 500
 				}
@@ -1856,7 +1822,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "1E189DD4BDD5FF07"
+				id: "73F16B214879C5BA"
 				type: "kill"
 				value: 128L
 			}]
@@ -1864,14 +1830,13 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["5CD0B8FBE3D0248D"]
 			icon: {
 				components: {
 					"ftbquests:icon": "minecraft:textures/mob_effect/darkness.png"
 				}
 				id: "ftbquests:custom_icon"
 			}
-			id: "752201E2F85A9A1C"
+			id: "094676E4110DC7EF"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1879,7 +1844,7 @@
 			rewards: [
 				{
 					count: 16
-					id: "432C3E7948D19131"
+					id: "1A4583C87B6FEC94"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -1887,7 +1852,7 @@
 					type: "item"
 				}
 				{
-					id: "05F2E7AA9D4B61DE"
+					id: "314646D879506DE5"
 					type: "xp_levels"
 					xp_levels: 6
 				}
@@ -1901,7 +1866,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "6DD3BDB060CD7BEB"
+				id: "636D18ECE00408AF"
 				type: "kill"
 				value: 200L
 			}]
@@ -1912,14 +1877,14 @@
 			icon: {
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
-			id: "6D89803F760D5658"
+			id: "79FC7419EA9E04BD"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "179EF1BE73D6E8A0"
+				id: "027AF7779EDCAEFC"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -1935,7 +1900,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "135F9FA83FDB7D1B"
+				id: "18B7CA6329C30F90"
 				type: "kill"
 				value: 5L
 			}]
@@ -1943,11 +1908,10 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["6D89803F760D5658"]
 			icon: {
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
-			id: "7508A124081E679C"
+			id: "1A2F81065B243C77"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1955,7 +1919,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "2E78FA7D74C37F3A"
+					id: "249E4A33215564A4"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -1963,7 +1927,7 @@
 					type: "item"
 				}
 				{
-					id: "34E4388971EB311E"
+					id: "1862B70BA78826D8"
 					type: "xp"
 					xp: 150
 				}
@@ -1977,7 +1941,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "7833CF1421794EC1"
+				id: "3006C1F02B0A75AF"
 				type: "kill"
 				value: 32L
 			}]
@@ -1985,11 +1949,10 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["7508A124081E679C"]
 			icon: {
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
-			id: "3BD9809A4BDA5445"
+			id: "2A83490BC28C683B"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -1997,7 +1960,7 @@
 			rewards: [
 				{
 					count: 2
-					id: "74A9B486F4B93DD5"
+					id: "25897B3932A67826"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -2005,7 +1968,7 @@
 					type: "item"
 				}
 				{
-					id: "5DC03FB4BEDA2C14"
+					id: "12CB7400D463FF2B"
 					type: "xp"
 					xp: 350
 				}
@@ -2019,7 +1982,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "43ECB1125CCD6BC2"
+				id: "0E98DDD5004EFE84"
 				type: "kill"
 				value: 64L
 			}]
@@ -2027,11 +1990,10 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["3BD9809A4BDA5445"]
 			icon: {
 				id: "born_in_chaos_v1:fangofthe_hound_leader"
 			}
-			id: "04B585AE7EEA7583"
+			id: "0A3D998C6D1DD9AD"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -2039,7 +2001,7 @@
 			rewards: [
 				{
 					count: 5
-					id: "61C3783491E36C18"
+					id: "391B554452CF7C56"
 					item: {
 						count: 1
 						id: "kubejs:silver_coin"
@@ -2047,7 +2009,7 @@
 					type: "item"
 				}
 				{
-					id: "1958F07586D593E6"
+					id: "26086BE05384DFDD"
 					type: "xp_levels"
 					xp_levels: 4
 				}
@@ -2061,7 +2023,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "192D0C81D162D63B"
+				id: "25D9F1043D60DADB"
 				type: "kill"
 				value: 128L
 			}]
@@ -2069,14 +2031,14 @@
 			y: 11.5d
 		}
 		{
-			id: "3FE9B15A4C6B8D21"
+			id: "2833C115FE34F57E"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 24
-				id: "5AF2E12494E1441C"
+				id: "1A366E8BB8E35538"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2085,7 +2047,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:citadel_keeper"
-				id: "5C333DCEF80FFF13"
+				id: "623D7C141E25FF49"
 				type: "kill"
 				value: 10L
 			}]
@@ -2093,8 +2055,7 @@
 			y: 19.0d
 		}
 		{
-			dependencies: ["4D8B8AE038552C78"]
-			id: "340F0444044D60BA"
+			id: "4AD35FF1888B8443"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -2102,7 +2063,7 @@
 			rewards: [
 				{
 					count: 40
-					id: "5932FC4C62884A8C"
+					id: "7A3FE1382F3C200F"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -2110,7 +2071,7 @@
 					type: "item"
 				}
 				{
-					id: "119AB96F1601FEB2"
+					id: "31F91BF35349EA2B"
 					type: "xp"
 					xp: 150
 				}
@@ -2124,7 +2085,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "24897FFEB286D983"
+				id: "7D23AC1D30C47548"
 				type: "kill"
 				value: 64L
 			}]
@@ -2132,15 +2093,14 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["3FE9B15A4C6B8D21"]
-			id: "375A5B42DB4A31C3"
+			id: "1A7FEABCE8206850"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "1F060AEE1D05B73D"
+				id: "0E6E58C27E3BCB17"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2149,7 +2109,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:citadel_keeper"
-				id: "5C0B423699727FAB"
+				id: "523D7EB9837364AF"
 				type: "kill"
 				value: 32L
 			}]
@@ -2157,18 +2117,14 @@
 			y: 21.0d
 		}
 		{
-			dependencies: [
-				"375A5B42DB4A31C3"
-				"3FE9B15A4C6B8D21"
-			]
-			id: "19E60C14ABB32C38"
+			id: "14AECFEFAD66D47E"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 2
-				id: "5B65209DB95A0914"
+				id: "0F7BDB2F02574DAC"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2177,7 +2133,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:citadel_keeper"
-				id: "559CBCC85911597A"
+				id: "5D3D93751E6A753E"
 				type: "kill"
 				value: 64L
 			}]
@@ -2185,19 +2141,14 @@
 			y: 23.0d
 		}
 		{
-			dependencies: [
-				"375A5B42DB4A31C3"
-				"3FE9B15A4C6B8D21"
-				"19E60C14ABB32C38"
-			]
-			id: "49E97A0BA6E7DB63"
+			id: "0BCDB065F79E6BB4"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 10
-				id: "6ADE1BAB17502C7B"
+				id: "436597EBB4570948"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2206,7 +2157,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:citadel_keeper"
-				id: "67E1EA8404E892D5"
+				id: "759F67446CDE1F59"
 				type: "kill"
 				value: 128L
 			}]
@@ -2214,14 +2165,14 @@
 			y: 25.0d
 		}
 		{
-			id: "342DA5C07F1EB066"
+			id: "254072562EA171E8"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "2D8812ED7D200B55"
+				id: "007A810E1628C2C3"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2230,7 +2181,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:archevoker"
-				id: "20FB9CFD83987DC9"
+				id: "606F9F79FAADF9FE"
 				type: "kill"
 				value: 1L
 			}]
@@ -2238,8 +2189,7 @@
 			y: 19.0d
 		}
 		{
-			dependencies: ["342DA5C07F1EB066"]
-			id: "6C815AC1A7CD46D6"
+			id: "11FF09CD4E5374F9"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -2247,7 +2197,7 @@
 			rewards: [
 				{
 					count: 64
-					id: "6C6AC40E148C5680"
+					id: "511A1F78BB353531"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -2255,14 +2205,14 @@
 					type: "item"
 				}
 				{
-					id: "61A5E8BC8C00D69B"
+					id: "092CD4BE9039E8D7"
 					type: "xp"
 					xp: 300
 				}
 			]
 			tasks: [{
 				entity: "irons_spellbooks:archevoker"
-				id: "1D4F7DE26442749A"
+				id: "1B5D065F587B604D"
 				type: "kill"
 				value: 3L
 			}]
@@ -2270,15 +2220,14 @@
 			y: 21.0d
 		}
 		{
-			dependencies: ["6C815AC1A7CD46D6"]
-			id: "28813D2D14D9906D"
+			id: "5F4B7BF5BC4D7B18"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 8
-				id: "5D99E18D8FCF0A09"
+				id: "509203518F907A1D"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2287,7 +2236,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:archevoker"
-				id: "78704893CD5372F5"
+				id: "49900C11F687E0F4"
 				type: "kill"
 				value: 9L
 			}]
@@ -2295,15 +2244,14 @@
 			y: 23.0d
 		}
 		{
-			dependencies: ["28813D2D14D9906D"]
-			id: "634DF9EF9679D939"
+			id: "5D0DCF509F00D1C9"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 16
-				id: "2CEEB1FA250647D7"
+				id: "67F04621D718F71E"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2312,7 +2260,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:archevoker"
-				id: "77FB63C147E60E81"
+				id: "3C83D26F40ADECF9"
 				type: "kill"
 				value: 18L
 			}]
@@ -2320,14 +2268,14 @@
 			y: 25.0d
 		}
 		{
-			id: "1608F430BCD06748"
+			id: "5A6363D3A22595A3"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "2E09C51ED4641116"
+				id: "336AD3A3BD4B3556"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2336,7 +2284,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:necromancer"
-				id: "7E17D613A0F0DB0F"
+				id: "6501635E000CE90A"
 				type: "kill"
 				value: 12L
 			}]
@@ -2344,15 +2292,14 @@
 			y: 19.0d
 		}
 		{
-			dependencies: ["1608F430BCD06748"]
-			id: "1BC0E1CA38969EE3"
+			id: "4605CBF51CD34A36"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "624BAE13A50DDF81"
+				id: "7DA3828CF6E10F35"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2361,7 +2308,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:necromancer"
-				id: "715936F6199E68EE"
+				id: "595AE17E04B2634D"
 				type: "kill"
 				value: 32L
 			}]
@@ -2369,15 +2316,14 @@
 			y: 21.0d
 		}
 		{
-			dependencies: ["1BC0E1CA38969EE3"]
-			id: "12C75FDC1E557B6D"
+			id: "439D406F5874E808"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 2
-				id: "66240C93C341FF25"
+				id: "6C69D33AE3E24048"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2386,7 +2332,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:necromancer"
-				id: "038520D129558676"
+				id: "5D106B1A524C929E"
 				type: "kill"
 				value: 64L
 			}]
@@ -2394,15 +2340,14 @@
 			y: 23.0d
 		}
 		{
-			dependencies: ["12C75FDC1E557B6D"]
-			id: "1A17FE8F3A048524"
+			id: "6C817239277FF4CB"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 10
-				id: "4482D7ACAE128C78"
+				id: "368D3EE71A996D3C"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2411,7 +2356,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:necromancer"
-				id: "4353E415ADEC2FD6"
+				id: "30D99FFF64E8BED6"
 				type: "kill"
 				value: 128L
 			}]
@@ -2419,7 +2364,7 @@
 			y: 25.0d
 		}
 		{
-			id: "43C7606D98B9E2A9"
+			id: "3CB09C5D4A823F49"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -2427,7 +2372,7 @@
 			rewards: [
 				{
 					count: 32
-					id: "385D59C2001F759F"
+					id: "2B839AA5B177B9B3"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -2435,7 +2380,7 @@
 					type: "item"
 				}
 				{
-					id: "5B97703AA69B2A99"
+					id: "76D466DC6DB7751B"
 					item: {
 						components: {
 							"irons_spellbooks:spell_container": {
@@ -2458,7 +2403,7 @@
 			]
 			tasks: [{
 				entity: "irons_spellbooks:pyromancer"
-				id: "2021C7E031E53FF5"
+				id: "325E481C9D9522AC"
 				type: "kill"
 				value: 1L
 			}]
@@ -2466,15 +2411,14 @@
 			y: 20.0d
 		}
 		{
-			dependencies: ["43C7606D98B9E2A9"]
-			id: "4623AB63F23933F3"
+			id: "1283BE13F10A27D1"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "79C507AF4B38220F"
+				id: "1244364FF071FDAE"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2483,7 +2427,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:pyromancer"
-				id: "095E5CF1EF80E687"
+				id: "159526CEF537E319"
 				type: "kill"
 				value: 5L
 			}]
@@ -2491,15 +2435,14 @@
 			y: 22.0d
 		}
 		{
-			dependencies: ["4623AB63F23933F3"]
-			id: "0A7963E1A3E40DD3"
+			id: "23E557B275CFD6AD"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 8
-				id: "311E25E14CBC1284"
+				id: "4EF5DC53A0B6BEB9"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2508,7 +2451,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:pyromancer"
-				id: "2637396FCBC310C1"
+				id: "7F134A9A2CFAA4C0"
 				type: "kill"
 				value: 12L
 			}]
@@ -2516,15 +2459,14 @@
 			y: 24.0d
 		}
 		{
-			dependencies: ["0A7963E1A3E40DD3"]
-			id: "4D4A72B430B269A8"
+			id: "307A8BAAF4FDAE43"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 16
-				id: "75A1123E896F785A"
+				id: "376BBABA73FAE7F3"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2533,7 +2475,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:pyromancer"
-				id: "16A12B4A8838B901"
+				id: "64A999F0A67E470C"
 				type: "kill"
 				value: 32L
 			}]
@@ -2541,7 +2483,7 @@
 			y: 26.0d
 		}
 		{
-			id: "5CA8E651F6AA0693"
+			id: "06952A67A2643F6C"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
@@ -2549,7 +2491,7 @@
 			rewards: [
 				{
 					count: 32
-					id: "324D140101B62816"
+					id: "68CB8B3D2AC06040"
 					item: {
 						count: 1
 						id: "kubejs:copper_coin"
@@ -2557,7 +2499,7 @@
 					type: "item"
 				}
 				{
-					id: "21C3B6FF411CD3BE"
+					id: "4FEFC08301E17AF3"
 					item: {
 						components: {
 							"irons_spellbooks:spell_container": {
@@ -2580,7 +2522,7 @@
 			]
 			tasks: [{
 				entity: "irons_spellbooks:cryomancer"
-				id: "7100ED418C369A96"
+				id: "64D52FE0568378CD"
 				type: "kill"
 				value: 1L
 			}]
@@ -2588,15 +2530,14 @@
 			y: 20.0d
 		}
 		{
-			dependencies: ["5CA8E651F6AA0693"]
-			id: "4BBED18E95CC7F36"
+			id: "5D4E9A9CB29F00B6"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "5327BE5F505C6E3E"
+				id: "763965D5487CD2BA"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2605,7 +2546,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:cryomancer"
-				id: "4516E159247F951F"
+				id: "137191D45EB5BAC4"
 				type: "kill"
 				value: 5L
 			}]
@@ -2613,15 +2554,14 @@
 			y: 22.0d
 		}
 		{
-			dependencies: ["4BBED18E95CC7F36"]
-			id: "0F90A64B18FC9072"
+			id: "2A9075EF867EA563"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 8
-				id: "001CD89C60A2FF7D"
+				id: "1E5CE4C80B4E1006"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2630,7 +2570,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:cryomancer"
-				id: "05A2537FD8C30837"
+				id: "24D4C23D822AD7A7"
 				type: "kill"
 				value: 12L
 			}]
@@ -2638,15 +2578,14 @@
 			y: 24.0d
 		}
 		{
-			dependencies: ["0F90A64B18FC9072"]
-			id: "0CFBEC334AB5AE28"
+			id: "61CE47EA2BD0B928"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 16
-				id: "41FBA295B2D6C1B8"
+				id: "641934C1523814A0"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2655,7 +2594,7 @@
 			}]
 			tasks: [{
 				entity: "irons_spellbooks:cryomancer"
-				id: "51C6AFFE3B46E3C9"
+				id: "26C063A392EB8A82"
 				type: "kill"
 				value: 32L
 			}]
@@ -2663,14 +2602,14 @@
 			y: 26.0d
 		}
 		{
-			id: "614B5F420F9FCF60"
+			id: "705F90C7630DD300"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "53085370DE8E1622"
+				id: "40BC7CD1B1A41F58"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2680,7 +2619,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_thrasher"
-				id: "2AA4EF74FC53F109"
+				id: "6868B4080D61119A"
 				type: "kill"
 				value: 8L
 			}]
@@ -2688,15 +2627,14 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["614B5F420F9FCF60"]
-			id: "7F6A2DB35BF8AE5F"
+			id: "7D3E28AB609431DC"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 2
-				id: "7286B9BE2769DB5C"
+				id: "09F5817302BA39E7"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2705,7 +2643,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_thrasher"
-				id: "5C6F4378112FBCD1"
+				id: "3462365F1831E429"
 				type: "kill"
 				value: 16L
 			}]
@@ -2713,15 +2651,14 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["7F6A2DB35BF8AE5F"]
-			id: "6F8E2C3CBB2379AB"
+			id: "42BCE0A84203E146"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 4
-				id: "1566FEF7232CB34A"
+				id: "301F99AFF7305B84"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2730,7 +2667,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_thrasher"
-				id: "778D83FC65933842"
+				id: "54139B87DDEC0E77"
 				type: "kill"
 				value: 32L
 			}]
@@ -2738,15 +2675,14 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["6F8E2C3CBB2379AB"]
-			id: "0B9BA8D49166A47A"
+			id: "270607860CCE8714"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 10
-				id: "32854733EBEFFCAB"
+				id: "15638A8D232648B1"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2755,7 +2691,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_thrasher"
-				id: "59F5E95C56EDDFD5"
+				id: "7336462E0C3E4584"
 				type: "kill"
 				value: 64L
 			}]
@@ -2763,14 +2699,14 @@
 			y: 11.5d
 		}
 		{
-			id: "1C2A82E9F2B86CF7"
+			id: "574FDE5C642E7220"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "3406070C7CF5261F"
+				id: "4A6F879CD04EF743"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2779,7 +2715,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:zombie_bruiser"
-				id: "3882474CADA5BAA2"
+				id: "47FD30B073CF4865"
 				type: "kill"
 				value: 8L
 			}]
@@ -2787,15 +2723,14 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["1C2A82E9F2B86CF7"]
-			id: "6873C651A2AFFBEC"
+			id: "0A836A468483E0C3"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 2
-				id: "71481993896915C5"
+				id: "0A397D7152A6D086"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2804,7 +2739,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:zombie_bruiser"
-				id: "3804ECFBD63F15C7"
+				id: "7C7CAACFE5EC5599"
 				type: "kill"
 				value: 16L
 			}]
@@ -2812,15 +2747,14 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["6873C651A2AFFBEC"]
-			id: "5F6CB06689DFB73B"
+			id: "230E82E93857FAFE"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 4
-				id: "1D7BB1819DA76759"
+				id: "11618DC9B067B86A"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2829,7 +2763,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:zombie_bruiser"
-				id: "3BC287CDC4C512AD"
+				id: "67BEF70875527A5B"
 				type: "kill"
 				value: 32L
 			}]
@@ -2837,15 +2771,14 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["5F6CB06689DFB73B"]
-			id: "0A84104223FD8075"
+			id: "72F5C24E642296DF"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 8
-				id: "5FEEB7706263CCEC"
+				id: "3564DE6AD2831162"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2854,7 +2787,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:zombie_bruiser"
-				id: "40C4E782448201B3"
+				id: "20B1EB1440A0DC75"
 				type: "kill"
 				value: 64L
 			}]
@@ -2862,14 +2795,14 @@
 			y: 11.5d
 		}
 		{
-			id: "52ABEE2BEF40BB78"
+			id: "334ACFF106C0934B"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "4D74A0FDD343F4CE"
+				id: "4D3EED9849F6F35B"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2878,7 +2811,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_demoman"
-				id: "071C2DBBA2651600"
+				id: "57F4AC6731537540"
 				type: "kill"
 				value: 16L
 			}]
@@ -2886,15 +2819,14 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["52ABEE2BEF40BB78"]
-			id: "12E31C2858662B20"
+			id: "7B4A4224EE3F736E"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "128CE70A73F45F56"
+				id: "0290B8F701B7096A"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2903,7 +2835,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_demoman"
-				id: "0FC4AA7FE76037C4"
+				id: "74FD2CDBB5814D09"
 				type: "kill"
 				value: 32L
 			}]
@@ -2911,15 +2843,14 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["12E31C2858662B20"]
-			id: "187296552C092680"
+			id: "4214A7626573B869"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 2
-				id: "04B2D830483FD945"
+				id: "09AF3A2A17D1A565"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2928,7 +2859,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_demoman"
-				id: "7C3853B5CDD80437"
+				id: "0AE64F9C9F606986"
 				type: "kill"
 				value: 64L
 			}]
@@ -2936,15 +2867,14 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["187296552C092680"]
-			id: "18178737F4B6A637"
+			id: "65039CD61B9BC685"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 8
-				id: "243DB4509138F57D"
+				id: "14BC547924FB0E89"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -2953,7 +2883,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:skeleton_demoman"
-				id: "7B122F084314EF21"
+				id: "03DC454C30F1C3E1"
 				type: "kill"
 				value: 128L
 			}]
@@ -2964,14 +2894,14 @@
 			icon: {
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
-			id: "25341F5F45753CD5"
+			id: "01189E1C8FDD736D"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "25C5040A9F40E01C"
+				id: "57A0D1EE6DD431FB"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -2980,7 +2910,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:lifestealer_true_form"
-				id: "0C23A4883BECC415"
+				id: "389CE406C09A4957"
 				type: "kill"
 				value: 1L
 			}]
@@ -2988,18 +2918,17 @@
 			y: 5.5d
 		}
 		{
-			dependencies: ["25341F5F45753CD5"]
 			icon: {
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
-			id: "20ED1DA1CE456A9A"
+			id: "6BD1AD6D87AE6DDC"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "144E3AFB55770861"
+				id: "3C6EAF1148E613A8"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -3008,7 +2937,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:lifestealer_true_form"
-				id: "1DFE98959FBCF5C6"
+				id: "26E98E516585E572"
 				type: "kill"
 				value: 4L
 			}]
@@ -3016,18 +2945,17 @@
 			y: 7.5d
 		}
 		{
-			dependencies: ["20ED1DA1CE456A9A"]
 			icon: {
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
-			id: "77A78AE59270C185"
+			id: "4F9CD10B474CB1F1"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 3
-				id: "4818E9FF2F29662C"
+				id: "43889BD7D09A68E3"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -3036,7 +2964,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:lifestealer_true_form"
-				id: "32424C21563010CD"
+				id: "2C1362F13DF6D0BC"
 				type: "kill"
 				value: 8L
 			}]
@@ -3044,18 +2972,17 @@
 			y: 9.5d
 		}
 		{
-			dependencies: ["77A78AE59270C185"]
 			icon: {
 				id: "born_in_chaos_v1:lifestealer_true_form_spawn_egg"
 			}
-			id: "28E0CDDA3DF0F574"
+			id: "2EE19B9C25A95C01"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 16
-				id: "4024F382E0249FF5"
+				id: "47D6708AA35BB01C"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -3064,7 +2991,7 @@
 			}]
 			tasks: [{
 				entity: "born_in_chaos_v1:lifestealer_true_form"
-				id: "7AA764751EBA562C"
+				id: "4E84581EDF7DA339"
 				type: "kill"
 				value: 16L
 			}]
@@ -3072,14 +2999,14 @@
 			y: 11.5d
 		}
 		{
-			id: "741662DCA4E8C257"
+			id: "52D854FCD58925BC"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "37C2F7B5722962ED"
+				id: "1B6DD0AAFE70A2CF"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -3095,7 +3022,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "1F45852377A572D2"
+				id: "7C264B617A61EA85"
 				type: "kill"
 				value: 20L
 			}]
@@ -3103,15 +3030,14 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["741662DCA4E8C257"]
-			id: "1E122063FEF0C582"
+			id: "3EA8BADD149AB4E2"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "0DF27B3938A7F2D7"
+				id: "066F92FB45660A70"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -3127,7 +3053,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "27F96DBA42237F0A"
+				id: "2C54CF34A6B0BBFC"
 				type: "kill"
 				value: 64L
 			}]
@@ -3135,15 +3061,14 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["1E122063FEF0C582"]
-			id: "63929FB8805FA52A"
+			id: "493FFE2076A66926"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 2
-				id: "740A10A9F16493D9"
+				id: "7186957985E39EB1"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -3159,7 +3084,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "33E5DB5D08E150EE"
+				id: "389A52799526C08D"
 				type: "kill"
 				value: 128L
 			}]
@@ -3167,15 +3092,14 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["63929FB8805FA52A"]
-			id: "6BECC946904E7312"
+			id: "3AC872699242588E"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 4
-				id: "38294DF57137E384"
+				id: "1400F351BA9E279D"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -3191,7 +3115,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "0C599398A86CD266"
+				id: "031CD10D1344A8C9"
 				type: "kill"
 				value: 256L
 			}]
@@ -3199,14 +3123,14 @@
 			y: 2.5d
 		}
 		{
-			id: "14A267A5F2541EBF"
+			id: "5FA6CD2EFDDF363C"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 32
-				id: "332A28ECCEBFD5EA"
+				id: "326C4EACF2EEABCB"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -3222,7 +3146,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "7843D01239C8F8B1"
+				id: "10809D929392E1C2"
 				type: "kill"
 				value: 10L
 			}]
@@ -3230,15 +3154,14 @@
 			y: -3.5d
 		}
 		{
-			dependencies: ["14A267A5F2541EBF"]
-			id: "61680E311BF4DCAD"
+			id: "7A9CA648413582BE"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 64
-				id: "6EAB6C6B8AEA41C9"
+				id: "668E6B43458E6E7F"
 				item: {
 					count: 1
 					id: "kubejs:copper_coin"
@@ -3254,7 +3177,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "3CE0EF33C66DCFE6"
+				id: "729990FCA74E940A"
 				type: "kill"
 				value: 20L
 			}]
@@ -3262,15 +3185,14 @@
 			y: -1.5d
 		}
 		{
-			dependencies: ["61680E311BF4DCAD"]
-			id: "09C7FEC7ECCC4CB3"
+			id: "188D166B703834A3"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 4
-				id: "5753078F366A3E1E"
+				id: "1AF5A3062A275E4B"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -3286,7 +3208,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "19585BEA49195263"
+				id: "2B7570EFDAAFE5FD"
 				type: "kill"
 				value: 40L
 			}]
@@ -3294,15 +3216,14 @@
 			y: 0.5d
 		}
 		{
-			dependencies: ["09C7FEC7ECCC4CB3"]
-			id: "3D8D66D3FA5F4297"
+			id: "7061B2EB352C0FAC"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
 			mqt_per_player: true
 			mqt_show_roster_tooltip: false
 			rewards: [{
 				count: 8
-				id: "34B811F4C377495A"
+				id: "64922A8627116F0E"
 				item: {
 					count: 1
 					id: "kubejs:silver_coin"
@@ -3318,7 +3239,7 @@
 					}
 					id: "ftbquests:custom_icon"
 				}
-				id: "1B03FED6827A9E23"
+				id: "7DF915E1270997CE"
 				type: "kill"
 				value: 80L
 			}]
