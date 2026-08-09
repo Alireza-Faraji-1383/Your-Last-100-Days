@@ -1238,8 +1238,8 @@
 				item: { count: 1, id: "apothic_enchanting:music_disc_arcana" }
 				type: "item"
 			}]
-			x: -0.5d
-			y: -2.0d
+			x: 0.0d
+			y: -3.25d
 		}
 	]
 }

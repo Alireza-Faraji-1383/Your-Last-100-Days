@@ -182,7 +182,6 @@
 	quest.0BF93E0CDEDCB004.title: "Frostmaw"
 	quest.0C5DA84E0E5FD721.quest_desc: ["Build a level 1 Station after logistics are stable. This starts the travel branch and prepares the colony for broader trade connections."]
 	quest.0C5DA84E0E5FD721.title: "Station"
-	quest.0C6336145194DF5F.quest_desc: ["Continue the Zombie bounty with a larger target. Complete it to unlock the next tier."]
 	quest.0CE1F6DE5FD6A6D9.title: "&aEvocation&r Upgrade Orb"
 	quest.0D6E099A1A242153.quest_desc: ["Collect the Build Tool and Town Hall block, then place the colony center. This is the foundation for every MineColonies building and the point where your settlement officially begins."]
 	quest.0D6E099A1A242153.title: "Found the Colony"
@@ -278,7 +277,6 @@
 	quest.153216DF47821D6F.title: "Mastering the Inferno"
 	quest.154F2CD44BB7EC38.quest_desc: ["Find the Ancient Factory before challenging the Harbinger."]
 	quest.154F2CD44BB7EC38.title: "Ancient Factory"
-	quest.1552D2ED4A036712.quest_desc: ["Finish the final Piglin Brute bounty for the largest reward in this chain."]
 	quest.155725BD5EEF4DB4.quest_desc: ["Find the Sunken City before challenging the Leviathan."]
 	quest.155725BD5EEF4DB4.title: "Sunken City"
 	quest.159A20BC9424EADC.quest_desc: ["Find the Acropolis before challenging Scylla."]
@@ -311,7 +309,6 @@
 	quest.1AFB23B86AFA4C64.quest_desc: ["Enchant an item at 0% Quanta. Low Quanta removes chaotic swings and is best when you want predictable results instead of gambling on variance."]
 	quest.1AFB23B86AFA4C64.quest_subtitle: "Stat Route - Clean Rolls"
 	quest.1AFB23B86AFA4C64.title: "Begone, Flux"
-	quest.1B416F55DB53C59C.quest_desc: ["Hunt Creepers to start this bounty chain. The next tier asks for a larger kill count."]
 	quest.1B8F8360FA7CAB0D.quest_desc: ["Receive Silver Coins for regular shop use."]
 	quest.1B8F8360FA7CAB0D.title: "Gold to Silver Exchange"
 	quest.1BA9D21E423F5547.quest_subtitle: "Clues +2"
@@ -421,7 +418,6 @@
 	quest.2B01B964638DFBD1.title: "Crusher Hut"
 	quest.2B42A1CB36B3751A.quest_desc: ["Create obsidian and prepare for stronger crafting and portals."]
 	quest.2B42A1CB36B3751A.title: "Obsidian Work"
-	quest.2B490712D752F2AA.quest_desc: ["Continue the Skeleton bounty with a larger target. Complete it to unlock the next tier."]
 	quest.2B901ECF97FFA181.quest_desc: ["When you finally combine the Ancient Knowledge Fragments you'll get the... &9Eldritch Manuscript&r! That's what the last class is! \n\n&9Eldritch&r is the last class, the most powerful of all &3Spells&r. They are crafted with &9Echo Shards&r and need to be learned from the &9Manuscript&r to use them. Each &9Manuscript&r is only one use."]
 	quest.2B901ECF97FFA181.title: "&9&lEldritch"
 	quest.2BB910B217DF3A12.title: "&dEnder&r Upgrade Orb"
@@ -460,7 +456,6 @@
 	quest.31A3BDCF12B7AF43.title: "Enchantments from the Depths"
 	quest.32546F7C7B7AFC83.quest_desc: ["Build a level 1 Resort. This adds tourism and relaxation to the colony, creating a new support path beyond production buildings."]
 	quest.32546F7C7B7AFC83.title: "Resort"
-	quest.326677DEA12C0398.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
 	quest.32D2CE292E088939.title: "&cFire&r Upgrade Orb"
 	quest.32F975D288A18F4A.quest_desc: ["Train a pet through the Pet Shop. This shows how the addon turns pets from flavor into useful colony helpers."]
 	quest.32F975D288A18F4A.title: "Train a Pet"
@@ -493,7 +488,6 @@
 	quest.359B4C333CD4394A.title: "Maximum Strength"
 	quest.360E9E02A494217C.quest_desc: ["Build a Barracks Tower to extend organized military coverage. It strengthens your defensive network beyond individual guard posts."]
 	quest.360E9E02A494217C.title: "Barracks Tower"
-	quest.367899B66A4BC30F.quest_desc: ["Finish the final Pillager bounty for the largest reward in this chain."]
 	quest.3694D22867FF07EF.quest_desc: ["Build a level 1 Station. This begins the travel and logistics branch for connecting the colony to wider trade routes."]
 	quest.3694D22867FF07EF.title: "Station"
 	quest.36CFAF2E18974908.quest_desc: ["Receive Silver Coins for regular shop use."]
@@ -614,7 +608,6 @@
 	quest.430475E11D259B74.quest_desc: ["Build the Stone Smeltery to refine stone materials. This supports higher-level construction and reduces the need for manual smelting."]
 	quest.430475E11D259B74.quest_subtitle: "Build a Stone Smelter"
 	quest.430475E11D259B74.title: "Stone Smeltery"
-	quest.431FE96D8045138D.quest_desc: ["Hunt Skeletons to start this bounty chain. The next tier asks for a larger kill count."]
 	quest.4407BD7B5F033765.quest_desc: ["Another Craftable &eSpell Book&r and following the pattern this one is even more expensive. It requires Arcane Clothes, Gold, and an Enchanted Book. It's not picky on which Book just needs to be Enchanted! \n\nIt has 10 &3Spell&r Slots and grants a huge Mana Boost!"]
 	quest.4407BD7B5F033765.title: "Enchanted Spell Book"
 	quest.440D46347B7FE013.quest_desc: ["Obtain a Pickaxe Tome to focus enchanting results toward pickaxes."]
@@ -622,10 +615,8 @@
 	quest.440D46347B7FE013.title: "Tome of the Miners"
 	quest.4454DC053175B397.quest_desc: ["Gather Astral Dust after Ichor to unlock Etherium progression."]
 	quest.4454DC053175B397.title: "Astral Dust"
-	quest.44B1D7CD5CCE18FD.quest_desc: ["Hunt Piglin Brutes to start this bounty chain. The next tier asks for a larger kill count."]
 	quest.457DF4079907B9F1.quest_desc: ["Obtain your first Trade Coin. Use the Marketplace and trade loop to start turning surplus colony resources into currency."]
 	quest.457DF4079907B9F1.title: "Big Spender"
-	quest.46A64FE462A309A2.quest_desc: ["Hunt Zombies to start this bounty chain. The next tier asks for a larger kill count."]
 	quest.46C19773B8CF7A2C.quest_desc: ["Complete the Sculptor challenge to earn a key boss-route reward."]
 	quest.46C19773B8CF7A2C.title: "Sculptor Challenge"
 	quest.472C6FAECDD0CBA0.quest_desc: ["Obtain the Monstrous Eye to open the Soul Blacksmith route."]
@@ -733,7 +724,6 @@
 	quest.4D9DC4973FD340E5.quest_desc: ["Build the Combat Academy to train stronger melee guards. Better-trained defenders make the colony much safer during raids and night attacks."]
 	quest.4D9DC4973FD340E5.quest_subtitle: "Build a Combat Academy"
 	quest.4D9DC4973FD340E5.title: "Combat Academy"
-	quest.4DC0476240C74913.quest_desc: ["Continue the Skeleton bounty with a larger target. Complete it to unlock the next tier."]
 	quest.4DD7E2BD8508A117.quest_desc: ["Complete the main herder chain for animal-based production. These buildings supply meat, wool, leather, eggs, and other materials needed by a mature colony."]
 	quest.4DD7E2BD8508A117.quest_subtitle: "Build one of every herder hut."
 	quest.4DD7E2BD8508A117.title: "All Herders"
@@ -891,7 +881,6 @@
 	quest.555ED1E39131D91B.title: "&b&lCryomancer"
 	quest.5626294477EA4DCB.quest_desc: ["Find a Better Stronghold and prepare for the End route."]
 	quest.5626294477EA4DCB.title: "Stronghold Trail"
-	quest.562C9082EA53DE02.quest_desc: ["Finish the final Evoker bounty for the largest reward in this chain."]
 	quest.56F019E26B073560.quest_desc: ["Unlock the Trade Post addon path after your colony has a Town Hall. This branch follows the addon advancements from economy into travel, services, pets, and wishes."]
 	quest.56F019E26B073560.title: "Trade Post for MineColonies"
 	quest.5707E1C306DE7F69.quest_desc: ["Survive a Trial Chamber and bring back its key."]
@@ -983,9 +972,7 @@
 	]
 	quest.622AEF3DA469F1C9.quest_subtitle: "The melody of power"
 	quest.622AEF3DA469F1C9.title: "Melody of Eterna"
-	quest.62DA05A109DCFA92.quest_desc: ["Continue the Pillager bounty with a larger target. Complete it to unlock the next tier."]
 	quest.63183D00FF35ED61.title: "Sapling"
-	quest.635C194330BA9376.quest_desc: ["Continue the Enderman bounty with a larger target. Complete it to unlock the next tier."]
 	quest.637C87D8968CD51A.title: "&aUncommon&r Ink"
 	quest.639531AB27DCD267.quest_desc: ["&7Runes&r are how we make our Classes and their parts. To get a &7Blank Rune&r you can either kill the &4&lDead King&r or wipe clean an Inscribed Rune with a Shriving Stone. \n\nThere's 8 different classes (1 secret one) each having their own &3Scrolls&r, Focus Material, Upgrades, and Outfits. "]
 	quest.639531AB27DCD267.title: "&lClasses"
@@ -1136,15 +1123,12 @@
 	quest.7500C6B1E70EDE99.quest_desc: ["Enchant an item at level 100. This is the main power cap of Apothic Enchanting and requires a tuned setup built around End-tier shelves."]
 	quest.7500C6B1E70EDE99.quest_subtitle: "Step 13 - Level 100 Enchanting"
 	quest.7500C6B1E70EDE99.title: "Draconic Enchanting"
-	quest.7553083A4719E09B.quest_desc: ["Finish the final Zombie bounty for the largest reward in this chain."]
 	quest.75599A9909C7A8C8.quest_desc: ["Make sure a citizen successfully eats food. A fed colony works more reliably, and this confirms your early food supply is reaching the people who need it."]
 	quest.75599A9909C7A8C8.title: "First Meal"
 	quest.75CC6A3ABF5E66E2.quest_desc: ["Grow the colony to seventy-five citizens. This is a late colony milestone that demands strong logistics, food, housing, and defense."]
 	quest.75CC6A3ABF5E66E2.title: "Population 75"
 	quest.7611B7FE98792535.title: "End"
-	quest.761C7DF67620DC29.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
 	quest.76558D23A70AFF78.title: "&bIce&r Upgrade Orb"
-	quest.767FA524371C9480.quest_desc: ["Hunt Endermen to start this bounty chain. The next tier asks for a larger kill count."]
 	quest.77CADB958D24D541.quest_desc: [
 		"Sometimes, it is desirable to avoid certain enchantments entirely during the enchanting process. The &bSeashelf of Aquatic Filtration&r allows you to do just that."
 		""
@@ -1192,13 +1176,12 @@
 	quest.7D50111C051FD8E5.title: "Pet Shop"
 	quest.7D7BFA807275B79B.quest_desc: ["Locate an Ocean Monument and gather tools for underwater progress."]
 	quest.7D7BFA807275B79B.title: "Ocean Monument"
+	quest.7DC509C2B9965835.title: "Why!?"
 	quest.7F85669FEA41CD97.quest_desc: [
 		"The Neutral protector of the &6Village&r. He will attack all nearby Hostile Mobs. Like an Iron Golem but he look familiar for some reason? Could it be someone we know in a costume? \n\nYou can trade Healing Potions with him and Emeralds for a Furled Map which will soon be made to help against &aEvoker Forts&r! \n\nIf you do wish to kill him he will repeatedly attack you with &6Holy Spells&r. He will also Heal himself when getting low. \n\nOnce killed he will drop Arcane Essence, Inks, &6Holy Runes&r, and &6Holy Scrolls&r."
 		"{image:irons_spellbooks:textures/quests/spells_priest.png width:100 height:200 align:center}"
 	]
 	quest.7F85669FEA41CD97.title: "&6&lPriest"
-	quest.7F9A15CD13D2D7CE.quest_desc: ["Continue the Zombie bounty with a larger target. Complete it to unlock the next tier."]
-	quest.7FABA4362B1747BD.quest_desc: ["Continue the Piglin Brute bounty with a larger target. Complete it to unlock the next tier."]
 	quest.7FC54AF87CBDD222.quest_desc: [
 		"&5Ancient Battlegrounds&r are only a fragment of the past. \n\nWho knows what happened. \n\nWho knows who fought who. All we have now are parts of the walls and these &5Piles of Armor&r. Might as well just pick them up by Mining them with your Pickaxe."
 		"{image:irons_spellbooks:textures/quests/spells_battleground.png width:200 height:100 align:center}"
@@ -1251,6 +1234,24 @@
 	quest.A10000000000003D.title: "Beyond the Curse"
 	quest.A340A7804D65B550.quest_desc: ["Continue the Enderman bounty with a larger target. Complete it to unlock the next tier."]
 	quest.A8B76DA8386046AB.quest_desc: ["Hunt Vindicators to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B0A700000000000B.quest_desc: ["Hunt Zombies to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B0A700000000000E.quest_desc: ["Continue the Zombie bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000012.quest_desc: ["Continue the Zombie bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000016.quest_desc: ["Finish the final Zombie bounty for the largest reward in this chain."]
+	quest.B0A700000000001A.quest_desc: ["Hunt Skeletons to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B0A700000000001D.quest_desc: ["Continue the Skeleton bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000021.quest_desc: ["Continue the Skeleton bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000029.quest_desc: ["Hunt Creepers to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B0A700000000002C.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000030.quest_desc: ["Continue the Creeper bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000038.quest_desc: ["Hunt Endermen to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B0A700000000003B.quest_desc: ["Continue the Enderman bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000047.quest_desc: ["Hunt Piglin Brutes to start this bounty chain. The next tier asks for a larger kill count."]
+	quest.B0A700000000004E.quest_desc: ["Continue the Piglin Brute bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A7000000000052.quest_desc: ["Finish the final Piglin Brute bounty for the largest reward in this chain."]
+	quest.B0A700000000005A.quest_desc: ["Continue the Pillager bounty with a larger target. Complete it to unlock the next tier."]
+	quest.B0A700000000005E.quest_desc: ["Finish the final Pillager bounty for the largest reward in this chain."]
+	quest.B0A700000000007C.quest_desc: ["Finish the final Evoker bounty for the largest reward in this chain."]
 	quest.B100000000000001.quest_desc: ["Acquire a Pure Heart after accepting the Cursed Ring path."]
 	quest.B100000000000001.title: "Pure Heart"
 	quest.B100000000000004.quest_desc: ["Acquire the Darkest Scroll before attempting cursed scrollcraft."]

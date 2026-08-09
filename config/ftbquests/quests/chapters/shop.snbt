@@ -19,7 +19,7 @@
 			rotation: 0.0d
 			width: 8.0d
 			x: -1.0d
-			y: -8.5d
+			y: -9.0d
 		}
 		{
 			corner: 1b
@@ -1480,22 +1480,13 @@
 				}
 				{
 					auto: "enabled"
-					count: 2
-					id: "4E5C9B043990A00B"
-					item: {
-						count: 1
-						id: "minecraft:netherite_scrap"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
 					id: "66414E5A8878D2F6"
 					type: "xp"
-					xp: 1000
+					xp: 1500
 				}
 				{
 					auto: "enabled"
+					count: 5
 					id: "1960889DB2252B41"
 					item: {
 						count: 1
@@ -1505,21 +1496,31 @@
 				}
 				{
 					auto: "enabled"
-					count: 9
-					id: "2E4E85D3AFE60984"
+					id: "0B2813CC98091355"
 					item: {
+						components: {
+							"minecraft:potion_contents": {
+								potion: "minecraft:strong_poison"
+							}
+						}
 						count: 1
-						id: "minecraft:ender_pearl"
+						id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
 					}
 					type: "item"
 				}
 				{
 					auto: "enabled"
-					count: 2
-					id: "25A54D58DDDFA02B"
+					id: "3451F947B9039825"
 					item: {
+						components: {
+							"minecraft:stored_enchantments": {
+								levels: {
+									"minecraft:mending": 1
+								}
+							}
+						}
 						count: 1
-						id: "enigmaticlegacyplus:recall_potion"
+						id: "minecraft:enchanted_book"
 					}
 					type: "item"
 				}
@@ -1534,7 +1535,7 @@
 				type: "item"
 			}]
 			x: -1.0d
-			y: -14.0d
+			y: -15.5d
 		}
 		{
 			can_repeat: true
@@ -1601,6 +1602,40 @@
 			}]
 			x: -0.9642857142857153d
 			y: 2.3071428571428543d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			hide_dependency_lines: true
+			icon: {
+				id: "enigmaticlegacyplus:cursed_ring"
+			}
+			id: "7DC509C2B9965835"
+			min_required_dependencies: 1
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				id: "2C9F072255D0AD14"
+				item: {
+					count: 1
+					id: "enigmaticlegacyplus:cursed_ring"
+				}
+				type: "item"
+			}]
+			shape: "hexagon"
+			size: 2.1d
+			tasks: [{
+				consume_items: true
+				count: 8L
+				id: "46521161087780D7"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: 18.5d
 		}
 	]
 }
