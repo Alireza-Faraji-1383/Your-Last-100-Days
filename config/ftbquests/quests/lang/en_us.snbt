@@ -615,6 +615,7 @@
 	quest.440D46347B7FE013.title: "Tome of the Miners"
 	quest.4454DC053175B397.quest_desc: ["Gather Astral Dust after Ichor to unlock Etherium progression."]
 	quest.4454DC053175B397.title: "Astral Dust"
+	quest.44A1E0736DA3F251.title: "Believe me thats not water"
 	quest.457DF4079907B9F1.quest_desc: ["Obtain your first Trade Coin. Use the Marketplace and trade loop to start turning surplus colony resources into currency."]
 	quest.457DF4079907B9F1.title: "Big Spender"
 	quest.46C19773B8CF7A2C.quest_desc: ["Complete the Sculptor challenge to earn a key boss-route reward."]
@@ -879,6 +880,7 @@
 		"{image:irons_spellbooks:textures/quests/spells_cryomancer.png width:100 height:200 align:center}"
 	]
 	quest.555ED1E39131D91B.title: "&b&lCryomancer"
+	quest.55E1BFC265CF2A28.title: "Believe me thats not Milk"
 	quest.5626294477EA4DCB.quest_desc: ["Find a Better Stronghold and prepare for the End route."]
 	quest.5626294477EA4DCB.title: "Stronghold Trail"
 	quest.56F019E26B073560.quest_desc: ["Unlock the Trade Post addon path after your colony has a Town Hall. This branch follows the addon advancements from economy into travel, services, pets, and wishes."]
@@ -1177,6 +1179,7 @@
 	quest.7D7BFA807275B79B.quest_desc: ["Locate an Ocean Monument and gather tools for underwater progress."]
 	quest.7D7BFA807275B79B.title: "Ocean Monument"
 	quest.7DC509C2B9965835.title: "Why!?"
+	quest.7F02BE8E25300A0B.title: "    "
 	quest.7F85669FEA41CD97.quest_desc: [
 		"The Neutral protector of the &6Village&r. He will attack all nearby Hostile Mobs. Like an Iron Golem but he look familiar for some reason? Could it be someone we know in a costume? \n\nYou can trade Healing Potions with him and Emeralds for a Furled Map which will soon be made to help against &aEvoker Forts&r! \n\nIf you do wish to kill him he will repeatedly attack you with &6Holy Spells&r. He will also Heal himself when getting low. \n\nOnce killed he will drop Arcane Essence, Inks, &6Holy Runes&r, and &6Holy Scrolls&r."
 		"{image:irons_spellbooks:textures/quests/spells_priest.png width:100 height:200 align:center}"

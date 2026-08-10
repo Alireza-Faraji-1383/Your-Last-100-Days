@@ -109,37 +109,6 @@
 	quest_links: [ ]
 	quests: [
 		{
-			id: "725D4B5645CC73BF"
-			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "PER_ACTOR"
-			mqt_per_player: true
-			mqt_show_roster_tooltip: false
-			rewards: [{
-				count: 24
-				id: "73AC0A45F6725E26"
-				item: {
-					count: 1
-					id: "kubejs:copper_coin"
-				}
-				type: "item"
-			}]
-			tasks: [{
-				entity: "minecraft:zombie"
-				icon: {
-					components: {
-						"!ftbquests:icon": { }
-						"ftbquests:entity_face": "minecraft:zombie"
-					}
-					id: "ftbquests:custom_icon"
-				}
-				id: "7170171DFE0D7D24"
-				type: "kill"
-				value: 20L
-			}]
-			x: -4.0d
-			y: -3.5d
-		}
-		{
 			id: "6D9B2AEEBD3A4E30"
 			mqt_collapse: "ALL"
 			mqt_exclusivity_scope: "PER_ACTOR"
@@ -252,37 +221,6 @@
 			}]
 			x: -4.0d
 			y: 2.5d
-		}
-		{
-			id: "5F5BF9A1A6009072"
-			mqt_collapse: "ALL"
-			mqt_exclusivity_scope: "PER_ACTOR"
-			mqt_per_player: true
-			mqt_show_roster_tooltip: false
-			rewards: [{
-				count: 32
-				id: "5E7D189F58A8160C"
-				item: {
-					count: 1
-					id: "kubejs:copper_coin"
-				}
-				type: "item"
-			}]
-			tasks: [{
-				entity: "minecraft:skeleton"
-				icon: {
-					components: {
-						"!ftbquests:icon": { }
-						"ftbquests:entity_face": "minecraft:skeleton"
-					}
-					id: "ftbquests:custom_icon"
-				}
-				id: "4D7DD3D7046035BF"
-				type: "kill"
-				value: 20L
-			}]
-			x: -1.0d
-			y: -3.5d
 		}
 		{
 			id: "5E269C8121FF35B4"
@@ -3245,6 +3183,68 @@
 			}]
 			x: -13.0d
 			y: 2.5d
+		}
+		{
+			id: "3D380B3E5AB1BDE1"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 32
+				id: "0E8D0D88CA8FCE95"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:skeleton"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:skeleton"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "28E2105F4E4743B5"
+				type: "kill"
+				value: 20L
+			}]
+			x: -1.0d
+			y: -3.5d
+		}
+		{
+			id: "03CF5A46346CC1ED"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				count: 24
+				id: "1C21675CD125ACF4"
+				item: {
+					count: 1
+					id: "kubejs:copper_coin"
+				}
+				type: "item"
+			}]
+			tasks: [{
+				entity: "minecraft:zombie"
+				icon: {
+					components: {
+						"!ftbquests:icon": { }
+						"ftbquests:entity_face": "minecraft:zombie"
+					}
+					id: "ftbquests:custom_icon"
+				}
+				id: "1413EB6F7FE19B1F"
+				type: "kill"
+				value: 20L
+			}]
+			x: -4.0d
+			y: -3.5d
 		}
 	]
 }

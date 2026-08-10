@@ -1486,7 +1486,7 @@
 				}
 				{
 					auto: "enabled"
-					count: 5
+					count: 10
 					id: "1960889DB2252B41"
 					item: {
 						count: 1
@@ -1496,31 +1496,10 @@
 				}
 				{
 					auto: "enabled"
-					id: "0B2813CC98091355"
-					item: {
-						components: {
-							"minecraft:potion_contents": {
-								potion: "minecraft:strong_poison"
-							}
-						}
-						count: 1
-						id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
 					id: "3451F947B9039825"
 					item: {
-						components: {
-							"minecraft:stored_enchantments": {
-								levels: {
-									"minecraft:mending": 1
-								}
-							}
-						}
 						count: 1
-						id: "minecraft:enchanted_book"
+						id: "minecraft:totem_of_undying"
 					}
 					type: "item"
 				}
@@ -1636,6 +1615,157 @@
 			}]
 			x: -1.0d
 			y: 18.5d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:water_bucket"
+			}
+			id: "44A1E0736DA3F251"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 2
+				id: "4595AA33A819FBF4"
+				item: {
+					count: 1
+					id: "minecraft:water_bucket"
+				}
+				type: "item"
+			}]
+			size: 1.4d
+			tasks: [{
+				consume_items: true
+				count: 32L
+				disable_toast: true
+				id: "0806F1B266A63E0F"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -2.6d
+			y: 3.7d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:milk_bucket"
+			}
+			id: "55E1BFC265CF2A28"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 4
+				id: "64D2F1313AA91BDF"
+				item: {
+					count: 1
+					id: "minecraft:milk_bucket"
+				}
+				type: "item"
+			}]
+			size: 1.4d
+			tasks: [{
+				consume_items: true
+				count: 64L
+				disable_toast: true
+				id: "43C1C384EA8EAD3B"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: 0.6d
+			y: 3.6999999999999997d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				components: {
+					"ftbquests:icon": "supplementaries:textures/particle/empty.png"
+				}
+				id: "ftbquests:custom_icon"
+			}
+			id: "7F02BE8E25300A0B"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [
+				{
+					auto: "enabled"
+					id: "30309B948D52902B"
+					item: {
+						count: 1
+						id: "irons_spellbooks:lightning_bottle"
+					}
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					id: "144DB8D4CBD6B0E5"
+					type: "xp"
+					xp: 1500
+				}
+				{
+					auto: "enabled"
+					count: 10
+					id: "79EA59039C7704A4"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					id: "3833404483E645E6"
+					item: {
+						components: {
+							"irons_spellbooks:spell_container": {
+								data: [{
+									id: "irons_spellbooks:black_hole"
+									index: 0
+									level: 1
+									locked: 1b
+								}]
+								maxSpells: 1
+								mustEquip: 0b
+								spellWheel: 0b
+							}
+						}
+						count: 1
+						id: "irons_spellbooks:scroll"
+					}
+					type: "item"
+				}
+				{
+					auto: "enabled"
+					count: 3
+					id: "1DE2502AC2DF2DAF"
+					item: {
+						count: 1
+						id: "enigmaticlegacyplus:earth_heart_fragment"
+					}
+					type: "item"
+				}
+			]
+			shape: "none"
+			size: 0.5d
+			tasks: [{
+				consume_items: true
+				disable_toast: true
+				id: "7B475852BDB7A6D8"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: -17.0d
 		}
 	]
 }
