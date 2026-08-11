@@ -199,7 +199,7 @@
 			y: 8.0d
 		}
 	]
-	order_index: 8
+	order_index: 9
 	quest_links: [ ]
 	quests: [
 		{
@@ -265,6 +265,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 8
+					id: "000F9D9AFF740A7F"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "hexagon"
 			tasks: [{
@@ -319,6 +328,15 @@
 					item: {
 						count: 1
 						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+				{
+					count: 8
+					id: "6BC67EBB1B35A635"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -456,6 +474,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 16
+					id: "1ED0A2B4D051EC0C"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "hexagon"
 			tasks: [{
@@ -528,6 +555,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 48
+					id: "488C06C0C65E5FBF"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			shape: "hexagon"
 			tasks: [{
@@ -591,6 +627,15 @@
 					item: {
 						count: 1
 						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+				{
+					count: 16
+					id: "3F9AABBE9D2DB743"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -712,6 +757,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 64
+					id: "392FEAA94A35A52C"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "cataclysm:kill_monstrosity"
@@ -762,6 +816,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 64
+					id: "1AC9E0FF35124F4E"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "cataclysm:kill_ignis"
@@ -809,6 +872,15 @@
 					item: {
 						count: 1
 						id: "minecolonies:ancienttome"
+					}
+					type: "item"
+				}
+				{
+					count: 2
+					id: "5F6A82B5F8FE369F"
+					item: {
+						count: 1
+						id: "kubejs:coin"
 					}
 					type: "item"
 				}

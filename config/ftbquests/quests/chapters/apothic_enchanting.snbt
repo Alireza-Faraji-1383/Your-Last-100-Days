@@ -90,7 +90,7 @@
 			y: 6.0d
 		}
 	]
-	order_index: 4
+	order_index: 6
 	quest_links: [{
 		id: "7FAC71EBF712F101"
 		linked_quest: "64886F972C47E615"
@@ -135,11 +135,21 @@
 		{
 			dependencies: ["0DA09629733D2F68"]
 			id: "3C4CBE20B2EE36D3"
-			rewards: [{
-				id: "60C4E2E20BB12AD8"
-				type: "xp"
-				xp: 250
-			}]
+			rewards: [
+				{
+					id: "60C4E2E20BB12AD8"
+					type: "xp"
+					xp: 250
+				}
+				{
+					id: "2302024947D10C5E"
+					item: {
+						count: 1
+						id: "apothic_enchanting:hellshelf"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				id: "20B86AA2D218A423"
 				item: { count: 1, id: "apothic_enchanting:hellshelf" }
@@ -151,11 +161,21 @@
 		{
 			dependencies: ["3C4CBE20B2EE36D3"]
 			id: "517F851353600623"
-			rewards: [{
-				id: "177BC99B5964CE1B"
-				type: "xp"
-				xp: 250
-			}]
+			rewards: [
+				{
+					id: "177BC99B5964CE1B"
+					type: "xp"
+					xp: 250
+				}
+				{
+					id: "73E9C5C7D1FC92E8"
+					item: {
+						count: 1
+						id: "apothic_enchanting:infused_hellshelf"
+					}
+					type: "item"
+				}
+			]
 			tasks: [{
 				id: "53ED0DE57D55DD29"
 				item: { count: 1, id: "apothic_enchanting:infused_hellshelf" }

@@ -18,6 +18,7 @@
 	chapter.4E7A000000000000.title: "Nether"
 	chapter.53CE9BF04888A6F5.chapter_subtitle: ["Hunt extra bosses and complete optional flawless challenges."]
 	chapter.53CE9BF04888A6F5.title: "Boss Challenges"
+	chapter.5431A32663D4DAD1.title: "The End...."
 	chapter.5A24B0F4C08450E8.chapter_subtitle: ["Spend Coins on repeatable caches and special progression trades."]
 	chapter.5A24B0F4C08450E8.title: "Shop"
 	chapter.5A68256C8616EE36.chapter_subtitle: ["Master Enigmatic Legacy through curses, scrolls, materials, relics, and late-game gear."]
@@ -169,6 +170,7 @@
 	quest.0AB503478883A9BC.quest_desc: ["Infuse a Dormant Deepshelf after the Hell and Sea tiers are stable. Deepshelves move the table into the Deep Dark tier and prepare the path to level 80."]
 	quest.0AB503478883A9BC.quest_subtitle: "Step 08 - Deep Dark Tier"
 	quest.0AB503478883A9BC.title: "Delving Into Darkness"
+	quest.0AD4FAFE0A6F9FA6.title: "Time For Work"
 	quest.0B009391E3F76D6E.quest_desc: ["Build the Fisherman Hut to add reliable food production. A good fishing setup helps feed citizens while sometimes producing useful extra loot."]
 	quest.0B009391E3F76D6E.title: "Fisherman Hut"
 	quest.0B1150037754A4EB.quest_desc: ["Infuse Seashelves when the table has enough Eterna, Quanta, and Arcana, then craft Heart-Forged or Crystalline variants. This branch gives the table cleaner high-quality rolls."]
@@ -566,6 +568,7 @@
 	quest.40450AFB706D9456.quest_desc: ["Obtain an Inert Trident, a rare component in Apothic Enchanting's equipment progression."]
 	quest.40450AFB706D9456.quest_subtitle: "A weapon awaiting power"
 	quest.40450AFB706D9456.title: "Inert Trident"
+	quest.40474E63D95F53F8.title: "Ka Boom!?"
 	quest.409CAA9FC686CC59.quest_desc: ["Defeat any hostile mob to open the extra boss board."]
 	quest.409CAA9FC686CC59.title: "First Blood"
 	quest.40A420EAEEBDB544.quest_desc: ["Defeat the Sandworm and unlock its flawless challenge."]

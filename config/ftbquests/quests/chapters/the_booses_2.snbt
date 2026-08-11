@@ -25,7 +25,7 @@
 			y: -6.5d
 		}
 	]
-	order_index: 7
+	order_index: 8
 	quest_links: [ ]
 	quests: [
 		{
@@ -45,7 +45,7 @@
 			dependencies: ["409CAA9FC686CC59"]
 			id: "40A420EAEEBDB544"
 			rewards: [{
-				count: 3
+				count: 4
 				id: "52F6C2243E61208A"
 				item: {
 					count: 1
@@ -66,7 +66,7 @@
 			dependencies: ["409CAA9FC686CC59"]
 			id: "160CD8B65B2BD16B"
 			rewards: [{
-				count: 3
+				count: 8
 				id: "7A9FEAA07AA92D71"
 				item: {
 					count: 1
@@ -87,7 +87,7 @@
 			dependencies: ["409CAA9FC686CC59"]
 			id: "3831CD0CAEEE8E4F"
 			rewards: [{
-				count: 3
+				count: 16
 				id: "1D4E8371D903B422"
 				item: {
 					count: 1
@@ -135,10 +135,11 @@
 					xp_levels: 50
 				}
 				{
-					id: "021AD3E5D9C0AC81"
+					count: 32
+					id: "725911C73E431EF3"
 					item: {
 						count: 1
-						id: "minecraft:nether_star"
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -169,6 +170,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 16
+					id: "369CF7ADBEA58682"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "block_factorys_bosses:no_hit_kraken"
@@ -196,6 +206,15 @@
 					}
 					type: "item"
 				}
+				{
+					count: 32
+					id: "11DAF33B14097BAB"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
+					}
+					type: "item"
+				}
 			]
 			tasks: [{
 				advancement: "block_factorys_bosses:no_hit_underworld_knight"
@@ -220,6 +239,15 @@
 					item: {
 						count: 1
 						id: "minecraft:nether_star"
+					}
+					type: "item"
+				}
+				{
+					count: 16
+					id: "187B126B76AC4DCD"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -258,7 +286,7 @@
 			dependencies: ["409CAA9FC686CC59"]
 			id: "17AB0649B90CFE9B"
 			rewards: [{
-				count: 3
+				count: 8
 				id: "0BF1A9EF9BC3E5F0"
 				item: {
 					count: 1
@@ -323,6 +351,15 @@
 					item: {
 						count: 1
 						id: "cataclysm:flame_eye"
+					}
+					type: "item"
+				}
+				{
+					count: 8
+					id: "5296F56CDC86DE44"
+					item: {
+						count: 1
+						id: "kubejs:silver_coin"
 					}
 					type: "item"
 				}
@@ -400,7 +437,7 @@
 			id: "386F7567AECE38AF"
 			rewards: [
 				{
-					count: 2
+					count: 5
 					id: "039D8FE65CE46E73"
 					item: {
 						count: 1
@@ -411,7 +448,13 @@
 				{
 					id: "3BFEC2E06C30B1CB"
 					type: "xp"
-					xp: 500
+					xp: 4000
+				}
+				{
+					exclude_from_claim_all: true
+					id: "07A4446FDEC8ACD8"
+					table_id: 525872331977689700L
+					type: "choice"
 				}
 			]
 			shape: "gear"
