@@ -70,7 +70,7 @@
 			rotation: 0.0d
 			width: 7.2d
 			x: -1.0d
-			y: 8.0d
+			y: 12.5d
 		}
 		{
 			height: 2.4d
@@ -391,7 +391,7 @@
 				type: "advancement"
 			}]
 			x: -1.0d
-			y: 9.0d
+			y: 13.0d
 		}
 		{
 			can_repeat: true
@@ -435,7 +435,7 @@
 				}
 			]
 			x: -3.0d
-			y: 11.0d
+			y: 15.0d
 		}
 		{
 			can_repeat: true
@@ -535,7 +535,7 @@
 				}
 			]
 			x: 2.0d
-			y: 9.0d
+			y: 13.0d
 		}
 		{
 			can_repeat: true
@@ -755,7 +755,7 @@
 				}
 			]
 			x: -4.0d
-			y: 9.0d
+			y: 13.0d
 		}
 		{
 			can_repeat: true
@@ -799,7 +799,7 @@
 				}
 			]
 			x: -1.0d
-			y: 6.0d
+			y: 10.0d
 		}
 		{
 			can_repeat: true
@@ -843,7 +843,7 @@
 				}
 			]
 			x: 1.5d
-			y: 7.0d
+			y: 11.0d
 		}
 		{
 			can_repeat: true
@@ -887,7 +887,7 @@
 				}
 			]
 			x: -3.0d
-			y: 7.0d
+			y: 11.0d
 		}
 		{
 			can_repeat: true
@@ -947,7 +947,7 @@
 				}
 			]
 			x: 1.0d
-			y: 11.0d
+			y: 15.0d
 		}
 		{
 			can_repeat: true
@@ -991,7 +991,7 @@
 				}
 			]
 			x: -1.0d
-			y: 12.0d
+			y: 16.0d
 		}
 		{
 			can_repeat: true
@@ -1066,7 +1066,7 @@
 				}
 			]
 			x: 1.0d
-			y: 15.0d
+			y: 19.0d
 		}
 		{
 			can_repeat: true
@@ -1149,7 +1149,7 @@
 				}
 			]
 			x: -3.0d
-			y: 15.0d
+			y: 19.0d
 		}
 		{
 			can_repeat: true
@@ -1194,7 +1194,7 @@
 				}
 			]
 			x: -1.0d
-			y: 15.0d
+			y: 19.0d
 		}
 		{
 			can_repeat: true
@@ -1476,24 +1476,19 @@
 					item: {
 						components: {
 							"irons_spellbooks:spell_container": {
-								data: [ ]
+								data: [{
+									id: "irons_spellbooks:teleport"
+									index: 0
+									level: 4
+									locked: 1b
+								}]
 								maxSpells: 1
-								mustEquip: 1b
-								spellWheel: 1b
+								mustEquip: 0b
+								spellWheel: 0b
 							}
-							"minecraft:enchantments": {
-								levels: {
-									"apothic_enchanting:icy_thorns": 3
-									"minecraft:mending": 1
-									"minecraft:projectile_protection": 4
-									"minecraft:protection": 4
-									"minecraft:unbreaking": 4
-								}
-							}
-							"minecraft:repair_cost": 31
 						}
 						count: 1
-						id: "irons_spellbooks:netherite_mage_chestplate"
+						id: "irons_spellbooks:scroll"
 					}
 					type: "item"
 				}
@@ -1508,63 +1503,20 @@
 					id: "1960889DB2252B41"
 					item: {
 						components: {
-							"minecraft:enchantments": {
-								levels: {
-									"minecraft:mending": 1
-									"minecraft:projectile_protection": 4
-									"minecraft:protection": 4
-									"minecraft:unbreaking": 3
-								}
+							"irons_spellbooks:spell_container": {
+								data: [{
+									id: "irons_spellbooks:black_hole"
+									index: 0
+									level: 3
+									locked: 1b
+								}]
+								maxSpells: 1
+								mustEquip: 0b
+								spellWheel: 0b
 							}
-							"minecraft:repair_cost": 15
 						}
 						count: 1
-						id: "irons_spellbooks:netherite_mage_leggings"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
-					id: "3451F947B9039825"
-					item: {
-						components: {
-							"minecraft:enchantments": {
-								levels: {
-									"minecraft:aqua_affinity": 1
-									"minecraft:blast_protection": 4
-									"minecraft:mending": 1
-									"minecraft:protection": 4
-									"minecraft:respiration": 2
-									"minecraft:unbreaking": 3
-								}
-							}
-							"minecraft:repair_cost": 63
-						}
-						count: 1
-						id: "irons_spellbooks:netherite_mage_helmet"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
-					id: "68B33193882E02D8"
-					item: {
-						components: {
-							"minecraft:enchantments": {
-								levels: {
-									"apothic_enchanting:stable_footing": 1
-									"minecraft:blast_protection": 4
-									"minecraft:feather_falling": 4
-									"minecraft:mending": 1
-									"minecraft:protection": 5
-									"minecraft:thorns": 3
-									"minecraft:unbreaking": 4
-								}
-							}
-							"minecraft:repair_cost": 511
-						}
-						count: 1
-						id: "irons_spellbooks:netherite_mage_boots"
+						id: "irons_spellbooks:scroll"
 					}
 					type: "item"
 				}
@@ -1574,7 +1526,7 @@
 					id: "3EC10D21EB8E1DD2"
 					item: {
 						count: 1
-						id: "apothic_enchanting:hellshelf"
+						id: "minecraft:enchanted_golden_apple"
 					}
 					type: "item"
 				}
@@ -1590,111 +1542,11 @@
 				}
 				{
 					auto: "enabled"
+					count: 3
 					id: "058E0AED645BB2A5"
 					item: {
-						components: {
-							"apothic_enchanting:crescendo_projectiles": [
-								{
-									components: {
-										"minecraft:intangible_projectile": { }
-										"minecraft:potion_contents": {
-											potion: "minecraft:strong_harming"
-										}
-									}
-									count: 1
-									id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
-								}
-								{
-									components: {
-										"minecraft:intangible_projectile": { }
-										"minecraft:potion_contents": {
-											potion: "minecraft:strong_harming"
-										}
-									}
-									count: 1
-									id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
-								}
-								{
-									components: {
-										"minecraft:intangible_projectile": { }
-										"minecraft:potion_contents": {
-											potion: "minecraft:strong_harming"
-										}
-									}
-									count: 1
-									id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
-								}
-							]
-							"apothic_enchanting:crescendo_shots": 1
-							"minecraft:charged_projectiles": [
-								{
-									components: {
-										"minecraft:intangible_projectile": { }
-										"minecraft:potion_contents": {
-											potion: "minecraft:strong_harming"
-										}
-									}
-									count: 1
-									id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
-								}
-								{
-									components: {
-										"minecraft:intangible_projectile": { }
-										"minecraft:potion_contents": {
-											potion: "minecraft:strong_harming"
-										}
-									}
-									count: 1
-									id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
-								}
-								{
-									components: {
-										"minecraft:intangible_projectile": { }
-										"minecraft:potion_contents": {
-											potion: "minecraft:strong_harming"
-										}
-									}
-									count: 1
-									id: "spartan_weaponry_unofficial:tipped_netherite_arrow"
-								}
-							]
-							"minecraft:enchantments": {
-								levels: {
-									"apothic_enchanting:crescendo_of_bolts": 4
-									"enigmaticlegacyplus:ceaseless": 1
-									"minecraft:multishot": 1
-									"minecraft:power": 5
-									"minecraft:quick_charge": 4
-									"minecraft:unbreaking": 4
-									"spartan_weaponry_unofficial:sharpshooter": 4
-								}
-							}
-							"minecraft:repair_cost": 7
-						}
 						count: 1
-						id: "minecraft:crossbow"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
-					id: "2EA80D0E4841AF27"
-					item: {
-						components: {
-							"irons_spellbooks:spell_container": {
-								data: [{
-									id: "irons_spellbooks:invisibility"
-									index: 0
-									level: 5
-									locked: 1b
-								}]
-								maxSpells: 1
-								mustEquip: 0b
-								spellWheel: 0b
-							}
-						}
-						count: 1
-						id: "irons_spellbooks:scroll"
+						id: "minecraft:wither_skeleton_skull"
 					}
 					type: "item"
 				}
@@ -1809,7 +1661,7 @@
 				type: "item"
 			}]
 			x: -1.0d
-			y: 18.5d
+			y: 22.5d
 		}
 		{
 			can_repeat: true
@@ -1909,7 +1761,7 @@
 				}
 				{
 					auto: "enabled"
-					count: 20
+					count: 40
 					id: "79EA59039C7704A4"
 					item: {
 						count: 1
@@ -1919,33 +1771,11 @@
 				}
 				{
 					auto: "enabled"
-					id: "3833404483E645E6"
-					item: {
-						components: {
-							"irons_spellbooks:spell_container": {
-								data: [{
-									id: "cataclysm_spellbooks:conjure_thralls"
-									index: 0
-									level: 10
-									locked: 1b
-								}]
-								maxSpells: 1
-								mustEquip: 0b
-								spellWheel: 0b
-							}
-						}
-						count: 1
-						id: "irons_spellbooks:scroll"
-					}
-					type: "item"
-				}
-				{
-					auto: "enabled"
-					count: 4
+					count: 10
 					id: "1DE2502AC2DF2DAF"
 					item: {
 						count: 1
-						id: "enigmaticlegacyplus:earth_heart_fragment"
+						id: "minecraft:iron_block"
 					}
 					type: "item"
 				}
@@ -2027,6 +1857,108 @@
 			}]
 			x: 0.5285714285714462d
 			y: -0.3214285714285765d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:poppy"
+			}
+			id: "3957538DFC959312"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 16
+				id: "2123C4B8619B5A97"
+				item: {
+					count: 1
+					id: "minecraft:poppy"
+				}
+				type: "item"
+			}]
+			shape: "rsquare"
+			size: 1.1d
+			tasks: [{
+				consume_items: true
+				count: 4L
+				disable_toast: true
+				id: "330DBF6153783BF3"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -1.0d
+			y: 5.5d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:cornflower"
+			}
+			id: "4480C7DBEFCC20C3"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 16
+				id: "72F821362AF3C928"
+				item: {
+					count: 1
+					id: "minecraft:cornflower"
+				}
+				type: "item"
+			}]
+			shape: "rsquare"
+			size: 1.1d
+			tasks: [{
+				consume_items: true
+				count: 4L
+				disable_toast: true
+				id: "5B33F5AB861BB179"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: 0.5d
+			y: 5.5d
+		}
+		{
+			can_repeat: true
+			disable_toast: true
+			icon: {
+				id: "minecraft:dandelion"
+			}
+			id: "3A7A7B71716E4EED"
+			mqt_collapse: "ALL"
+			mqt_exclusivity_scope: "PER_ACTOR"
+			mqt_per_player: true
+			mqt_show_roster_tooltip: false
+			rewards: [{
+				auto: "enabled"
+				count: 16
+				id: "10196A4F68BC5ECB"
+				item: {
+					count: 1
+					id: "minecraft:dandelion"
+				}
+				type: "item"
+			}]
+			shape: "rsquare"
+			size: 1.1d
+			tasks: [{
+				consume_items: true
+				count: 4L
+				disable_toast: true
+				id: "541F97E2D49163E5"
+				item: { count: 1, id: "kubejs:copper_coin" }
+				type: "item"
+			}]
+			x: -2.5d
+			y: 5.5d
 		}
 	]
 }

@@ -1351,7 +1351,6 @@
 					type: "item"
 				}
 				{
-					count: 2
 					id: "0E2BD743CCD464D7"
 					item: {
 						components: {
@@ -1937,6 +1936,15 @@
 					id: "40F334C8F1199631"
 					type: "xp_levels"
 					xp_levels: 5
+				}
+				{
+					count: 32
+					id: "5FFBA900B79A4192"
+					item: {
+						count: 1
+						id: "minecraft:oak_planks"
+					}
+					type: "item"
 				}
 			]
 			tasks: [{
@@ -2917,15 +2925,7 @@
 				{
 					id: "13D86EE849172352"
 					type: "xp_levels"
-					xp_levels: 40
-				}
-				{
-					id: "603CCF9F8DCF86ED"
-					item: {
-						count: 1
-						id: "advancednetherite:netherite_diamond_pickaxe"
-					}
-					type: "item"
+					xp_levels: 30
 				}
 				{
 					id: "76E4B0B8D4F84C92"
@@ -2945,7 +2945,7 @@
 					type: "item"
 				}
 				{
-					count: 3
+					count: 8
 					id: "0CA080953C1BC817"
 					item: {
 						count: 1

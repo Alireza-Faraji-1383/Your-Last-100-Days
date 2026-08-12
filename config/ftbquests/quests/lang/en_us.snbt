@@ -517,6 +517,7 @@
 		"A single &dDraconic Endshelf&r provides enough raw strength to boost a table from Level 80 to Level 100. However, it provides no other stat bonuses."
 	]
 	quest.3953AFE08C194E79.quest_subtitle: "Reaching Level 100"
+	quest.3957538DFC959312.title: "Dye"
 	quest.395A33977B18B9AD.quest_desc: [
 		"After trying to harvest the &5Piles of Armor&r they appear to come back to life as if there was a body using it. \n\nThey have 60 Hearts and they are different from other bosses as they don't use magic, rather I believe they are something made from magic. They will attack using their Sword either by swinging it or charging at you with it. \n\nFrom what I've seen they will attack everything they see besides other &5&lKnights&r! \n\nOnce killed they dropped Netherite Scraps and Cinder Essence, that should definitely be of good use!"
 		"{image:irons_spellbooks:textures/quests/spells_knight.png width:100 height:200 align:center}"
@@ -528,6 +529,7 @@
 	quest.39CBE1417FEE719A.title: "The Twist"
 	quest.39FFF3DDA03C40EF.quest_desc: ["Accessing the penultimate tier requires a Level 80 table and access to &dDragon's Breath&r. With these, you can create Infused Dragon's Breath, a core component of &eEndshelves&r."]
 	quest.39FFF3DDA03C40EF.quest_subtitle: "Reaching Level 90"
+	quest.3A7A7B71716E4EED.title: "Dye"
 	quest.3AE1C3290500638F.quest_desc: ["Grow the colony to ten citizens. This confirms the early housing, food, and job systems are working together."]
 	quest.3AE1C3290500638F.title: "Population 10"
 	quest.3B3B0B00C759708D.title: "Sapling"
@@ -618,6 +620,7 @@
 	quest.440D46347B7FE013.title: "Tome of the Miners"
 	quest.4454DC053175B397.quest_desc: ["Gather Astral Dust after Ichor to unlock Etherium progression."]
 	quest.4454DC053175B397.title: "Astral Dust"
+	quest.4480C7DBEFCC20C3.title: "Dye"
 	quest.44A1E0736DA3F251.title: "Believe me thats not water"
 	quest.457DF4079907B9F1.quest_desc: ["Obtain your first Trade Coin. Use the Marketplace and trade loop to start turning surplus colony resources into currency."]
 	quest.457DF4079907B9F1.title: "Big Spender"
