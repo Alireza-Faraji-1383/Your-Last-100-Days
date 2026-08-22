@@ -119,10 +119,10 @@
 		"Play sound when drinking" = true
 
 [Blazes]
-	#Make blazes fire faster/more fireballs. Only mobs in enhancedai:blaze/change_attack entity type tag are affected by this feature.
+	#Make blazes fire faster/more fireballs. Only mobs in enhancedai:blaze_attack/change_attack entity type tag are affected by this feature.
 	"Enable Blaze attack" = true
 
-	#Make blazes fire faster/more fireballs. Only mobs in enhancedai:blaze/change_attack entity type tag are affected by this feature.
+	#Make blazes fire faster/more fireballs. Only mobs in enhancedai:blaze_attack/change_attack entity type tag are affected by this feature.
 	[Blazes."Blaze attack"]
 
 		#How many ticks pass between shooting fireballs. Vanilla is 6
@@ -390,8 +390,6 @@
 	"Enable Pick up and throw" = true
 	#Allows mobs to break vehicles to escape.
 	"Enable Anti-Cheese" = true
-	#Makes mobs panic when on fire.
-	"Enable Panic" = true
 	#Allows mobs to call reinforcements (like vanilla zombies can, but better) and have leaders that have a high chance to call reinforcements. Only entity types in the `enhancedai:mobs/leaders` tag can jump. PLEASE NOTE that this feature uses a custom attribute (enhancedai:spawn_reinforcements_chance) instead of the vanilla one. This feature has also an MPR condition `enhancedai:is_leader` to check if the mob is a leader.
 	"Enable Leaders" = true
 	#Let mobs use ender pearls as long as they have them in the off hand and when far enough from the target. Only mobs in the enhancedai:mobs/can_equip_pearl entity type tag will try to be equipped ender pearls.
@@ -451,10 +449,16 @@
 	"Enable Falling shockwave" = false
 	#Mobs can bite if are attacked with non-weapons. Only mobs in the enhancedai:mobs/biting_mobs/can_bite entity type tag can bite. Entity types in `mobs/biting_mobs/unaffected_by_bite` tag are unaffected by bites. Damage types in `biting_mobs/doesnt_trigger_bite` tag don't trigger biting mobs.
 	"Enable Biting mobs" = true
+	#Increases the distance of the leap based off the current delta movement.
+	"Enable Better leap at target goal" = true
+	#Makes mobs panic when on fire.
+	"Enable Panic on fire" = true
+	#Mobs with this feature enabled will move back to the position they spawned in if getting too far away from it.
+	"Enable Patrol" = true
 
 	#Let mobs use Fishing Rods, reeling players in. Either put a Fishing Rod in main or off hand and when near enough from the target they will use it. Only mobs in enhancedai:mobs/can_equip_fishing_rod entity type tag are affected by this feature.
 	[Mobs."Fisher mobs"]
-		#Chance for entity types in the enhancedai:fisher_mobs/can_equip_rod tag to spawn with a Fishing Rod in the offhand.
+		#Chance for entity types in the enhancedai:mobs/can_equip_fishing_rod tag to spawn with a Fishing Rod in the offhand.
 		#If you require more control, use Mobs Properties Randomness
 		# Default: 0.07
 		# Range: 0.0 ~ 1.0
@@ -539,17 +543,10 @@
 
 	#Allows mobs to break vehicles to escape.
 	[Mobs.Anti-Cheese]
-		#If true, entity types in the enhancedai:vehicle_anti_cheese/prevent_riding tag will not be able to mount vehicles in `enhancedai:mobs/vehicle_anti_cheese/valid_vehicles`.
+		#If true, entity types in the enhancedai:mobs/vehicle_anti_cheese/prevent_riding tag will not be able to mount vehicles in `enhancedai:mobs/vehicle_anti_cheese/valid_vehicles`.
 		"Prevent riding vehicles" = false
 		#If true, entity types in the enhancedai:mobs/vehicle_anti_cheese/break_vehicle tag will get an AI to break vehicles in `enhancedai:mobs/vehicle_anti_cheese/valid_vehicles` tag.
 		"Break vehicles" = true
-
-	#Makes mobs panic when on fire.
-	[Mobs.Panic]
-		#Chance for a mob to get the panic on fire AI
-		# Default: 0.8
-		# Range: 0.0 ~ 1.0
-		Chance = 0.8
 
 	#Allows mobs to call reinforcements (like vanilla zombies can, but better) and have leaders that have a high chance to call reinforcements. Only entity types in the `enhancedai:mobs/leaders` tag can jump. PLEASE NOTE that this feature uses a custom attribute (enhancedai:spawn_reinforcements_chance) instead of the vanilla one. This feature has also an MPR condition `enhancedai:is_leader` to check if the mob is a leader.
 	[Mobs.Leaders]
@@ -823,7 +820,7 @@
 
 	#Prevent players from abusing water or 2 high gaps to bully endermen.
 	[Mobs."Teleport anti-cheese"]
-		#Chance for entity types in the enhancedai:anti_cheese/teleport tag to get the Teleport Anti-Cheese AI, teleporting the target near them after not being able to reach them. Entity types in the tag enhancedai:anti_cheese/cant_be_teleported can't be teleported
+		#Chance for entity types in the enhancedai:mobs/teleport_anti_cheese/can_use tag to get the Teleport Anti-Cheese AI, teleporting the target near them after not being able to reach them. Entity types in the tag enhancedai:mobs/teleport_anti_cheese/cant_be_teleported can't be teleported
 		# Default: 1.0
 		# Range: 0.0 ~ 1.0
 		Chance = 1.0
@@ -848,7 +845,7 @@
 
 	#Mobs can mine blocks to reach the target. Uses offhand item to mine. Only mobs in the entity type tag enhancedai:mobs/can_mine can spawn with the ability to mine and blocks in the tag enhancedai:miner_blacklist cannot be mined. This feature also adds the block reach attribute to all entities.
 	[Mobs."Miner mobs"]
-		#Chance for a mob in the entity type tag enhancedai:can_be_miner to spawn with the miner ability
+		#Chance for a mob in the entity type tag enhancedai:mobs/can_mine to spawn with the miner ability
 		# Default: 0.07
 		# Range: 0.0 ~ 1.0
 		"Miner chance" = 0.2
@@ -869,7 +866,7 @@
 		"Time to break multiplier" = 1.25
 		#Dimensions where mobs can mine.
 		"Dimension whitelist" = ["minecraft:overworld", "minecraft:the_nether", "minecraft:the_end"]
-		#If true, the block tag `enhancedai:miner_mobs/blacklist` will be treated as a whitelist instead of blacklist
+		#If true, the block tag enhancedai:miner_blacklist will be treated as a whitelist instead of blacklist
 		"Block blacklist as whitelist" = false
 		#Mobs with Miner AI will not be able to break tile entities
 		"Blacklist tile entities" = true
@@ -1022,6 +1019,30 @@
 			# Range: 0.0 ~ 1.0
 			Hard = 0.3
 
+	#Increases the distance of the leap based off the current delta movement.
+	[Mobs."Better leap at target goal"]
+		#Vanilla is 0.4
+		# Default: 0.4
+		# Range: 0.0 ~ 1.7976931348623157E308
+		"Distance speed multiplier" = 0.4
+		#Vanilla is 0.2
+		# Default: 0.6
+		# Range: 0.0 ~ 1.7976931348623157E308
+		"Delta movement speed multiplier" = 0.6
+
+	#Makes mobs panic when on fire.
+	[Mobs."Panic on fire"]
+		#Chance for a mob to get the panic on fire AI
+		# Default: 0.8
+		# Range: 0.0 ~ 1.0
+		Chance = 0.8
+
+	#Mobs with this feature enabled will move back to the position they spawned in if getting too far away from it.
+	[Mobs.Patrol]
+		# Default: 32.0
+		# Range: 0.0 ~ 1.7976931348623157E308
+		Range = 32.0
+
 [Animals]
 	#Makes animals not tempted by food. Use the entity type tag enhancedai:animal/can_ignore_food_temptation to change animals. Please note that re-adding the tempt goal to the mob can't be done at runtime by updating the data with the /enhancedai command.
 	"Enable Not tempted animals" = true
@@ -1090,10 +1111,10 @@
 		"Flee range if seen" = 32
 
 [Ghast]
-	#Various changes to ghast shooting. Only ghast in enhancedai:ghast/change_shooting entity type tag are affected by this feature.
+	#Various changes to ghast shooting. Only ghast in enhancedai:ghast/change_shoot entity type tag are affected by this feature.
 	"Enable Ghast shooting" = true
 
-	#Various changes to ghast shooting. Only ghast in enhancedai:ghast/change_shooting entity type tag are affected by this feature.
+	#Various changes to ghast shooting. Only ghast in enhancedai:ghast/change_shoot entity type tag are affected by this feature.
 	[Ghast."Ghast shooting"]
 		#Chance for a Ghast to try and shoot the target even if can't see it. If enabled and the Ghast can't see the target, he will shoot 4 times as fast to breach.
 		# Default: 0.3

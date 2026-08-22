@@ -6,6 +6,10 @@
 "Enable Time stop no player online" = false
 #Adds a new `insanelib:push_resistance` attribute to mobs, making them harder to be pushed (or not pushable with 1) (this is not knockback resistance, this is for the bounding boxes of mobs intersecting). Disabling this will prevent the attribute from working. This doesn't work on players.
 "Enable Push resistance" = true
+#Add item tooltips via item tags. Items in the insanelib:has_tooltip item tag get a tooltip with the vanilla name + .tooltip (e.g. item.minecraft.arrow.tooltip). Items in insanelib:has_hidden_tooltip get the same tooltip, but only shown while holding SHIFT.
+"Enable Item tooltips" = true
+#Adds a new `insanelib:mob_detection_range` attribute to living entities (-Double.MAX_VALUE~1, default 0), that reduces (negative values) or increases (positive values) in percentage the range at which other entities can detect/see them. Hooks into LivingVisibilityEvent with LOWEST priority so it modifies the final visibility value.
+"Enable Mob detection range" = true
 
 #Various fixes and improvements
 [Fixes]
@@ -37,7 +41,7 @@
 
 #Changes the behaviour of Falling Blocks to be smarter by preventing them from getting stuck when landing on a block but their center has air below, or try to stack or move them when inside a block.
 ["Better falling blocks"]
-	#If true, falling blocks will break blocks that are instabreakable and place instead of dropping. If the falling block ends in a non-insta-break block, it will move to the side instead.
+	#If true, falling blocks will break blocks that are insta-breakable and place instead of dropping. If the falling block ends in a non-insta-break block, it will move to the side instead.
 	"Break instabreak blocks" = true
 	#Fix dupe exploit through dimensions.
 	"Fix dupe exploit" = true
@@ -54,3 +58,4 @@
 	"Stack limit" = 9999
 	#Always render the item stack count at a smaller scale, even when it's 99 or below
 	"Always shrink stack count" = false
+	"Disable shrink stack count" = false

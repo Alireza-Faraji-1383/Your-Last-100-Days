@@ -20,10 +20,43 @@
 	# Default: 20
 	# Range: > 5
 	baseHealth = 25
-	#If true, companions ask for food when below half health
+	#If true, companions eat and ask for food when they reach the configured health threshold
 	lowHealthFood = true
-	#If true, companions warn the player about nearby creepers
+	#If true, companions warn the player and avoid nearby creepers
 	creeperWarning = true
+	#Whether companions automatically equip suitable gear from their inventory
+	autoEquip = false
+	#When enabled, following companions teleport to a safe spot near the owner after exceeding the selected Radius by 5 blocks and failing to close distance.
+	teleportLeash = false
+	#Ticks a companion spends trying to close distance before an emergency teleport; 20 ticks equals 1 second.
+	# Default: 20
+	# Range: > 0
+	teleportDelayTicks = 20
+	#Minimum ticks between emergency teleports; 20 ticks equals 1 second.
+	# Default: 40
+	# Range: > 0
+	teleportCooldownTicks = 40
+	#Health fraction at or below which companions eat or ask for food; 0.5 means half health
+	# Default: 0.5
+	# Range: 0.0 ~ 1.0
+	lowHealthFoodThreshold = 0.5
+	#Enable the companion Stamina system
+	staminaEnabled = true
+	#Stamina spent per game tick while sprinting; 0 disables sprint drain
+	# Default: 1
+	# Range: 0 ~ 100
+	sprintStaminaCost = 1
+	#Stamina spent after a successful melee attack; 0 disables melee drain
+	# Default: 8
+	# Range: 0 ~ 100
+	meleeStaminaCost = 8
+	#Full plays all companion voice lines; Limited keeps pain, death, and ambient noises; Off disables custom companion sounds.
+	#Allowed Values: FULL, LIMITED, OFF
+	voiceMode = "FULL"
+	#Volume of custom companion sounds as a percentage.
+	# Default: 80
+	# Range: 0 ~ 100
+	voiceVolume = 80
 
 [personality]
 	#Enable birth traits for companions (Primary/Secondary).
@@ -72,3 +105,135 @@
 	# Default: 0.05
 	# Range: 0.0 ~ 1.0
 	luckyExtraDropChance = 0.1
+
+[taming]
+	#Configured item registry ids companions may request, choose as favorites, and eat for healing. Safe standard foods from other mods are detected automatically.
+	allFoods = ["minecraft:cookie", "minecraft:bread", "minecraft:melon_slice", "minecraft:apple", "minecraft:sweet_berries", "minecraft:carrot", "minecraft:baked_potato", "minecraft:cooked_salmon", "minecraft:cooked_cod", "minecraft:cooked_mutton", "minecraft:cooked_porkchop", "minecraft:cooked_beef", "minecraft:cooked_chicken", "minecraft:pumpkin_pie", "minecraft:glow_berries", "minecraft:potato", "minecraft:beetroot", "minecraft:dried_kelp", "minecraft:cooked_rabbit"]
+	#Optional exact recruitment rows: companion registry id|item registry id|count. Add multiple rows for multiple required items; an omitted companion keeps the random default.
+	recruitmentRequirements = []
+	#Additional item registry ids companions may consume for healing but never request while taming.
+	extraHealConsumables = ["minecraft:golden_apple", "minecraft:enchanted_golden_apple", "minecraft:golden_carrot", "minecraft:honey_bottle", "minecraft:mushroom_stew", "minecraft:beetroot_soup", "minecraft:rabbit_stew"]
+	#Item registry ids used for common companion taming-resource requests.
+	commonResourceItems = ["minecraft:coal", "minecraft:charcoal", "minecraft:copper_ingot", "minecraft:iron_ingot", "minecraft:redstone", "minecraft:lapis_lazuli", "minecraft:flint", "minecraft:clay_ball", "minecraft:string", "minecraft:leather", "minecraft:bone", "minecraft:feather"]
+	#Item registry ids used for uncommon companion taming-resource requests.
+	uncommonResourceItems = ["minecraft:gold_ingot", "minecraft:amethyst_shard", "minecraft:slime_ball", "minecraft:gunpowder", "minecraft:glowstone_dust", "minecraft:prismarine_shard", "minecraft:prismarine_crystals", "minecraft:ender_pearl", "minecraft:obsidian"]
+	#Item registry ids used for rare companion taming-resource requests.
+	rareResourceItems = ["minecraft:diamond", "minecraft:emerald", "minecraft:blaze_rod", "minecraft:magma_cream"]
+
+[hunting]
+	#Entity registry ids companions target when the manual Hunt toggle is enabled.
+	huntMobs = ["minecraft:chicken", "minecraft:cow", "minecraft:pig", "minecraft:rabbit", "minecraft:sheep", "minecraft:goat"]
+
+[alert]
+	#Use registry ids such as minecraft:ender_dragon, not Java class names. Creeper is the one editable default.
+	excludedMobs = ["minecraft:creeper"]
+	#Internal migration marker for the Creeper Alert default.
+	creeperDefaultMigrated = true
+
+[jobs]
+	#Enable the Lumberjack job behaviors.
+	lumberjackEnabled = true
+	#Minimum Lumberjack search radius; the companion Radius can expand work up to 128 blocks.
+	# Default: 10
+	# Range: 4 ~ 64
+	lumberjackRadius = 10
+	#Block ids or #tag ids accepted beneath natural trees, for example #minecraft:dirt or minecraft:moss_block.
+	lumberjackGroundBlocks = ["#minecraft:dirt", "minecraft:moss_block"]
+	#Multiplier applied to the tool-based per-log felling time.
+	# Default: 2.0
+	# Range: 0.25 ~ 8.0
+	lumberjackBreakTimeMultiplier = 2.0
+	#Enable the Hunter job behaviors.
+	hunterEnabled = true
+	#Search radius for Hunter target scans.
+	# Default: 20
+	# Range: 6 ~ 64
+	hunterRadius = 20
+	#Enable the Miner job behaviors.
+	minerEnabled = true
+	#Minimum Miner search radius; the companion Radius can expand work up to 128 blocks.
+	# Default: 8
+	# Range: 4 ~ 32
+	minerRadius = 8
+	#Optional whitelist of block ids the Miner may break (empty uses default tags).
+	minerAllowBlocks = []
+	#Blacklist of block ids the Miner should never break.
+	minerDenyBlocks = ["minecraft:chest", "minecraft:spawner"]
+	#Enable the Fisher job behaviors.
+	fisherEnabled = true
+	#Search radius for Fisher water spot scans.
+	# Default: 10
+	# Range: 4 ~ 32
+	fisherRadius = 10
+	#Enable the Chef job behaviors.
+	chefEnabled = true
+	#Search radius for Chef heat source scans.
+	# Default: 8
+	# Range: 3 ~ 24
+	chefRadius = 8
+	#Enable the Farmer job behaviors.
+	farmerEnabled = true
+	#Minimum Farmer crop scan radius; the companion Radius can expand work up to 128 blocks.
+	# Default: 12
+	# Range: 4 ~ 64
+	farmerRadius = 12
+	#Allow Farmers to use bone meal already carried in their inventory on immature crops.
+	farmerBoneMealEnabled = true
+	#If true, companions keep their assigned drop-off chests chunk-loaded to prevent courier failures.
+	assignedChestsChunkload = false
+	#Show the Jobs button in the companion inventory. Disabled by default while Jobs are experimental.
+	showJobsButton = false
+
+[currencies]
+	#Enable currency items, chest loot, and configured JEI trade displays.
+	enabled = true
+	#Percent chance for each vanilla chest loot table to receive currency.
+	# Default: 25
+	# Range: 0 ~ 100
+	lootDisperse = 25
+	#Number of currency stacks added when a chest loot table wins a currency roll.
+	# Default: 1
+	# Range: 1 ~ 5
+	lootRolls = 1
+	#Minimum item count per currency stack added to chest loot.
+	# Default: 1
+	# Range: 1 ~ 64
+	lootMinCount = 1
+	#Maximum item count per currency stack added to chest loot.
+	# Default: 3
+	# Range: 1 ~ 64
+	lootMaxCount = 3
+	#Percent chance for a vanilla chest loot table to receive one initialized Credit Card.
+	# Default: 2
+	# Range: 0 ~ 100
+	cardLootChance = 2
+	#Configured value of the tin denomination.
+	# Default: 1
+	# Range: > 0
+	tinValue = 1
+	#Configured value of the copper denomination.
+	# Default: 5
+	# Range: > 0
+	copperValue = 5
+	#Configured value of the silver denomination.
+	# Default: 10
+	# Range: > 0
+	silverValue = 10
+	#Configured value of the gold denomination.
+	# Default: 25
+	# Range: > 0
+	goldValue = 25
+	#Configured value of the dollar denomination.
+	# Default: 100
+	# Range: > 0
+	dollarValue = 100
+	#Configured value of the stack denomination.
+	# Default: 500
+	# Range: > 0
+	stackValue = 500
+	#Configured value of the gold_stack denomination.
+	# Default: 5000
+	# Range: > 0
+	goldStackValue = 5000
+	#JEI-only trades: first_id|first_count|second_id|second_count|output_id|output_count. Use -|0 for no second input.
+	tradeRecipes = []
