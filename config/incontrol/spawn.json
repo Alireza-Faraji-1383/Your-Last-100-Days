@@ -2,7 +2,15 @@
   {
     "mod": "born_in_chaos_v1",
     "hostile": true,
-    "daycount": "lt(15)",
+    "daycount": "lt(25)",
+    "result": "deny"
+  },
+  {
+    "hostile": true,
+    "spawntype": "natural",
+    "maxlight": 0,
+    "maxdaycount": 41,
+    "random": 0.5,
     "result": "deny"
   }
 ]
