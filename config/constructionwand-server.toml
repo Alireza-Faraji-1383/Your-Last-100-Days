@@ -23,6 +23,10 @@
 	destruction = 0
 	#Allow wand upgrading by putting the wand together with a wand core in a crafting grid.
 	upgradeable = false
+	#Wand exchange block limit (0 to disable exchange core)
+	# Default: 0
+	# Range: > 0
+	exchange = 0
 
 [iron_wand]
 	#Wand durability
@@ -43,6 +47,10 @@
 	destruction = 9
 	#Allow wand upgrading by putting the wand together with a wand core in a crafting grid.
 	upgradeable = true
+	#Wand exchange block limit (0 to disable exchange core)
+	# Default: 9
+	# Range: > 0
+	exchange = 9
 
 [diamond_wand]
 	#Wand durability
@@ -63,6 +71,10 @@
 	destruction = 25
 	#Allow wand upgrading by putting the wand together with a wand core in a crafting grid.
 	upgradeable = true
+	#Wand exchange block limit (0 to disable exchange core)
+	# Default: 25
+	# Range: > 0
+	exchange = 25
 
 [netherite_wand]
 	#Wand durability
@@ -83,6 +95,10 @@
 	destruction = 75
 	#Allow wand upgrading by putting the wand together with a wand core in a crafting grid.
 	upgradeable = true
+	#Wand exchange block limit (0 to disable exchange core)
+	# Default: 75
+	# Range: > 0
+	exchange = 75
 
 [infinity_wand]
 	#Wand block limit
@@ -99,6 +115,10 @@
 	destruction = 81
 	#Allow wand upgrading by putting the wand together with a wand core in a crafting grid.
 	upgradeable = true
+	#Wand exchange block limit (0 to disable exchange core)
+	# Default: 81
+	# Range: > 0
+	exchange = 81
 
 [misc]
 	#Block limit for Infinity Wand used in creative mode
@@ -124,3 +144,27 @@
 	TEList = ["chiselsandbits"]
 	#If set to TRUE, treat TEList as a whitelist, otherwise blacklist
 	TEWhitelist = false
+
+[gold_wand]
+	#Wand durability
+	# Default: 32
+	# Range: > 1
+	durability = 32
+	#Wand block limit
+	# Default: 60
+	# Range: > 1
+	limit = 60
+	#Max placement distance with angel core (0 to disable angel core)
+	# Default: 5
+	# Range: > 0
+	angel = 5
+	#Wand destruction block limit (0 to disable destruction core)
+	# Default: 15
+	# Range: > 0
+	destruction = 15
+	#Wand exchange block limit (0 to disable exchange core)
+	# Default: 15
+	# Range: > 0
+	exchange = 15
+	#Allow wand upgrading by putting the wand together with a wand core in a crafting grid.
+	upgradeable = true
