@@ -37,7 +37,9 @@
     const TEAM_SYNC_EVERY = 20;       // refresh FTB roster/HUD once per second
     const TEAM_RAID_DISTANCE = 500;
     const TEAM_RAID_DISTANCE_SQ = TEAM_RAID_DISTANCE * TEAM_RAID_DISTANCE;
-    const TEAM_RAID_ESCAPE_SECONDS = 10;
+    // Players get a visible 30-second grace period after crossing the 500-block
+    // boundary. Returning before it expires clears the record completely.
+    const TEAM_RAID_ESCAPE_SECONDS = 30;
     const MAX_CONCURRENT_RAIDS = 5;    // global combat cap; additional raids wait in a persisted queue
     const RAID_QUEUE_CHECK_EVERY = 20; // one tiny queue pass per second while no terminal event fires
     const RAID_DRIVER_WATCHDOG_EVERY = 20; // one no-op readiness check per second while raids exist
@@ -1625,6 +1627,17 @@
         });
     }
 
+    function suppressRaidHealing(raw) {
+        if (!raw) return;
+        // Block vanilla + modded healing that would inflate effective HP
+        var heals = ["minecraft:regeneration", "minecraft:instant_health", "minecraft:health_boost", "irons_spellbooks:heal", "cataclysm:healing"];
+        for (var i = 0; i < heals.length; i++) {
+            try { if (raw.hasEffect && raw.hasEffect(heals[i])) raw.removeEffect(heals[i]); } catch (e1) {}
+            try { if (typeof raw.removeEffect === "function") raw.removeEffect(heals[i]); } catch (e2) {}
+            try { if (raw.potionEffects) raw.potionEffects.remove(heals[i]); } catch (e3) {}
+        }
+    }
+
     // Some modded undead ignore equipped helmets and still ignite in sunlight.
     // Use the mob's native ServerLevel for sky/weather checks: the KubeJS level
     // wrapper does not expose canSeeSky consistently for modded entities. This
@@ -2362,7 +2375,7 @@
     }
 
     // Plan and spawn every mob in a round. Returns entity refs.
-    function spawnRound(level, player, def, round, instanceId) {
+    function spawnRound(level, player, def, round, instanceId, specSink) {
         var EAI = getEAI();
         if (!EAI || !player) return null;
         var out = [];
@@ -2470,7 +2483,12 @@
             var names = mobPresetNames(def, mob);
             // Per-raid followRange overrides any preset follow_range (last write wins
             // in applyAttributes), clamped to FOLLOW_RANGE_CAP (see const above).
-            var xtra = mob.extraArgs;
+            var xtra = [];
+            for (var _fx = 0; _fx < mob.extraArgs.length; _fx++) {
+                var _xa = String(mob.extraArgs[_fx]);
+                if (_xa.indexOf("max_health") !== -1) continue;
+                xtra.push(mob.extraArgs[_fx]);
+            }
             var nativeLongRange = NATIVE_LONG_PATH_RAID_MOB_RANGES[mob.type];
             var fr = nativeLongRange != null ? nativeLongRange : def.followRange;
             if (fr == null) fr = FOLLOW_RANGE_CAP;            // also caps preset values (farSight=100)
@@ -2557,6 +2575,19 @@
                 }
                 // Track immediately so any later failure rolls this entity back.
                 out.push(entity);
+                if (specSink) {
+                    try {
+                        var mid = mobUuid(entity);
+                        if (mid) specSink[mid] = {
+                            type: String(mob.type),
+                            names: names.slice(),
+                            xtra: xtra.slice(),
+                            breacher: !!mob.breacher,
+                            equip: mob.equip ? shallowCopy(mob.equip) : null,
+                            nbt: mob.nbt ? shallowCopy(mob.nbt) : null
+                        };
+                    } catch (eSpec) {}
+                }
                 forceAwakeRaidMob(entity, mob.type);
                 try { EAI.applyDeferred(level, entity, EAI.resolveArgs(names, xtra)); }
                 catch (eD) { warn(`applyDeferred: ${eD}`); }
@@ -2631,6 +2662,16 @@
         this._terminalNotified = false;// terminal lifecycle event fires exactly once
         this._deathCount = 0;         // shown by the HUD and persisted; never changes raid outcome
         this._diedDuringRaid = false; // legacy aggregate retained for old active snapshots
+        this._mobSpecs = {};          // uuid -> {type,names,xtra,breacher,equip,nbt}
+        this._mobDead = {};           // confirmed uuids that truly died (death event)
+        // Fixed point captured when the raid instance is created. Player
+        // respawns always return here, never to a bed/anchor outside the raid.
+        this._raidAnchor = null;      // {x,y,z}
+        try {
+            var startPos = player && player.position ? player.position() : null;
+            if (startPos) this._raidAnchor = { x: Number(startPos.x), y: Number(startPos.y), z: Number(startPos.z) };
+        } catch (eStartAnchor) {}
+        this._waveAnchor = null;      // {x,y,z} of the current wave start
         this._playerDeathCounts = {}; // UUID -> personal deaths; flawless is evaluated per member
     }
     // Freeze the bar on an end state (victory green / defeat red) before it closes.
@@ -3012,6 +3053,7 @@
         eachMob(this, function (m) {
             var raw = rawMobOf(m);
             if (!raw) return;
+            suppressRaidHealing(raw);
             clearDaylightFire(inst.level, raw);
             if (typeof raw.setTarget !== "function") return;
             var t = decideTarget(raw, teamRaws, victims, radiusSqr);
@@ -3040,13 +3082,29 @@
         });
     };
     RaidInstance.prototype.aliveCount = function () {
-        return pruneDead(this.roundMobs).length + pruneDead(this.carryover).length;
+        var count = 0;
+        var lists = [this.roundMobs, this.carryover];
+        for (var li = 0; li < lists.length; li++) {
+            var arr = lists[li];
+            for (var i = 0; i < arr.length; i++) {
+                var e = arr[i];
+                var live = false;
+                try { live = !!(e && (!e.isAlive || e.isAlive())); } catch (eA) {}
+                if (live) { count++; continue; }
+                var uu = "";
+                try { uu = mobUuid(e) || ""; } catch (eU) {}
+                if (uu && this._mobDead && this._mobDead[uu]) continue;
+                count++;
+            }
+        }
+        return count;
     };
     RaidInstance.prototype.startRound = function (idx, player) {
         var round = this.def.rounds[idx];
         info(`raid ${this.id}: start round ${idx} "${round.name}"`);
         this._mobState = {};   // drop stale anti-stuck entries from the previous wave
-        var spawned = spawnRound(this.level, player, this.def, round, this.id);
+        var sink = {};
+        var spawned = spawnRound(this.level, player, this.def, round, this.id, sink);
         if (spawned == null) {
             this.spawnRetryLeft = SPAWN_RETRY_TICKS;
             this.setBarName("§e" + this.barBase + " §8(" + (this.roundIdx + 1) + "/" +
@@ -3057,6 +3115,14 @@
         }
         this.spawnRetryLeft = 0;
         this.roundMobs = spawned;
+        if (!this._mobSpecs) this._mobSpecs = {};
+        if (!this._mobDead) this._mobDead = {};
+        for (var sk in sink) this._mobSpecs[sk] = sink[sk];
+        // anchor for 500-block leash + respawn return (middle of where this wave started)
+        try {
+            var ap = player.position();
+            this._waveAnchor = { x: Number(ap.x), y: Number(ap.y), z: Number(ap.z) };
+        } catch (eAnchor) {}
         this.roundTimeLeft = (round.timeLimit != null) ? round.timeLimit : null;
         this.roundTotalHealth = Math.max(1, sumMax(this.roundMobs) + sumMax(this.carryover));
         this.roundTotalMobs = this.roundMobs.length + this.carryover.length;
@@ -3116,6 +3182,8 @@
             info("resumed raid " + this.id + " for " + player.username);
         }
 
+        if (enforceWaveAreaLeash(this)) return;
+
         switch (this.phase) {
 
             case "ENDING":
@@ -3134,8 +3202,8 @@
                 break;
 
             case "FIGHTING":
-                this.roundMobs = pruneDead(this.roundMobs);
-                this.carryover = pruneDead(this.carryover);
+                this.roundMobs = replenishLostMobs(this, this.roundMobs);
+                this.carryover = replenishLostMobs(this, this.carryover);
                 this.aggro(player);
                 this.barFight(round);
                 this.updateBar(player);
@@ -3180,7 +3248,7 @@
                 break;
 
             case "BREATHER":
-                this.carryover = pruneDead(this.carryover);
+                this.carryover = replenishLostMobs(this, this.carryover);
                 this.aggro(player);
                 this.setBarName("§e" + this.barBase + " §8(" +
                                 Math.min(this.roundIdx + 2, this.def.rounds.length) + "/" + this.def.rounds.length +
@@ -3195,8 +3263,8 @@
                 break;
 
             case "WIN_WAIT":
-                this.roundMobs = pruneDead(this.roundMobs);
-                this.carryover = pruneDead(this.carryover);
+                this.roundMobs = replenishLostMobs(this, this.roundMobs);
+                this.carryover = replenishLostMobs(this, this.carryover);
                 this.aggro(player);
                 var stragglers = this.roundMobs.length + this.carryover.length;
                 this.setBarName("§6" + this.barBase + " §8(" + this.def.rounds.length + "/" +
@@ -3224,6 +3292,232 @@
             try { if (e && (!e.isAlive || e.isAlive())) alive.push(e); } catch (eA) {}
         }
         return alive;
+    }
+
+    function isLavaBlock(block) {
+        try {
+            var id = block ? String(block.id) : "";
+            if (!id || id === "minecraft:air") return false;
+            return id.indexOf("lava") !== -1;
+        } catch (e) { return false; }
+    }
+
+    function dryGroundAt(level, x, baseY, z) {
+        try {
+            var bx = Math.floor(x), bz = Math.floor(z);
+            var topY = Math.floor(baseY) + 6;
+            for (var y = topY; y > topY - 30; y--) {
+                var below = null, at = null, above = null;
+                try { below = level.getBlock(bx, y - 1, bz); } catch (e1) { continue; }
+                try { at = level.getBlock(bx, y, bz); } catch (e2) { continue; }
+                try { above = level.getBlock(bx, y + 1, bz); } catch (e3) { continue; }
+                if (isAirBlock(below)) continue;
+                if (isLavaBlock(below)) continue;
+                if (!isAirBlock(at)) continue;
+                if (!isAirBlock(above)) continue;
+                if (isLavaBlock(at) || isLavaBlock(above)) continue;
+                return { x: bx + 0.5, y: y, z: bz + 0.5 };
+            }
+        } catch (e) {}
+        return null;
+    }
+
+    function findRespawnGround(level, pp) {
+        try {
+            var hit = dryGroundAt(level, pp.x, pp.y, pp.z);
+            if (hit) return hit;
+            for (var r = 0; r < 3; r++) {
+                var radius = 20 + r * 10;
+                for (var a = 0; a < 12; a++) {
+                    var ang = (a / 12) * Math.PI * 2 + r * 0.7;
+                    var x = pp.x + Math.cos(ang) * radius;
+                    var z = pp.z + Math.sin(ang) * radius;
+                    var h = dryGroundAt(level, x, pp.y, z);
+                    if (h) return h;
+                }
+            }
+        } catch (eR) {}
+        return null;
+    }
+
+    function findWaveReturnSpot(level, anchor) {
+        try {
+            var hit = dryGroundAt(level, anchor.x, anchor.y, anchor.z);
+            if (hit) return hit;
+            for (var r = 0; r < 6; r++) {
+                var radius = 4 + r * 5;
+                for (var a = 0; a < 12; a++) {
+                    var ang = (a / 12) * Math.PI * 2 + r;
+                    var x = anchor.x + Math.cos(ang) * radius;
+                    var z = anchor.z + Math.sin(ang) * radius;
+                    var h = dryGroundAt(level, x, anchor.y, z);
+                    if (h) return h;
+                }
+            }
+        } catch (eW) {}
+        return null;
+    }
+
+    function fallbackMobSpec(inst) {
+        try {
+            var def = inst.def;
+            if (!def || !def.rounds || def.rounds.length === 0) return null;
+            var idx = Math.max(0, Math.min(def.rounds.length - 1, Number(inst.roundIdx) || 0));
+            var round = def.rounds[idx];
+            if (!round || !round.mobs || round.mobs.length === 0) return null;
+            var mob = round.mobs[0];
+            var names = mobPresetNames(def, mob);
+            var fr = def.followRange != null ? def.followRange : 300;
+            var filtered = [];
+            var srcXtra = mob.extraArgs ? mob.extraArgs.slice() : [];
+            for (var _fi = 0; _fi < srcXtra.length; _fi++) if (String(srcXtra[_fi]).indexOf("max_health") === -1) filtered.push(srcXtra[_fi]);
+            var xtra = filtered.concat(["attributes/follow_range=" + fr]);
+            if (def.waterproof !== false) xtra = xtra.concat(["attributes/water_movement_efficiency=1.0", "attributes/oxygen_bonus=1000"]);
+            return {
+                type: String(mob.type),
+                names: names,
+                xtra: xtra,
+                breacher: !!mob.breacher,
+                equip: mob.equip ? shallowCopy(mob.equip) : null,
+                nbt: mob.nbt ? shallowCopy(mob.nbt) : null
+            };
+        } catch (eF) { return null; }
+    }
+
+    function respawnRaidMob(inst, spec, player) {
+        var EAI = getEAI();
+        if (!EAI || !spec || !player || !inst.level) return null;
+        var pp = null;
+        try { pp = player.position(); } catch (eP) { return null; }
+        var level = inst.level;
+        var pos = findRespawnGround(level, pp);
+        if (!pos) return null;
+        var src = spec;
+        var entity = null;
+        try { entity = EAI.fromPresets(level, src.type, src.names, src.xtra); } catch (eF) { return null; }
+        if (!entity) return null;
+        if (src.nbt) applyEntityNbt(entity, src.nbt);
+        preparePlayerBoundRaidMob(entity, src.type, player);
+        try { entity.setPos(pos.x, pos.y, pos.z); } catch (ePos) { return null; }
+        try { entity.addTag("raid_mob"); } catch (e1) {}
+        try { entity.addTag("raid_" + inst.id); } catch (e2) {}
+        if (src.breacher) { try { entity.addTag("raid_breacher"); } catch (eB) {} }
+        try { entity.setPersistenceRequired(); } catch (e3) {}
+        try { entity.setCustomName(Text.of("[RAID]")); } catch (e4) {}
+        try {
+            var res = entity.spawn();
+            if (res === false) throw new Error("spawn returned false");
+        } catch (eSp) { return null; }
+        if (src.equip) equipMob(entity, src.equip);
+        forceAwakeRaidMob(entity, src.type);
+        try { EAI.applyDeferred(level, entity, EAI.resolveArgs(src.names, src.xtra)); } catch (eD) {}
+        joinRaidTeam(Manager._server, entity);
+        forceTarget(entity, player);
+        try {
+            var uuid = mobUuid(entity);
+            if (uuid) {
+                if (!inst._mobSpecs) inst._mobSpecs = {};
+                inst._mobSpecs[uuid] = src;
+            }
+        } catch (eU) {}
+        spawnPoof(player, pos);
+        return entity;
+    }
+
+    function anchorDistanceSqr(player, anchor) {
+        if (!player || !anchor) return Infinity;
+        try {
+            var p = player.position();
+            // Horizontal-only: Y is ignored, so building up / digging down near
+            // the raid area never trips the 500-block leash.
+            var dx = Number(p.x) - Number(anchor.x);
+            var dz = Number(p.z) - Number(anchor.z);
+            return dx * dx + dz * dz;
+        } catch (e) { return Infinity; }
+    }
+
+    function enforceWaveAreaLeash(inst) {
+        if (!inst || !inst._waveAnchor || inst.phase === "ENDING" || inst.phase === "QUEUED" || inst.phase === "DONE") return false;
+        var violator = null;
+        var offenders = [];
+        try {
+            eachOnlineParticipant(inst, function (member) {
+                if (violator) return;
+                try {
+                    if (member && typeof member.isAlive === "function" && !member.isAlive()) return;
+                    if (member && typeof member.isAlive === "boolean" && !member.isAlive) return;
+                } catch (eAlive) {}
+                if (!sameRaidLevel(inst, member)) { violator = member; offenders.push(member); return; }
+                if (anchorDistanceSqr(member, inst._waveAnchor) > TEAM_RAID_DISTANCE_SQ) { violator = member; offenders.push(member); }
+            }, false);
+        } catch (eE) { return false; }
+        if (!violator) return false;
+        var name = "";
+        try { name = String(violator.username || "A player"); } catch (eN) {}
+        eachOnlineParticipant(inst, function (m) {
+            try { m.tell(Text.of("§4" + name + " fled the raid area — the raid is lost!")); } catch (eT) {}
+        }, true);
+        if (offenders.length > 0) {
+            try { console.warn("[Raid] leash loss: " + name + " fled " + inst.id); } catch (eL) {}
+        }
+        inst.lose(violator);
+        return true;
+    }
+
+    function replenishLostMobs(inst, arr) {
+        if (!inst || !arr || arr.length === 0) return arr;
+        if (inst.phase === "ENDING" || inst.phase === "DONE" || inst.phase === "QUEUED") {
+            var aliveOnly = [];
+            for (var i = 0; i < arr.length; i++) {
+                var e = arr[i];
+                var live = false;
+                try { live = !!(e && (!e.isAlive || e.isAlive())); } catch (eA) {}
+                if (live) aliveOnly.push(e);
+                else {
+                    try {
+                        var uu = mobUuid(e);
+                        if (uu) { if (inst._mobDead) delete inst._mobDead[uu]; if (inst._mobSpecs) delete inst._mobSpecs[uu]; }
+                    } catch (eU2) {}
+                }
+            }
+            return aliveOnly;
+        }
+        var out = [];
+        var respawned = 0;
+        for (var i = 0; i < arr.length; i++) {
+            var e = arr[i];
+            var live = false;
+            try { live = !!(e && (!e.isAlive || e.isAlive())); } catch (eA) {}
+            if (live) { out.push(e); continue; }
+            var uu = "";
+            try { uu = mobUuid(e) || ""; } catch (eU) {}
+            if (uu && inst._mobDead && inst._mobDead[uu]) {
+                // truly died - remove permanently
+                try { delete inst._mobSpecs[uu]; } catch (eD) {}
+                try { delete inst._mobDead[uu]; } catch (eD2) {}
+                continue;
+            }
+            // removed without death (chunk unload/despawn) - must respawn
+            var spec = (uu && inst._mobSpecs) ? inst._mobSpecs[uu] : null;
+            if (!spec) spec = fallbackMobSpec(inst);
+            if (uu) {
+                try { delete inst._mobSpecs[uu]; } catch (eDS) {}
+            }
+            var player = resolvePlayer(inst) || inst._ctxPlayer;
+            var fresh = null;
+            if (spec && player) fresh = respawnRaidMob(inst, spec, player);
+            if (fresh) {
+                out.push(fresh);
+                respawned++;
+            } else {
+                // keep the stale ref for one more try instead of clearing the wave
+                out.push(e);
+            }
+        }
+        if (respawned > 0) {
+            try { console.info("[Raid] respawned " + respawned + " lost mob(s) for " + inst.id); } catch (eI) {}
+        }
+        return out;
     }
 
     // First live raw mob across both lists — aggro scan center when the main
@@ -3473,8 +3767,8 @@
             record.lastShown = remaining;
             showSpatialActionbar(
                 player,
-                "You are moving away from the raid area! Return within " +
-                    remaining + (remaining === 1 ? " second." : " seconds."),
+                "RAID WARNING  |  Return to the raid area in " +
+                    remaining + "s",
                 remaining <= 3 ? "dark_red" : "red"
             );
         }
@@ -4800,7 +5094,26 @@
             roundMobUuids: roundIds,
             carryoverUuids: carryIds,
             roundMobRecords: roundRecords,
-            carryoverMobRecords: carryRecords
+            carryoverMobRecords: carryRecords,
+            mobSpecs: (function () {
+                var out = {};
+                var specs = inst._mobSpecs || {};
+                for (var kk in specs) {
+                    var v = specs[kk];
+                    if (!v) continue;
+                    out[kk] = {
+                        type: String(v.type || ""),
+                        names: v.names ? v.names.slice() : [],
+                        xtra: v.xtra ? v.xtra.slice() : [],
+                        breacher: !!v.breacher,
+                        equip: v.equip ? shallowCopy(v.equip) : null,
+                        nbt: v.nbt ? shallowCopy(v.nbt) : null
+                    };
+                }
+                return out;
+            })(),
+            raidAnchor: inst._raidAnchor ? { x: Number(inst._raidAnchor.x), y: Number(inst._raidAnchor.y), z: Number(inst._raidAnchor.z) } : null,
+            waveAnchor: inst._waveAnchor ? { x: Number(inst._waveAnchor.x), y: Number(inst._waveAnchor.y), z: Number(inst._waveAnchor.z) } : null
         };
     }
 
@@ -4925,6 +5238,41 @@
             inst._restoreChunkIndex = 0;
             inst._restoreChunkSettle = 0;
             inst._restoreLegacyWarned = false;
+            inst._mobSpecs = (function () {
+                var out = {};
+                var src = s.mobSpecs || {};
+                for (var kk in src) {
+                    var vv = src[kk];
+                    if (!vv) continue;
+                    out[String(kk).toLowerCase()] = {
+                        type: String(vv.type || ""),
+                        names: vv.names ? vv.names.slice() : [],
+                        xtra: vv.xtra ? vv.xtra.slice() : [],
+                        breacher: !!vv.breacher,
+                        equip: vv.equip ? shallowCopy(vv.equip) : null,
+                        nbt: vv.nbt ? shallowCopy(vv.nbt) : null
+                    };
+                }
+                return out;
+            })();
+            inst._mobDead = {};
+            inst._raidAnchor = null;
+            try {
+                if (s.raidAnchor && s.raidAnchor.x != null)
+                    inst._raidAnchor = { x: Number(s.raidAnchor.x), y: Number(s.raidAnchor.y), z: Number(s.raidAnchor.z) };
+            } catch (eRaidAnchor) {}
+            // Backward compatibility for active snapshots created before the
+            // fixed raid anchor existed: the first saved wave anchor is the
+            // safest available return point.
+            if (!inst._raidAnchor && s.waveAnchor && s.waveAnchor.x != null) {
+                inst._raidAnchor = { x: Number(s.waveAnchor.x), y: Number(s.waveAnchor.y), z: Number(s.waveAnchor.z) };
+            }
+            inst._waveAnchor = null;
+            try {
+                if (s.waveAnchor && s.waveAnchor.x != null) {
+                    inst._waveAnchor = { x: Number(s.waveAnchor.x), y: Number(s.waveAnchor.y), z: Number(s.waveAnchor.z) };
+                }
+            } catch (eA) {}
             // Queued records never owned mobs, so they need neither chunk loads
             // nor the resume delay. Combat snapshots keep the existing rebind.
             inst._restoring = inst.phase !== "QUEUED";
@@ -5050,12 +5398,45 @@
         if (!best || !bestList) return false;
 
         var replacedMaxHealth = 0;
+        var oldUuid = "";
+        var oldSpec = null;
         if (bestIndex >= 0) {
             replacedMaxHealth = Math.max(0, entMaxHealth(bestList[bestIndex]));
+            try { oldUuid = mobUuid(bestList[bestIndex]) || ""; } catch (eOldU) {}
+            try { if (oldUuid && best._mobSpecs) oldSpec = best._mobSpecs[oldUuid]; } catch (eOldSpec) {}
             bestList[bestIndex] = form;
+            if (oldUuid) {
+                try { if (!best._mobDead) best._mobDead = {}; best._mobDead[oldUuid] = true; } catch (eDead) {}
+                try { if (best._mobSpecs) delete best._mobSpecs[oldUuid]; } catch (eSpec) {}
+            }
         } else {
             bestList.push(form);
         }
+        try {
+            var newFormUuid = mobUuid(form);
+            if (newFormUuid) {
+                if (!best._mobSpecs) best._mobSpecs = {};
+                if (oldSpec) {
+                    best._mobSpecs[newFormUuid] = {
+                        type: LIFESTEALER_TRUE_FORM_ID,
+                        names: oldSpec.names ? oldSpec.names.slice() : [],
+                        xtra: oldSpec.xtra ? oldSpec.xtra.slice() : [],
+                        breacher: true,
+                        equip: oldSpec.equip ? shallowCopy(oldSpec.equip) : null,
+                        nbt: oldSpec.nbt ? shallowCopy(oldSpec.nbt) : null
+                    };
+                } else {
+                    best._mobSpecs[newFormUuid] = {
+                        type: LIFESTEALER_TRUE_FORM_ID,
+                        names: [],
+                        xtra: ["attributes/follow_range=300", "attributes/water_movement_efficiency=1.0", "attributes/oxygen_bonus=1000"],
+                        breacher: true,
+                        equip: null,
+                        nbt: null
+                    };
+                }
+            }
+        } catch (eNewSpec) {}
 
         try { form.addTag("raid_mob"); } catch (e1) {}
         try { form.addTag("raid_" + best.id); } catch (e2) {}
@@ -5229,6 +5610,8 @@
             } catch (x) {}
         });
         inst.roundMobs = []; inst.carryover = [];
+        try { inst._mobSpecs = {}; } catch (eS) {}
+        try { inst._mobDead = {}; } catch (eD) {}
         return killed;
     }
 
@@ -5269,6 +5652,9 @@
             } catch (eKill) {}
         });
         inst.roundMobs = []; inst.carryover = [];
+        try { inst._mobSpecs = {}; } catch (eS) {}
+        try { inst._mobDead = {}; } catch (eD) {}
+        try { inst._waveAnchor = null; } catch (eA) {}
         return removed;
     }
 
@@ -5562,6 +5948,29 @@
         Manager._drive(event.server);
     });
 
+    // Track true raid mob deaths so distance-unload despawns don't count as kills.
+    EntityEvents.death(function (event) {
+        try {
+            var ent = event.entity;
+            if (!ent) return;
+            try { if (String(ent.type) === "minecraft:player") return; } catch (eT) {}
+            if (!anyActive()) return;
+            var tags = null;
+            try { tags = ent.getTags(); } catch (eT2) { return; }
+            if (!tags || !tags.contains("raid_mob")) return;
+            var muuid = mobUuid(ent);
+            if (!muuid) return;
+            for (var kk in _active) {
+                var iinst = _active[kk];
+                if (!iinst || iinst.phase === "DONE" || iinst.phase === "ENDING") continue;
+                if (!tags.contains("raid_" + iinst.id)) continue;
+                if (!iinst._mobDead) iinst._mobDead = {};
+                iinst._mobDead[muuid] = true;
+                break;
+            }
+        } catch (eMob) { warn("raid mob death track: " + eMob); }
+    });
+
     // Player death never ends a raid. Every death updates both the team total
     // and that player's persisted personal count; flawless uses only the latter.
     EntityEvents.death("minecraft:player", function (event) {
@@ -5611,6 +6020,73 @@
         } catch (e) { warn("team raid login sync: " + e); }
     });
 
+    PlayerEvents.respawn(function (event) {
+        try {
+            var player = event.entity || event.player;
+            if (!player) return;
+            // Participant lookup + team fallback: any teammate whose team owns the raid
+            var inst = raidForPlayer(player);
+            if (!inst) {
+                try {
+                    var ident = playerTeamIdentity(player);
+                    if (ident && ident.teamId) {
+                        for (var kk in _active) {
+                            var cand = _active[kk];
+                            if (!cand || cand.phase === "DONE" || cand.phase === "ENDING" || cand.phase === "QUEUED") continue;
+                            if (!cand._raidAnchor && !cand._waveAnchor) continue;
+                            if (String(cand.teamId || "") === String(ident.teamId)) { inst = cand; break; }
+                        }
+                    }
+                } catch (eTeam) {}
+            }
+            if (!inst) return;
+            if (inst.phase === "ENDING" || inst.phase === "QUEUED" || inst.phase === "DONE") return;
+            // A raid participant must never respawn at a bed or personal spawn
+            // outside the encounter. Always return them to the instance's
+            // fixed start point, even if death occurred inside the radius.
+            var returnAnchor = inst._raidAnchor || inst._waveAnchor;
+            if (!returnAnchor) return;
+            var spot = findWaveReturnSpot(inst.level, returnAnchor);
+            if (!spot) {
+                try { console.warn("[Raid] no safe return ground for " + player.username); } catch (eL) {}
+                return;
+            }
+            // Re-add team member who died outside but was culled from participantUuids
+            try {
+                var puid = playerUuidOf(player);
+                if (puid && inst.participantUuids && !inst.participantUuids[puid]) {
+                    inst.participantUuids[puid] = true;
+                    if (inst._lostParticipantUuids) delete inst._lostParticipantUuids[puid];
+                    inst._teamSyncLeft = 0;
+                }
+            } catch (eAdd) {}
+            try {
+                // Try dimension-aware teleport first (cross-dimension bed), fallback to 3-arg
+                try { player.teleportTo(inst.level, spot.x, spot.y, spot.z, Number(player.yaw) || 0, Number(player.pitch) || 0); }
+                catch (eT1) { player.teleportTo(spot.x, spot.y, spot.z); }
+            } catch (eTp) {
+                try { player.setPos(spot.x, spot.y, spot.z); } catch (ePos) {}
+                try { player.setPosition(spot.x, spot.y, spot.z); } catch (ePos2) {}
+            }
+            // Some NeoForge/KubeJS respawn wrappers accept teleportTo without
+            // moving the newly-created server entity (especially after a bed
+            // respawn or dimension change). Issue a server-side fallback too;
+            // it is one command per player death and guarantees the vanilla bed
+            // location cannot win the race with the raid return.
+            try {
+                var srv = player.server || Manager._server;
+                var dim = levelId(inst.level);
+                if (srv && dim && typeof srv.runCommandSilent === "function") {
+                    srv.runCommandSilent(
+                        "execute in " + dim + " run tp " + String(player.username) +
+                        " " + Number(spot.x) + " " + Number(spot.y) + " " + Number(spot.z)
+                    );
+                }
+            } catch (eCmdTp) { warn("raid respawn command return: " + eCmdTp); }
+            try { player.tell(Text.of("§7You died! Returned to the raid area.")); } catch (eTell) {}
+        } catch (eRespawn) { warn("raid respawn return: " + eRespawn); }
+    });
+
     // Rebind only when the last teammate in the raid dimension logs out. One
     // member leaving no longer pauses a battle that the rest of the team is
     // still actively fighting.
@@ -5636,6 +6112,22 @@
                 }
                 if (!leavingListed) spatialPlayers.push(event.player);
                 enforceSpatialCohesion(inst, spatialPlayers);
+                if (inst && inst._waveAnchor && inst.phase !== "ENDING" && inst.phase !== "QUEUED" && inst.phase !== "DONE") {
+                    var leaverOutside = false;
+                    try {
+                        if (!sameRaidLevel(inst, event.player)) leaverOutside = true;
+                        else if (anchorDistanceSqr(event.player, inst._waveAnchor) > TEAM_RAID_DISTANCE_SQ) leaverOutside = true;
+                    } catch (eLeash) { leaverOutside = true; }
+                    if (leaverOutside) {
+                        var nameL = "";
+                        try { nameL = String(event.player.username || "A player"); } catch (eNL) {}
+                        eachOnlineParticipant(inst, function (mm) {
+                            try { mm.tell(Text.of("§4" + nameL + " fled the raid area — the raid is lost!")); } catch (eTell) {}
+                        }, true);
+                        try { console.warn("[Raid] leash logout loss: " + nameL + " fled " + inst.id); } catch (eLL) {}
+                        inst.lose(event.player);
+                    }
+                }
 
                 var players = combatParticipants(inst, true);
                 var hasOther = false;

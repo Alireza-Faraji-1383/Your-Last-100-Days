@@ -106,7 +106,7 @@
             nbt: { IsBaby: false, Fire: -1 }
         };
         var args = [];
-        if (maxHealth) args.push("attributes/max_health=" + maxHealth);
+        // max_health boost disabled - mobs use vanilla health only
         if (speed) args.push("attributes/movement_speed=" + speed);
         if (args.length) out.extraArgs = args;
         return out;
@@ -119,7 +119,7 @@
             equip: equipWith("minecraft:bow", armor),
             nbt: { Fire: -1 }
         };
-        if (maxHealth) out.extraArgs = ["attributes/max_health=" + maxHealth];
+        // max_health boost disabled
         return out;
     }
 
@@ -149,58 +149,45 @@
         // Teleports onto the player with ender pearls — walls don't matter.
         PEARL_ZOMBIE:   { type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_IRON_CHAIN),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         PEARL_ZOMBIE_VETERAN:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_IRON_DIAMOND),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         PEARL_ZOMBIE_ELITE:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_SPIRIT),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         PEARL_ZOMBIE_ARCANE:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_ARCANE),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         PEARL_ZOMBIE_ABYSSAL:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_ABYSSAL),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         PEARL_ZOMBIE_CHAMPION:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_IGNIS),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         PEARL_ZOMBIE_MYTHIC:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_DARK_CONCORD),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         PEARL_ZOMBIE_LAST:{ type: "minecraft:zombie", presets: ["mobile", "pearlThrower"],
                           equip: equipWith("minecraft:ender_pearl", ARMOR_SPIRIT),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=40"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         // Picks up a fellow raid mob and hurls it at the player — delivers
         // melee over walls (EAI thrower; players themselves can't be grabbed).
         TOSSER:         { type: "minecraft:zombie", presets: ["mobile", "thrower"],
                           equip: equipWith(SW + "iron_battleaxe", ARMOR_IRON_DIAMOND),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=50"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         TOSSER_ELITE:   { type: "minecraft:zombie", presets: ["mobile", "thrower"],
                           equip: equipWith(SW + "iron_battleaxe", ARMOR_ARCANE),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=50"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         TOSSER_CHAMPION:{ type: "minecraft:zombie", presets: ["mobile", "thrower"],
                           equip: equipWith(SW + "iron_battleaxe", ARMOR_ROTTEN_LEGION),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=50"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         TOSSER_MYTHIC:  { type: "minecraft:zombie", presets: ["mobile", "thrower"],
                           equip: equipWith(SW + "iron_battleaxe", ARMOR_DARK_CONCORD),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=50"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         TOSSER_ARCANE:  { type: "minecraft:zombie", presets: ["mobile", "thrower"],
                           equip: equipWith(SW + "iron_battleaxe", ARMOR_ARCANE),
-                          nbt: { IsBaby: false, Fire: -1 },
-                          extraArgs: ["attributes/max_health=50"] },
+                          nbt: { IsBaby: false, Fire: -1 } },
         // EnhancedAI breaching creeper: sprints/parkours/climbs toward the raid,
         // launches at walls and uses a TNT-like blast.
         TNT_CREEPER:    { type: "minecraft:creeper", presets: ["mobile", "tntCreeper"] },
@@ -233,11 +220,10 @@
         VINDICATOR_ELITE:{ type: "minecraft:vindicator", presets: ["mobile", "sharpTargeting"],
                            equip: { mainhand: "minecraft:diamond_axe",
                                     head: "minecraft:diamond_helmet", chest: "minecraft:diamond_chestplate",
-                                    feet: "minecraft:diamond_boots" },
-                           extraArgs: ["attributes/max_health=50"] },
+                                    feet: "minecraft:diamond_boots" } },
         EVOKER:          { type: "minecraft:evoker" },
         WARBEAST_RAVAGER:{ type: "minecraft:ravager",
-                           extraArgs: ["attributes/max_health=150", "attributes/movement_speed=0.32"] },
+                           extraArgs: ["attributes/movement_speed=0.32"] },
         BLAZE:           { type: "minecraft:blaze" },
 
         // ================= Born in Chaos — undead rabble ================
@@ -295,9 +281,9 @@
         // Miniboss cuts of the Lifestealer / Missionary — buffed HP, meant to
         // anchor a mid/late round with a small escort.
         LIFESTEALER_BOSS:{ type: BIC + "lifestealer", miniboss: true, breacher: true,
-                           extraArgs: ["attributes/max_health=150"] },
+                            },
         MISSIONARY_BOSS: { type: BIC + "missioner", miniboss: true, breacher: true,
-                           extraArgs: ["attributes/max_health=120"] },
+                            },
         DOOR_KNIGHT:     { type: BIC + "door_knight" },        // smashes doors
         FALLEN_KNIGHT:   { type: BIC + "fallen_chaos_knight" },
         SCARLET_PERSECUTOR:{ type: BIC + "scarlet_persecutor" },
@@ -341,12 +327,12 @@
         APTRGANGR:       { type: CAT + "aptrgangr", miniboss: true, breacher: true },
         // Burning Arena boss, HP-balanced for an open-field raid.
         MALEDICTUS:      { type: CAT + "maledictus", boss: true, breacher: true,
-                           extraArgs: ["attributes/max_health=200"] },
+                            },
         // Final boss of night 90. Keep its native animation/path AI isolated
         // from EnhancedAI's explosion-avoidance goal; its wave now contains
         // breaching creepers. The core supplies its one-boss 128 path range.
         IGNIS:           { type: CAT + "ignis", boss: true, breacher: true, noDefaults: true,
-                           extraArgs: ["attributes/max_health=250", "attributes/movement_speed=0.38"] },
+                           extraArgs: ["attributes/movement_speed=0.38"] },
 
         // Night 100 final boss. The core binds it to the raid player before
         // spawn so its native gear-copy, spells and phase logic initialize.
@@ -361,14 +347,14 @@
         PYROMANCER:      { type: ISS + "pyromancer" },
         CRYOMANCER:      { type: ISS + "cryomancer" },
         NECROMANCER:     { type: ISS + "necromancer" },        // summons undead
-        PRIEST:          { type: ISS + "priest" },             // enemy healer — kill first
+        PRIEST:          { type: ISS + "cultist" },            // was priest (healer) - healing disabled per raid health boost rule
         APOTHECARIST:    { type: ISS + "apothecarist" },
         ICE_SPIDER:      { type: ISS + "ice_spider" },
         ARCHEVOKER:      { type: ISS + "archevoker" },
         MAGEHUNTER:      { type: ISS + "magehunter_vindicator" },
         // "Ancient Knight" — heavy melee elite, day-50 miniboss.
         CITADEL_KEEPER:  { type: ISS + "citadel_keeper", miniboss: true, breacher: true,
-                           extraArgs: ["attributes/max_health=120"] },
+                            },
 
         // ================= Mowzie's Mobs — mobile wild hunt =============
         // Stationary Foliaath and arena/puzzle bosses are deliberately

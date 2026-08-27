@@ -1246,6 +1246,40 @@
 				{
 					id: "0BB20E30D1C6442F"
 					item: {
+						components: {
+							"relics:data": {
+								abilities: {
+									abilities: {
+										jump: {
+											extender: {
+												cooldown: 0
+												cooldownCap: 0
+												ticking: 0b
+											}
+											lock: {
+												breaks: 5
+											}
+											points: 0
+											research: {
+												links: { }
+												researched: 0b
+											}
+											stats: {
+												count: {
+													initialValue: 1.41026d
+												}
+											}
+										}
+									}
+								}
+								leveling: {
+									experience: 0
+									level: 0
+									luck: 0
+									points: 0
+								}
+							}
+						}
 						count: 1
 						id: "artifacts:cloud_in_a_bottle"
 					}

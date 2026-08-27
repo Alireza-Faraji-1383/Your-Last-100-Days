@@ -1821,6 +1821,40 @@
 				{
 					id: "7C3C9B55A2D6A6A5"
 					item: {
+						components: {
+							"relics:data": {
+								abilities: {
+									abilities: {
+										power: {
+											extender: {
+												cooldown: 0
+												cooldownCap: 0
+												ticking: 0b
+											}
+											lock: {
+												breaks: 5
+											}
+											points: 0
+											research: {
+												links: { }
+												researched: 0b
+											}
+											stats: {
+												amount: {
+													initialValue: 0.9047d
+												}
+											}
+										}
+									}
+								}
+								leveling: {
+									experience: 0
+									level: 0
+									luck: 0
+									points: 0
+								}
+							}
+						}
 						count: 1
 						id: "artifacts:power_glove"
 					}
@@ -1872,6 +1906,60 @@
 				{
 					id: "5DE06C2E20E1B19E"
 					item: {
+						components: {
+							"relics:data": {
+								abilities: {
+									abilities: {
+										discarding: {
+											extender: {
+												cooldown: 0
+												cooldownCap: 0
+												ticking: 0b
+											}
+											lock: {
+												breaks: 5
+											}
+											points: 0
+											research: {
+												links: { }
+												researched: 0b
+											}
+											stats: {
+												interaction: {
+													initialValue: 0.32762d
+												}
+											}
+										}
+										interaction: {
+											extender: {
+												cooldown: 0
+												cooldownCap: 0
+												ticking: 0b
+											}
+											lock: {
+												breaks: 0
+											}
+											points: 0
+											research: {
+												links: { }
+												researched: 0b
+											}
+											stats: {
+												range: {
+													initialValue: 0.2194d
+												}
+											}
+										}
+									}
+								}
+								leveling: {
+									experience: 0
+									level: 0
+									luck: 0
+									points: 0
+								}
+							}
+						}
 						count: 1
 						id: "artifacts:pocket_piston"
 					}

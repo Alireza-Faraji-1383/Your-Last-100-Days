@@ -17,6 +17,9 @@
 // State is a small JSON object per scheduled raid in server.persistentData:
 //   raidsched_day<N>_<raidId>_player_states_v1
 //     = { "<uuid>": { fired, pending, instanceIds } }
+// Cooldown: after any raid finishes, that player must wait 2 play days before
+// the next scheduled raid can fire (persistent map raidsched_cooldowns_v1
+// = { "<uuid>": lastCompletedPlayDay }).
 //
 // Night begins at tick 13000. A raid whose day equals the player's current play
 // day starts at night. A raid the player is already past (they were offline
@@ -33,10 +36,14 @@
     var CHECK_EVERY = 100;   // one small online-player pass every 5 seconds
     var NIGHT_START = 13000;
     var STATE_SUFFIX = "_player_states_v1";
+    var COOLDOWN_DAYS = 2;
+    var COOLDOWN_KEY = "raidsched_cooldowns_v1";
     var _accum = 0;
     var _schedule = [];
     var _server = null;
     var _recovered = false;
+    var _cooldowns = {};
+    var _cooldownsLoaded = false;
 
     function warn(message) { console.warn("[RaidSched] " + message); }
 
@@ -271,6 +278,73 @@
         return String(s.raidId).replace(/_/g, " ");
     }
 
+    function loadCooldowns(server) {
+        if (_cooldownsLoaded) return _cooldowns;
+        _cooldownsLoaded = true;
+        _cooldowns = {};
+        if (!server || !server.persistentData) return _cooldowns;
+        try {
+            var raw = String(server.persistentData.getString(COOLDOWN_KEY) || "");
+            if (!raw) return _cooldowns;
+            var parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== "object") return _cooldowns;
+            for (var k in parsed) {
+                var v = Number(parsed[k]);
+                if (isFinite(v) && v >= 0) _cooldowns[String(k).toLowerCase()] = Math.floor(v);
+            }
+        } catch (e) {
+            warn("read cooldowns: " + e);
+            _cooldowns = {};
+        }
+        return _cooldowns;
+    }
+
+    function saveCooldowns(server) {
+        if (!server || !server.persistentData) return false;
+        var map = loadCooldowns(server);
+        try {
+            var any = false;
+            for (var k in map) { if (map[k] != null) { any = true; break; } }
+            if (any) server.persistentData.putString(COOLDOWN_KEY, JSON.stringify(map));
+            else server.persistentData.remove(COOLDOWN_KEY);
+            return true;
+        } catch (e) {
+            warn("write cooldowns: " + e);
+            return false;
+        }
+    }
+
+    function cooldownRemaining(server, uuid) {
+        var map = loadCooldowns(server);
+        var key = String(uuid || "").toLowerCase();
+        if (!key || map[key] == null) return 0;
+        var last = Number(map[key] || 0);
+        var cur = daysForUuid(server, key);
+        var rem = (last + COOLDOWN_DAYS) - cur;
+        return rem > 0 ? rem : 0;
+    }
+
+    function isOnCooldown(server, uuid) {
+        return cooldownRemaining(server, uuid) > 0;
+    }
+
+    function setCooldownNow(server, uuid) {
+        var map = loadCooldowns(server);
+        var key = String(uuid || "").toLowerCase();
+        if (!key) return false;
+        var cur = daysForUuid(server, key);
+        map[key] = cur;
+        return saveCooldowns(server);
+    }
+
+    function clearCooldown(server, uuid) {
+        var map = loadCooldowns(server);
+        var key = String(uuid || "").toLowerCase();
+        if (!key || map[key] == null) return false;
+        delete map[key];
+        return saveCooldowns(server);
+    }
+
     function showRaidWarning(server, player, s, tonight) {
         if (!server || !player) return false;
         var key = warningKey(s, tonight);
@@ -331,6 +405,7 @@
                     if (!next || s.day < next.day) next = s;
                 }
                 if (!next) continue;
+                if (isOnCooldown(server, uuid)) continue;
                 var tonight = days >= next.day;
                 if (tonight && timeOfDay >= NIGHT_START) continue;
 
@@ -380,6 +455,7 @@
 
                 var days = daysForUuid(server, uuid);
                 if (days < s.day) continue;
+                if (isOnCooldown(server, uuid)) continue;
                 // On the player's own scheduled day, keep the normal night start.
                 // Once that day has passed the catch-up fires within this
                 // 5-second window regardless of time of day.
@@ -456,6 +532,7 @@
         //    no ledger entry of their own, so ticking only the starter would let
         //    that teammate restart the raid on the very next check.
         var uuids = consumed ? (event.participantUuids || []) : [];
+        var cooldownDirty = false;
         for (var u = 0; u < uuids.length; u++) {
             var key = String(uuids[u] || "").toLowerCase();
             if (!key) continue;
@@ -466,7 +543,14 @@
                 state.instanceIds = [];
                 changed = true;
             }
+            // 2-day rest before next raid for this player
+            try {
+                var cmap = loadCooldowns(_server);
+                cmap[key] = daysForUuid(_server, key);
+                cooldownDirty = true;
+            } catch (eCD) {}
         }
+        if (cooldownDirty) saveCooldowns(_server);
         // An admin stop permanently burns the raid for everyone listed here,
         // and the undo (/raid done <player> <raidId> false) is per player, so
         // name them rather than making the operator reconstruct the roster.
@@ -582,6 +666,7 @@
             if (!value) {
                 state.pending = false;
                 state.instanceIds = [];
+                try { clearCooldown(_server, key); } catch (eC) {}
             }
             return saveStates(_server, s);
         },
@@ -599,6 +684,15 @@
                 try { if (_server) _server.persistentData.remove(stateKey(s)); }
                 catch (e) {}
             }
+            if (resetCount > 0) {
+                try {
+                    if (_server) {
+                        _cooldowns = {};
+                        _cooldownsLoaded = true;
+                        _server.persistentData.remove(COOLDOWN_KEY);
+                    }
+                } catch (eCD) {}
+            }
             return resetCount;
         }
     };
@@ -607,6 +701,8 @@
         _server = event.server;
         _accum = 0;
         _recovered = false;
+        _cooldowns = {};
+        _cooldownsLoaded = false;
         for (var i = 0; i < _schedule.length; i++) {
             _schedule[i].states = emptyStates();
             _schedule[i].statesLoaded = false;

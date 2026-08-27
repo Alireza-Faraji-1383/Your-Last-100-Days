@@ -13,6 +13,13 @@
 // The comparison is !== rather than > so that /time set moving the world
 // backwards burns a day instead of freezing the counter forever.
 //
+// Raid freeze: a player who is fighting a raid (participant of an active or
+// queued instance, RaidManager.isInRaid) does not advance while the fight
+// lasts. The mid-raid rollover is deferred, not lost - entry.w stays behind,
+// so the first touch after the raid ends still grants the day. The in-raid
+// check runs only on the pass where a rollover was detected, so the
+// steady-state cost is zero.
+//
 // The store lives in server.persistentData, NOT player.persistentData: a raid
 // can end while a participant is offline (raid_core.js PlayerEvents.loggedOut
 // keeps nearby leavers on the roster and deliverPendingTeamWins pays them on
@@ -96,6 +103,16 @@
         }
     }
 
+    // Participant membership across active AND queued instances (raid_core.js
+    // playerRaidIncludingQueue). Pure map lookups over <=5 instances - no FTB
+    // API call, no world scan. Defensive: absent manager simply never freezes.
+    function playerInRaid(player) {
+        try {
+            if (typeof RaidManager === "undefined" || !RaidManager || !RaidManager.isInRaid) return false;
+            return !!RaidManager.isInRaid(player);
+        } catch (e) { return false; }
+    }
+
     function touch(server, player) {
         server = pickServer(server);
         if (!server) return 0;
@@ -111,6 +128,9 @@
             return 1;
         }
         if (entry.w !== today) {
+            // Mid-fight rollover: leave entry.w stale so the day is granted on
+            // the first touch after the raid ends instead of during combat.
+            if (playerInRaid(player)) return entry.d;
             entry.d = entry.d + 1;
             entry.w = today;
             save(server);

@@ -14,16 +14,30 @@ import net.minecraft.world.BossEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = RaidHudMod.MOD_ID, dist = Dist.CLIENT)
 public final class RaidHudMod {
     public static final String MOD_ID = "y100d_raid_hud";
     private static final String PERSONAL_DEATH_DATA = "[Y100D_PERSONAL_DEATHS]";
+    private static final String PERSONAL_DAY_DATA = "[Y100D_PERSONAL_DAY]";
 
     private static final ResourceLocation FRAME = ResourceLocation.fromNamespaceAndPath(
         MOD_ID,
         "textures/gui/raid_hud_frame_wide.png"
+    );
+    private static final ResourceLocation MOON = ResourceLocation.fromNamespaceAndPath(
+        MOD_ID,
+        "textures/gui/day_moon_bg.png"
+    );
+    private static final ResourceLocation MOON_SMALL = ResourceLocation.fromNamespaceAndPath(
+        MOD_ID,
+        "textures/gui/day_moon_small.png"
+    );
+    private static final ResourceLocation MOON_DARK = ResourceLocation.fromNamespaceAndPath(
+        MOD_ID,
+        "textures/gui/day_moon_dark.png"
     );
     private static final Set<String> RAID_TITLES = Set.of(
         "The Rotting Dawn",
@@ -60,9 +74,17 @@ public final class RaidHudMod {
     private static HudLabels cachedLabels = HudLabels.EMPTY;
     private static int personalDeaths;
     private static boolean multiplayerRaid;
+    private static int personalDay;
+    private static boolean dayReceived;
+    // Raid omen: refreshed every frame a raid boss bar is rendered. The dark
+    // moon stays for a short grace window after the bar disappears so it
+    // never flickers between waves. No per-frame scans, no reflection.
+    private static volatile long lastRaidBarSeenAt;
+    private static final long RAID_OMEN_WINDOW_MS = 3000;
 
     public RaidHudMod() {
         NeoForge.EVENT_BUS.addListener(RaidHudMod::onBossBar);
+        NeoForge.EVENT_BUS.addListener(RaidHudMod::onRenderGui);
         System.out.println("[Y100D Raid HUD] Client renderer installed.");
     }
 
@@ -71,6 +93,17 @@ public final class RaidHudMod {
         // it before the disabled check so it can never appear as a vanilla bar,
         // even if the decorative renderer has fallen back after an error.
         String plainName = event.getBossEvent().getName().getString();
+        if (plainName.startsWith(PERSONAL_DAY_DATA)) {
+            String payload = plainName.substring(PERSONAL_DAY_DATA.length()).trim();
+            int parsedDay = parseNonNegativeInt(payload.isEmpty() ? "0" : payload.split("\\s+")[0]);
+            if (parsedDay != personalDay || !dayReceived) {
+                personalDay = parsedDay;
+                dayReceived = true;
+            }
+            event.setIncrement(0);
+            event.setCanceled(true);
+            return;
+        }
         if (plainName.startsWith(PERSONAL_DEATH_DATA)) {
             String payload = plainName.substring(PERSONAL_DEATH_DATA.length()).trim();
             String[] values = payload.isEmpty() ? new String[0] : payload.split("\\s+");
@@ -105,6 +138,77 @@ public final class RaidHudMod {
         }
     }
 
+    private static void onRenderGui(RenderGuiEvent.Post event) {
+        if (disabled && !dayReceived) {
+            return;
+        }
+        // Even if raid renderer is disabled, the day HUD should stay up unless
+        // the whole mod is in failure state - but day data channel is independent.
+        try {
+            renderDayOverlay(event);
+        } catch (Throwable error) {
+            if (!failureLogged) {
+                failureLogged = true;
+                System.err.println("[Y100D Raid HUD] Day overlay failed.");
+                error.printStackTrace();
+            }
+        }
+    }
+
+    private static void renderDayOverlay(RenderGuiEvent.Post event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.options.hideGui) {
+            return;
+        }
+        GuiGraphics graphics = event.getGuiGraphics();
+        Font font = mc.font;
+
+        int day = dayReceived ? personalDay : 0;
+        String text = String.valueOf(day);
+
+        // Responsive: unit scale follows screen width, clamped for tiny/huge windows.
+        float scale = Math.max(2.0F, Math.min(3.5F, graphics.guiWidth() / 220.0F));
+
+        // Moon 12 units (2.5x of 4.8), glyphs 0.5x, flush top-center.
+        float moonUnits = 12.0F;
+        float moonY = 0.0F;
+        float halfW = graphics.guiWidth() / (2.0F * scale);
+
+        // Dark-army omen: blood eclipse moon + ember number while a raid lives.
+        boolean raidOmen = (System.currentTimeMillis() - lastRaidBarSeenAt) < RAID_OMEN_WINDOW_MS;
+        ResourceLocation moonTex = raidOmen ? MOON_DARK : MOON_SMALL;
+        int dayColor = raidOmen ? 0xFFFF5A4A : 0xFFFFE8A0;
+
+        graphics.pose().pushPose();
+        graphics.pose().scale(scale, scale, scale);
+
+        // Mini moon texture 8x8 -> 12 units (1.5 units/texel, crisp chunky pixels).
+        try {
+            graphics.pose().pushPose();
+            graphics.pose().translate(halfW - moonUnits / 2.0F, moonY, 0.0F);
+            graphics.pose().scale(moonUnits / 8.0F, moonUnits / 8.0F, 1.0F);
+            graphics.blit(moonTex, 0, 0, 0.0F, 0.0F, 8, 8, 8, 8);
+            graphics.pose().popPose();
+        } catch (Throwable error) {
+            int mx = Math.round(halfW - moonUnits / 2.0F);
+            int my = Math.round(moonY);
+            graphics.fill(mx, my, Math.round(halfW + moonUnits / 2.0F), my + Math.round(moonUnits), 0xCC1A1A1E);
+        }
+
+        // Number: 0.5x glyphs centered inside the moon.
+        float textScale = 0.5F;
+        int textWidth = font.width(text);
+        float tx = halfW - (textWidth * textScale) / 2.0F;
+        float ty = moonY + (moonUnits - 8 * textScale) / 2.0F;
+        graphics.pose().pushPose();
+        graphics.pose().translate(tx, ty, 0.0F);
+        graphics.pose().scale(textScale, textScale, 1.0F);
+        graphics.drawString(font, text, 0, 0, dayColor, true);
+        graphics.pose().popPose();
+
+        graphics.pose().popPose();
+    }
+
     private static void renderRaidBar(CustomizeGuiOverlayEvent.BossEventProgress event) {
         LerpingBossEvent boss = event.getBossEvent();
         String plainName = boss.getName().getString();
@@ -112,13 +216,18 @@ public final class RaidHudMod {
         if (raidTitle == null) {
             return;
         }
+        // Confirmed raid bar on screen -> keep the dark moon omen alive.
+        lastRaidBarSeenAt = System.currentTimeMillis();
 
         GuiGraphics graphics = event.getGuiGraphics();
         Font font = Minecraft.getInstance().font;
         HudLabels labels = labelsFor(font, plainName, raidTitle);
 
         int x = (graphics.guiWidth() - FRAME_WIDTH) / 2;
-        int y = event.getY();
+        // Responsive offset — keep the raid bar below the mini moon HUD (12 units at y0).
+        float hudScale = Math.max(2.0F, Math.min(3.5F, graphics.guiWidth() / 220.0F));
+        int moonBottom = Math.round(12.0F * hudScale) + 4;
+        int y = event.getY() + moonBottom;
         int barX = x + INNER_X;
         int barY = y + INNER_Y;
         int filled = Math.round(INNER_WIDTH * clamp01(boss.getProgress()));

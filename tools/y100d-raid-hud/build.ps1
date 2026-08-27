@@ -52,6 +52,18 @@ Copy-Item `
     -LiteralPath (Join-Path $workspaceRoot "kubejs\assets\kubejs\textures\gui\raid_hud_frame_wide.png") `
     -Destination (Join-Path $textureTarget "raid_hud_frame_wide.png") `
     -Force
+Copy-Item `
+    -LiteralPath (Join-Path $workspaceRoot "kubejs\assets\kubejs\textures\gui\day_moon_bg.png") `
+    -Destination (Join-Path $textureTarget "day_moon_bg.png") `
+    -Force
+Copy-Item `
+    -LiteralPath (Join-Path $workspaceRoot "kubejs\assets\kubejs\textures\gui\day_moon_small.png") `
+    -Destination (Join-Path $textureTarget "day_moon_small.png") `
+    -Force
+Copy-Item `
+    -LiteralPath (Join-Path $workspaceRoot "kubejs\assets\kubejs\textures\gui\day_moon_dark.png") `
+    -Destination (Join-Path $textureTarget "day_moon_dark.png") `
+    -Force
 
 & (Join-Path $javaBin "jar.exe") --create --file $outputJar -C $stageRoot .
 if ($LASTEXITCODE -ne 0) {

@@ -145,6 +145,40 @@
 		}
 		{
 			icon: {
+				components: {
+					"relics:data": {
+						abilities: {
+							abilities: {
+								devouring: {
+									extender: {
+										cooldown: 0
+										cooldownCap: 0
+										ticking: 1b
+									}
+									lock: {
+										breaks: 5
+									}
+									points: 0
+									research: {
+										links: { }
+										researched: 0b
+									}
+									stats: {
+										frequency: {
+											initialValue: 126.59226d
+										}
+									}
+								}
+							}
+						}
+						leveling: {
+							experience: 0
+							level: 0
+							luck: 0
+							points: 0
+						}
+					}
+				}
 				id: "artifacts:rooted_boots"
 			}
 			id: "2C9F7712321854BE"
